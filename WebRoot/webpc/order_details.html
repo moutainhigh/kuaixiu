@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+	<title>订单信息 - M-超人</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+	<div class="index_topmenubg">
+		<div class="index_topmenu">
+			<a class="logo" href="#"><img src="img/logo.jpg" /></a>
+			<div class="index_topright">
+				<div class="inquiry">
+					<input class="text placeholder" type="text" value="查询/支付" placeholder="查询/支付" />
+					<input class="search" type="button" value="" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content_title">
+		<div class="title"><i class="line"></i><span>订单信息</span></div>
+	</div>
+
+	<div class="tobe_paid">
+		<div class="order_info">
+			<table class="order_deailes">
+				<tr>
+					<td width="465" class="order_bg">
+						<div class="title">订单信息</div>
+						<div class="order_tab">
+							<span class="addr_icon"><i class="iocn"></i><font>[地址]</font></span>
+							<div class="order_addr">
+								<p>{{fullAddress}}</p>
+								<p>{{customerInfo}}</p>
+							</div>
+						</div>
+						<div class="order_tab">
+							<span class="font_cont">备注：</span>
+							<span class="order_addr">{{remark}}</span>
+						</div>
+						<div class="order_tab">
+							<span class="font_cont">订单号：</span>
+							<span class="order_addr">{{orderNo}}</span>
+						</div>
+						<div class="order_tab">
+							<span class="font_cont">维修方式：</span>
+							<span class="order_addr" v-if="repairType == 0">上门维修</span>
+							<span class="order_addr" v-if="repairType == 1">到店维修</span>
+							<span class="order_addr" v-if="repairType == 3">寄修</span>
+						</div>
+					</td>
+					<td width="465" rowspan="4" align="center">
+						<div class="condition"><i class="icon"></i>订单状态：{{statusMes}}</div>
+						<div class="order_evaluate" v-if="orderStatus == 30">
+							<a @click="orderCancel" class="but" href="javascript:void(0);">取消订单</a>
+							<a class="but" :href="'payBalance.html?id='+id" target="_blank">确认并支付</a>
+							<a class="but" href="orderList.html">返回列表</a>
+						</div>
+						<div class="order_evaluate" v-else-if="orderStatus == 40">
+							<a id="confirmBtn" @click="orderConfirm" class="but" href="javascript:void(0);">确认收货</a>
+							<a class="but" href="orderList.html">返回列表</a>
+						</div>
+						<div class="order_evaluate" v-else-if="orderStatus == 50&&isComment == 0">
+							<a id="commentBtn" class="but" :href="'evaluate.html?id='+id">评 价</a>
+							<a class="but" href="orderList.html">返回列表</a>
+						</div>
+						<div class="order_evaluate" v-else-if="orderStatus == 60">
+							<a class="but" href="orderList.html">返回列表</a>
+							<p class="cancelTime">取消时间：{{endTime}}</p>
+						</div>
+						<div class="order_evaluate" v-else>
+							<a @click="orderCancel" class="but" href="javascript:void(0);">取消订单</a>
+							<a class="but" href="orderList.html">返回列表</a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="paid_tab">
+			<table class="tab">
+				<thead>
+				<tr>
+					<th>下单时间</th>
+					<th>维修机型</th>
+					<th>维修故障</th>
+					<th>维修参考价（元）</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td valign="middle" align="center">{{inTime}}</td>
+					<td valign="middle" width="280" align="center">{{model}}</td>
+					<td valign="middle" width="233" align="center">
+						<p v-for="(item,index) in cusFault" :key="index">{{item.projectName}}</p>
+					</td>
+					<td valign="middle" align="center">{{referPrice}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<!--寄往维修中心-->
+		<div class="logistics_infor" v-if="repairType == 3">
+			<div class="logistics_code">
+				<p class="transporting">邮寄地址　　<span>{{shopAddress}}</span></p>
+				<p>{{shopManagerName}}收　　{{shopManagerMobile}}</p>
+			</div>
+		</div>
+
+		<div class="paid_content">
+			<div class="order_code">
+				<p class="order_id">维修门店：{{shopName}}</p>
+				<p class="order_id">服务热线：{{shopTel}}</p>
+			</div>
+
+			<div class="fault_cont">
+				<div class="fault_list">
+					<div class="fault_item clearfix" v-if="shopFault.length>0">
+						<p class="fl">维修工程师检测故障为：</p>
+						<div class="fr">
+							<p class="clearfix" v-for="item in shopFault"><span class="fl">{{item.projectName}}</span><span class="fr">{{item.price}}元</span></p>
+						</div>
+
+					</div>
+
+					<div class="fault_class">
+						<p><span class="reason red">维修总价</span><span class="money red">{{totalPrice}}元</span></p>
+						<p v-if="isUseCoupon==1"><span class="reason red">优惠券抵用</span><span class="money red">-{{couponPrice}}元</span></p>
+						<p class="pay" v-if="isUseCoupon==1"><span class="reason">实付金额</span><span class="money red">{{realPrice}}元</span></p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="index_copyright">
+		<div class="index_copycont">
+			<p>Copyright 2016 All Rights Reserved 杭州翼诺科技有限公司 技术支持 浙ICP备16041546号</p>
+			<div class="code">
+				<img src="img/code.png" />
+				<span>扫码关注微信公众号</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="cancelLayer" id="cancelLayer">
+		<div class="order_cancel">
+			<p>能告诉我们原因么？</p>
+			<ul class="fault_list">
+				<li class="" v-for="(item,index) in reasons" @click="selectFault($event)"><a href="javascript:void(0);">{{item.reason}}</a></li>
+			</ul>
+			<textarea class="reason" name="" id="reason" placeholder="请写下您取消的原因吧！"></textarea>
+
+			<div class="index_but">
+				<a href="javascript:void(0);" class="btn-cancel" @click="closePage('cancelLayer')">取消</a>
+				<a href="javascript:void (0);" class="btn-confirm" @click="cancelSure">确认取消订单</a>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+	<div class="remind_delivery_cont">
+		<p></p>
+	</div>
+</div>
+<!--错误提示end-->	
+<!--确认提示-->
+<div class="popup_bg" style="display: none;"></div>
+	<div class="popup_content" style="display: none;">
+		<div class="popup_cont">
+			<div class="popup_title"></div>
+			<div class="popup_font"></div>
+			<div class="popup_but">
+				<a class="but cancel" href="javascript:void(0);">取 消</a>
+				<a class="but confirm" href="javascript:void(0);">确 认</a>
+			</div>
+			<a class="popup_exit" href="javascript:void(0);"></a>
+		</div>
+	</div>
+<!--确认提示end-->				
+		
+<!--遮盖层-->
+<div id="mask_boxs" style="display: none;width:100%;height:100%;z-index:50">
+	<div id="masks"></div>
+	<div id="mcon">
+		<img src="img/loadings.gif" style="width: 80px;height:80px;position:fixed; top:50%;left:50%; margin-left:-25px;  margin-top:-25px;z-index:999"/>
+	</div>
+</div>
+<!--遮盖层end-->	
+		
+<!--登录-->
+<div class="login_popupbg loginPopup">
+	<div class="login_popup">
+		<div class="popup_title"><a class="exit_popup" @click="colseLogin" href="javascript:;"><i class="icon"></i></a></div>
+		<div class="login_head">
+			快修账号登录
+		</div>
+		<div class="login_input">
+			<input class="text placeholder" v-model="tel" id="inputtel" maxlength="11" type="text" value="请输入下单手机号" placeholder="请输入下单手机号" />
+		</div>
+		<div class="login_input">
+			<input class="text psw placeholder" v-model="checkCode" type="text" value="请输入短信验证码" placeholder="请输入短信验证码" />
+			<input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" v-on:click="sendMsg($event)" />
+		</div>
+		<div class="login_submit">
+			<input class="submit" type="submit" v-on:click="Login" value="查询/支付" />
+		</div>
+	</div>
+</div>
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/login.js"></script>
+<script>
+	var access_token = sessionStorage.getItem('access_token');
+	var details = new Vue({
+		el:'#app',
+		data:{
+			id:'',
+			fullAddress:'',
+			customerInfo:'',
+			remark:'',
+			orderNo:'',
+			repairType:'',
+			orderStatus:'',
+			isComment:0,
+			statusMes:'',
+			endTime:'',
+			inTime:'',
+			model:'',
+			cusFault:[],
+			shopFault:[],
+			referPrice:'0.00',
+			totalPrice:'0.00',
+			realPrice:'0.00',
+			shopAddress:'',
+			shopManagerName:'',
+			shopManagerMobile:'',
+			shopName:'',
+			shopTel:'',
+			isUseCoupon:0,
+			couponPrice:'',
+			reasons:[],
+			selReason:[]
+		},
+		create:function () {
+
+		},
+		mounted:function () {
+			var _self = this,
+					params={
+						id:(window.location.search).substring(4)
+					};
+					fn_loading();
+			$.ajax({
+				type:'POST',
+				url:linkUrl+'/wechat/order/orderDetail.do',
+				dataType:'json',
+				data:{
+					access_token:access_token,
+					params:JSON.stringify(params)
+				},
+				xhrFields: {
+                        withCredentials: true
+                    },
+                crossDomain: true,
+				success:function (data) {
+                    loading_hide();
+					if (data.success){
+						$('#app').show();
+						var order = data.result.order;
+						_self.id = order.id;
+						_self.fullAddress = order.fullAddress;
+						_self.customerInfo = order.customerName + ' '+order.mobile;
+						_self.remark = order.node;
+						_self.orderNo = order.orderNo;
+						_self.repairType = order.repairType;
+						_self.isComment = order.isComment;
+						_self.orderStatus = order.orderStatus;
+						_self.statusMes = _self.StatusMes(order.orderStatus);
+						_self.endTime = order.endTime;
+						_self.inTime = order.inTime;
+						_self.model = order.modelName +" "+order.color;
+						
+						_self.shopAddress = order.shopFullAddress;
+						_self.shopManagerName = order.shopManagerName;
+						_self.shopManagerMobile = order.shopManagerMobile;
+
+						_self.shopName = order.shopName;
+						_self.shopTel = order.shopTel;
+						_self.isUseCoupon = order.isUseCoupon;
+						_self.isUpdatePrice = order.isUpdatePrice;
+                        _self.totalPrice = parseFloat(order.realPrice).toFixed(2);
+						if (_self.isUseCoupon == 1){//1用优惠券
+                            _self.couponPrice = parseFloat(order.coupon.couponPrice).toFixed(2);
+							if(_self.isUpdatePrice == 0){//管理员未改过价格
+							   _self.realPrice = _self.totalPrice - parseFloat(order.coupon.couponPrice).toFixed(2);
+							}else{
+							  _self.realPrice = parseFloat(_self.totalPrice).toFixed(2);
+							}
+                        }
+						for (var i = 0;i < order.details.length;i++){
+							if (order.details[i].type == 0){
+								_self.referPrice = parseFloat(_self.referPrice) + parseFloat(order.details[i].price);
+								_self.cusFault.push({projectName:order.details[i].projectName})
+							}else{
+								_self.shopFault.push({
+									projectName:order.details[i].projectName,
+									price:order.details[i].price.toFixed(2)
+								})
+							}
+						}
+                        _self.referPrice = parseFloat(_self.referPrice).toFixed(2);
+                        _self.realPrice = parseFloat(_self.realPrice).toFixed(2);
+					}else {
+                        if (data.hasOwnProperty("exceptionType")){
+                            eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                            eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                            window.location.href = 'error.html';
+                        }else {
+                            dataError(data.resultMessage);
+                            if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                window.location.href = 'index.html';
+                            }
+                        }
+					}
+				},
+				error:function (jqXHR) {
+					loading_hide();
+					dataError('系统异常，请稍后再试！');
+				}
+			})
+		},
+		methods:{
+			StatusMes:function (status) {
+				var message = '';
+				switch (status){
+					case 0:
+						message = "生成订单";
+						break;
+					case 2:
+						message = "待派单";
+						break;
+					case 3:
+						message = "待门店收件";
+						break;
+					case 5:
+						message = "门店已收件";
+						break;
+					case 11:
+						message = "待预约";
+						break;
+					case 12:
+						message = "已预约";
+						break;
+					case 20:
+						message = "定位故障";
+						break;
+					case 30:
+						message = "待付款";
+						break;
+					case 35:
+						message = "正在维修";
+						break;
+					case 40:
+						message = "待收货";
+						break;
+					case 50:
+						if (this.isComment == 0){
+							message = "待评价";
+						}else {
+							message = "已评价";
+						}
+						break;
+					case 60:
+						message = "已取消";
+						break;
+				}
+				return message;
+			},
+			dealNumber:function (num) {
+				return num%1 == 0 ? num+".00":(num%1).toFixed(2);
+			},
+			orderCancel:function () {
+				fn_loading();
+				var _self = this;
+				$.ajax({
+					type:'POST',
+					url:linkUrl+'/wechat/order/cancelReason.do',
+					dataType:'json',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+					success:function (data) {
+					    loading_hide();
+						if (data.success){
+                            _self.reasons = data.result.data;
+                            $('.cancelLayer').show();
+						}else {
+                            if (data.hasOwnProperty("exceptionType")){
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                window.location.href = 'error.html';
+                            }else {
+                                dataError(data.resultMessage);
+                                if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                    window.location.href = 'index.html';
+                                }
+                            }
+						}
+					},
+					error:function (jqXHR) {
+                        loading_hide();
+                        dataError('系统异常，请稍后再试！');
+					}
+				})
+
+			},
+			cancelSure:function () {
+				var params = {
+					id:this.id,
+					reason:$('#reason').val(),
+					selectReason:this.selReason.join("、")
+				};
+				$.ajax({
+					type:'POST',
+					url:linkUrl+'/wechat/order/orderCancel.do',
+					dataType:'json',
+					data:{
+						params:JSON.stringify(params),
+						access_token:access_token
+					},
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+					success:function (data) {
+						if (data.success){
+							dataError("订单取消成功");
+                            $('.cancelLayer').hide();
+							// location.replace('newOrder_details.html?id='+this.id);
+							window.location.href=window.location.href;
+							window.location.reload;
+						}else {
+                            if (data.hasOwnProperty("exceptionType")){
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                window.location.href = 'error.html';
+                            }else {
+                                dataError(data.resultMessage);
+                                if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                    window.location.href = 'index.html';
+                                }
+                            }
+						}
+					},
+					error:function (jqXHR) {
+					    dataError('系统异常，请稍后再试！');
+					}
+				})
+			},
+            closePage:function (obj) {
+                $('#'+obj).hide();
+            },
+            selectFault:function (e) {
+            	var obj = e.currentTarget;
+                if ($(obj).hasClass("fault_in")){
+                    $(obj).removeClass("fault_in");
+                    var index = this.selReason.indexOf($(obj).find("a").html());
+                    this.selReason.splice(index,1);
+                }else {
+                    $(obj).addClass("fault_in");
+                    this.selReason.push($(obj).find("a").html());
+                }
+            },
+			orderConfirm:function () {
+				var params = {
+					id:this.id
+				};
+				$.ajax({
+					type:'POST',
+					url:linkUrl+'/wechat/order/orderConfirmToFinish.do',
+					dataType:'json',
+					data:{
+						access_token:access_token,
+						params:JSON.stringify(params)
+					},
+					success:function (data) {
+						if (data.success){
+							dataError("订单已确认");
+							window.location.reload();
+						}else {
+                            if (data.hasOwnProperty("exceptionType")){
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                window.location.href = 'error.html';
+                            }else {
+                                dataError(data.resultMessage);
+                                if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                    window.location.href = 'index.html';
+                                }
+                            }
+						}
+					},
+					error:function (jqXHR) {
+					    dataError('系统异常，请稍后再试')
+					}
+				})
+			}
+		}
+	});
+
+</script>
+</body>
+</html>

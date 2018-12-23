@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.address.dao.AddressMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.address.entity.Address" >
+        <result column="id" property="id"/>
+        <result column="area_id" property="areaId"/>
+        <result column="area" property="area"/>
+        <result column="level" property="level"/>
+        <result column="pid" property="pid"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="sort" property="sort"/>
+        <result column="intime" property="intime"/>
+    </resultMap>
+    
+    <!-- sys_address table all fields -->
+    <sql id="Base_Column_List" >
+        id,area_id,area,level,pid,province_id,sort,date_format(`intime`,'%Y-%m-%d %H:%i:%s') intime
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_address
+        (id,area_id,area,level,pid,province_id,sort,intime)
+        values
+        (uuid(),#{areaId},#{area},#{level},#{pid},#{provinceId},#{sort},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_address 
+        set 
+            area_id=#{areaId},
+            area=#{area},
+            level=#{level},
+            pid=#{pid},
+            province_id=#{provinceId},
+            sort=#{sort}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_address where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_address where id = #{id}
+    </select>
+    
+    <!-- 根据地址id查询  -->
+    <select id="queryByAreaId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_address where area_id = #{aid}
+    </select>
+    
+    <!-- 根据地址名称查询  -->
+    <select id="queryByAreaAndPid"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_address where pid = #{pid} and area = #{area} limit 1
+    </select>
+    
+    <!-- 根据上级地址查询  -->
+    <select id="queryByPid"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_address where pid = #{pid}
+        order by sort, area_id
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_address
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="level != null and level != ''" >
+            and level = #{level}
+        </if>
+        <if test="pid != null and pid != ''" >
+            and pid = #{pid}
+        </if>
+        <if test="provinceId != null and provinceId != ''" >
+            and province_id = #{provinceId}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="intime != null and intime != ''" >
+            and intime = #{intime}
+        </if>
+        order by sort, area_id
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_address
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="level != null and level != ''" >
+            and level = #{level}
+        </if>
+        <if test="pid != null and pid != ''" >
+            and pid = #{pid}
+        </if>
+        <if test="provinceId != null and provinceId != ''" >
+            and province_id = #{provinceId}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="intime != null and intime != ''" >
+            and intime = #{intime}
+        </if>
+        order by sort, area_id
+    </select>
+
+</mapper>   

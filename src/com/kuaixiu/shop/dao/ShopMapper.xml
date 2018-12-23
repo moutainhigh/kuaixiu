@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.shop.dao.ShopMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.shop.entity.Shop" >
+        <result column="id" property="id"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="manager_name" property="managerName"/>
+        <result column="manager_mobile" property="managerMobile"/>
+        <result column="manager_mobile1" property="managerMobile1"/>
+        <result column="manager_mobile2" property="managerMobile2"/>
+        <result column="dispatch_type" property="dispatchType"/>
+        <result column="tel" property="tel"/>
+        <result column="email" property="email"/>
+        <result column="description" property="description"/>
+        <result column="dispatch_rate" property="dispatchRate"/>
+        <result column="service_rate" property="serviceRate"/>
+        <result column="technical_level" property="technicalLevel"/>
+        <result column="overall_rate" property="overallRate"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="distance" property="distance"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="street" property="street"/>
+        <result column="areas" property="areas"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status"/>
+        <result column="sort" property="sort"/>
+        <result column="engineerNum" property="engineerNum"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+        <result column="old_to_new" property="oldToNew"/>
+        <result column="is_send_repair" property="isSendRepair"/>
+    </resultMap>
+    
+    <!-- kx_shop table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.provider_code,t.code,t.name,t.manager_name,t.manager_mobile,t.manager_mobile1,t.manager_mobile2,t.dispatch_type,t.tel,t.email,t.description,t.dispatch_rate,t.service_rate,t.technical_level,t.overall_rate,t.longitude,t.latitude,t.province,t.city,t.county,t.street,t.areas,t.address,t.status,t.sort,t.is_del,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+        ,t.old_to_new,t.is_send_repair
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_shop
+        (id,provider_code,code,name,manager_name,manager_mobile,manager_mobile1,manager_mobile2,tel,email,
+        description,dispatch_rate,service_rate,technical_level,overall_rate,
+        longitude,latitude,province,city,county,street,areas,address,
+        status,sort,is_del,create_time,create_userid,old_to_new,is_send_repair)
+        values
+        (uuid(),#{providerCode},#{code},#{name},#{managerName},#{managerMobile},#{managerMobile1},#{managerMobile2},#{tel},#{email},
+        #{description},#{dispatchRate},#{serviceRate},#{technicalLevel},#{overallRate},
+        #{longitude},#{latitude},#{province},#{city},#{county},#{street},#{areas},#{address},
+        #{status},#{sort},#{isDel},now(),#{createUserid},#{oldToNew},#{isSendRepair})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_shop 
+        set 
+            provider_code=#{providerCode},
+            name=#{name},
+            manager_name=#{managerName},
+            manager_mobile=#{managerMobile},
+            manager_mobile1=#{managerMobile1},
+            manager_mobile2=#{managerMobile2},
+            tel=#{tel},
+            email=#{email},
+            description=#{description},
+            dispatch_rate=#{dispatchRate},
+            service_rate=#{serviceRate},
+            technical_level=#{technicalLevel},
+            overall_rate=#{overallRate},
+            longitude=#{longitude},
+            latitude=#{latitude},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            street=#{street},
+            areas=#{areas},
+            address=#{address},
+            status=#{status},
+            sort=#{sort},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid},
+            old_to_new=#{oldToNew},
+            is_send_repair=#{isSendRepair}
+        where id=#{id}
+    </update>
+    
+    <!-- 根据id，更新派单模式-->
+    <update id="updateDispatchType" parameterType="Object" >
+        update kx_shop set dispatch_type=#{dispatchType}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_shop where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+            , p.`name` provider_name
+        from kx_shop t 
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.id = #{id}
+        AND t.is_del = 0
+        AND p.is_del = 0
+    </select>
+    
+    <!-- 根据code查询  -->
+    <select id="queryByCode"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+            , p.`name` provider_name
+        from kx_shop t 
+        left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
+        where t.code = #{code} AND t.is_del = 0
+    </select>
+
+    <!-- 查询网点个数 -->
+    <select id="queryCount" resultType="int"  parameterType="Object">
+        select count(*) 
+        from kx_shop t
+        where t.is_del = 0
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select <include refid="Base_Column_List"/>
+            ,(select count(*) from kx_engineer eg where eg.is_del = 0 and eg.shop_code = t.code) engineerNum
+            , p.`name` provider_name
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0 and p.is_del = 0
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="code != null and code != ''" >
+            and t.code = #{code}
+        </if>
+        <if test="name != null and name != ''" >
+            and t.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="managerName != null and managerName != ''" >
+            and t.manager_name like CONCAT('%', #{managerName}, '%')
+        </if>
+        <if test="managerMobile != null and managerMobile != ''" >
+            and (t.manager_mobile like CONCAT('%', #{managerMobile}, '%')
+            	or t.manager_mobile1 like CONCAT('%', #{managerMobile}, '%')
+            	or t.manager_mobile2 like CONCAT('%', #{managerMobile}, '%'))
+        </if>
+        <if test="tel != null and tel != ''" >
+            and t.tel = #{tel}
+        </if>
+        <if test="oldToNew!= null " >
+            and t.old_to_new = #{oldToNew}
+        </if>
+        <if test="isSendRepair!= null " >
+            and t.is_send_repair = #{isSendRepair}
+        </if>
+        <if test="status != null and status != ''" >
+            and t.status = #{status}
+        </if>
+		<if test="queryIds != null and queryIds.size() > 0" >
+            and t.id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+         <if test="isSendRepair!= null " >
+            and t.is_send_repair = #{isSendRepair}
+        </if>
+        <if test="province != null and province != ''" >
+            and t.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and t.city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and t.county = #{county}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            ,(select count(*) from kx_engineer eg where eg.is_del = 0 and eg.shop_code like CONCAT('%',t.code,'%')) engineerNum
+            , p.`name` provider_name
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0 and p.is_del = 0
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="code != null and code != ''" >
+            and t.code = #{code}
+        </if>
+        <if test="name != null and name != ''" >
+            and t.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="managerName != null and managerName != ''" >
+            and t.manager_name like CONCAT('%', #{managerName}, '%')
+        </if>
+        <if test="managerMobile != null and managerMobile != ''" >
+            and (t.manager_mobile like CONCAT('%', #{managerMobile}, '%')
+            	or t.manager_mobile1 like CONCAT('%', #{managerMobile}, '%')
+            	or t.manager_mobile2 like CONCAT('%', #{managerMobile}, '%'))
+        </if>
+        <if test="tel != null and tel != ''" >
+            and t.tel = #{tel}
+        </if>
+        
+        <if test="status != null and status != ''" >
+            and t.status = #{status}
+        </if>
+        <if test="oldToNew != null"  >
+            and t.old_to_new = #{oldToNew}
+        </if>
+        <if test="isSendRepair!= null " >
+            and t.is_send_repair = #{isSendRepair}
+        </if>
+        <if test="province != null and province != ''" >
+            and t.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and t.city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and t.county = #{county}
+        </if>
+    </select>
+    
+    <!-- 根据经纬度查询最近的维修门店 带分页 -->
+    <select id="queryByLonAndLatForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0
+            and latitude &gt; #{latitude}-1 
+            and latitude &lt; #{latitude}+1 
+            and longitude &gt; #{longitude}-1 
+            and longitude &lt; #{longitude}+1 
+        having distance &lt; ${@com.system.constant.SystemConstant@ADDRESS_RANGE}
+        order by distance asc
+    </select>
+    
+    <!-- 根据经纬度查询最近的兑换门店 带分页 -->
+    <select id="queryNewByLonAndLatForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0  and t.old_to_new=0
+            and latitude &gt; #{latitude}-1 
+            and latitude &lt; #{latitude}+1 
+            and longitude &gt; #{longitude}-1 
+            and longitude &lt; #{longitude}+1 
+        having distance &lt; ${@com.system.constant.SystemConstant@OLDTONEW_RANGE}
+        order by distance asc
+         
+    </select>
+    
+    <!-- 根据经纬度查询最近的维修门店 带分页 -->
+    <select id="queryByOrderForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0
+            and latitude &gt; #{latitude}-1 
+            and latitude &lt; #{latitude}+1 
+            and longitude &gt; #{longitude}-1 
+            and longitude &lt; #{longitude}+1 
+        having distance &lt; ${@com.system.constant.SystemConstant@ADDRESS_RANGE}
+        	and (select 1 from kx_shop_model sm 
+        		where sm.shop_code = t.`code` and sm.brand_id = #{brandId})
+        order by distance asc
+    </select>
+    
+    <!-- 根据经纬度查询最近支持以旧换新的兑换门店 带分页 -->
+    <select id="queryByNewOrderForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0 and t.old_to_new=0
+            and latitude &gt; #{latitude}-1 
+            and latitude &lt; #{latitude}+1 
+            and longitude &gt; #{longitude}-1 
+            and longitude &lt; #{longitude}+1 
+        having distance &lt; ${@com.system.constant.SystemConstant@OLDTONEW_RANGE}
+        	and (select 1 from kx_new_shop_model sm 
+        		where sm.shop_code = t.`code` and sm.brand_id = #{brandId})
+        order by distance asc
+    </select>
+   
+    <!-- 根据经纬度查询最近的维修门店有空闲工程师 带分页 -->
+    <select id="queryByOrderWithEmptyEng" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+            ,IFNULL((select 1 from kx_engineer eng where eng.shop_code = t.code and eng.is_dispatch = 0 limit 1), 0) hasEmpeyEng
+            ,(
+            	(select count(id) from kx_order o where o.is_del = 0 and o.order_status not in (30,50,60) and o.shop_code = t.`code`) 
+            	/
+				(SELECT count(id) FROM kx_engineer eng WHERE eng.shop_code = t.`code` AND eng.is_dispatch != 2 AND eng.is_del = 0)
+			) unFinishAvg
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0
+            and latitude &gt; #{latitude}-1 
+            and latitude &lt; #{latitude}+1 
+            and longitude &gt; #{longitude}-1 
+            and longitude &lt; #{longitude}+1 
+        	and exists (select 1 from kx_shop_model sm 
+        		where sm.shop_code = t.`code` and sm.brand_id = #{brandId} limit 1)
+        		<!-- 
+            and exists (select 1 from kx_engineer eng 
+                where eng.is_del = 0 and eng.shop_code = t.`code` and eng.is_dispatch != 2 limit 1)
+                 -->
+        having distance &lt; ${@com.system.constant.SystemConstant@ADDRESS_RANGE}
+        	and hasEmpeyEng = 1
+        order by hasEmpeyEng desc, distance asc, unFinishAvg asc
+    </select>
+    
+    
+     <!-- 根据经纬度查询最近支持以旧换新的兑换门店 带分页 -->
+    <select id="queryByNewOrderWithEmptyEng" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+            ,IFNULL((select 1 from kx_engineer eng where eng.shop_code = t.code and eng.is_dispatch = 0 limit 1), 0) hasEmpeyEng
+            ,(
+            	(select count(id) from kx_new_order o where o.is_del = 0 and o.order_status not in (30,50,60) and o.shop_code = t.`code`) 
+            	/
+				(SELECT count(id) FROM kx_engineer eng WHERE eng.shop_code = t.`code` AND eng.is_dispatch != 2 AND eng.is_del = 0)
+			) unFinishAvg
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0 and t.old_to_new=0
+            having distance &lt; ${@com.system.constant.SystemConstant@OLDTONEW_RANGE}
+        	and hasEmpeyEng = 1
+        order by hasEmpeyEng desc, distance asc, unFinishAvg asc
+    </select>
+    
+    
+    <!-- 根据经纬度查询最近的维修门店 -->
+    <select id="queryByOrder" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+            ,IFNULL((select 1 from kx_engineer eng where eng.shop_code = t.code and eng.is_dispatch = 0 limit 1), 0) hasEmpeyEng
+            ,(
+            	(select count(id) from kx_order o where o.is_del = 0 and o.order_status not in (30,50,60) and o.shop_code = t.`code`) 
+            	/
+				(SELECT count(id) FROM kx_engineer eng WHERE eng.shop_code = t.`code` AND eng.is_dispatch != 2 AND eng.is_del = 0)
+			) unFinishAvg
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0
+            and latitude &gt; #{latitude}-1 
+            and latitude &lt; #{latitude}+1 
+            and longitude &gt; #{longitude}-1 
+            and longitude &lt; #{longitude}+1 
+        	and exists (select 1 from kx_shop_model sm 
+        		where sm.shop_code = t.`code` and sm.brand_id = #{brandId} limit 1)
+        		<!--  
+            and exists (select 1 from kx_engineer eng 
+                where eng.is_del = 0 and eng.shop_code = t.`code` and eng.is_dispatch != 2 limit 1)
+                -->
+        having distance &lt; ${@com.system.constant.SystemConstant@ADDRESS_RANGE}
+         
+        	and hasEmpeyEng = 0
+        order by hasEmpeyEng desc, unFinishAvg asc, distance asc
+    </select>
+    
+  <!-- 根据经纬度查询最近支持以旧换新的兑换门店 -->
+    <select id="queryByNewOrder" resultMap="BaseResultMap"  parameterType="Object">
+        select
+            <include refid="Base_Column_List"/>
+            , p.`name` provider_name
+            ,(ACOS( SIN(#{latitude} / 180 * PI()) * SIN(latitude / 180 * PI())
+            +COS(#{latitude} / 180 * PI()) * COS(latitude / 180 * PI()) 
+            *COS((#{longitude} - longitude) / 180 * PI())) * 6366) AS distance
+            ,IFNULL((select 1 from kx_engineer eng where eng.shop_code = t.code and eng.is_dispatch = 0 limit 1), 0) hasEmpeyEng
+            ,(
+            	(select count(id) from kx_new_order o where o.is_del = 0 and o.order_status not in (30,50,60) and o.shop_code = t.`code`) 
+            	/
+				(SELECT count(id) FROM kx_engineer eng WHERE eng.shop_code = t.`code` AND eng.is_dispatch != 2 AND eng.is_del = 0)
+			) unFinishAvg
+        from kx_shop t
+        left join kx_provider p on t.provider_code = p.`code`
+        where t.is_del = 0 and t.old_to_new=0
+            having distance &lt; ${@com.system.constant.SystemConstant@OLDTONEW_RANGE}
+        	and hasEmpeyEng = 0
+        order by hasEmpeyEng desc, distance asc,unFinishAvg asc
+    </select>
+</mapper>   

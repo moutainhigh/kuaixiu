@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css?version=2.1">
+    <script type="text/javascript" src="js/flexible.js"></script>
+    <title>碎屏保-报修流程</title>
+    <script src="js/include.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <include src="components/header.html"></include>
+    <main>
+        <h2>报修流程</h2>
+        <ol>
+            <li>1. 顾客本人拨打服务热线<a href="tel:4001013786">4001013786</a>，或通过“phonehero”公众号微信端报修。</li>
+            <li>2. 顾客报修需要提交的资料：① 手持身份证件照片② 购机凭证③ 手机正面和背面各一张照片（正面在屏幕显示IMEI码的界面下拍照）④ 书面出险过程（包括时间、地点、发生原因、损失情况并由顾客本人提供）。</li>
+            <li>3. 超出本服务保修期、责任限额或发生屏幕以外的零件损坏之情况都不在本服务保障范围。</li>
+            <li>4. 所有属于顾客服务合同除外条款的情况，都不在本服务保障范围。</li>
+        </ol>
+    </main>
+</div>
+<script>
+    var pageHeight = window.innerHeight;
+    if(typeof pageHeight != "number"){
+        if(document.compatMode == "CSS1Compat"){//判断页面是否标准模式
+            pageHeight = document.documentElement.clientHeight;
+        }else{
+            pageHeight = document.body.clientHeight;
+        }
+    }
+    document.getElementById('wrap').style.cssText = "height:"+pageHeight+"px";
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

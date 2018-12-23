@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.card.dao.BatchCardMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.card.entity.BatchCard">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="begin_iccid" jdbcType="VARCHAR" property="beginIccid" />
+    <result column="end_iccid" jdbcType="VARCHAR" property="endIccid" />
+    <result column="sum" jdbcType="INTEGER" property="sum" />
+    <result column="batch" jdbcType="VARCHAR" property="batch" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="card_name" jdbcType="INTEGER" property="cardName" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="update_userid" jdbcType="VARCHAR" property="updateUserid" />
+    <result column="is_distribution" jdbcType="INTEGER" property="isDistribution" />
+    <result column="distribution_sum" jdbcType="INTEGER" property="distributionSum" />
+    <result column="lose_efficacy" jdbcType="TIMESTAMP" property="loseEfficacy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="distribution_time" jdbcType="TIMESTAMP" property="distributionTime" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    id, province, begin_iccid, end_iccid, sum, batch, type, card_name, in_time, update_time, 
+    create_userid, update_userid, is_distribution, distribution_sum, lose_efficacy,is_del,distribution_time
+  </sql>
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from hk_batch_card where id=#{id}
+  </select>
+
+
+  <insert id="add" parameterType="Object">
+    insert into hk_batch_card (id, province, begin_iccid,
+      end_iccid, sum, batch, 
+      type, card_name, in_time, 
+      create_userid,
+      distribution_sum, lose_efficacy
+      )
+    values (#{id,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{beginIccid,jdbcType=VARCHAR},
+      #{endIccid,jdbcType=VARCHAR}, #{sum,jdbcType=INTEGER}, #{batch,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{cardName,jdbcType=INTEGER}, now(),
+      #{createUserid,jdbcType=VARCHAR},
+      #{distributionSum,jdbcType=INTEGER}, #{loseEfficacy,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+
+  <update id="update" parameterType="Object">
+    update hk_batch_card
+    set
+    update_userid = #{updateUserid,jdbcType=VARCHAR},
+    is_distribution = #{isDistribution,jdbcType=INTEGER},
+    distribution_sum = #{distributionSum,jdbcType=INTEGER},
+    lose_efficacy = #{loseEfficacy,jdbcType=TIMESTAMP},
+    distribution_time=#{distributionTime,jdbcType=TIMESTAMP},
+    is_del=#{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+
+
+
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_batch_card
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="batch != null and batch != ''">
+      and batch = #{batch}
+    </if>
+    order by in_time desc
+  </select>
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_batch_card
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="batch != null and batch != ''">
+      and batch = #{batch}
+    </if>
+    order by in_time desc
+  </select>
+
+
+</mapper>

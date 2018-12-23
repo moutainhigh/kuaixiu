@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleCheckItemsMapper">
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleCheckItems">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="wechat_id" jdbcType="VARCHAR" property="wechatId"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="wechat_model" jdbcType="VARCHAR" property="wechatModel"/>
+        <result column="recycle_model" jdbcType="VARCHAR" property="recycleModel"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="items" jdbcType="VARCHAR" property="items"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="brand_id" jdbcType="VARCHAR" property="brandId"/>
+        <result column="model_id" jdbcType="VARCHAR" property="modelId"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="login_mobile" jdbcType="VARCHAR" property="loginMobile"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    id, wechat_id, brand, wechat_model, recycle_model, product_id, items, in_time, last_price, 
+    price, update_time,brand_id,model_id,mobile,login_mobile
+  </sql>
+
+    <!-- 根据微信用户id查询记录 -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_checkitems where wechat_id=#{wechatId} ;
+    </select>
+
+
+    <insert id="add" parameterType="Object">
+        insert into kx_recycle_checkitems
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, wechat_id, brand,
+            wechat_model, recycle_model, product_id,
+            in_time,last_price,brand_id,model_id,mobile
+            <if test="loginMobile!=null and loginMobile!=''">
+                ,login_mobile
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            uuid(), #{wechatId,jdbcType=VARCHAR},
+            #{brand,jdbcType=VARCHAR},
+            #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
+            now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},#{modelId,jdbcType=VARCHAR},
+            #{mobile,jdbcType=VARCHAR}
+            <if test="loginMobile!=null and loginMobile!=''">
+                ,#{loginMobile,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+
+
+    <!-- 通过id修改 -->
+    <update id="update" parameterType="Object">
+        update kx_recycle_checkitems
+        <set>
+            brand = #{brand,jdbcType=VARCHAR},
+            wechat_model = #{wechatModel,jdbcType=VARCHAR},
+            recycle_model = #{recycleModel,jdbcType=VARCHAR},
+            product_id = #{productId,jdbcType=VARCHAR},
+            items = #{items,jdbcType=VARCHAR},
+            last_price = #{lastPrice,jdbcType=DECIMAL},
+            price = #{price,jdbcType=DECIMAL},
+            <if test="loginMobile!=null and loginMobile!=''">
+                #{loginMobile,jdbcType=VARCHAR},
+            </if>
+            update_time=now()
+        </set>
+        where id=#{id}
+    </update>
+
+
+    <!-- 通过微信openid修改 -->
+    <update id="updateByWechatId" parameterType="Object">
+    update kx_recycle_checkitems
+    set
+     	brand = #{brand,jdbcType=VARCHAR},
+		wechat_model = #{wechatModel,jdbcType=VARCHAR},
+		recycle_model = #{recycleModel,jdbcType=VARCHAR},
+		product_id = #{productId,jdbcType=VARCHAR},
+		items = #{items,jdbcType=VARCHAR},
+		last_price = #{lastPrice,jdbcType=DECIMAL},
+		price = #{price,jdbcType=DECIMAL}
+		where wechat_id=#{wechatId}
+  </update>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_checkitems
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="wechatId != null and wechatId != ''">
+            and wechat_id=#{wechatId}
+        </if>
+        <if test="wechatModel != null and wechatModel != ''">
+            and wechat_model =#{wechatModel}
+        </if>
+        <if test="recycleModel != null and recycleModel != ''">
+            and recycle_model =#{recycleModel}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and mobile =#{mobile}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_mobile =#{loginMobile}
+        </if>
+        order by in_time desc
+    </select>
+
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"
+            parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_checkitems
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="wechatId != null and wechatId != ''">
+            and wechat_id=#{wechatId}
+        </if>
+        <if test="wechatModel != null and wechatModel != ''">
+            and wechat_model =#{wechatModel}
+        </if>
+        <if test="recycleModel != null and recycleModel != ''">
+            and recycle_model =#{recycleModel}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and mobile =#{mobile}
+        </if>
+        order by in_time desc
+    </select>
+
+</mapper>

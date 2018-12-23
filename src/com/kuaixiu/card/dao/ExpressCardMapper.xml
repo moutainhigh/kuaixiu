@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.card.dao.ExpressCardMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.card.entity.ExpressCard">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="batch_id" jdbcType="VARCHAR" property="batchId" />
+    <result column="station_id" jdbcType="VARCHAR" property="stationId" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="express_number" jdbcType="VARCHAR" property="expressNumber" />
+    <result column="express_company" jdbcType="VARCHAR" property="expressCompany" />
+    <result column="send_city" jdbcType="VARCHAR" property="sendCity" />
+    <result column="start_iccid" jdbcType="VARCHAR" property="startIccid" />
+    <result column="end_iccid" jdbcType="VARCHAR" property="endIccid" />
+    <result column="sum" jdbcType="INTEGER" property="sum" />
+    <result column="card_type" jdbcType="INTEGER" property="cardType" />
+    <result column="card_name" jdbcType="INTEGER" property="cardName" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="batch" jdbcType="VARCHAR" property="batch" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    e.id, e.batch_id, e.station_id, e.send_time, e.express_number, e.express_company, e.send_city,
+    e.start_iccid, e.end_iccid, e.sum, e.card_type, e.card_name,e.in_time,e.status,e.msg
+  </sql>
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from hk_express_card e where e.id=#{id}
+  </select>
+
+
+  <insert id="add" parameterType="Object">
+    insert into hk_express_card (id, batch_id, station_id,
+      send_time, express_number, express_company, 
+      start_iccid, end_iccid,
+      sum, card_type, card_name,in_time,status,msg
+      )
+    values (#{id,jdbcType=VARCHAR}, #{batchId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR},
+      #{sendTime,jdbcType=TIMESTAMP}, #{expressNumber,jdbcType=VARCHAR}, #{expressCompany,jdbcType=VARCHAR}, 
+      #{startIccid,jdbcType=VARCHAR}, #{endIccid,jdbcType=VARCHAR},
+      #{sum,jdbcType=INTEGER}, #{cardType,jdbcType=INTEGER}, #{cardName,jdbcType=INTEGER},now(),
+      #{status,jdbcType=INTEGER}, #{msg,jdbcType=VARCHAR}
+      )
+  </insert>
+
+
+  <update id="update" parameterType="Object">
+    update hk_express_card
+    set
+    send_city = #{sendCity,jdbcType=VARCHAR},
+    status = #{status,jdbcType=INTEGER},
+    msg = #{msg,jdbcType=VARCHAR},
+    in_time = #{inTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_express_card e
+    where 1=1
+    <if test="id != null and id != ''">
+      and e.id = #{id}
+    </if>
+    <if test="batchId != null and batchId != ''">
+      and e.batch_id = #{batchId}
+    </if>
+    <if test="stationId != null and stationId != ''">
+      and e.station_id = #{stationId}
+    </if>
+    <if test="expressNumber != null and expressNumber != ''">
+      and e.express_number = #{expressNumber}
+    </if>
+    <if test="expressCompany != null and expressCompany != ''">
+      and e.express_company = #{expressCompany}
+    </if>
+    <if test="cardType != null">
+      and e.card_type = #{cardType}
+    </if>
+    <if test="cardName != null">
+      and e.card_name = #{cardName}
+    </if>
+    <if test="status != null">
+      and e.status = #{status}
+    </if>
+    order by e.in_time desc
+  </select>
+
+
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />,batch
+    from hk_express_card e,hk_batch_card b where e.batch_id=b.id
+    <if test="id != null and id != ''">
+      and e.id = #{id}
+    </if>
+    <if test="batchId != null and batchId != ''">
+      and e.batch_id = #{batchId}
+    </if>
+    <if test="batch != null and batch != ''">
+      and b.batch = #{batch}
+    </if>
+    <if test="stationId != null and stationId != ''">
+      and e.station_id = #{stationId}
+    </if>
+    <if test="expressNumber != null and expressNumber != ''">
+      and e.express_number = #{expressNumber}
+    </if>
+    <if test="expressCompany != null and expressCompany != ''">
+      and e.express_company = #{expressCompany}
+    </if>
+    <if test="cardType != null">
+      and e.card_type = #{cardType}
+    </if>
+    <if test="cardName != null">
+      and e.card_name = #{cardName}
+    </if>
+    <if test="status != null">
+      and e.status = #{status}
+    </if>
+    order by e.in_time desc
+  </select>
+
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.dict.dao.DictMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.dict.entity.Dict" >
+        <result column="id" property="id"/>
+        <result column="key" property="key"/>
+        <result column="value" property="value"/>
+        <result column="description" property="description"/>
+        <result column="pkey" property="pkey"/>
+        <result column="sort" property="sort"/>
+        <result column="is_visible" property="isVisible"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- sys_dict table all fields -->
+    <sql id="Base_Column_List" >
+        id,`key`,`value`,description,pkey,sort,is_visible,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_dict
+        (id,`key`,`value`,description,pkey,sort,is_visible,create_time,create_userid)
+        values
+        (uuid(),#{key},#{value},#{description},#{pkey},#{sort},#{isVisible},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_dict 
+        set 
+            `key`=#{key},
+            `value`=#{value},
+            description=#{description},
+            pkey=#{pkey},
+            sort=#{sort},
+            is_visible=#{isVisible},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_dict where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_dict where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dict
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="key != null and key != ''" >
+            and `key` = #{key}
+        </if>
+        <if test="value != null and value != ''" >
+            and `value` = #{value}
+        </if>
+        <if test="description != null and description != ''" >
+            and description = #{description}
+        </if>
+        <if test="pkey != null and pkey != ''" >
+            and pkey = #{pkey}
+        </if>
+        <if test="isVisible != null" >
+            and is_visible = #{isVisible}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dict
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="key != null and key != ''" >
+            and `key` = #{key}
+        </if>
+        <if test="value != null and value != ''" >
+            and `value` = #{value}
+        </if>
+        <if test="description != null and description != ''" >
+            and description = #{description}
+        </if>
+        <if test="pkey != null and pkey != ''" >
+            and pkey = #{pkey}
+        </if>
+        <if test="isVisible != null" >
+            and is_visible = #{isVisible}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.clerk.dao.ClerkMapper" >
+       <resultMap type="com.kuaixiu.clerk.entity.Clerk" id="BaseResultMap">
+          <result column="id" property="id"/>
+          <result column="name" property="name"/>
+          <result column="tel" property="tel"/>
+          <result column="identity_card" property="identityCard"/>
+          <result column="code" property="code"/>
+          <result column="integral" property="integral"/>
+          <result column="success_order" property="successOrder"/>
+          <result column="proceed_order" property="proceedOrder"/>
+          <result column="province" property="province"/>
+          <result column="city" property="city"/>
+          <result column="county" property="county"/>
+          <result column="street" property="street"/>
+          <result column="areas" property="areas"/>
+          <result column="address" property="address"/>
+          <result column="is_del" property="isDel"/>
+          <result column="in_time" property="inTime"/>
+          <result column="update_time" property="updateTime"/> 
+          <result column="update_userid" property="updateUserId"/>
+          <result column="wechat_id" property="wechatId"/>
+          <result column="is_realname" property="isRealName"/>
+       </resultMap>
+         
+       <sql id="Base_Column_List">
+          id,name,tel,identity_card,code,integral,success_order,proceed_order,province,
+          city,county,street,areas,address,is_del,in_time,update_time,update_userid,wechat_id,is_realname
+       </sql> 
+       <!-- 插入记录 -->
+       <insert id="add" parameterType="Object">
+         insert into kx_clerk(id,name,tel,identity_card,code,province,
+          city,county,street,areas,address,in_time,wechat_id,is_realname) values
+         (#{id},#{name},#{tel},#{identityCard},#{code},#{province},#{city},#{county},#{street},
+         #{areas},#{address},now(),#{wechatId},#{isRealName})
+       </insert>
+       
+       <!--增加店员积分-->
+       <insert id="addIntegralById" parameterType="Object">
+         update kx_clerk set integral=#{integral}
+         where id=#{id}
+       </insert>
+       
+       
+        <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+       select 
+           <include refid="Base_Column_List"/>
+           from kx_clerk  where is_del = 0 
+       <if test="id != null and id != ''" >
+            and id = #{id}
+       </if>
+       <if test="tel != null and tel != ''" >
+            and tel like CONCAT('%', #{tel}, '%')
+        </if>
+         <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="wechatId != null and wechatId != ''" >
+            and wechat_id = #{wechatId}
+        </if>
+        <if test="isRealName != null and isRealName != ''" >
+            and is_realname = #{isRealName}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+       </select>
+        
+       <!-- 查询列表带分页 -->
+       <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+          select 
+           <include refid="Base_Column_List"/>
+           from kx_clerk  where is_del = 0 
+        <if test="tel != null and tel != ''" >
+            and tel like CONCAT('%', #{tel}, '%')
+        </if>
+         <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+         <if test="wechatId != null and wechatId != ''" >
+            and wechat_id = #{wechatId}
+        </if>
+        <if test="isRealName != null and isRealName != ''" >
+            and is_realname = #{isRealName}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        order by in_time desc
+       </select>
+
+       <!-- 修改记录 -->
+       <update id="update" parameterType="Object">
+          update kx_clerk 
+            set name=#{name},
+                 tel=#{tel},
+                code=#{code},
+             identity_card=#{identityCard},
+                update_time=now(),
+                  is_del=#{isDel},
+                 wechat_id=#{wechatId},
+                 is_realname=#{isRealName},
+                 province=#{province},
+                   city=#{city},
+                 county=#{county},
+                 street=#{street},
+                 areas=#{areas},
+                 address=#{address},
+                update_userid=#{updateUserId}
+                where id=#{id}
+       </update>
+       
+       <!-- 删除记录 -->
+       <delete id="delete" parameterType="Object">
+        delete from kx_clerk where id=#{id} 
+       </delete>
+       
+       <!-- 根据id查询 -->
+       <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+       select 
+         <include refid="Base_Column_List"/>
+         from kx_clerk where id=#{id}
+       </select>
+       
+       <!-- 根据手机号查询 -->
+        <select id="queryByTel" resultMap="BaseResultMap" parameterType="Object">
+       select 
+         <include refid="Base_Column_List"/>
+         from kx_clerk where tel=#{tel}
+       </select>
+</mapper>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.engineer.dao.EngineerMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.engineer.entity.Engineer">
+        <result column="id" property="id"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="shop_code" property="shopCode"/>
+        <result column="shop_name" property="shopName"/>
+        <result column="number" property="number"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="mobile" property="mobile"/>
+        <result column="idcard" property="idcard"/>
+        <result column="email" property="email"/>
+        <result column="overall_rate" property="overallRate"/>
+        <result column="technical_level" property="technicalLevel"/>
+        <result column="service_rate" property="serviceRate"/>
+        <result column="is_dispatch" property="isDispatch"/>
+        <result column="order_day_num" property="orderDayNum"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+
+    <!-- kx_engineer table all fields -->
+    <sql id="Base_Column_List">
+        t.id,t.provider_code,t.shop_code,t.number,t.name,t.gender,t.mobile,t.idcard,t.email,t.overall_rate,t.technical_level,t.service_rate,t.is_dispatch,t.is_del,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into kx_engineer
+        (id,provider_code,shop_code,number,name,gender,mobile,idcard,email,overall_rate,technical_level,service_rate,is_dispatch,is_del,create_time,create_userid)
+        values
+        (uuid(),#{providerCode},#{shopCode},#{number},#{name},#{gender},#{mobile},#{idcard},#{email},#{overallRate},#{technicalLevel},#{serviceRate},#{isDispatch},#{isDel},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update kx_engineer 
+        set 
+            provider_code=#{providerCode},
+            shop_code=#{shopCode},
+            number=#{number},
+            name=#{name},
+            gender=#{gender},
+            mobile=#{mobile},
+            idcard=#{idcard},
+            email=#{email},
+            overall_rate=#{overallRate},
+            technical_level=#{technicalLevel},
+            service_rate=#{serviceRate},
+            is_dispatch=#{isDispatch},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_engineer where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,(select count(*) from kx_order o where o.engineer_id = t.id and o.order_status = 50
+        and date_format(o.end_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) order_day_num
+        ,p.`name` provider_name
+        from kx_engineer t
+        left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
+        where t.id = #{id}
+    </select>
+
+    <!-- 根据门店查询空闲工程师  -->
+    <select id="queryUnDispatchByShopCode" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,(select count(*) from kx_order o where o.engineer_id = t.id and o.order_status != 60) order_day_num
+        from kx_engineer t
+        where t.is_del = 0
+        	and t.is_dispatch = 0
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
+        </if>
+        	<if test="notEngId != null and notEngId != ''" >
+	            and t.id != #{notEngId}
+	        </if>
+        order by order_day_num asc
+    </select>
+
+    <!-- 根据门店查询忙碌工程师  -->
+    <select id="queryDispatchByShopCode"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        ,(select count(*) from kx_order o where o.engineer_id = t.id and o.order_status != 60) order_day_num
+        from kx_engineer t
+        where t.is_del = 0
+        and t.is_dispatch = 1
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
+        </if>
+        <if test="notEngId != null and notEngId != ''" >
+            and t.id != #{notEngId}
+        </if>
+        order by order_day_num asc
+    </select>
+
+    <!-- 根据工程师ID查询未完成的维修订单个数  -->
+    <select id="queryUnFinishedOrderByEngId" resultType="int" parameterType="Object">
+        select count(*) from kx_order o 
+        where o.is_del = 0
+        and o.order_status not in (30,50,60)
+        and o.engineer_id = #{id} 
+    </select>
+
+    <!-- 根据工程师ID查询未完成的以旧换新订单个数  -->
+    <select id="queryUnFinishedNewOrderByEngId" resultType="int" parameterType="Object">
+        select count(*) from kx_new_order o 
+        where o.is_del = 0
+        and o.order_status not in (50,55,60)
+        and o.engineer_id = #{id} 
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryCount" resultType="int" parameterType="Object">
+        select count(*)
+        from kx_engineer t
+        where t.is_del = 0
+        <if test="providerCode != null and providerCode != ''">
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
+        </if>
+        <if test="isDispatch != null">
+            and t.is_dispatch = #{isDispatch}
+        </if>
+
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,(select count(*) from kx_order o where o.engineer_id = t.id and o.order_status = 50
+        and date_format(o.end_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) order_day_num
+        , p.`name` provider_name
+        from kx_engineer t
+        left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="providerCode != null and providerCode != ''">
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
+        </if>
+        <if test="number != null and number != ''">
+            and t.number = #{number}
+        </if>
+        <if test="name != null and name != ''">
+            and t.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="gender != null and gender != ''">
+            and t.gender = #{gender}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and t.mobile = #{mobile}
+        </if>
+        <if test="idcard != null and idcard != ''">
+            and t.idcard = #{idcard}
+        </if>
+        <if test="isDispatch != null">
+            and t.is_dispatch = #{isDispatch}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and t.id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,(select count(*) from kx_order o where o.engineer_id = t.id and o.order_status = 50
+        and date_format(o.end_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) order_day_num
+        ,p.`name` provider_name
+        from kx_engineer t
+        left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="providerCode != null and providerCode != ''">
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
+        </if>
+        <if test="number != null and number != ''">
+            and t.number = #{number}
+        </if>
+        <if test="name != null and name != ''">
+            and t.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="gender != null and gender != ''">
+            and t.gender = #{gender}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and t.mobile = #{mobile}
+        </if>
+        <if test="idcard != null and idcard != ''">
+            and t.idcard = #{idcard}
+        </if>
+        <if test="isDispatch != null and isDispatch != ''">
+            and t.is_dispatch = #{isDispatch}
+        </if>
+        order by t.create_time desc
+    </select>
+
+    <!-- 根据工程师工号查询  -->
+    <select id="queryByEngineerNumber" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        , p.`name` provider_name
+        from kx_engineer t
+        left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
+        where t.number= #{number} and t.is_del = 0
+    </select>
+</mapper>   

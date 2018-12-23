@@ -1,0 +1,92 @@
+/* CSS Document */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,acronym,address,cite,code,del,dfn,em,font,img,strong,sub,sup,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,thead,tr,th,td{margin:0;padding:0;border:0;word-break:break-all;word-wrap:break-word;box-sizing: border-box;}
+ol,ul{list-style:none;}
+table{border-collapse:collapse;border-spacing:0;}
+.fl{float:left}
+.fr{float:right}
+.moa{margin:0 auto;}
+.clear{clear:both;height:0;overflow:hidden;}
+.clearfix:after {content: " ";display: block;clear: both;height: 0;}
+.clearfix {zoom: 1;}
+.tc{text-align:center;}
+.ti2{text-indent: 2em;}
+.pl50{padding-left: 50px;}
+i{display:inline-block;vertical-align:middle;}
+/*新闻列表溢出显示...*/
+.list_out{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+a:link,a:hover,a:visited,a:active{color: #558dc4;text-decoration: none;}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar{ width: 2px; height: 2px; background-color: transparent;}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track{-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.0); border-radius: 2px;background-color: transparent;}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{border-radius:2px; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.1); background-color: transparent;}
+
+/*去除点击高亮效果*/
+a,button,input,select,img,label{-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-tap-highlight-color:transparent;outline:medium none;}
+input::-moz-focus-inner{border:none;padding:0;}
+select, input{vertical-align:middle;}
+/*去掉苹果的默认UI来渲染按钮*/
+input[type="submit"],input[type="reset"],input[type="button"],button,select{-webkit-appearance:none;}
+/*placeholder文本颜色*/
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder,input:-moz-placeholder,textarea:-moz-placeholder{
+  color: #999999; font-size: 24px;
+}
+
+/*长英文字母 数字 换行*/
+p{word-break:break-all;word-wrap:break-word;}
+.fontBold{font-weight: bold;}
+/*提示框*/
+.remind_delivery_bg{
+  display: none; width:100%; height:70px; position:fixed; top:50%; left:0;z-index:6000;
+  .remind_delivery_cont{ width:415px; margin:0 auto; background:rgba(0,0,0,0.6); border-radius:10px; padding:15px 10px;
+    p{ text-align:center; line-height: 35px; color:#FFF; font-size: 24px; }
+  }
+}
+//确认提示
+.popup_bg{
+  display: none; width: 100%; height: 100%; background: rgba(0,0,0,0.7); position: fixed; top: 0; left: 0; z-index: 200;
+  .popup_content{
+    .popup_cont{
+      width:580px; height: auto; margin:0 auto; background: #FFFFFF; border-radius: 10px; padding: 19px 40px 40px;position: relative;top: -50%;transform: translateY(50%);
+      .popup_title{
+        width: 500px; height: 65px; font-size: 28px; line-height: 65px; text-align: center; color: #464646;
+      }
+      .popup_font{
+        font-size: 24px; line-height: 32px; color: #606060;
+      }
+      .popup_but{
+        padding-top: 50px;  overflow: hidden;
+        .but{
+          display: inline-block;width: 230px; height: 66px; border-radius: 10px; border: solid 1px #439AFF;  font-size: 26px; line-height: 66px;text-align: center;
+          &.cancel{ float: left; color:#439AFF;}
+          &.confirm{
+            float: right; background: #439AFF; color: #FFFFFF;
+          }
+        }
+      }
+    }
+  }
+}
+
+//等待
+#mask_boxs{
+  display: none;position: absolute;top:0;left: 0;width:100%;height:100%;z-index:50;
+  #mcon{
+    img{
+      width: 80px;height:80px;position:fixed; top:50%;left:50%; margin-left:-25px;  margin-top:-25px;z-index:999;
+    }
+  }
+}
+.font-dpr(@font-size){
+  font-size: @font-size;
+
+  [data-dpr="2"] & {
+    font-size: @font-size * 2;
+  }
+
+  [data-dpr="3"] & {
+      font-size: @font-size * 3;
+  }
+}

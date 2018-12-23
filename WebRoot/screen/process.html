@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/amazeui.min.css">
+    <link rel="stylesheet" href="css/main.css?version=2.1">
+    <title>碎屏保-激活步骤</title>
+    <script src="js/include.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <include src="components/header.html"></include>
+    <main>
+        <h2>激活步骤</h2>
+        <ol>
+            <li>1、我方通过短信服务器发送顾客“激活衔接”
+                <p>格式如下：</p>
+                <p class="ti2">尊敬的XXX顾客，感谢您在XXXX网上商城购买了“PHONEHERO碎屏保障产品”，请用另一部有摄像功能的手机激活需要保障的手机，激活网址为XXXXXXXXXXXXXXXXXXXXXXXXXX，激活中有疑问请拨打XXXXXXXXX服务热线。------（浙江华英）。</p>
+            </li>
+            <li>2、顾客用另一部手机登陆该网址并激活页面及激活顺序如下：
+                <p class="pl50">手机号码验证登陆</p>
+                <img src="img/img1.png" alt="">
+                <p>顾客手机与系统预置号码一致并获得验证码登陆跳转以下页面</p>
+
+                <p class="pl50">顾客填写产品信息并自助验机</p>
+                <img src="img/img2.png" alt="">
+                <p class="pl50">顾客输入身份信息</p>
+
+                <p>告知顾客保修期限及保障额度，并确认同意服务条款</p>
+                <img src="img/img3.png" alt="">
+                <p class="pl50">点击“确定”以激活</p>
+
+                <p>页面显示关注“phonehero”登陆公众号进入“个人服务”-“激活验证”以查看激活信息</p>
+                <img src="img/u288.png" alt="">
+            </li>
+            <li>3、激活信息查验
+                <p>登陆“phonehero”公众号，进入“激活验证”，可查验激活信息，并再次查看“服务条款”。</p>
+            </li>
+            <li>4、如有其他疑问请咨询客服<a href="tel:4001013786">4001013786</a>。</li>
+        </ol>
+    </main>
+</div>
+<script>
+    var pageHeight = window.innerHeight;
+    if(typeof pageHeight != "number"){
+        if(document.compatMode == "CSS1Compat"){//判断页面是否标准模式
+            pageHeight = document.documentElement.clientHeight;
+        }else{
+            pageHeight = document.body.clientHeight;
+        }
+    }
+    document.getElementById('wrap').style.cssText = "height:"+pageHeight+"px";
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

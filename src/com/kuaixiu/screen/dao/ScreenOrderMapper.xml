@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.screen.dao.ScreenOrderMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.screen.entity.ScreenOrder" >
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="project_id" property="projectId"/>
+        <result column="project_name" property="projectName"/>
+        <result column="project_brand" property="projectBrand"/>
+        <result column="order_price" property="orderPrice"/>
+        <result column="real_price" property="realPrice"/>
+        <result column="max_price" property="maxPrice"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="is_payment" property="isPayment"/>
+        <result column="is_drawback" property="isDrawback"/>
+        <result column="balance_status" property="balanceStatus"/>
+        <result column="balance_time" property="balanceTime"/>
+        <result column="balance_no" property="balanceNo"/>
+        <result column="is_del" property="isDel"/>
+        <result column="in_time" property="inTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="refund_reason" property="refundReason"/>
+        <result column="from_system" property="fromSystem"/>
+        <result column="error_reason" property="errorReason"/>
+        <result column="refund_result" property="refundResult"/>
+        <result column="mobile_brand" property="mobileBrand"/>
+        <result column="mobile_model" property="mobileModel"/>
+        <result column="mobile_code" property="mobileCode"/>
+        <result column="due_to_time" property="dueToTime"/>
+        <result column="is_active" property="isActive"/>
+    </resultMap>
+    
+    <!-- kx_provider table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.name,t.mobile,t.order_no,t.project_id,t.project_name,
+        t.project_brand,t.order_price,t.real_price,t.max_price,
+        t.order_status,t.is_payment,t.is_drawback,t.balance_status,
+        date_format(t.`balance_time`,'%Y-%m-%d %H:%i:%s')balance_time,t.balance_no,
+        t.is_del,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+        date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,
+        date_format(t.`end_time`,'%Y-%m-%d %H:%i:%s')end_time,t.refund_reason,t.from_system
+        ,t.error_reason,t.refund_result,t.mobile_brand,t.mobile_model,t.mobile_code,t.due_to_time,
+        t.is_active
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_screen_order
+        (id,name,mobile,order_no,
+        project_id,project_name,project_brand,order_price,real_price,max_price,order_status,
+        is_payment,is_drawback,in_time,from_system,end_time,is_active,mobile_brand,mobile_model)
+        values
+        (#{id},#{name},#{mobile},#{orderNo},
+        #{projectId},#{projectName},#{projectBrand},#{orderPrice},#{realPrice},#{maxPrice},#{orderStatus},
+        #{isPayment},#{isDrawback},now(),#{fromSystem},#{endTime},#{isActive},#{mobileBrand},#{mobileModel})
+    </insert>
+
+    <!-- 根据订单号，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_screen_order
+        set 
+            order_price=#{orderPrice},
+            real_price=#{realPrice},
+            order_status=#{orderStatus},
+            is_payment=#{isPayment},
+            is_drawback=#{isDrawback},
+            balance_status=#{balanceStatus},
+            balance_time=#{balanceTime},
+            balance_no=#{balanceNo},
+            is_del=#{isDel},
+            update_time=#{updateTime},
+            end_time=#{endTime},
+            refund_reason=#{refundReason},
+            error_reason=#{errorReason},
+            mobile_brand=#{mobileBrand},
+            mobile_model=#{mobileModel},
+            mobile_code=#{mobileCode},
+            due_to_time=#{dueToTime},
+            refund_result=#{refundResult}
+        where order_no=#{orderNo}
+    </update>
+
+   
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_order t where t.id = #{id}
+    </select>
+    
+    <!-- 根据orderNo查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_order t where t.order_no = #{orderNo}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_screen_order t
+        where t.is_del in(0,2)
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and t.order_no=#{orderNo}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+             and t.mobile=#{mobile}
+        </if>
+        <if test="orderStatus != null" >
+            and t.order_status = #{orderStatus}
+        </if>
+        <if test="isPayment != null" >
+            and t.is_payment = #{isPayment}
+        </if>
+        <if test="isDrawback != null" >
+            and t.is_drawback = #{isDrawback}
+        </if>
+         <if test="isActive != null" >
+            and t.is_active = #{isActive}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+         select
+        <include refid="Base_Column_List"/>
+        from kx_screen_order t
+        where t.is_del in(0,2)
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and t.order_no=#{orderNo}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+             and t.mobile=#{mobile}
+        </if>
+        <if test="orderStatus != null" >
+            and t.order_status = #{orderStatus}
+        </if>
+        <if test="isPayment != null" >
+            and t.is_payment = #{isPayment}
+        </if>
+        <if test="isDrawback != null" >
+            and t.is_drawback = #{isDrawback}
+        </if>
+        <if test="isActive != null" >
+            and t.is_active = #{isActive}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+    </select>
+    
+   
+
+</mapper>  

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>用户信息-M超人</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+    <style>
+        #container {width:300px; height: 180px; }  
+    </style>
+</head>
+<body>
+<div id="wrap" class="userWrap">
+    <div class="main">
+        <div class="select_Info bg">
+            <div class="user_model">
+                <div class="hint_title">您的机型:</div>
+                <div class="model_name">
+                    
+                </div>
+            </div>
+            <div class="user_fault" id="faultList">
+                <div class="hint_title">故障为:</div>
+                <!-- 故障列表 -->
+            </div>
+            <div class="service_price">
+                <p id="type"><!-- 维修方式 --></p>
+                <p><span class="font">维修参考价:</span><span class="money">0.00</span></p>
+            </div>
+        </div>
+
+        <div class="user_info bg">
+            <div class="inputRow">
+                <input class="text mustText" id="cusName" type="text" value="" placeholder="请填写姓名">
+            </div>
+
+            <div class="inputRow">
+                <input class="text" id="inputtel" type="tel" value="" maxlength="11" placeholder="请输入手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+            </div>
+
+            <div class="inputRow">
+                <input class="text mustText" id="code" type="tel" value="" maxlength="6" placeholder="请输入验证码" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+                <input class="get_validate" type="button" value="获取验证码" data-verify="获取验证码" onclick="sendMsg(this)" />
+            </div>
+
+            <ul class="inputRow select_addr">
+                <li>
+                    <select id="s_Province" name="s_Province" onchange="fn_select_address(2, this.value, '', 's_');">
+                        <option value="" disabled selected>--省份--</option>
+                    </select>
+                </li>
+                <li>
+                    <select id="s_City" name="s_City" onchange="fn_select_address(3, this.value, '', 's_');">
+                        <option value="" disabled selected>--地级市--</option>
+                    </select>
+                </li>
+                <li>
+                    <select id="s_County" name="s_County" onchange="fn_select_address(4, this.value, '', 's_');">
+                        <option value="" disabled selected>--区/县--</option>
+                    </select>
+                </li>
+              <!--  <li>
+                    <select id="s_Street" name="s_Street">
+                        <option value="" disabled selected>--街/道--</option>
+                    </select>
+                </li>  -->
+            </ul>
+
+            <div class="inputRow">
+                <input class="text mustText" id="address" type="text" value="" placeholder="请输入街道/小区/楼号等">
+            </div>
+            <div class="inputRow mailing_addr">
+                <!-- 邮寄地址 -->
+            </div>
+            <div class="inputRow">
+                <span>备注：</span>
+                <input class="text" type="text" id="note" value="" placeholder="请填写您的需要">
+            </div>
+            <div class="inputRow">
+                <span>优惠码：</span>
+                <input class="text" id="couponCode" type="text" value="" placeholder="请填写您的优惠码">
+                <input class="get_validate" onclick="selCode(this)" type="button" value="查询">
+            </div>
+            
+            <div class="inputRow couponInfo" id="couponInfoLabel">
+                <!-- 优惠信息 -->
+            </div>
+
+            <div class="illustrate">
+                <p>备注：</p>
+                <p>1.参考价为预测报价，实际以工程师上门检测为准；</p>
+                <p>2.损坏零件需被工程师收回，如需自留，另补差价；</p>
+                <p>3.优惠劵将在订单中抵用；</p>
+                <p>4.M-超人 服务时间为：09:00-19:00。</p>
+            </div>
+        </div>
+
+        <div class="agree_clause">
+            <input id="radio" class="radio" checked="checked" type="checkbox" value="" />
+            <label for="radio">提交订单等于同意手机超人的</label>
+            <a href="agreement.html">维修服务条款</a>
+        </div>
+
+        <div class="btn-box">
+            <a class="btn-normal" href="javascript:history.back(-1);">上一步</a>
+            <a id="submitOrder" class="btn-normal btn-normal-confirm" href="javascript:;">提交订单</a>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li class="bottom_in"><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+
+    <!--遮盖层-->
+    <div id="mask_boxs">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+    <!--遮盖层end-->
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <!--确认提示-->
+    <div class="popup_bg">
+        <div class="popup_content">
+            <div class="popup_title"></div>
+            <div class="popup_font"></div>
+            <div class="popup_but">
+                <a class="btn-normal cancel" href="javascript:void(0);">取 消</a>
+                <a class="btn-normal btn-normal-confirm confirm" href="javascript:void(0);">确 认</a>
+            </div>
+        </div>
+    </div>
+    <!--确认提示end-->
+
+    <div id="container"></div> 
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script src="js/address.js"></script>
+<script src="js/jbase64.js"></script>
+
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.10&key=0db9bfb678ada40b29eb757e132f63f1"></script> 
+<script src="js/location.js"></script>
+<script>
+    $(function(){
+
+        getAddr();
+
+        var height = $(window).height();
+        window.res = null;
+        $(window).resize(function () {
+            if ($(this).height()<height){
+                $(".bottom").css({'position':'static'});
+            }else {
+                $(".bottom").css({'position':'absolute'});
+            }
+        });
+        var idsObj = eCacheUtil.storage.getCache(CacheKey.faultId);
+        var namesObj = eCacheUtil.storage.getCache(CacheKey.faultName),
+            priceObj = eCacheUtil.storage.getCache(CacheKey.faultPrice),
+            color = eCacheUtil.storage.getCache(CacheKey.phoneSelColor),
+            repairWay = eCacheUtil.storage.getCache(CacheKey.repairWay),
+            modelName = eCacheUtil.storage.getCache(CacheKey.phoneModelName),
+            limitCode = eCacheUtil.storage.getCache(CacheKey.limitCode);
+
+        var faultId = [],faultName = [],faultPrice = [];
+        if (!isEmpty(idsObj) && !isEmpty(namesObj)&&!isEmpty(priceObj)) {
+            faultId = JSON.parse(idsObj);
+            faultName = JSON.parse(namesObj);
+            faultPrice = JSON.parse(priceObj);
+        }else{
+            realAlert("系统提示", "请先选择您的机型或机型故障", function(){
+                location.href ='index.html';
+            });
+            return false;
+        }
+        $('.model_name').html(modelName+' '+color);
+        for (i in faultId){
+            $('#faultList').append('<div class="selected_list">' +
+                '<div class="font">'+faultName[i]+'</div>' +
+                '<div class="right"><span class="sum">'+faultPrice[i]+'</span><a class="minus" href="javascript:;">一</a></div>' +
+                '</div>');
+        }
+        if (repairWay == 0){
+            $('#type').html('<span class="font">维修方式：</span>上门维修');
+        }else {
+            $('#type').html('<span class="font">维修方式：</span>寄修');
+        }
+        if (!isEmpty(limitCode)){
+            $('#couponCode').val(limitCode);
+        }
+        loading_hide();
+        //
+        var count = 0;
+        $(".sum").each(function () {
+            var price = $(this).html() - 0;
+            count += price;
+            $(".money").html(count.toFixed(2));
+            return count;
+        });
+        $('.selected_list .minus').click(function(){
+            if ($(".selected_list").length == 1){
+                alertTip('维修故障不能少于一个！');
+                return false;
+            }else {
+                count -= $(this).prev('.sum').html();
+                $(".money").html(count.toFixed(2));
+                var $index = $(this).parents('.selected_list').index();
+                $(this).parents('.selected_list').remove();
+                faultId.splice($index,1);
+                faultName.splice($index,1);
+                faultPrice.splice($index,1);
+            }
+        });
+
+        //
+        $('.agree_clause .radio').change(function(){
+            if(this.checked){
+                $('#submitOrder').removeClass('disabled');
+            }else{
+                $('#submitOrder').addClass('disabled');
+            }
+        });
+
+        var checkSubmitFlg = false;
+        //提交订单
+        $("#submitOrder").click(function(){
+            if(checkSubmitFlg ==true){
+                return false; //当表单被提交过一次后checkSubmitFlg将变为true,根据判断将无法进行提交。
+            }
+            checkSubmitFlg ==true;
+            var base = new Base64();
+            var myform = $('.mustText');
+            for(var i=0;i<myform.length;i++){
+                var textval = myform.eq(i).val();
+                if(textval == ''){
+                    alertTip(myform.eq(i).attr('placeholder'));
+                    myform.eq(i).focus();
+                    checkSubmitFlg = false;
+                    return false;
+                }
+            }
+            var pro = [],fm;
+            for (var j = 0;j<faultId.length;j++){
+                pro.push({
+                    "projectId":faultId[j]
+                });
+            }
+            fm = eCacheUtil.storage.getCache(CacheKey.fm);
+            if (isEmpty(fm)) {
+                fm = ''
+            }
+			engineerId=eCacheUtil.storage.getCache(CacheKey.engineerId);
+			if (isEmpty(engineerId)) {
+                engineerId = ''
+            }
+            var params = {
+                brandId:eCacheUtil.storage.getCache(CacheKey.phoneBrandId),
+                modelId:eCacheUtil.storage.getCache(CacheKey.phoneModelId),
+                color:color,
+                repairType:repairWay,
+                customerName:$('#cusName').val().trim(),
+                mobile:$('#inputtel').val().trim(),
+                checkCode:$('#code').val().trim(),
+                province:$('#s_Province').val(),
+                city:$('#s_City').val(),
+                area:$('#s_County').val(),
+               // county:$('#s_Street').val(),
+                street:$('#address').val(),
+                note:$('#note').val().trim(),
+                couponCode:$('#couponCode').val(),
+                projects:pro,
+                fm:fm,
+				engineerId:engineerId
+            };
+            $.ajax({
+                type:'POST',
+                url:linkUrl+'/wechat/repair/saveOrder.do',
+                dataType:'json',
+                data:{
+                    params:JSON.stringify(params)
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success:function (data) {
+                    if (data.success){
+                        alertTip('下单成功');
+                        eCacheUtil.storage.cache(CacheKey.customerMobile,$('#inputtel').val());
+                        sessionStorage.setItem("access_token",data.result.access_token);
+                        var randomValue = getRandomStr();
+                        eCacheUtil.storage.cache(CacheKey.orderId,base.encode(data.result.id));
+                        window.location.href = 'order_details.html?r=' + randomValue;
+                    }else {
+                        if (repairWay == 0&&data.resultCode == 3004){
+                            confirmTip('系统提示','亲，附近没有维修门店，是否选择寄修？',function () {
+                                repairWay = 3;
+                                findSendAddress($('#s_Province').val(),$('#s_City').val());
+                                checkSubmitFlg = false;
+                            });
+                        }else {
+                            if (data.exceptionType){
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                window.location.href = 'error.html';
+                            }else {
+                                alertTip(data.resultMessage);
+                                checkSubmitFlg = false;
+                            }
+                        }
+                    }
+                },
+                error:function () {
+                    alertTip('系统异常，请稍后再试！');
+                    checkSubmitFlg = false;
+                }
+            });
+        });
+    })
+//获取优惠信息
+function selCode(obj) {
+    var tel = $("#inputtel").val().trim(),
+		code = $("#code").val().trim(),
+		coupon = $('#couponCode').val().trim();
+    if (tel == ''){
+		alertTip('请输入手机号!');
+		$("#inputtel").focus();
+	}else if (code == ''){
+		alertTip('请输入验证码！');
+		$('#code').focus();
+	}else if (coupon == ''){
+		alertTip('请填写您的优惠码！');
+		$('#couponCode').focus();
+	}else {
+        var params = {
+            mobile:tel,
+            checkCode:code,
+            couponCode:coupon
+        };
+        $.ajax({
+            type:'POST',
+            url:linkUrl+'/wechat/repair/couponInfo.do',
+            dataTyp:'json',
+            data:{
+                params:JSON.stringify(params)
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success:function (data) {
+                if (data.success){
+                    var result = data.result;
+                    var temporary = [],snap = [];
+                    for (var i = 0;i < result.models.length;i++){
+                        temporary.push(result.models[i].brandName);
+                    }
+                    for (var j = 0;j < result.projects.length;j++){
+                        snap.push(result.projects[j].projectName);
+                    }
+                    $('#couponInfoLabel').empty().append('<p>优惠码名称：<span class="color-gray">'+ result.data.couponName +'</span></p>' +
+                        '<p>优惠金额：<span class="color-red">¥ '+result.data.couponPrice+'</span></p>' +
+                        '<p>有效时间：'+result.data.beginTime+' - '+result.data.endTime+'</p>' +
+                        '<p>限定项目：'+snap.join('、')+'</p>' +
+                        '<p>限定品牌：'+temporary.join("、")+'</p>').show();
+                }else {
+                    alertTip(data.resultMessage);
+                }
+            },
+            error:function (jqXHR) {
+
+            }
+        })
+	}
+}
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

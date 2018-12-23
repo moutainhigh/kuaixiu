@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.zhuanzhuan.dao.HappyPrizeMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.zhuanzhuan.entity.HappyPrize">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="already_use" jdbcType="INTEGER" property="alreadyUse" />
+    <result column="total_use" jdbcType="INTEGER" property="totalUse" />
+    <result column="lottery_mobile" jdbcType="VARCHAR" property="lotteryMobile" />
+    <result column="last_prize_time" jdbcType="TIMESTAMP" property="lastPrizeTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id,in_time, update_time, is_del, already_use, total_use,
+  lottery_mobile,last_prize_time
+  </sql>
+
+
+
+  <insert id="add" parameterType="Object">
+    insert into kx_happy_prize (id,in_time,total_use,lottery_mobile)
+    values
+    (uuid(),now(),#{totalUse,jdbcType=INTEGER},#{lotteryMobile,jdbcType=VARCHAR})
+  </insert>
+
+
+
+
+
+  <update id="update" parameterType="Object">
+    update kx_happy_prize
+    set
+      is_del = #{isDel,jdbcType=INTEGER},
+      already_use = #{alreadyUse,jdbcType=INTEGER},
+      total_use = #{totalUse,jdbcType=INTEGER},
+      last_prize_time = #{lastPrizeTime,jdbcType=TIMESTAMP}
+     where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_happy_prize  where id = #{id}  and is_del=0
+  </select>
+
+
+  <!-- 根据抽奖手机号查询 -->
+  <select id="queryByMobile" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_happy_prize  where lottery_mobile = #{lotteryMobile} and is_del=0
+  </select>
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_happy_prize
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="lotteryMobile != null and lotteryMobile != ''">
+      and lottery_mobile=#{lotteryMobile}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_happy_prize
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="lotteryMobile != null and lotteryMobile != ''">
+      and lottery_mobile=#{lotteryMobile}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+</mapper>

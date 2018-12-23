@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleWechatMapper">
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleWechat">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="model" jdbcType="VARCHAR" property="model"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="nick" jdbcType="VARCHAR" property="nick"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="gender" jdbcType="INTEGER" property="gender"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="country" jdbcType="VARCHAR" property="country"/>
+        <result column="language" jdbcType="VARCHAR" property="language"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_del" jdbcType="INTEGER" property="isDel"/>
+        <result column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="login_mobile" jdbcType="VARCHAR" property="loginMobile"/>
+        <result column="session_key" jdbcType="VARCHAR" property="sessionKey"/>
+        <result column="longitude" jdbcType="DECIMAL" property="longitude"/>
+        <result column="latitude" jdbcType="DECIMAL" property="latitude"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="already_use" jdbcType="INTEGER" property="alreadyUse"/>
+        <result column="total_use" jdbcType="INTEGER" property="totalUse"/>
+        <result column="prize_name" jdbcType="VARCHAR" property="prizeName"/>
+        <result column="prize_mobile" jdbcType="VARCHAR" property="prizeMobile"/>
+        <result column="prize_province" jdbcType="VARCHAR" property="prizeProvince"/>
+        <result column="prize_city" jdbcType="VARCHAR" property="prizeCity"/>
+        <result column="prize_area" jdbcType="VARCHAR" property="prizeArea"/>
+        <result column="prize_street" jdbcType="VARCHAR" property="prizeStreet"/>
+        <result column="lottery_mobile" jdbcType="VARCHAR" property="lotteryMobile"/>
+        <result column="last_prize_time" jdbcType="TIMESTAMP" property="lastPrizeTime"/>
+        <result column="union_id" jdbcType="TIMESTAMP" property="unionId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, mobile, model, name, address, nick, url, gender, province, city, country, language, 
+    in_time, update_time,is_del,open_id,login_mobile,session_key,longitude,latitude,brand,already_use,total_use,
+    prize_name,prize_mobile,prize_province,prize_city,prize_area,prize_street,lottery_mobile,last_prize_time
+  </sql>
+
+    <!-- 根据id查询记录 -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_wechat where id=#{id} and is_del=0 ;
+    </select>
+
+    <!-- 查询所有省份 -->
+    <select id="queryProvince" resultType="java.lang.String" parameterType="Object">
+        select
+        DISTINCT province
+        from kx_recycle_wechat where is_del=0 ;
+    </select>
+
+    <!-- 查询该省份下城市 -->
+    <select id="queryCity" resultType="java.lang.String" parameterType="Object">
+        select
+        DISTINCT city
+        from kx_recycle_wechat where province=#{province} and is_del=0 ;
+    </select>
+
+
+    <!-- 查询所有机型 -->
+    <select id="queryBrand" resultType="java.lang.String" parameterType="Object">
+        select
+        DISTINCT brand
+        from kx_recycle_wechat where is_del=0 ;
+    </select>
+
+    <!-- 查询该省份下城市 -->
+    <select id="queryModel" resultType="java.lang.String" parameterType="Object">
+        select
+        DISTINCT model
+        from kx_recycle_wechat where brand=#{brand} and is_del=0 ;
+    </select>
+
+
+    <select id="queryByOpenId" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_wechat
+        where open_id = #{openId,jdbcType=VARCHAR} and is_del=0 ;
+    </select>
+
+    <select id="queryByMobie" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_wechat
+        where mobile = #{mobile,jdbcType=VARCHAR} and is_del=0 ;
+    </select>
+
+    <select id="queryLoginMobie" parameterType="Object" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_wechat
+        where login_mobile = #{loginMobile,jdbcType=VARCHAR} and is_del=0 ;
+    </select>
+
+    <insert id="add" parameterType="Object">
+        insert into kx_recycle_wechat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="name != null and name != ''">
+                name,
+            </if>
+            <if test="unionId != null and unionId != ''">
+                union_id,
+            </if>
+            <if test="model != null and model != ''">
+                model,
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile,
+            </if>
+            <if test="address != null and address != ''">
+                address,
+            </if>
+            <if test="nick != null and nick != ''">
+                nick,
+            </if>
+            <if test="url != null and url != ''">
+                url,
+            </if>
+            <if test="gender != null and gender != ''">
+                gender,
+            </if>
+            <if test="province != null and province != ''">
+                province,
+            </if>
+            <if test="city != null and city != ''">
+                city,
+            </if>
+            <if test="country != null and country != ''">
+                country,
+            </if>
+            <if test="language != null and language != ''">
+                language,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="openId != null and openId != ''">
+                open_id,
+            </if>
+            <if test="sessionKey != null and sessionKey != ''">
+                session_key,
+            </if>
+            <if test="longitude != null and longitude != ''">
+                longitude,
+            </if>
+            <if test="latitude != null and latitude != ''">
+                latitude,
+            </if>
+            <if test="brand != null and brand != ''">
+                brand,
+            </if>
+            <if test="alreadyUse != null and alreadyUse != ''">
+                already_use,
+            </if>
+            <if test="totalUse != null and totalUse != ''">
+                tota_use,
+            </if>
+            <if test="lastPrizeTime != null and lastPrizeTime != ''">
+                last_prize_time,
+            </if>
+            <if test="lotteryMobile != null and lotteryMobile != ''">
+                lottery_mobile,
+            </if>
+            <if test="prizeName != null and prizeName != ''">
+                prize_name,
+            </if>
+            <if test="prizeMobile != null and prizeMobile != ''">
+                prize_mobile,
+            </if>
+            <if test="prizeProvince != null and prizeProvince != ''">
+                prize_province,
+            </if>
+            <if test="prizeCity != null and prizeCity != ''">
+                prize_city,
+            </if>
+            <if test="prizeArea != null and prizeArea != ''">
+                prize_area,
+            </if>
+            <if test="prizeStreet != null and prizeStreet != ''">
+                prize_street,
+            </if>
+            <if test="loginMobile!=null and loginMobile!=''">
+                login_mobile,
+            </if>
+                in_time,
+            <if test="updateTime!=null and updateTime!=''">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="id != null and id != ''">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="unionId != null and unionId != ''">
+                #{unionId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null and name != ''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null and model != ''">
+                #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null and address != ''">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="nick != null and nick != ''">
+                #{nick,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null and url != ''">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null and gender != ''">
+                #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null and province != ''">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null and city != ''">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="country != null and country != ''">
+                #{country,jdbcType=VARCHAR},
+            </if>
+            <if test="language != null and language != ''">
+                #{language,jdbcType=VARCHAR},
+            </if>
+            <if test="isDel != null and isDel !=''">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+            <if test="openId != null and openId != ''">
+                #{openId,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionKey != null and sessionKey != ''">
+                #{sessionKey,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null and longitude != ''">
+                #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null and latitude != ''">
+                #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null and brand != ''">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="alreadyUse != null and alreadyUse != ''">
+                #{alreadyUse,jdbcType=INTEGER},
+            </if>
+            <if test="totalUse != null and totalUse != ''">
+                #{totalUse,jdbcType=INTEGER},
+            </if>
+            <if test="lastPrizeTime != null and lastPrizeTime != ''">
+                #{lastPrizeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lotteryMobile != null and lotteryMobile != ''">
+                #{lotteryMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeName != null and prizeName != ''">
+                #{prizeName,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeMobile != null and prizeMobile != ''">
+                #{prizeMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeProvince != null and prizeProvince != ''">
+                #{prizeProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeCity != null and prizeCity != ''">
+                #{prizeCity,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeArea != null and prizeArea != ''">
+                #{prizeArea,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeStreet != null and prizeStreet != ''">
+                #{prizeStreet,jdbcType=VARCHAR},
+            </if>
+            <if test="loginMobile!=null and loginMobile!=''">
+                #{loginMobile,jdbcType=VARCHAR},
+            </if>
+                now(),
+            <if test="updateTime!=null and updateTime!=''">
+                now(),
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.kuaixiu.recycle.entity.RecycleWechat">
+        update kx_recycle_wechat
+        set mobile = #{mobile,jdbcType=VARCHAR},
+        union_id = #{unionId,jdbcType=VARCHAR},
+        model = #{model,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        address = #{address,jdbcType=VARCHAR},
+        nick = #{nick,jdbcType=VARCHAR},
+        url = #{url,jdbcType=VARCHAR},
+        gender = #{gender,jdbcType=INTEGER},
+        province = #{province,jdbcType=VARCHAR},
+        city = #{city,jdbcType=VARCHAR},
+        country = #{country,jdbcType=VARCHAR},
+        is_del=#{isDel,jdbcType=INTEGER},
+        language = #{language,jdbcType=VARCHAR},
+        session_key=#{sessionKey,jdbcType=VARCHAR},
+        longitude=#{longitude,jdbcType=DECIMAL},
+        latitude=#{latitude,jdbcType=DECIMAL},
+        already_use=#{alreadyUse,jdbcType=VARCHAR},
+        total_use=#{totalUse,jdbcType=VARCHAR},
+        brand=#{brand,jdbcType=VARCHAR},
+        prize_name=#{prizeName,jdbcType=VARCHAR},
+        prize_mobile=#{prizeMobile,jdbcType=VARCHAR},
+        prize_province=#{prizeProvince,jdbcType=VARCHAR},
+        prize_city=#{prizeCity,jdbcType=VARCHAR},
+        prize_area=#{prizeArea,jdbcType=VARCHAR},
+        prize_street=#{prizeStreet,jdbcType=VARCHAR},
+        lottery_mobile=#{lotteryMobile,jdbcType=VARCHAR},
+        last_prize_time=#{lastPrizeTime,jdbcType=TIMESTAMP},
+        login_mobile=#{loginMobile,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR} and is_del=0;
+    </update>
+
+
+    <update id="updateByOpenId" parameterType="com.kuaixiu.recycle.entity.RecycleWechat">
+    update kx_recycle_wechat
+    set mobile = #{mobile,jdbcType=VARCHAR},
+       union_id = #{unionId,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      nick = #{nick,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      is_del=#{isDel,jdbcType=INTEGER},
+      language = #{language,jdbcType=VARCHAR},
+      session_key=#{sessionKey,jdbcType=VARCHAR},
+      longitude=#{longitude,jdbcType=DECIMAL},
+      latitude=#{latitude,jdbcType=DECIMAL},
+      already_use=#{alreadyUse,jdbcType=VARCHAR},
+      total_use=#{totalUse,jdbcType=VARCHAR},
+      brand=#{brand,jdbcType=VARCHAR},
+       prize_name=#{prizeName,jdbcType=VARCHAR},
+       prize_mobile=#{prizeMobile,jdbcType=VARCHAR},
+       prize_province=#{prizeProvince,jdbcType=VARCHAR},
+       prize_city=#{prizeCity,jdbcType=VARCHAR},
+       prize_area=#{prizeArea,jdbcType=VARCHAR},
+       prize_street=#{prizeStreet,jdbcType=VARCHAR},
+       lottery_mobile=#{lotteryMobile,jdbcType=VARCHAR},
+        last_prize_time=#{lastPrizeTime,jdbcType=TIMESTAMP}
+    where open_id = #{openId,jdbcType=VARCHAR} and is_del=0
+  </update>
+
+
+    <update id="updateByLoginMobile" parameterType="com.kuaixiu.recycle.entity.RecycleWechat">
+        update kx_recycle_wechat
+        set mobile = #{mobile,jdbcType=VARCHAR},
+        model = #{model,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        address = #{address,jdbcType=VARCHAR},
+        nick = #{nick,jdbcType=VARCHAR},
+        url = #{url,jdbcType=VARCHAR},
+        gender = #{gender,jdbcType=INTEGER},
+        province = #{province,jdbcType=VARCHAR},
+        city = #{city,jdbcType=VARCHAR},
+        country = #{country,jdbcType=VARCHAR},
+        language = #{language,jdbcType=VARCHAR},
+        session_key=#{sessionKey,jdbcType=VARCHAR},
+        brand=#{brand,jdbcType=VARCHAR},
+        prize_name=#{prizeName,jdbcType=VARCHAR},
+        prize_mobile=#{prizeMobile,jdbcType=VARCHAR},
+        prize_province=#{prizeProvince,jdbcType=VARCHAR},
+        prize_city=#{prizeCity,jdbcType=VARCHAR},
+        prize_area=#{prizeArea,jdbcType=VARCHAR},
+        prize_street=#{prizeStreet,jdbcType=VARCHAR},
+        lottery_mobile=#{lotteryMobile,jdbcType=VARCHAR},
+        last_prize_time=#{lastPrizeTime,jdbcType=TIMESTAMP}
+        where login_mobile = #{loginMobile,jdbcType=VARCHAR} and is_del=0
+    </update>
+
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_wechat
+        where 1=1 and is_del=0
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and name=#{name}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and mobile=#{mobile}
+        </if>
+        <if test="province != null and province != ''">
+            and province=#{province}
+        </if>
+        <if test="city != null and city != ''">
+            and city=#{city}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand=#{brand}
+        </if>
+        <if test="model != null and model != ''">
+            and model=#{model}
+        </if>
+        <if test="gender != null">
+            and gender=#{gender}
+        </if>
+        <if test="isDel != null">
+            and is_del=#{isDel}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="prizeMobile != null and prizeMobile != ''">
+            and prize_mobile=#{prizeMobile}
+        </if>
+        <if test="openId != null and openId != ''">
+            and open_id=#{openId}
+        </if>
+        <if test="lotteryMobile != null and lotteryMobile != ''">
+            and lottery_mobile=#{lotteryMobile}
+        </if>
+        order by in_time desc
+    </select>
+
+
+    <!-- 查询列表 带分页  微信用户信息缺失严重的不显示 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"
+            parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_wechat
+        where 1=1 and is_del=0 and nick is not null
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and name=#{name}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and mobile=#{mobile}
+        </if>
+        <if test="province != null and province != ''">
+            and province=#{province}
+        </if>
+        <if test="city != null and city != ''">
+            and city=#{city}
+        </if>
+        <if test="brand != null and brand != ''">
+            and brand=#{brand}
+        </if>
+        <if test="model != null and model != ''">
+            and model=#{model}
+        </if>
+        <if test="gender != null">
+            and gender=#{gender}
+        </if>
+        <if test="isDel != null">
+            and is_del=#{isDel}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="prizeMobile != null and prizeMobile != ''">
+            and prize_mobile=#{prizeMobile}
+        </if>
+        <if test="openId != null and openId != ''">
+            and open_id=#{openId}
+        </if>
+        <if test="lotteryMobile != null and lotteryMobile != ''">
+            and lottery_mobile=#{lotteryMobile}
+        </if>
+        order by in_time desc
+    </select>
+
+
+</mapper>

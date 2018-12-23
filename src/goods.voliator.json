@@ -1,0 +1,56 @@
+{
+    // "更新订单项目验证"
+    goodsImportVoliatorJson : [
+        // "验证订单号"
+        {   
+            name : "orderNo",
+            validators : {
+                notEmpty : {
+                    message : "订单号不能为空"
+                },
+                stringLength : {
+                    message : "订单号不能大于32个字符",
+                    max : 32             
+                }
+            }
+        },
+        // "验证维修方式"
+        {   
+            name : "repair_type",
+            validators : {
+                notEmpty : {
+                    message : "维修方式不能为空"
+                },
+                regexp : {
+                    message : "维修方式格式不正确",
+                    regexp : "^0|1|2$"
+                }
+            }
+        },
+        // "验证维修项目"
+        {
+            name : "projects",
+            validators : {
+                notEmpty : {
+                    message : "维修项目不能为空"
+                }
+            },
+            fields : [
+
+                // "验证维修项目ID"
+                {   
+                    name : "project_id",
+                    validators : {
+                        notEmpty : {
+                            message : "维修项目ID不能为空"
+                        },
+                        stringLength : {
+                            message : "维修项目ID不能大于36个字符",
+                            max : 36             
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>选择颜色、故障</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="otherWrap">
+    <div class="main">
+        <div class="select_color bg">
+            <div class="pageTitle">
+                <p>请选择颜色</p>
+                <span></span>
+            </div>
+            <ul class="color_list">
+                <!-- <li class="select_tabin">玫瑰金色</li> -->
+            </ul>
+        </div>
+        <div class="select_fault bg">
+            <div class="pageTitle">
+                <p>请选择故障类型</p>
+                <span></span>
+            </div>
+            <ul class="fault_list">
+                <!-- <li class="select_tabin">内屏碎裂</li> -->
+            </ul>
+        </div>
+		
+		 <div class="loadMore">
+            <a href="javascript:;" class="btn-large">加载更多</a>
+         </div>
+        <div class="btn-box">
+            <a href="javascript:;" id="confirmBtn" class="btn-large disabled">确认故障</a>
+        </div>
+    </div>
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li class="bottom_in"><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+
+    <!--遮盖层-->
+    <div id="mask_boxs">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+    <!--遮盖层end-->
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function(){
+        var neiping = "6aaa3f6e-6f71-11e6-b930-10c37b579295",//屏幕破碎（显示异常） 内屏碎裂
+            waiping = "fe750fc5-70ff-11e6-80cd-10c37b579295",//屏幕破碎（显示正常） 外屏碎裂
+            screenBroken="89971c83-d95c-11e6-a112-00163e04c890",//屏幕破碎
+            outScreenBroken="db3c6320-1aa1-11e7-932d-00163e04c890";//外屏破碎
+		
+        var page = 1, //分页码
+            off_on = true,//分页开关
+            totalcount = 0;	
+			
+		getModelInfo();
+			
+		$('.loadMore').click(function(){
+			if (off_on){
+				$('.loadMore a').html('加载中');
+				page++;
+				getModelInfo();  //调用执行上面的加载方法
+			}
+		});
+
+        var hash = location.hash;
+		color="";
+            selFaultId = new Array();
+            selFaultName = new Array();
+            selFaultPrice = [];
+		var projectList=[];
+		var projectId='';
+		
+		function getModelInfo(){
+		 var params = {
+		        pageIndex:page,
+                pageSize:'10',
+                modelId:eCacheUtil.storage.getCache(CacheKey.phoneModelId)
+            };
+            
+		 $.ajax({
+            type:'POST',
+            url:linkUrl+'/wechat/repair/modelInfo.do',
+            dataType:'json',
+            data:{
+                params:JSON.stringify(params)
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success:function (data) {
+                if (data.success){
+                    $('.color_list').empty();
+                    $('.fault_list').empty();
+                    var modelColor = data.result.modelColor.split(',');
+					totalcount = data.result.recordsTotal;
+                    for (var i = 0;i < modelColor.length; i++){
+                        if (modelColor[i] != ''){
+                            $('.color_list').append('<li>'+modelColor[i]+'</li>');
+                        }
+                    }
+                    
+			        projectList=projectList.concat(data.result.data);
+					
+                    for (var j = 0;j<projectList.length;j++){
+                        $('.fault_list').append('<li data-projectId="'+projectList[j].projectId+'" data-price="'+projectList[j].price.toFixed(2)+'">'+projectList[j].projectName+'</li>');
+                    }
+                    projectId = eCacheUtil.storage.getCache(CacheKey.faultId);
+                    if (!isEmpty(projectId)){
+                        // projectId = base.decode(projectId);
+                        $('.fault_list li').each(function(){
+                            var pid = $(this).attr("data-projectId"),
+                                pname = $(this).html(),
+                                price = $(this).attr('data-price');
+                            if (projectId == pid){
+                                $(this).addClass('select_tabin');
+                                selFaultId.push(pid);
+                                selFaultName.push(pname);
+                                selFaultPrice.push(price);
+                            }
+                        })
+                    }
+					
+					
+                    if (!isEmpty(hash)){
+                        limitOrNot();
+                    }
+                    LoadOrNot();
+                    loading_hide();
+					
+				    if ($('.fault_list li').length == totalcount){
+						off_on = false;
+						$('.loadMore a').html('- 我是有底线的 -');
+					}else{
+						off_on = true;
+						$('.loadMore a').html('加载更多');
+					}
+                }else {
+                    loading_hide();
+                    alertTip(data.resultMessage);
+                }
+            },
+            error:function (jqXHR) {
+                loading_hide();
+            }
+          });
+		}
+       
+        var b = window.setInterval(chgbt,100);
+        function chgbt(){
+            if($('.color_list li').hasClass('select_tabin') && $('.fault_list li').hasClass('select_tabin')){
+                $('#confirmBtn').removeClass('disabled');
+                return true;
+            }else{
+                $('#confirmBtn').addClass('disabled');
+            }
+        }
+        //请选择颜色
+        $('.color_list').delegate('li','click',function () {
+            color = $(this).html();
+            $(this).addClass('select_tabin').siblings().removeClass('select_tabin');
+        });
+
+        //选择故障
+        $('.fault_list').delegate('li','click',function () {
+            if (!$(this).hasClass('disabled')){
+                if ($(this).hasClass('select_tabin')){
+                    $(this).removeClass('select_tabin');
+                }else {
+                    var pid = $(this).attr("data-projectId"),
+                        pname = $(this).html(),
+                        price = $(this).attr('data-price');
+                    $(this).addClass('select_tabin');
+                    if (pid == neiping){
+                        //判断是否同时存在外屏并已选中
+                        if ($('[data-projectid =' + waiping +']').hasClass('select_tabin')){
+                            $("[data-projectId =" + waiping +"]").removeClass('select_tabin');
+                        }
+                    }else if (pid == waiping){
+                        //判断是否同时存在nei屏并已选中
+                        if ($('[data-projectid =' + neiping +']').hasClass('select_tabin')){
+                            $("[data-projectId =" + neiping +"]").removeClass('select_tabin');
+                        }
+                    }else if (pid == screenBroken){
+                        //判断是否同时存在nei屏并已选中
+                        if ($('[data-projectid =' + outScreenBroken +']').hasClass('select_tabin')){
+                            $("[data-projectId =" + outScreenBroken +"]").removeClass('select_tabin');
+                        }
+                    }else if (pid == outScreenBroken){
+                        //判断是否同时存在nei屏并已选中
+                        if ($('[data-projectid =' + screenBroken +']').hasClass('select_tabin')){
+                            $("[data-projectId =" + screenBroken +"]").removeClass('select_tabin');
+                        }
+                    }
+                }
+            }else{
+                alertTip('该故障类型不能使用该优惠券');
+            }
+        });
+
+        //确认故障
+        $('#confirmBtn').click(function () {
+            if (color == ''){
+                alertTip("请选择颜色！")
+            }else if ($('.fault_list li.select_tabin').length == 0){
+                alertTip("请选择故障！");
+            }else {
+                $('.fault_list .select_tabin').each(function(i,ele){
+                    var pid = $(this).attr("data-projectId"),
+                        pname = $(this).html(),
+                        price = $(this).attr('data-price');
+                    selFaultId.push(pid);
+                    selFaultName.push(pname);
+                    selFaultPrice.push(price);
+                });
+                eCacheUtil.storage.cache(CacheKey.phoneSelColor,color);
+                eCacheUtil.storage.cache(CacheKey.faultId,selFaultId);
+                eCacheUtil.storage.cache(CacheKey.faultName,selFaultName);
+                eCacheUtil.storage.cache(CacheKey.faultPrice,selFaultPrice);
+                window.location.href = 'userinfo.html';
+                eCacheUtil.storage.removeCache(CacheKey.tempFaultId);
+            }
+        });
+
+        function limitOrNot(){
+            var limit = eCacheUtil.storage.getCache(CacheKey.limitProject);
+            if (!isEmpty(limit)){
+                limit = JSON.parse(limit);
+                var target = $('.fault_list li');
+                target.addClass('disabled');
+                $.each(limit, function (i, n) {
+                    for (var j = 0; j < target.length; j++){
+                        if (target.eq(j).attr('data-projectId') == n){
+                            target.eq(j).removeClass('disabled');
+                        }
+                    }                  
+                });
+            }
+        }
+
+        function LoadOrNot() {
+            var str= eCacheUtil.storage.getCache(CacheKey.phoneSelColor),
+                strid = eCacheUtil.storage.getCache(CacheKey.faultId),
+                tempid = eCacheUtil.storage.getCache(CacheKey.tempFaultId);
+            if(!isEmpty(str)){
+                var target = $('.color_list li');
+                for (var i = 0; i < target.length; i++){
+                    if (target.eq(i).html() == str){
+                        target.eq(i).addClass('select_tabin').siblings().removeClass('select_tabin');
+                    }
+                }
+            }
+            if(!isEmpty(strid)){
+                strids = JSON.parse(strid);
+                var target = $('.fault_list li');
+                $.each(strids, function (i, n) {
+                    for (var j = 0; j < target.length; j++){
+                        if (target.eq(j).attr('data-projectId') == n){
+                            target.eq(j).addClass('select_tabin');
+                        }
+                    }                  
+                });
+            }else if(!isEmpty(tempid)){
+                strids = JSON.parse(tempid);
+                var target = $('.fault_list li');
+                $.each(strids, function (i, n) {
+                    for (var j = 0; j < target.length; j++){
+                        if (target.eq(j).attr('data-projectId') == n){
+                            target.eq(j).addClass('select_tabin');
+                        }
+                    }                  
+                });
+            }
+        }
+
+    })
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/amazeui.min.css">
+    <link rel="stylesheet" href="css/main.css?version=2.1">
+    <title>碎屏保-购买须知</title>
+    <script src="js/include.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <include src="components/header.html"></include>
+    <main>
+        <h2>购买须知</h2>
+        <ol>
+            <li>1. 本服务仅适用于中国大陆境内合法销售的手机产品购买时无拆修，功能正常。</li>
+            <li>2. 随新机当天购买，或购机一年内（苹果IPNONE8/8Plus/X限购机当天购买）。</li>
+            <li>3. 本服务并不取代厂家的保修服务，碎屏保服务周期为一年（前30天免赔）。</li>
+            <li>4. 本服务的保障范围是手机屏幕正常使用过程中，因意外碰撞或跌损造成的屏幕损坏。</li>
+            <li>5. 本服务需用户激活后生效。</li>
+            <li>6. 取消订单或其他疑问请拨打<a href="tel:4001013786">4001013786</a>。</li>
+        </ol>
+    </main>
+</div>
+<script>
+    var pageHeight = window.innerHeight;
+    if(typeof pageHeight != "number"){
+        if(document.compatMode == "CSS1Compat"){//判断页面是否标准模式
+            pageHeight = document.documentElement.clientHeight;
+        }else{
+            pageHeight = document.body.clientHeight;
+        }
+    }
+    document.getElementById('wrap').style.cssText = "height:"+pageHeight+"px";
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

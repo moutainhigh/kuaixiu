@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.download.dao.FileDownloadMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.download.entity.SysReport" >
+        <result column="id" property="id"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_temp_name" property="fileTempName"/>
+        <result column="file_out_name" property="fileOutName"/>
+        <result column="class_path" property="classPath"/>
+        <result column="method_name" property="methodName"/>
+        <result column="type" property="type"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- sys_menu table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.file_name,t.file_temp_name,t.file_out_name,t.class_path,t.method_name,t.type,t.is_del,
+        date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,
+        date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_report
+        (id,file_name,file_temp_name,file_out_name,class_path,method_name,type,is_del,create_time,create_userid,update_time,update_userid)
+        values
+        (NULL,#{fileName},#{fileTempName},#{fileOutName},#{classPath},#{methodName},#{type},#{isDel},#{createTime},#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_report 
+        set 
+            id=#{id},
+            file_name=#{fileName},
+            file_temp_name=#{fileTempName},
+            file_out_name=#{fileOutName},
+            class_path = #{classPath},
+            method_name = #{methodName},
+            type=#{type},
+            is_del=#{isDel},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=#{updateTime},
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_report where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_report t where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_report t
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="fileName != null and fileName != ''" >
+            and file_name=#{fileName}
+        </if>
+        <if test="fileTempName != null and fileTempName != ''" >
+            and file_temp_name=#{fileTempName}
+        </if>
+        <if test="fileOutName != null and fileOutName != ''" >
+            and file_out_name=#{fileOutName}
+        </if>
+        <if test="type != null and type != ''" >
+            and type=#{type}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_report t
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="fileName != null and fileName != ''" >
+            and file_name=#{fileName}
+        </if>
+        <if test="fileTempName != null and fileTempName != ''" >
+            and file_temp_name=#{fileTempName}
+        </if>
+        <if test="fileOutName != null and fileOutName != ''" >
+            and file_out_name=#{fileOutName}
+        </if>
+        <if test="type != null and type != ''" >
+            and type=#{type}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>天翼回收加价劵</title>
+    <script src="./js/adapter.js"></script>
+    <link rel="stylesheet" href="./css/ticket.css">
+   
+</head>
+<body>
+    <div id="ticket-box" class="ticket">
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>20</span><span>.00元(满100元)</span>
+                    <img src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A001">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>60</span><span>.00元(满1000元)</span>
+                    <img src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A002">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>120</span><span>.00元(满2000元)</span>
+                    <img class="price" src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A003">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>300</span><span>.00元(满4000元)</span>
+                    <img class="price" src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A004">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg ">
+            <div class="bg-pic">
+                <div class="add">
+                    <span class="size">10%</span><span>.00元(满300元)</span>
+                    <img class="price1" src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A002">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="pop">已领取过，请使用后再来领取</div>
+    </div>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/util.js"></script>
+<script>   
+    $(function(){
+		window.G = window.G || {};
+		
+		G.HappyGoMobile = eCacheUtil.storage.getCache( CacheKey.HappyGoMobile );  //获得手机号
+		
+		$('#ticket-box').delegate( '.rece' , 'click' , function(){
+			var self = $(this);
+			var batchId = self.data( 'batchid' );           //当前优惠劵的批次号
+			
+			G.HappyGoMobile='18106538281';
+			
+
+			//判断是否有有效的手机号码
+			if( ! (G.HappyGoMobile) ){
+				alert( '手机号码为空！' )
+				return ;
+			}
+			
+			if( G.isPosting == true ){
+				return ;
+			}
+			G.isPosting = true ;
+			
+			
+			//获取客户领取加价券
+			var param = {
+					mobile:G.HappyGoMobile,
+					batchId:batchId
+			};
+			$.post(
+				linkUrl+'/recycle/receiveCoupons.do',
+				{
+					params:JSON.stringify(param)
+				},
+				function(data){
+				    if(data.success){
+				    	if( data.resultCode == "0" ){
+							//已经领取
+							var parentBox = self.parent() ;
+							var ledBtn = parentBox.find( '.led' );
+							//隐藏当前的按钮，并显示'已领取'的按钮
+							self.attr( 'style' , 'display:none' );
+							ledBtn.attr( 'style' , 'display:block' );
+						}
+					}else{						
+						//TODO
+						if( data.resultCode == "1" ){
+							//已经领取
+							var parentBox = self.parent() ;
+							var ledBtn = parentBox.find( '.led' );
+							//隐藏当前的按钮，并显示'已领取'的按钮
+							self.attr( 'style' , 'display:none' );
+							ledBtn.attr( 'style' , 'display:block' );
+							
+							//提示已经领取过
+							alert( '您已经领取过该加价劵' );
+						}if else(data.resultCode == "2"){
+						  alert( '该加价券已被领完,下次记得早点来哦!' );
+						}
+					 } 
+					console.log(data) 
+					
+					G.isPosting = false ;
+				});
+					
+			
+			
+		}); //end of 响应按钮事件
+		
+  
+    })
+</script>
+</html>

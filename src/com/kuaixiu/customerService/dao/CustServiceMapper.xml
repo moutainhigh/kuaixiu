@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.customerService.dao.CustServiceMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.customerService.entity.CustService" >
+        <result column="id" property="id"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="shop_code" property="shopCode"/>
+        <result column="number" property="number"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_customer_service table all fields -->
+    <sql id="Base_Column_List" >
+        id,provider_code,shop_code,number,name,mobile,email,gender,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_customer_service
+        (id,provider_code,shop_code,number,name,mobile,email,gender,is_del,create_time,create_userid)
+        values
+        (uuid(),#{providerCode},#{shopCode},#{number},#{name},#{mobile},#{email},#{gender},#{isDel},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_customer_service 
+        set 
+            provider_code=#{providerCode},
+            shop_code=#{shopCode},
+            number=#{number},
+            name=#{name},
+            mobile=#{mobile},
+            email=#{email},
+            gender=#{gender},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_customer_service where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_customer_service where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_customer_service
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="number != null and number != ''" >
+            and number = #{number}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="gender != null and gender != ''" >
+            and gender = #{gender}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_customer_service
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="number != null and number != ''" >
+            and number = #{number}
+        </if>
+        <if test="name != null and name != ''" >
+            and name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="gender != null and gender != ''" >
+            and gender = #{gender}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        
+    </select>
+	<!-- 根据工号查询  -->
+    <select id="queryByNumber"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+            ,s.`name` shop_name, p.`name` provider_name
+        from kx_customer_service t
+        left join kx_shop s on t.shop_code = s.`code` AND s.is_del = 0
+        left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
+        where t.number= #{number} and t.is_del = 0
+    </select>
+    
+     <!-- 根据客服工号查询  -->
+    <select id="queryByCustNumber"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_customer_service  t where t.number= #{number} and t.is_del = 0
+    </select>
+</mapper>   

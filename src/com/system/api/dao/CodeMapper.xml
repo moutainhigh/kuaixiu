@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.api.dao.CodeMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.api.entity.Code" >
+        <result column="mobile" property="mobile"/>
+        <result column="code" property="code"/>
+        <result column="in_time" property="inTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- sys_api_config table all fields -->
+    <sql id="Base_Column_List" >
+        mobile,code,in_time,update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_code
+        (mobile,code,in_time)
+        values
+        (#{mobile},#{code},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_code
+        set 
+           code=#{code},
+           update_time=#{updateTime}
+        where mobile=#{mobile}
+    </update>
+
+
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_code where mobile = #{mobile}
+    </select>
+    
+
+
+</mapper>   

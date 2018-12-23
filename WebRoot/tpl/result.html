@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-评估</title>
+</head>
+<body>
+<div id="wrap" class="resultWrap">
+    <div class="main">
+        <div class="estimatePrice">
+            <p>您的宝贝预估可卖</p>
+            <p class="price"></p>
+            <p><a href="javascript:;" onclick="Reassess();">重新评估&nbsp;&gt;</a></p>
+        </div>
+        <div class="infor">
+            <p>- 信用预付 极速到账 -</p>
+            <p><a href="javascript:;">芝麻信用·先得款</a></p>
+            <p>芝麻分600及以上,下单快速可获最高￥1500预付款</p>
+        </div>
+        <div class="mixinsBox">
+            <div class="iconBox bg">
+                <div><p>官方认证</p></div>
+                <div><p>顺丰包邮</p></div>
+                <div><p>安全便捷</p></div>
+            </div>
+            <div class="exchangeBox bg">
+                <a href="javascript:;" id="nowChange">评估芝麻信用,下单拿钱</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--遮盖层-->
+<div id="mask_boxs">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/jbase64.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function () {
+        var itemsId = eCacheUtil.storage.getCache(CacheKey.SelectItems);
+        if (isEmpty(itemsId)){
+            itemsId = eCacheUtil.storage.getCache(CacheKey.SelectItems1);
+            eCacheUtil.storage.cache(CacheKey.SelectItems,itemsId);
+            eCacheUtil.storage.removeCache(CacheKey.SelectItems1);
+        }
+        var param = {
+            "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
+            "items":itemsId
+        },base = new Base64(),quote = '';
+
+        $.post(linkUrl+'/recycle/getPrice.do',{params:JSON.stringify(param)},function (data) {
+            if (data.success){
+                var dataInfo = data.result.datainfo;
+                quote = dataInfo.quoteid;
+                $('.price').html(dataInfo.price);
+                loading_hide();
+            }else {
+                loading_hide();
+                alertTip(data.resultMessage);
+            }
+        });
+
+        $('#nowChange').click(function () {
+            var price = parseFloat($('.price').html());
+            if (price <= 50){
+                alertTip('订单满50元才可以继续回收!');
+                return false;
+            }
+            var param = {
+                quoteId:quote,
+                imagePath:eCacheUtil.storage.getCache(CacheKey.imgHref) ,
+                detail:eCacheUtil.storage.getCache(CacheKey.itemsName)
+            };
+            $.post(linkUrl+'/recycle/commitOrder.do',{params:JSON.stringify(param)},function (data) {
+                if (data.success){
+                    location.href = base.decode(data.result.path);
+                }else {
+                    alertTip(data.resultMessage);
+                }
+            });
+        });
+    });
+    function Reassess() {
+        eCacheUtil.storage.cache(CacheKey.SelectItems1,eCacheUtil.storage.getCache(CacheKey.SelectItems));
+        eCacheUtil.storage.removeCache(CacheKey.SelectItems);
+        location.href = 'ceping.html';
+    }
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

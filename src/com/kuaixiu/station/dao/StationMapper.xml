@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.station.dao.StationMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.station.entity.Station">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="station_name" jdbcType="VARCHAR" property="stationName" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="is_open" jdbcType="INTEGER" property="isOpen" />
+    <result column="distribution_sum" jdbcType="INTEGER" property="distributionSum" />
+    <result column="repertory" jdbcType="INTEGER" property="repertory" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, station_name, name, tel, is_open, distribution_sum, repertory, address, in_time,is_del
+  </sql>
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from hk_station where id=#{id} and is_del=0
+  </select>
+
+
+  <insert id="add" parameterType="Object">
+    insert into hk_station (id, station_name, name, tel,address, in_time)
+    values (#{id,jdbcType=VARCHAR}, #{stationName,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR}, now()
+      )
+  </insert>
+
+
+  <update id="update" parameterType="Object">
+    update hk_station
+    set
+    station_name = #{stationName,jdbcType=VARCHAR},
+    tel = #{tel,jdbcType=VARCHAR},
+    is_open = #{isOpen,jdbcType=INTEGER},
+    distribution_sum = #{distributionSum,jdbcType=INTEGER},
+    repertory=#{repertory,jdbcType=INTEGER},
+    is_del=#{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!--更新库存数量 防止高并发-->
+  <update id="updateById" parameterType="Object">
+    update hk_station
+    set
+    repertory = repertory-1
+    where id = #{id,jdbcType=VARCHAR} and repertory>0;
+  </update>
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_station
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="isOpen != null">
+      and is_open = #{isOpen}
+    </if>
+    <if test="stationName != null and stationName != ''">
+      and station_name like CONCAT('%', #{stationName}, '%')
+    </if>
+    <if test="name != null and name != ''">
+      and name = #{name}
+    </if>
+    <if test="tel != null and tel != ''">
+      and tel = #{tel}
+    </if>
+    order by in_time desc
+  </select>
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_station
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="isOpen != null">
+      and is_open = #{isOpen}
+    </if>
+    <if test="stationName != null and stationName != ''">
+      and station_name like CONCAT('%', #{stationName}, '%')
+    </if>
+    <if test="name != null and name != ''">
+      and name = #{name}
+    </if>
+    <if test="tel != null and tel != ''">
+      and tel = #{tel}
+    </if>
+    order by station_name desc
+  </select>
+
+
+
+  <!-- 通过名字模糊查询  -->
+  <select id="queryByName" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_station
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="isOpen != null">
+      and is_open = #{isOpen}
+    </if>
+    <if test="stationName != null and stationName != ''">
+      and station_name like CONCAT('%', #{stationName}, '%')
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+</mapper>

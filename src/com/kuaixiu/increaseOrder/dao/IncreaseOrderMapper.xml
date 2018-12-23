@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.increaseOrder.dao.IncreaseOrderMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.increaseOrder.entity.IncreaseOrder">
+    <id column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="recycle_order_no" jdbcType="VARCHAR" property="recycleOrderNo" />
+    <result column="plan" jdbcType="VARCHAR" property="plan" />
+    <result column="times" jdbcType="INTEGER" property="times" />
+    <result column="is_success" jdbcType="INTEGER" property="isSuccess" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="score_list" jdbcType="VARCHAR" property="scoreList" />
+    <result column="total_times" jdbcType="INTEGER" property="totalTimes" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+     order_no, recycle_order_no, plan, times, is_success, in_time, update_time,score_list,total_times
+  </sql>
+
+
+  <!-- 根据订单号查询  -->
+  <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+    select <include refid="Base_Column_List" />
+    from hs_increase_order where order_no =#{orderNo}
+  </select>
+
+  <!-- 查询加价中订单  -->
+  <select id="queryByIsSuccess"  resultMap="BaseResultMap" parameterType="Object">
+    select <include refid="Base_Column_List" />
+    from hs_increase_order where is_success=0
+  </select>
+
+  <!-- 插入记录 -->
+  <insert id="add" parameterType="Object">
+      insert into hs_increase_order (order_no, recycle_order_no, plan, in_time)
+    values (#{orderNo,jdbcType=VARCHAR}, #{recycleOrderNo,jdbcType=VARCHAR}, #{plan,jdbcType=VARCHAR},now())
+  </insert>
+
+
+  <!-- 根据订单号，修改记录 -->
+  <update id="update" parameterType="Object">
+   update hs_increase_order
+      set
+      plan = #{plan,jdbcType=VARCHAR},
+      times = #{times,jdbcType=INTEGER},
+      total_times = #{totalTimes,jdbcType=INTEGER},
+      is_success = #{isSuccess,jdbcType=INTEGER},
+      score_list=#{scoreList,jdbcType=VARCHAR},
+      update_time =now()
+    where order_no = #{orderNo,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hs_increase_order
+    where 1=1
+    <if test="orderNo != null and orderNo != ''">
+      and order_no = #{orderNo}
+    </if>
+    <if test="recycleOrderNo != null and recycleOrderNo != ''">
+      and recycle_order_no = #{recycleOrderNo}
+    </if>
+    <if test="isSuccess != null">
+      and is_success=#{isSuccess}
+    </if>
+    <if test="increaseStartTime != null and increaseStartTime !=''">
+      and in_time&gt;#{increaseStartTime}
+    </if>
+    <if test="increaseEndTime != null and increaseEndTime !=''">
+      and in_time&lt;#{increaseEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap"
+          parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hs_increase_order
+    where 1=1
+    <if test="orderNo != null and orderNo != ''">
+      and order_no = #{orderNo}
+    </if>
+    <if test="recycleOrderNo != null and recycleOrderNo != ''">
+      and recycle_order_no = #{recycleOrderNo}
+    </if>
+    <if test="isSuccess != null">
+    and is_success=#{isSuccess}
+    </if>
+    order by in_time desc
+  </select>
+
+</mapper>

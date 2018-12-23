@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.balance.dao.BalanceProviderMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.balance.entity.BalanceProvider" >
+        <result column="id" property="id"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="batch_name" property="batchName"/>
+        <result column="balance_no" property="balanceNo"/>
+        <result column="balance_name" property="balanceName"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="manager_name" property="managerName"/>
+        <result column="manager_mobile" property="managerMobile"/>
+        <result column="tel" property="tel"/>
+        <result column="balance_type" property="balanceType"/>
+        <result column="status" property="status"/>
+        <result column="shop_count" property="shopCount"/>
+        <result column="order_count" property="orderCount"/>
+        <result column="proportion" property="proportion"/>
+        <result column="amount_price" property="amountPrice"/>
+        <result column="balance_price" property="balancePrice"/>
+        <result column="profit_price" property="profitPrice"/>
+        <result column="balance_begin_time" property="balanceBeginTime"/>
+        <result column="balance_end_time" property="balanceEndTime"/>
+        <result column="account_bank" property="accountBank"/>
+        <result column="account_bank_branch" property="accountBankBranch"/>
+        <result column="account_name" property="accountName"/>
+        <result column="account_number" property="accountNumber"/>
+        <result column="bank_slip_img" property="bankSlipImg"/>
+        <result column="notice_time" property="noticeTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_balance table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.batch_no,t.batch_name,t.balance_no,t.balance_name,t.provider_code,t.provider_name,t.balance_type,t.status,t.shop_count,t.order_count,t.proportion,t.amount_price,t.balance_price,t.profit_price,t.balance_begin_time,t.balance_end_time,t.account_bank,t.account_bank_branch,t.account_name,t.account_number,t.bank_slip_img,date_format(t.`notice_time`,'%Y-%m-%d %H:%i:%s')notice_time,date_format(t.`finish_time`,'%Y-%m-%d %H:%i:%s')finish_time,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_balance_provider
+        (id,batch_no,batch_name,balance_no,balance_name,provider_code,provider_name,balance_type,status,shop_count,order_count,proportion,amount_price,balance_price,profit_price,balance_begin_time,balance_end_time,account_bank,account_bank_branch,account_name,account_number,bank_slip_img,notice_time,finish_time,create_time,create_userid)
+        values
+        (uuid(),#{batchNo},#{batchName},#{balanceNo},#{balanceName},#{providerCode},#{providerName},#{balanceType},#{status},#{shopCount},#{orderCount},#{proportion},#{amountPrice},#{balancePrice},#{profitPrice},#{balanceBeginTime},#{balanceEndTime},#{accountBank},#{accountBankBranch},#{accountName},#{accountNumber},#{bankSlipImg},#{noticeTime},#{finishTime},#{createTime},#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_balance_provider 
+        set 
+            balance_name=#{balanceName},
+            provider_code=#{providerCode},
+            provider_name=#{providerName},
+            balance_type=#{balanceType},
+            status=#{status},
+            shop_count=#{shopCount},
+            order_count=#{orderCount},
+            proportion=#{proportion},
+            amount_price=#{amountPrice},
+            balance_price=#{balancePrice},
+            profit_price=#{profitPrice},
+            balance_begin_time=#{balanceBeginTime},
+            balance_end_time=#{balanceEndTime},
+            account_bank=#{accountBank},
+            account_bank_branch=#{accountBankBranch},
+            account_name=#{accountName},
+            account_number=#{accountNumber},
+            bank_slip_img=#{bankSlipImg},
+            notice_time=#{noticeTime},
+            finish_time=#{finishTime},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_balance_provider where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+            ,p.manager_name,p.manager_mobile,p.tel
+        from kx_balance_provider t
+        left join kx_provider p on t.provider_code = p.code
+        where t.id = #{id}
+        AND p.is_del = 0
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select <include refid="Base_Column_List"/>
+            ,p.manager_name,p.manager_mobile,p.tel
+        from kx_balance_provider t
+        left join kx_provider p on t.provider_code = p.code
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="batchNo != null and batchNo != ''" >
+            and t.batch_no = #{batchNo}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and t.balance_no = #{balanceNo}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''" >
+            and t.provider_name = #{providerName}
+        </if>
+        <if test="balanceType != null and balanceType != ''" >
+            and t.balance_type = #{balanceType}
+        </if>
+        <if test="status != null" >
+            and t.status = #{status}
+        </if>
+        <if test="accountBank != null and accountBank != ''" >
+            and t.account_bank = #{accountBank}
+        </if>
+        <if test="accountBankBranch != null and accountBankBranch != ''" >
+            and t.account_bank_branch = #{accountBankBranch}
+        </if>
+        <if test="accountName != null and accountName != ''" >
+            and t.account_name = #{accountName}
+        </if>
+        <if test="accountNumber != null and accountNumber != ''" >
+            and t.account_number = #{accountNumber}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select <include refid="Base_Column_List"/>
+            ,p.manager_name,p.manager_mobile,p.tel
+        from kx_balance_provider t
+        left join kx_provider p on t.provider_code = p.code
+        where 1=1 and p.is_del = 0
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="batchNo != null and batchNo != ''" >
+            and t.batch_no = #{batchNo}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and t.balance_no = #{balanceNo}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''" >
+            and t.provider_name = #{providerName}
+        </if>
+        <if test="balanceType != null and balanceType != ''" >
+            and t.balance_type = #{balanceType}
+        </if>
+        <if test="status != null" >
+            and t.status = #{status}
+        </if>
+        <if test="accountBank != null and accountBank != ''" >
+            and t.account_bank = #{accountBank}
+        </if>
+        <if test="accountBankBranch != null and accountBankBranch != ''" >
+            and t.account_bank_branch = #{accountBankBranch}
+        </if>
+        <if test="accountName != null and accountName != ''" >
+            and t.account_name = #{accountName}
+        </if>
+        <if test="accountNumber != null and accountNumber != ''" >
+            and t.account_number = #{accountNumber}
+        </if>
+        order by t.create_time desc
+    </select>
+
+</mapper>   

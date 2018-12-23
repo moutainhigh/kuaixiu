@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="expires" content="0">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	</head>
+	<body>
+		<div class="index_topmenubg">
+			 <div class="index_topmenu">
+			 	  <a class="logo" href="#"><img src="img/logo.jpg" /></a>
+			 	  <div class="index_topright">
+			 	  	   <div class="inquiry">
+			 	  	   		<input class="text placeholder" type="text" value="查询/支付" placeholder="查询/支付" />
+			 	  	   		<input class="search" type="button" value="" />
+			 	  	   </div>
+			 	  </div>
+			 </div>
+		 </div>
+
+		 <div class="content_title">
+		 	  <div class="title"><i class="line"></i><span>订单取消原因</span></div>
+		 </div>
+		 <div class="cancelLayer">
+			 <div class="order_cancel">
+				 <p>能告诉我们原因么？</p>
+				 <ul class="fault_list">
+					 <li class=""><a href="javascript:void(0);">手机不修了</a></li>
+					 <li class=""><a href="javascript:void(0);">价格太高</a></li>
+					 <li class=""><a href="javascript:void(0);">没人联系我</a></li>
+					 <li class=""><a href="javascript:void(0);">工程师修不好</a></li>
+					 <li class=""><a href="javascript:void(0);">工程师没在约定时间上门</a></li>
+				 </ul>
+				 <textarea class="reason" name="" id="" placeholder="请写下您取消的原因吧！"></textarea>
+
+				 <div class="index_but">
+					 <a href="javascript:void(0);" class="btn-cancel">取消</a>
+					 <a href="javascript:void (0);" class="btn-confirm">确认取消订单</a>
+				 </div>
+
+			 </div>
+		 </div>
+
+
+		<div class="index_copyright">
+			<div class="index_copycont">
+				<p>Copyright 2016 All Rights Reserved 杭州翼诺科技有限公司 技术支持 浙ICP备16041546号</p>
+				<div class="code">
+					<img src="img/code.png" />
+					<span>扫码关注微信公众号</span>
+				</div>
+			</div>
+		</div>
+		<!--登录-->
+		<div class="login_popupbg loginPopup">
+			<div class="login_popup">
+				<div class="popup_title"><a class="exit_popup" v-on:click="colseLogin" href="javascript:;"><i class="icon"></i></a></div>
+				<div class="login_head">
+					快修账号登录
+				</div>
+				<div class="login_input">
+					<input class="text placeholder" v-model="tel" id="inputtel" maxlength="11" type="text" value="请输入下单手机号" placeholder="请输入下单手机号" />
+				</div>
+				<div class="login_input">
+					<input class="text psw placeholder" v-model="checkCode" type="text" value="请输入短信验证码" placeholder="请输入短信验证码" />
+					<input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" v-on:click="sendMsg($event)" />
+				</div>
+				<div class="login_submit">
+					<input class="submit" type="submit" v-on:click="Login" value="查询/支付" />
+				</div>
+			</div>
+		</div>
+
+		<!--错误提示-->
+		<div class="remind_delivery_bg">
+			<div class="remind_delivery_cont">
+				<p></p>
+			</div>
+		</div>
+		
+	</body>
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/login.js"></script>
+	<script>
+		$(".fault_list li").click(function () {
+			$(this).addClass("fault_in").siblings("li").removeClass("fault_in");
+		});
+		$('.btn-confirm').click(function(){
+			if(!$('.fault_list li').hasClass('fault_in')){
+				$(".remind_delivery_bg").show();
+				$('.remind_delivery_cont p').text('请选择原因');
+				window.setTimeout(function(){
+					$(".remind_delivery_bg").fadeOut();
+				},2000);
+				return false;
+			}else if($('.reason').val()==''){
+				$(".remind_delivery_bg").show();
+				$('.remind_delivery_cont p').text('请填写点取消原因吧');
+				window.setTimeout(function(){
+					$(".remind_delivery_bg").fadeOut();
+				},2000);
+				return false;
+			}else{
+				$(".remind_delivery_bg").show();
+				$('.remind_delivery_cont p').text('订单取消成功');
+				window.setTimeout(function(){
+					$(".remind_delivery_bg").fadeOut();
+					$(".layer").addClass("hide");
+				},1000);
+				return false;
+			}
+		});
+		$(".btn-cancel").click(function () {
+			$(".fault_list li").removeClass("fault_in");
+			$(".reason").val("");
+		});
+	</script>
+</html>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecyclePrizeMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecyclePrize">
+    <id column="prize_id" jdbcType="VARCHAR" property="prizeId" />
+    <result column="prize_name" jdbcType="VARCHAR" property="prizeName" />
+    <result column="prize_probability" jdbcType="VARCHAR" property="prizeProbability" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />   
+    <result column="total_sum" jdbcType="INTEGER" property="totalSum" />
+    <result column="use_sum" jdbcType="INTEGER" property="useSum" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />  
+    <result column="grade" jdbcType="INTEGER" property="grade" />
+    <result column="details" jdbcType="VARCHAR" property="details" />
+    <result column="batch" jdbcType="VARCHAR" property="batch" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    prize_id,prize_name, prize_probability,is_del,total_sum,use_sum,in_time, 
+    update_time,create_user,update_user,grade,details,batch,sort
+  </sql>
+
+
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_prize  where prize_id = #{prizeId} and is_del=0;
+	</select>
+  
+  
+    <!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+	  insert into kx_recycle_prize (prize_id,prize_name,prize_probability,total_sum,in_time, 
+    create_user,grade,details,batch,sort)
+    values (uuid(),#{prizeName},#{prizeProbability},#{totalSum},now(),
+    #{createUser},#{grade},#{details},#{batch},#{sort}
+    )
+	</insert>
+	
+	
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update kx_recycle_prize
+		set 
+		prize_name = #{prizeName},
+		prize_probability = #{prizeProbability},
+		total_sum = #{totalSum},
+		use_sum = #{useSum},
+		update_user = #{updateUser},
+		grade=#{grade},
+		details = #{details},
+		batch = #{batch},
+		sort  = #{sort},
+		is_del = #{isDel}
+		where prize_id=#{prizeId}
+	</update>
+	
+	
+    <!--更新奖品数量 防止高并发-->
+	<update id="updateById" parameterType="Object">
+		update kx_recycle_prize
+		set
+		use_sum = use_sum+1
+		where prize_id=#{prizeId} and use_sum&lt;total_sum;
+	</update>
+	
+	
+	
+  
+  <!-- 查询列表无分页 -->
+	<select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_prize
+		where 1=1 and is_del=0
+		<if test="prizeId != null and prizeId != ''">
+			and prize_id = #{prizeId}
+		</if>
+		<if test="prizeName != null and prizeName != ''">
+			and prize_name = #{prizeName}
+		</if>
+		<if test="grade != null">
+			and grade=#{grade}
+		</if>
+		<if test="batch != null and batch != ''">
+			and batch =#{batch}
+		</if>
+		order by in_time desc
+	</select>
+
+
+
+	<!-- 查询列表 带分页 -->
+	<select id="queryListForPage" resultMap="BaseResultMap"
+		parameterType="Object">
+			select
+		<include refid="Base_Column_List" />
+		from kx_recycle_prize
+		where 1=1 and is_del=0
+		<if test="prizeId != null and prizeId != ''">
+			and prize_id = #{prizeId}
+		</if>
+		<if test="prizeName != null and prizeName != ''">
+			and prize_name = #{prizeName}
+		</if>
+		<if test="grade != null">
+			and grade=#{grade}
+		</if>
+		<if test="batch != null and batch != ''">
+			and batch =#{batch}
+		</if>
+		order by in_time desc
+	</select>
+
+
+	<!-- 查询列表无分页按奖品等级排序 -->
+	<select id="queryListByGrade" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_prize
+		where 1=1 and is_del=0
+		<if test="prizeId != null and prizeId != ''">
+			and prize_id = #{prizeId}
+		</if>
+		<if test="grade != null">
+			and grade=#{grade}
+		</if>
+		<if test="batch != null and batch != ''">
+			and batch =#{batch}
+		</if>
+		order by grade desc
+	</select>
+  
+  
+  
+</mapper>

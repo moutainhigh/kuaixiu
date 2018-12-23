@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.zhuanzhuan.dao.AuctionOrderMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.zhuanzhuan.entity.AuctionOrder">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="auction_order_id" jdbcType="VARCHAR" property="auctionOrderId" />
+    <result column="cate_id" jdbcType="INTEGER" property="cateId" />
+    <result column="ally_id" jdbcType="VARCHAR" property="allyId" />
+    <result column="station_tel" jdbcType="VARCHAR" property="stationTel" />
+    <result column="station_name" jdbcType="VARCHAR" property="stationName" />
+    <result column="station_address" jdbcType="VARCHAR" property="stationAddress" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="product_description" jdbcType="VARCHAR" property="productDescription" />
+    <result column="sender_mobile" jdbcType="VARCHAR" property="senderMobile" />
+    <result column="sender_nickname" jdbcType="VARCHAR" property="senderNickname" />
+    <result column="sender_address" jdbcType="VARCHAR" property="senderAddress" />
+    <result column="express_code" jdbcType="VARCHAR" property="expressCode" />
+    <result column="express_company" jdbcType="VARCHAR" property="expressCompany" />
+    <result column="shipped_time" jdbcType="TIMESTAMP" property="shippedTime" />
+    <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+    <result column="sale_time" jdbcType="TIMESTAMP" property="saleTime" />
+    <result column="probably_price" jdbcType="INTEGER" property="probablyPrice" />
+    <result column="super_price" jdbcType="INTEGER" property="superPrice" />
+    <result column="real_price" jdbcType="INTEGER" property="realPrice" />
+    <result column="auction_update_time" jdbcType="TIMESTAMP" property="auctionUpdateTime" />
+    <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
+    <result column="sort_done_time" jdbcType="TIMESTAMP" property="sortDoneTime" />
+    <result column="sort_remark" jdbcType="VARCHAR" property="sortRemark" />
+    <result column="package_list" jdbcType="VARCHAR" property="packageList" />
+    <result column="zhuan_remark" jdbcType="VARCHAR" property="zhuanRemark" />
+    <result column="super_remark" jdbcType="VARCHAR" property="superRemark" />
+    <result column="check_status" jdbcType="INTEGER" property="checkStatus" />
+    <result column="status_desc" jdbcType="VARCHAR" property="statusDesc" />
+    <result column="check_desc" jdbcType="VARCHAR" property="checkDesc" />
+    <result column="pics" jdbcType="VARCHAR" property="pics" />
+    <result column="qc_code" jdbcType="VARCHAR" property="qcCode" />
+    <result column="qc_done_time" jdbcType="TIMESTAMP" property="qcDoneTime" />
+    <result column="apply_photo_time" jdbcType="TIMESTAMP" property="applyPhotoTime" />
+    <result column="done_photo_time" jdbcType="TIMESTAMP" property="donePhotoTime" />
+    <result column="times" jdbcType="INTEGER" property="times" />
+    <result column="cate_info" jdbcType="VARCHAR" property="cateInfo" />
+    <result column="report" jdbcType="VARCHAR" property="report" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="return_id" jdbcType="VARCHAR" property="returnId" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, order_no, auction_order_id, cate_id, ally_id, station_tel,station_name, station_address,
+    create_time, product_description, sender_mobile, sender_nickname, sender_address, 
+    express_code, express_company, shipped_time, order_status, sale_time, probably_price, super_price,
+    real_price,auction_update_time,receive_time, sort_done_time,
+    sort_remark,package_list, zhuan_remark, super_remark, check_status, status_desc,
+    check_desc, pics, qc_code, qc_done_time,apply_photo_time, done_photo_time, times, cate_info, report,
+    is_del, in_time, update_time, return_id
+  </sql>
+
+
+
+
+
+
+
+  <insert id="add" parameterType="Object">
+    insert into kx_auction_order (id, order_no, auction_order_id, 
+      cate_id, ally_id,station_tel, station_name,
+      station_address, create_time, product_description, 
+      sender_mobile, sender_nickname, sender_address, 
+      express_code, express_company, shipped_time, 
+      order_status,in_time)
+    values (uuid(), #{orderNo,jdbcType=VARCHAR}, #{auctionOrderId,jdbcType=VARCHAR},
+      #{cateId,jdbcType=INTEGER}, #{allyId,jdbcType=VARCHAR},#{stationTel,jdbcType=VARCHAR}, #{stationName,jdbcType=VARCHAR},
+      #{stationAddress,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{productDescription,jdbcType=VARCHAR}, 
+      #{senderMobile,jdbcType=VARCHAR}, #{senderNickname,jdbcType=VARCHAR}, #{senderAddress,jdbcType=VARCHAR}, 
+      #{expressCode,jdbcType=VARCHAR}, #{expressCompany,jdbcType=VARCHAR}, #{shippedTime,jdbcType=TIMESTAMP}, 
+      #{orderStatus,jdbcType=VARCHAR},now())
+  </insert>
+
+
+
+
+
+  <update id="update" parameterType="Object">
+    update kx_auction_order
+    set
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      sale_time = #{saleTime,jdbcType=TIMESTAMP},
+      probably_price = #{probablyPrice,jdbcType=INTEGER},
+      super_price = #{superPrice,jdbcType=INTEGER},
+      real_price = #{realPrice,jdbcType=INTEGER},
+      auction_update_time = #{auctionUpdateTime,jdbcType=TIMESTAMP},
+      receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      sort_done_time = #{sortDoneTime,jdbcType=TIMESTAMP},
+      sort_remark = #{sortRemark,jdbcType=VARCHAR},
+      package_list = #{packageList,jdbcType=VARCHAR},
+      zhuan_remark = #{zhuanRemark,jdbcType=VARCHAR},
+      super_remark = #{superRemark,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=INTEGER},
+      status_desc = #{statusDesc,jdbcType=VARCHAR},
+      check_desc = #{checkDesc,jdbcType=VARCHAR},
+      pics = #{pics,jdbcType=VARCHAR},
+      qc_code = #{qcCode,jdbcType=VARCHAR},
+      qc_done_time = #{qcDoneTime,jdbcType=TIMESTAMP},
+      apply_photo_time = #{applyPhotoTime,jdbcType=TIMESTAMP},
+      done_photo_time = #{donePhotoTime,jdbcType=TIMESTAMP},
+      times = #{times,jdbcType=INTEGER},
+      cate_info = #{cateInfo,jdbcType=VARCHAR},
+      report = #{report,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=INTEGER},
+      return_id = #{returnId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_order t where t.id = #{id}
+  </select>
+
+
+  <!-- 根据转转订单id查询 -->
+  <select id="queryByAuctionOrderId" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_order  where auction_order_id = #{auctionOrderId}
+  </select>
+
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_order
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="orderNo != null and orderNo != ''">
+      and order_no=#{orderNo}
+    </if>
+    <if test="auctionOrderId != null and auctionOrderId != ''">
+      and auction_order_id =#{auctionOrderId}
+    </if>
+    <if test="allyId != null and allyId != ''">
+      and ally_id=#{allyId}
+    </if>
+    <if test="senderMobile != null and senderMobile != ''">
+      and sender_mobile=#{senderMobile}
+    </if>
+    <if test="expressCode != null and expressCode != ''">
+      and express_code =#{expressCode}
+    </if>
+    <if test="expressCompany != null and expressCompany != ''">
+      and express_company=#{expressCompany}
+    </if>
+    <if test="orderStatus != null and orderStatus != ''">
+      and order_status=#{orderStatus}
+    </if>
+    <if test="times != null and times != ''">
+      and times =#{times}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap"
+          parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_order
+    where 1=1 and is_del=0
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="orderNo != null and orderNo != ''">
+      and order_no=#{orderNo}
+    </if>
+    <if test="auctionOrderId != null and auctionOrderId != ''">
+      and auction_order_id =#{auctionOrderId}
+    </if>
+    <if test="allyId != null and allyId != ''">
+      and ally_id=#{allyId}
+    </if>
+    <if test="senderMobile != null and senderMobile != ''">
+      and sender_mobile=#{senderMobile}
+    </if>
+    <if test="expressCode != null and expressCode != ''">
+      and express_code =#{expressCode}
+    </if>
+    <if test="expressCompany != null and expressCompany != ''">
+      and express_company=#{expressCompany}
+    </if>
+    <if test="orderStatus != null and orderStatus != ''">
+      and order_status=#{orderStatus}
+    </if>
+    <if test="times != null and times != ''">
+      and times =#{times}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+</mapper>

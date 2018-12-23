@@ -1,0 +1,296 @@
+body {
+  background-color: #fff;
+}
+body #wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  font-size: .12rem;
+}
+body #wrap header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 .15rem;
+  height: .39rem;
+  background: linear-gradient(to right, #94bdfa, #4489c6);
+  font-size: .18rem;
+  color: #fff;
+}
+body #wrap header a.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: .49rem;
+  height: .23rem;
+  background: rgba(236, 238, 241, 0.18);
+  border: 1px solid #d3e3fb;
+  border-radius: .04rem;
+  font-size: .12rem;
+  color: #FFFFFF;
+}
+body #wrap header a.home span {
+  display: block;
+  line-height: 1;
+}
+body #wrap header a.home span.back {
+  display: inline-block;
+  content: '';
+  width: .06rem;
+  height: .11rem;
+  background: url("../img/back.png") no-repeat;
+  background-size: 100% 100%;
+  margin-right: 3px;
+}
+body #wrap header a.person {
+  display: inline-block;
+  width: .24rem;
+  height: .24rem;
+  margin-left: .25rem;
+}
+body #wrap header a.person img {
+  display: block;
+  width: 100%;
+}
+body #wrap.vipWrap main h2 {
+  padding: .18rem 0;
+  font-size: .15rem;
+  text-align: center;
+  line-height: .38rem;
+}
+body #wrap.vipWrap main .form {
+  padding: 0 .25rem;
+}
+body #wrap.vipWrap main .form .labelBox {
+  position: relative;
+  margin-bottom: .1rem;
+  display: flex;
+  align-items: center;
+}
+body #wrap.vipWrap main .form .labelBox label {
+  display: inline-block;
+  width: .8rem;
+  font-size: .13rem;
+}
+body #wrap.vipWrap main .form .labelBox > input {
+  flex: 1 1 auto;
+  width: calc(100% - .8rem);
+  height: .31rem;
+  padding: 0 .07rem;
+  border: 1px solid #b9ccdf;
+  border-radius: .02rem;
+  font-size: .12rem;
+  background: transparent;
+}
+body #wrap.vipWrap main .form .labelBox input[type=button] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0;
+  width: .85rem;
+  height: 100%;
+  background-color: #72a7db;
+  border-radius: 3px;
+  font-size: .1rem;
+  text-align: center;
+  color: #FFFFFF;
+}
+body #wrap.vipWrap main .form .labelBox a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: .33rem;
+  background-color: #d8e1ea;
+  border-radius: .02rem;
+}
+body #wrap.vipWrap main .form .labelBox a img {
+  width: .1rem;
+}
+body #wrap.vipWrap main .form .labelBox .selectList {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  bottom: 0;
+  z-index: 5;
+  width: calc(100% - .8rem);
+  max-height: 2.22rem;
+  min-height: 1.22rem;
+  background-color: #fff;
+  border-bottom-left-radius: .04rem;
+  border-bottom-right-radius: .04rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+body #wrap.vipWrap main .form .labelBox .selectList p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 .1rem;
+  width: 100%;
+  height: .405rem;
+  border-bottom: 1px solid #edeff0;
+  font-size: .12rem;
+  color: #1a1a1a;
+}
+body #wrap.vipWrap main .form .labelBox .selectList p:after {
+  display: inline-block;
+  content: '';
+  width: .13rem;
+  height: .1rem;
+  background: url('../img/icon_select.png') no-repeat;
+  background-size: 100% 100%;
+}
+body #wrap.vipWrap main .form .labelBox .selectList p.active {
+  background-color: #f5f7fa;
+  font-weight: bold;
+}
+body #wrap.vipWrap main .form .labelBox .selectList p.active:after {
+  background: url('../img/icon_selected.png') no-repeat;
+  background-size: 100% 100%;
+}
+body #wrap.vipWrap main .form .labelBox .selectList.active {
+  display: block;
+}
+body #wrap.vipWrap main .form .agree_clause {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: .1rem;
+  color: #8a8a8a;
+  margin: .25rem 0 .125rem;
+}
+body #wrap.vipWrap main .form .agree_clause a {
+  font-size: .1rem;
+  color: #558dc4;
+}
+body #wrap.vipWrap main .form a.submit {
+  display: block;
+  width: 100%;
+  height: .36rem;
+  background-color: #72a7db;
+  border-radius: .18rem;
+  font-size: .15rem;
+  color: #FFFFFF;
+  line-height: .36rem;
+  text-align: center;
+}
+body #wrap.vipWrap main .form a.submit.disabled {
+  background-color: #568bc0;
+}
+body #wrap.vipWrap .selectLay {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+body #wrap.vipWrap .selectLay.active {
+  display: block;
+}
+body #wrap.vipWrap .confirmLay {
+  position: absolute;
+  left: 0;
+  top: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body #wrap.vipWrap .confirmLay .confirmCont {
+  width: 79.69%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body #wrap.vipWrap .confirmLay .confirmCont > a {
+  align-self: flex-end;
+  display: inline-block;
+  margin-right: .13rem;
+  width: .29rem;
+  height: .29rem;
+  text-align: right;
+  line-height: 1;
+  position: relative;
+}
+body #wrap.vipWrap .confirmLay .confirmCont > a img {
+  width: 100%;
+}
+body #wrap.vipWrap .confirmLay .confirmCont > a:after {
+  display: inline-block;
+  content: '';
+  position: absolute;
+  right: .14rem;
+  top: 100%;
+  width: 2px;
+  height: .49rem;
+  background-color: #bfc8ce;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo {
+  margin-top: .49rem;
+  width: 100%;
+  background-color: #f7fafc;
+  border-radius: .1rem;
+  position: relative;
+  padding: .7rem .18rem 0;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo:before {
+  display: inline-block;
+  content: '';
+  position: absolute;
+  left: calc(50% - .5525rem);
+  top: -0.36rem;
+  width: 1.105rem;
+  height: .87rem;
+  background: url('../img/icon_order.png') no-repeat;
+  background-size: 100% 100%;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo h2 {
+  font-size: .15rem;
+  color: #1a90ff;
+  text-align: center;
+  margin-bottom: .16rem;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo p {
+  font-size: .12rem;
+  color: #1a1a1a;
+  line-height: .2rem;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo p #confirmName {
+  font-size: .14rem;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo p .blue {
+  color: #1a90ff;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo .confirmBox {
+  border-top: 1px solid #e1e6eb;
+  margin: 0 -0.18rem;
+  margin-top: .15rem;
+  padding: .15rem .18rem;
+}
+body #wrap.vipWrap .confirmLay .confirmCont .confirmInfo .confirmBox a {
+  display: block;
+  width: 100%;
+  height: .36rem;
+  border-radius: .18rem;
+  background-color: #1a90ff;
+  font-size: .16rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  line-height: .36rem;
+}
+body #wrap.vipWrap .confirmLay.active {
+  top: 0;
+}

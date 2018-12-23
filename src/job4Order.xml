@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!-- 定时定时处理派单、订单确认-->
+    <bean id="orderJob" class="com.kuaixiu.timer.Job4Order"></bean>
+    
+    <!-- 定时处理派单 -->
+    <bean id="dealAutoDispatchDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>dealAutoDispatch</value></property>
+    </bean>
+    <bean id="dealAutoDispatchTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dealAutoDispatchDetail"/>
+        </property>        
+        <property name="cronExpression">
+          <value>10 0/2 * * * ?</value>  <!-- 启动10s后，每隔2分钟执行一次 -->     
+        </property>        
+    </bean>
+    
+    <!-- 定时对门店商超过15分钟没有派单的订单自动重新派单 -->
+    <bean id="dealReDispatchDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>dealReDispatch</value></property>
+    </bean>
+    <bean id="dealReDispatchTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dealReDispatchDetail"/>
+        </property>        
+        <property name="cronExpression">
+          <value>50 0/2 * * * ?</value>  <!-- 启动50s后，每隔2分钟执行一次 -->     
+        </property>        
+    </bean>
+
+    <!-- 定时查询15分钟前后微信已提交订单 -->
+    <bean id="dealPayLogOrderDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>dealPayLogOrder</value></property>
+    </bean>
+    <bean id="dealPayLogOrderTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dealPayLogOrderDetail"/>
+        </property>
+        <property name="cronExpression">
+            <value>59 0/5 * * * ?</value>  <!-- 启动60s后，每隔5分钟执行一次 -->
+        </property>
+    </bean>
+    
+    
+     <!-- 定时发送提醒预约短信-->
+    <bean id="dealAgreedNews"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>dealAgreed</value></property>
+    </bean>
+    <bean id="dealAgreedNewsTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dealAgreedNews"/>
+        </property>        
+        <property name="cronExpression">
+          <value>15 0/30 * * * ?</value>  <!-- 启动15s后，每隔30分钟执行一次 -->     
+        </property>        
+    </bean>
+    
+     <!-- 定时刷新access_token-->
+    <bean id="dealAccessToken"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>getAccessToken</value></property>
+    </bean>
+    <bean id="dealAccessTokenTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dealAccessToken"/>
+        </property>        
+        <property name="cronExpression">
+          <value>0  0 1/2 * * ?</value>  <!-- 启动后，每隔2小时执行一次 -->     
+        </property>        
+    </bean>
+
+
+
+    <!-- 定时推送号卡给电渠-->
+    <bean id="pushTelecom"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>pushTelecom</value></property>
+    </bean>
+    <bean id="dealPushTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="pushTelecom"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0 3 * * ?</value>  <!-- 每天凌晨3点   0 0 3 * * ? -->
+            <!--测试每40秒一次  0/40 0/1 * * * ? *-->
+        </property>
+    </bean>
+
+    <!-- 定时计算外部测评手机总金额-->
+    <bean id="externalTotalprice"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="orderJob"/></property>
+        <property name="targetMethod"><value>externalTotalprice</value></property>
+    </bean>
+    <bean id="dealPushTotalprice" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="externalTotalprice"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0 1 * * ?</value>  <!-- 每天凌晨1点   0 0 3 * * ? -->
+            <!--测试每40秒一次  0/40 0/1 * * * ? *-->
+        </property>
+    </bean>
+    
+    
+    <!-- 配置启用的定时器 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+          <list>
+              <!-- 定时处理派单-->
+              <ref local="dealAutoDispatchTrigger"/>
+
+              <!-- 定时对门店商超过15分钟没有派单的订单自动重新派单-->
+              <ref local="dealReDispatchTrigger"/>
+
+              <!-- 提醒预约信息-->
+              <ref local="dealAgreedNewsTrigger"/>
+
+              <!-- 定时刷新微信access_token-->
+              <ref local="dealAccessTokenTrigger"/>
+
+              <!--定时推送号卡给电渠-->
+              <ref local="dealPushTrigger"/>
+
+              <!--定时计算外部测评手机总金额-->
+              <ref local="dealPushTotalprice"/>
+
+              <!--定时查询15分钟前后微信已提交订单-->
+              <ref local="dealPayLogOrderTrigger"/>
+          </list>
+        </property>
+    </bean>
+</beans>

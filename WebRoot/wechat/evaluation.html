@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>评价</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="evalWrap">
+    <div class="main">
+        <div class="evaluation bg">
+            <div class="pageTitle">
+                <p>评价</p>
+                <span></span>
+            </div>
+            <div class="evaluation_score">
+                <a href="javascript:;"><i class="icon"></i></a>
+                <a href="javascript:;"><i class="icon"></i></a>
+                <a href="javascript:;"><i class="icon"></i></a>
+                <a href="javascript:;"><i class="icon"></i></a>
+                <a href="javascript:;"><i class="icon"></i></a>
+            </div>
+            <textarea class="evaluation_text" placeholder="写下您对商家和维修员的评价吧~~"></textarea>
+        </div>
+        <div class="btn-box">
+            <a href="javascript:history.back(-1);" class="btn-normal">取消</a>
+            <a href="javascript:;" id="submit" class="btn-normal btn-normal-confirm">提交</a>
+        </div>
+
+    </div>
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li class="bottom_in"><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function(){
+        //评价
+        $('.evaluation_score a').click(function(){
+            $('.scorein').removeClass('scorein');
+            $(this).addClass('scorein');
+            $(this).prevAll('a').addClass('scorein');
+        });
+
+        $('#submit').click(function(){
+            var evaluation = $('.evaluation_text').val().trim();
+            isFont = /^[\u4e00-\u9fa5\w]{1,5}$/;
+            if(!$('.evaluation_score a').hasClass('scorein')){
+                alertTip('请选择评价');
+                return false;
+            }else if(!isFont.test(evaluation)){
+                alertTip('请写下您对商家和维修员的评价吧');
+                return false;
+            }else{
+                var base = new Base64();
+                var orderId = base.decode(eCacheUtil.storage.getCache(CacheKey.orderId)),
+                    params = {
+                        id:orderId,
+                        overallRate:$('.scorein').length,
+                        content:evaluation
+                    };
+                $.ajax({
+                    type:'POST',
+                    url:linkUrl+'/wechat/order/saveComment.do',
+                    dataType:'json',
+                    data:{
+                        params:JSON.stringify(params),
+                        access_token:sessionStorage.getItem('access_token')
+                    },
+                    success:function (data) {
+                        if (data.success){
+                            alertTip('评价成功！');
+                            var randomValue = getRandomStr();
+                            var type = eCacheUtil.storage.getCache(CacheKey.orderType);
+                            if (type == 1){//0weixiu
+                                window.location.href = "new_details.html?r=" + randomValue;
+                            }else {
+                                window.location.href = "order_details.html?r=" + randomValue;
+                            }
+
+                        }else {
+                            if (data.hasOwnProperty("exceptionType")) {
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg, data.msg);
+                                window.location.href = 'error.html';
+                            } else {
+                                alertTip(data.resultMessage);
+                                if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                    window.location.href = 'index.html';
+                                }
+                            }
+                        }
+                    },
+                    error:function (jqXHR) {
+                        alertTip('系统异常，请稍后再试！')
+                    }
+                });
+            }
+        });
+    })
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

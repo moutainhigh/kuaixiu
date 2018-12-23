@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="resultWrap">
+        <div class="main">
+            <div class="estimatePrice">
+                <p>您的宝贝预估可卖</p>
+                <p class="price"><img src="img/loadings.gif" alt=""></p>
+                <p class="ping1"><a href="javascript:;" onclick="Reassess();">重新评估</a></p>
+               <!-- <p class="ping2">
+                    <a href="javascript:;" id="submit"><img src="img/icon_qian.png" /><span>参加手机回收免费送“新年特惠碎屏保”</span></a>
+                </p>-->
+            </div>
+            <div class="mixinsBox">
+                <div class="iconBox">
+                    <p>- 优质服务，值得信赖 -</p>
+                    <div><p>上门取件</p></div>
+                    <div><p>顺丰包邮</p></div>
+                    <div><p>安全便捷</p></div>
+                </div>
+                <div class="exchangeBox">
+                    <a href="javascript:;" id="nowChange" class="btn-large">马上换钱</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+	 <div onclick="go_view();">
+		<a href="javascript:;" class="btn-large">打开小程序</a>
+	 </div>
+	 -->
+    <script src="js/jquery.js"></script>
+    <script src="js/jbase64.js"></script>
+    <script src="js/common.js"></script>
+	<script>  
+		function getUrlParam(key){
+			var url = window.location.search;
+			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+			var result = url.substr(1).match(reg);
+			return result ? decodeURIComponent(result[2]) : null;
+		}
+		
+
+		if (getUrlParam("SelectItems") && getUrlParam("productid")){
+	     	alert('空');
+			eCacheUtil.storage.cache(CacheKey.SelectItems,getUrlParam("SelectItems"));
+			eCacheUtil.storage.cache(CacheKey.ProjectId,getUrlParam("productid"));
+			eCacheUtil.storage.cache(CacheKey.isSelect,true);
+		}
+	
+
+    </script>
+	
+	
+    <script>
+        $(function(){
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            if(isGo == 'true'){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }
+
+            //判断是否为小程序来源
+            var openId=eCacheUtil.storage.getCache(CacheKey.OpenId);
+            if(isEmpty(openId)){
+                openId = '';
+            }
+
+            var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice),
+                quote = '';
+            if (!isEmpty(prePrice)){
+                $('.price').html(prePrice);
+                quote = eCacheUtil.storage.getCache(CacheKey.quoteId);
+            }else{
+                var itemsId = eCacheUtil.storage.getCache(CacheKey.SelectItems);
+                var param = {
+				    "token":eCacheUtil.storage.getCache(CacheKey.CheckToke),
+					"brandId":eCacheUtil.storage.getCache(CacheKey.BrandId),
+                    "productId":eCacheUtil.storage.getCache(CacheKey.ProjectId),
+                    "items":itemsId,
+					"detail":eCacheUtil.storage.getCache(CacheKey.itemsName)
+                },base = new Base64();
+                $.post(linkUrl+'/recycle/external/getPrice.do',{params:JSON.stringify(param)},function (data) {
+                    if (data.success){
+                        prePrice = data.result.datainfo.price;              
+                        $('.price').html(prePrice);
+                        quote = base.encode(data.result.datainfo.quoteid);
+                        loading_hide();
+                    }else {
+                        loading_hide();
+                        alertTip(data.resultMessage);
+                    }
+                });
+            }
+            
+            $('#nowChange').click(function(){
+                eCacheUtil.storage.cache(CacheKey.quoteId,quote);
+                eCacheUtil.storage.cache(CacheKey.prePrice,prePrice);
+                location.href = 'order.html';
+            })
+        })
+        function Reassess() {
+            eCacheUtil.storage.cache(CacheKey.isSelect,false);
+            eCacheUtil.storage.removeCache(CacheKey.prePrice);
+            location.href = 'test.html';
+        }
+        $('.ping2').click(function(){
+        	location.href = 'https://m-super.com/screen/list.html?r=RJ1WZFV5HB5XEWAA3P57';
+        });
+		
+
+		function go_view(){
+	     var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice);
+		 var quote = eCacheUtil.storage.getCache(CacheKey.quoteId);
+		 var SelectItems = eCacheUtil.storage.getCache(CacheKey.SelectItems);
+		 var productid=eCacheUtil.storage.getCache(CacheKey.ProjectId);
+		 var isSelect=eCacheUtil.storage.getCache(CacheKey.isSelect);
+		 
+		 var val="prePrice="+prePrice+"&quote="+quote+"&SelectItems="+SelectItems+"&productid="+productid+"&isSelect="+isSelect;
+		 var val="SelectItems="+SelectItems+"&productid="+productid+"&isSelect=true";
+		
+		  wx.miniProgram.reLaunch({url:'/pages/share/share'});
+		  wx.miniProgram.postMessage({ data: {val:val} });
+		}
+    </script>
+	
+
+	
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

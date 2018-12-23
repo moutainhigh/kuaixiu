@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.integral.dao.GetIntegralMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.integral.entity.GetIntegral" >
+        <result column="id" property="id"/>
+        <result column="clerk_id" property="clerkId"/>
+        <result column="integral" property="integral"/>
+        <result column="in_time" property="inTime"/>
+        <result column="name" property="name"/>
+        <result column="tel" property="tel"/>
+        <result column="is_show" property="isShow"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+    
+    <!-- kx_banner table all fields -->
+    <sql id="Base_Column_List" >
+        id,clerk_id,integral,in_time,name,tel,is_show,order_no,order_id
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_get_integral
+        (id,clerk_id,integral,in_time,name,tel,order_no,order_id)
+        values
+        (#{id},#{clerkId},#{integral},now(),#{name},#{tel},#{orderNo},#{orderId})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_get_integral
+        set 
+           name=#{name},
+           tel=#{tel},
+           in_time=now(),
+           is_show=#{isShow}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_get_integral where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_get_integral where id = #{id}
+    </select>
+
+
+    <!-- 根据orderNo查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_get_integral where order_no = #{orderNo}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_get_integral
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="clerkId != null and clerkId != ''" >
+            and clerk_id = #{clerkId}
+        </if>
+        <if test="integral != null and integral != ''" >
+            and integral = #{integral}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+         <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="tel != null and tel != ''" >
+            and tel = #{tel}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+         <if test="isShow != null and isShow != ''" >
+            and is_show = #{isShow}
+        </if>
+         <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_get_integral
+        where 1=1
+     <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="clerkId != null and clerkId != ''" >
+            and clerk_id = #{clerkId}
+        </if>
+        <if test="integral != null and integral != ''" >
+            and integral = #{integral}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+         <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="tel != null and tel != ''" >
+            and tel = #{tel}
+        </if>
+        <if test="isShow !=null" >
+            and is_show=#{isShow}        
+        </if>
+         <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+    </select>
+
+</mapper>   

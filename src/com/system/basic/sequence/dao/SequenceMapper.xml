@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.sequence.dao.SequenceMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.sequence.entity.Sequence" >
+        <result column="seq_key" property="seqKey"/>
+        <result column="seq_value" property="seqValue"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- sys_sequence table all fields -->
+    <sql id="Base_Column_List" >
+        seq_key,seq_value,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_sequence
+        (seq_key,seq_value,create_time,update_time)
+        values
+        (#{seqKey},#{seqValue},#{createTime},#{updateTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_sequence 
+        set 
+            seq_key=#{seqKey},
+            seq_value=#{seqValue},
+            create_time=#{createTime},
+            update_time=#{updateTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_sequence where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_sequence where id = #{id}
+    </select>
+    
+    <!-- 根据key和类型查询当前序列  -->
+    <select id="getNext" resultType="java.lang.String" parameterType="Object">
+        select next_sequence(#{key}, #{type}) next_key
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_sequence
+        where 1=1
+        <if test="seqKey != null and seqKey != ''" >
+            and seq_key = #{seqKey}
+        </if>
+        <if test="seqValue != null and seqValue != ''" >
+            and seq_value = #{seqValue}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_sequence
+        where 1=1
+        <if test="seqKey != null and seqKey != ''" >
+            and seq_key = #{seqKey}
+        </if>
+        <if test="seqValue != null and seqValue != ''" >
+            and seq_value = #{seqValue}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+</mapper>   

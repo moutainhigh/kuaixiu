@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.project.dao.ProjectMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.project.entity.Project" >
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="is_all" property="isAll"/>
+        <result column="price" property="price"/>
+        <result column="sort" property="sort"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    <!-- all fields -->
+    <sql id="Base_Column_List" >
+        id,name,is_all,price,sort,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+    <!-- all fields 带表别名 -->
+    <sql id="prefix_Column_List" >
+        pro.id,pro.name,pro.is_all,pro.price,pro.sort,pro.is_del,date_format(pro.`create_time`,'%Y-%m-%d %H:%i:%s') create_time,pro.create_userid, date_format(pro.`update_time`,'%Y-%m-%d %H:%i:%s') update_time, pro.update_userid
+    </sql>
+    
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_project
+        (id,name,is_all,price,sort,is_del,create_time,create_userid)
+        values
+        (uuid(),#{name},#{isAll},#{price},#{sort},#{isDel},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_project 
+        set name=#{name}, 
+            is_all=#{isAll}, 
+            price=#{price}, 
+            sort=#{sort},
+            is_del=#{isDel}, 
+            update_time=now(), 
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+    
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_project where id = #{id}
+    </delete>
+    <!-- 根据id查询 -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_project where id = #{id}
+    </select>
+    
+    <!-- 根据名称查询 -->
+    <select id="queryByName"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_project where name = #{name} and is_del = 0
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_project t
+        where is_del = 0
+        <if test="name != null and name != ''" >
+            and name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="isAll != null" >
+            and is_all = #{isAll}
+        </if>
+        
+        <if test="querySpare == 1" >
+            and exists (select 1 from kx_repair_cost r left join kx_model m on r.model_id = m.id where r.project_id = t.id and m.is_del = 0)
+        </if>
+        
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by sort
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_project
+        where is_del = 0
+        <if test="name != null and name != ''" >
+            and name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="isAll != null" >
+            and is_all = #{isAll}
+        </if>
+        order by create_time desc
+    </select>
+    
+    <select id="queryProjectName"  resultType="java.util.HashMap" >
+--         SELECT DISTINCT `name` FROM kx_project WHERE is_del = 0 order by sort
+        SELECT name FROM kx_project WHERE is_del = 0 group by name order by max(sort) desc
+    </select>
+</mapper>   

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta http-equiv="cache-control" content="must-revalidate">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-故障测评</title>
+</head>
+<body>
+<div id="wrap" class="cepingWrap">
+    <div class="top">
+        <div class="processbar">
+            <div class="processbar-cover"></div>
+        </div>
+    </div>
+    <div id="scrolldIV" class="main">
+        <div class="mainShell">
+            <div class="phoneName bg">
+                <div>
+                    <p id="name"></p>
+                    <p>如实填写详细信息，预估更准确哦！</p>
+                </div>
+                <img src="img/book.png" alt="">
+            </div>
+            <div class="select-property init required bg">
+
+            </div>
+            <div class="footer bg">
+                <a href="javascript:;" class="submit disabled">马上估价</a>
+            </div>
+        </div>
+    </div>
+    <div class="tipBox">
+        <div class="tipCon">
+            <div class="close"><a><img src="img/cuo.png" alt=""></a></div>
+            <div class="desc">
+                <img src="" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+<!--遮盖层-->
+<div id="mask_boxs">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#name').html(eCacheUtil.storage.getCache(CacheKey.ModelName));
+        var param = {
+            productid:eCacheUtil.storage.getCache(CacheKey.ProjectId),
+            modelName:eCacheUtil.storage.getCache(CacheKey.ModelName)
+        };
+        loadData(param);
+    });
+
+    function loadData(param) {
+        $.post(linkUrl+"/recycle/getCheckList.do",{params:JSON.stringify(param)},function(data){
+            if (data.success){
+                var s='',dataInfo = data.result.datainfo;
+                for (var i = 0;i < dataInfo.length;i++){
+                    s += '<dl data-acc="'+dataInfo[i].checkid+'">' +
+                        '<dt>' +(i+1)+'.'+dataInfo[i].checkname+
+                        '<span class="selected-property"></span>' +
+                        '<i>修改</i>' +
+                        '</dt>' +
+                        '<dd>';
+                    var value = dataInfo[i].value;
+                    for (var j = 0;j < value.length;j++){
+                        s += '<p class="value-text" data-level="'+value[j].vlevelid+'">'+value[j].vlevelname;
+                        if (isEmpty(value[j].vdescriptionimg[0])){
+                            s += '</p>'
+                        }else {
+                            if (isEmpty(value[j].vdescriptionimg[1])){
+                                s += '<span data-imgs="'+value[j].vdescriptionimg[0]+'"></span></p>';
+                            }else {
+                                s += '<span data-imgs="'+value[j].vdescriptionimg[0]+'" data-content="'+value[j].vdescriptionimg[1]+'"></span></p>'
+                            }
+                        }
+                    }
+                    s += '</dd>' +
+                        '</dl>';
+                }
+                $('.select-property').html(s);
+                $('.select-property dl').eq(0).addClass('select');
+                loading_hide();
+                LoadOrNot();
+            }else {
+                loading_hide();
+                alertTip(data.resultMessage);
+            }
+        });
+    }
+    function LoadOrNot() {
+        var str=eCacheUtil.storage.getCache(CacheKey.SelectItems);
+        if(!isEmpty(str)){
+            var strs = new Array();
+            strs = str.split("|");
+            $.each(strs, function (i, n) {
+                var index = n.split(','),
+                    target = $('.select-property').find('dl').eq(i);
+                if (index[0]==target.attr('data-acc')){
+                    target.find('[data-level="'+index[1]+'"]').addClass('is-lock');
+                    target.find('.selected-property').html(target.find('.is-lock').html());
+                    target.addClass('checked').removeClass('select');
+                }
+            });
+            i();
+        }
+    }
+    $('.select-property').on('click','.select .value-text',function () {
+        //滑动
+        $('html,body').animate({
+            scrollTop:$('.phoneName').height()+$('dl dt').height()*$('.select').eq($('.select').length-1).index()
+        },"fast");
+        $(this).addClass('is-lock').siblings().removeClass('is-lock');
+        $(this).parents('dl').attr('class','checked');
+        $(this).parents('dl').find('span.selected-property').html($(this).text());
+        var nextObj = $(this).parents('dl').next();
+        if (!nextObj.hasClass('checked')){
+            $(this).parents('dl').next().addClass('select');
+        }
+        i();
+    }).on('click','.checked i',function () {
+        $(this).prev('.selected-property').empty();
+        $(this).parents('dl').addClass('select');
+    }).on('click','dd span',function (e) {
+        e.stopPropagation();
+        $('.desc img').attr('src',$(this).attr('data-imgs'));
+        if (!isEmpty($(this).attr('data-content'))){
+            $('.desc').append('<p>'+$(this).attr('data-content')+'</p>');
+        }
+        $('.tipBox').addClass('active');
+    });
+    $('.close a').click(function () {
+        $('.tipBox').removeClass('active');
+    });
+
+    function i() {
+        var total = $('.select-property dl').length;
+        var len = $('.select-property .checked').length;
+        var per = Math.ceil(len / total * 10000/100.00);
+        $('.processbar-cover').animate({
+            width:per+"%"
+        },"fast").html(per + "%");
+        if (total == len){
+            $('.footer .submit').removeClass('disabled');
+        }
+    }
+    $('.submit').click(function () {
+        if (!$(this).hasClass('disabled')){
+            var itemsArr = [],items = '';
+            $('.checked').each(function (i,e) {
+                itemsArr[i]=[$(this).attr('data-acc'),$(this).find('.is-lock').attr('data-level')];
+                items += $(this).find('.selected-property').html()+'、'
+            });
+            eCacheUtil.storage.cache(CacheKey.SelectItems,itemsArr.join('|'));
+            eCacheUtil.storage.cache(CacheKey.itemsName,items.substr(0,items.length-1));
+            eCacheUtil.storage.removeCache(CacheKey.SelectItems1);
+            location.href = 'result.html';
+        }
+    })
+
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/rem.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6.1">
+    <title>M-超人</title>
+</head>
+<body>
+    <div id="wrap" class="joinWrap">
+        <div class="main" id="main">
+            <div class="pages page1">
+              <div class="textCN">
+                <p>手机超人为您提供便捷、放心、高品质的手机服务</p>
+                <p>我们具有同类公司不具备的优势</p>
+              </div>
+              <div class="textEn">
+                <p>M-super provides you with convenient, safe and high quality</p>
+                <p>mobile service, and we have the advantages that</p>
+                <p>similar companies do not have</p>
+              </div>
+              <div class="nextPage">
+                <img src="img/nextPage.png" alt="">
+              </div>
+            </div>
+            <div class="pages page2">
+                <div class="joinTitle">
+                    <h2 class="text-gradient" data-text="我们的优势">我们的优势</h2>
+                    <p>— Our advantages —</p>
+                </div>
+                <div class="briefly">
+                  <p>线上快修下单、2小时上门维修服务</p>
+                  <p>价格合理、半年质保。快修业务流程分为客户端</p>
+                  <p>维修工程师端、售后网点管理端</p>
+                </div>
+                <div class="advantList">
+                  <dl>
+                    <dt>
+                      <img src="img/advant1.png" alt="">
+                    </dt>
+                    <dd>
+                      <h2>维修服务运营成本低</h2>
+                      <p>依靠全国连锁化的售后服务中心，提供快速上门服务，将大大降低您为爱机承担的维修费。</p>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt>
+                      <img src="img/advant2.png" alt="">
+                    </dt>
+                    <dd>
+                      <h2>派单系统自动调度</h2>
+                      <p>售后服务质量有跟踪保障，运营商和厂商的售后质量服务水平有口碑。</p>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt>
+                      <img src="img/advant3.png" alt="">
+                    </dt>
+                    <dd>
+                      <h2>客户自助下单</h2>
+                      <p>客户可以通过微信公众号和PC网站下单、付费、查询、评价。</p>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt>
+                      <img src="img/advant4.png" alt="">
+                    </dt>
+                    <dd>
+                      <h2>工程师APP线上接单</h2>
+                      <p>维修工程师可通过工程师APP接单、修改服务项目。</p>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="nextPage">
+                  <img src="img/nextPage.png" alt="">
+                </div>
+            </div>
+            <div class="pages page3">
+              <div class="joinTitle">
+                <h2 class="text-gradient" data-text="加盟条件">加盟条件</h2>
+                <p>— Conditions of joining —</p>
+              </div>
+              <div class="conditions">
+                <p style="padding-bottom: .3rem"><span>假如</span></p>
+                <p style="padding-bottom: .25rem">您有<span style="font-weight:bold">多年的</span>手机维修经验</p>
+                <p style="padding-bottom: .22rem">拥有精湛的技术</p>
+                <p style="padding-bottom: .2rem">可以轻松搞定各类手机的故障同时您愿意为您的日常增加一块收入来源</p>
+                <p style="padding-bottom: .24rem">那么</p>
+                <p><span>欢迎您的加入!</span></p>
+                <img src="img/icon_need.png" alt="">
+              </div>
+              <div class="nextPage">
+                <img src="img/nextPage.png" alt="">
+              </div>
+            </div>
+            <div class="pages page4">
+              <div class="joinTitle">
+                <h2 class="text-gradient" data-text="加盟填写信息">加盟填写信息</h2>
+                <p>— Fill in information to join —</p>
+              </div>
+              <div class="form">
+                <div class="inputRow">
+                  <span>姓名</span>
+                  <input id="name" type="text" placeholder="请填写您的姓名">
+                </div>
+                <div class="inputRow">
+                  <span>电话</span>
+                  <input id="tel" type="text" placeholder="请填写您的手机号">
+                </div>
+                <div class="eachRow">
+                  <span>地址</span>
+                  <ul class="address">
+                    <li class="" data-name="s_Province" data-id="15" data-level="1" onclick="packageAddress(1,'',this);">浙江</li>
+                    <li data-name="s_City" data-id="1213" data-level="2" onclick="fn_select_address(2, this,0);">杭州市</li>
+                    <li data-name="s_Area" data-id="3408" data-level="3" onclick="fn_select_address(3, this,0);">上城区</li>
+                    <div class="addressList">
+                      <p>上城区</p>
+                      <p>下城区</p>
+                      <p>江干区</p>
+                      <p>西湖区</p>
+                      <p>滨江区</p>
+                      <p>拱墅区</p>
+                      <p>萧山区</p>
+                    </div>
+                  </ul>
+                </div>
+                <div class="inputRow">
+                  <input id="address" type="text" placeholder="街道、小区、楼号等">
+                </div>
+                <input type="button" value="提交" id="submit">
+                <p>如果您还有其他疑问欢迎拨打客服热线</p>
+                <p><a href="tel:4008110299">4008110299</a></p>
+              </div>
+              <!-- 选择地址遮罩层 -->
+              <div class="selMash"></div>
+
+              <!-- <div class="nextPage">
+                <img src="img/nextPage.png" alt="">
+              </div> -->
+            </div>
+        </div>
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+          <div class="remind_delivery_cont">
+            <p></p>
+          </div>
+        </div>
+        <!--错误提示end-->
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/join.js"></script>
+    <script>
+      //重要！禁止移动端滑动的默认事件
+      document.body.addEventListener('touchmove', function(event) {
+        event = event ? event : window.event;
+        if(event.preventDefault) {
+          event.preventDefault();
+        } else {
+          event.returnValue = false;
+        }
+      }, false);
+      var pages = function(obj) {
+        var box = document.getElementById(obj.wrap);
+        var box2 = document.getElementById(obj.wrap2);
+        var len = obj.len;
+        var n = obj.n;
+        var startY, moveY, cliH;
+        //获取屏幕高度
+        var getH = function() {
+          cliH = document.body.clientHeight
+        };
+        getH();
+        window.addEventListener('resize', getH, false);
+        //touchStart
+        var touchstart = function(event) {
+          if(!event.touches.length) {
+            return;
+          }
+          startY = event.touches[0].pageY;
+          moveY = 0;
+        };
+        //touchMove
+        var touchmove = function(event) {
+          if(!event.touches.length) {
+            return;
+          }
+          moveY = event.touches[0].pageY - startY;
+          box2.style.transform = 'translateY(' + (-n * cliH + moveY) + 'px)'; //根据手指的位置移动页面
+        };
+        //touchEnd
+        var touchend = function(event) {
+          //位移小于+-50的不翻页
+          if(moveY < -50) n++;
+          if(moveY > 50) n--;
+          //最后&最前页控制
+          if(n < 0) n = 0;
+          if(n > len - 1) n = len - 1;
+          //重定位
+          box2.style.transform = 'translateY(' + (-n * 10) + '%)'; //根据百分比位置移动页面
+        };
+        //touch事件绑定
+        box.addEventListener("touchstart", function(event) {
+          touchstart(event)
+        }, false);
+        box.addEventListener("touchmove", function(event) {
+          touchmove(event)
+        }, false);
+        box.addEventListener("touchend", function(event) {
+          touchend(event)
+        }, false);
+      };
+      pages({
+        wrap: 'wrap', //.wrap的id
+        wrap2: 'main', //.wrap2的id
+        len: 4, //一共有几页
+        n: 0 //页面一打开默认在第几页？第一页就是0，第二页就是1
+      });
+    </script>
+</body>
+</html>

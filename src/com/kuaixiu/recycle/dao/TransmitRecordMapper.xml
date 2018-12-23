@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.TransmitRecordMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.TransmitRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="wechat_group_id" jdbcType="VARCHAR" property="wechatGroupId" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List">
+    id, wechat_id, mobile, wechat_group_id, in_time, update_time
+  </sql>
+  
+  	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		insert into kx_transmit_record
+		(id, wechat_id, mobile, wechat_group_id, in_time)
+		values
+		(uuid(),#{wechatId},#{mobile},#{wechatGroupId},now())
+	</insert>
+
+
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_transmit_record t where t.id = #{id}
+	</select>
+
+
+
+	
+	<!-- 查询列表无分页 -->
+	<select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_transmit_record
+		where 1=1
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="wechatId != null and wechatId != ''">
+			and wechat_id=#{wechatId}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			and mobile =#{mobile}
+		</if>
+		<if test="wechatGroupId != null and wechatGroupId != ''">
+			and wechat_group_id=#{wechatGroupId}
+		</if>
+		order by in_time desc
+	</select>
+
+	<!-- 查询列表 带分页 -->
+	<select id="queryListForPage" resultMap="BaseResultMap"
+			parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_transmit_record
+		where 1=1
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="wechatId != null and wechatId != ''">
+			and wechat_id=#{wechatId}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			and mobile =#{mobile}
+		</if>
+		<if test="wechatGroupId != null and wechatGroupId != ''">
+			and wechat_group_id=#{wechatGroupId}
+		</if>
+		order by in_time desc
+	</select>
+  
+  
+ 
+</mapper>

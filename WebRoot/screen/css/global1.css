@@ -1,0 +1,271 @@
+/* CSS Document */
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+acronym,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+strong,
+sub,
+sup,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+textarea,
+input,
+button,
+legend,
+table,
+caption,
+tbody,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  word-break: break-all;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+ol,
+ul {
+  list-style: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: none;
+}
+/*清除浮动*/
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.clearfix {
+  zoom: 1;
+}
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+  overflow: hidden;
+}
+/*新闻列表溢出显示...*/
+.list_out {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  background-color: transparent;
+}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+  border-radius: 2px;
+  background-color: transparent;
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+}
+/*去除点击高亮效果*/
+a,
+button,
+input,
+textarea,
+select,
+img,
+label {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  outline: medium none;
+}
+input::-moz-focus-inner {
+  border: none;
+  padding: 0;
+}
+select,
+input {
+  vertical-align: middle;
+}
+/*去掉苹果的默认UI来渲染按钮*/
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button,
+select {
+  -webkit-appearance: none;
+}
+/*placeholder文本颜色*/
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder,
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  color: #999999;
+}
+.checkbox {
+  width: .12rem;
+  height: .12rem;
+  border-radius: 5px;
+  display: inline-block;
+  background: #FFFFFF;
+  vertical-align: -4px;
+  *vertical-align: 1px;
+  opacity: 0;
+  margin-right: .03rem;
+}
+.checkbox + .check_icon {
+  width: .12rem;
+  height: .12rem;
+  display: inline-block;
+  background: url('../img/icon_check.png') no-repeat;
+  background-size: cover;
+  margin-left: -0.12rem;
+  margin-right: .03rem;
+}
+.checkbox:checked + .check_icon {
+  background: url('../img/icon_checked.png') no-repeat;
+  background-size: cover;
+}
+.fontBold {
+  font-weight: bold;
+}
+/*提示框*/
+.remind_delivery_bg {
+  display: none;
+  width: 100%;
+  height: .35rem;
+  position: fixed;
+  top: 50%;
+  left: 0;
+  z-index: 6000;
+}
+.remind_delivery_bg .remind_delivery_cont {
+  width: 2.075rem;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: .05rem;
+  padding: .075rem .05rem;
+}
+.remind_delivery_bg .remind_delivery_cont p {
+  text-align: center;
+  line-height: 1.46;
+  color: #FFF;
+  font-size: .12rem;
+}
+.popup_bg {
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
+.popup_bg .popup_content .popup_cont {
+  width: 2.9rem;
+  height: auto;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border-radius: .05rem;
+  padding: .1rem .2rem .2rem;
+  position: relative;
+  top: -50%;
+  transform: translateY(50%);
+}
+.popup_bg .popup_content .popup_cont .popup_title {
+  width: 2.5rem;
+  height: .325rem;
+  font-size: .14rem;
+  line-height: .325rem;
+  text-align: center;
+  color: #464646;
+}
+.popup_bg .popup_content .popup_cont .popup_font {
+  font-size: .12rem;
+  line-height: .16rem;
+  color: #606060;
+}
+.popup_bg .popup_content .popup_cont .popup_but {
+  padding-top: .25rem;
+  overflow: hidden;
+}
+.popup_bg .popup_content .popup_cont .popup_but .but {
+  display: inline-block;
+  width: 1.15rem;
+  height: .33rem;
+  border-radius: .05rem;
+  border: solid 1px #439AFF;
+  font-size: .13rem;
+  line-height: .33rem;
+  text-align: center;
+}
+.popup_bg .popup_content .popup_cont .popup_but .but.cancel {
+  float: left;
+  color: #439AFF;
+}
+.popup_bg .popup_content .popup_cont .popup_but .but.confirm {
+  float: right;
+  background: #439AFF;
+  color: #FFFFFF;
+}
+#mask_boxs {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+}
+#mask_boxs #mcon img {
+  width: .4rem;
+  height: .4rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.125rem;
+  margin-top: -0.125rem;
+  z-index: 999;
+}

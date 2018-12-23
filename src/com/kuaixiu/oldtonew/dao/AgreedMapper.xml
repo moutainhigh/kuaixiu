@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.oldtonew.dao.AgreedMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.oldtonew.entity.Agreed" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="agreed_time" property="agreedTime"/>
+        <result column="agreed_order_price" property="agreedOrderPrice"/>
+        <result column="new_model_name" property="newModelName"/>
+        <result column="other" property="other"/>
+        <result column="in_time" property="inTime"/>
+        <result column="engineer_id" property="engineerId"/>
+        <result column="color" property="color"/>
+        <result column="memory" property="memory"/>
+        <result column="edition" property="edition"/>
+        <result column="is_del" property="isDel"/>
+        <result column="agreed_brand" property="agreedBrand"/>
+    </resultMap>
+    
+    <!-- kx_model table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.order_no,t.agreed_time,t.agreed_order_price,t.new_model_name,t.other,t.in_time,t.engineer_id,
+        t.color,t.memory,t.edition,t.is_del,t.agreed_brand
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_agreed
+        (id,order_no,agreed_time,agreed_order_price,new_model_name,other,in_time,engineer_id,color,memory,edition,agreed_brand)
+        values
+        (#{id},#{orderNo},#{agreedTime},#{agreedOrderPrice},#{newModelName},#{other},now(),#{engineerId},#{color},#{memory},#{edition},#{agreedBrand})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_agreed
+        set 
+        agreed_time=#{agreedTime},
+       agreed_order_price=#{agreedOrderPrice},
+       new_model_name=#{newModelName},
+       other=#{other},
+       color=#{color},
+       memory=#{memory},
+       edition=#{edition},
+       agreed_brand=#{agreedBrand},
+       is_del=#{isDel} 
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_agreed where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_agreed t 
+        where t.id = #{id} and is_del=0
+    </select>
+
+  
+
+   <!-- 根据订单号查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_agreed t 
+        where t.order_no = #{orderNo} and is_del=0
+    </select>
+
+</mapper>   

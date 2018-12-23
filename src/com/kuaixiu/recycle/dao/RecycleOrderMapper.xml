@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleOrderMapper">
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleOrder">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="check_id" jdbcType="VARCHAR" property="checkId"/>
+        <result column="pay_ment_id" jdbcType="VARCHAR" property="payMentId"/>
+        <result column="pay_refund_id" jdbcType="VARCHAR" property="payRefundId"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="recycle_type" jdbcType="INTEGER" property="recycleType"/>
+        <result column="exchange_type" jdbcType="INTEGER" property="exchangeType"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="pay_mobile" jdbcType="VARCHAR" property="payMobile"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="percent" jdbcType="INTEGER" property="percent"/>
+        <result column="prepare_price" jdbcType="DECIMAL" property="preparePrice"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="source_type" jdbcType="INTEGER" property="sourceType"/>
+        <result column="is_del" jdbcType="INTEGER" property="isDel"/>
+        <result column="order_status" jdbcType="INTEGER" property="orderStatus"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="take_time" jdbcType="VARCHAR" property="takeTime"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="sf_order_no" jdbcType="VARCHAR" property="sfOrderNo"/>
+        <result column="customer_id" jdbcType="VARCHAR" property="customerId"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="final_price" jdbcType="DECIMAL" property="finalPrice"/>
+        <result column="negotiation_price" jdbcType="DECIMAL" property="negotiationPrice"/>
+        <result column="mail_type" jdbcType="INTEGER" property="mailType"/>
+        <result column="note" jdbcType="VARCHAR" property="note"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="wechat_openId" jdbcType="VARCHAR" property="wechatOpenId"/>
+        <result column="is_sale" jdbcType="INTEGER" property="isSale"/>
+        <result column="increase_order_no" jdbcType="VARCHAR" property="increaseOrderNo"/>
+        <result column="coupon_id" jdbcType="VARCHAR" property="couponId"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    t.id, t.order_no, t.check_id, t.pay_ment_id,t.pay_refund_id,t.user_id, t.recycle_type,t.exchange_type,t.order_type, 
+    t.pay_mobile, t.product_name, t.percent, t.prepare_price, t.price,t.final_price,t.negotiation_price,t.source_type, t.is_del, t.order_status, t.in_time,
+    t.update_time, t.take_time, t.image_path, t.detail, t.sf_order_no, t.customer_id,t.mobile, t.note,t.mail_type,t.wechat_openId,
+    is_sale,increase_order_no,coupon_id
+  </sql>
+
+    <!-- 根据orderno修改记录 -->
+    <update id="updateByOrderStatus" parameterType="Object">
+        update kx_recycle_order
+        <set>
+            <if test="negotiationPrice!=null and negotiationPrice!=''">
+                negotiation_price=#{negotiationPrice},
+            </if>
+            order_status =#{orderStatus}
+        </set>
+        where order_no=#{orderNo} and is_del=0;
+    </update>
+
+    <!-- 根据orderno删除加价券使用记录 -->
+    <update id="deleteCouponIdByOrderStatus" parameterType="Object">
+        update kx_recycle_order
+        set coupon_id=null
+        where order_no=#{orderNo} and is_del=0;
+    </update>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+		insert into kx_recycle_order
+		(id,order_no,check_id,pay_ment_id,pay_refund_id,user_id,recycle_type,exchange_type,order_type,pay_mobile,product_name,
+		percent,prepare_price,price,source_type,order_status,in_time,take_time,
+		image_path,detail,sf_order_no,customer_id,mobile,mail_type,note,wechat_openId,coupon_id)
+		values
+		(#{id},#{orderNo},#{checkId},#{payMentId},#{payRefundId},#{userId},#{recycleType},#{exchangeType},#{orderType},#{payMobile},#{productName},
+		#{percent},#{preparePrice},#{price},#{sourceType},#{orderStatus},now(),#{takeTime},
+		#{imagePath},#{detail},#{sfOrderNo},#{customerId},#{mobile},#{mailType},#{note},#{wechatOpenId},#{couponId})
+	</insert>
+
+    <!-- 根据id，修改记录 -->
+    <update id="update" parameterType="Object">
+		update kx_recycle_order
+		set
+		order_no=#{orderNo},
+		is_del=#{isDel},
+		take_time=#{takeTime},
+		order_type=#{orderType},
+		pay_mobile=#{payMobile},
+		sf_order_no=#{sfOrderNo},
+		customer_id=#{customerId},
+		pay_ment_id=#{payMentId},
+		final_price=#{finalPrice},
+		pay_refund_id=#{payRefundId},
+		is_sale=#{isSale},
+		increase_order_no=#{increaseOrderNo}
+		where id=#{id}
+	</update>
+
+    <select id="queryByOrderState" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_order t
+        where 1=1
+        <if test="orderNo != null and orderNo != ''">
+            and order_no=#{orderNo}
+        </if>
+        <if test="price != null and orderNo != ''">
+            and price=#{price}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''">
+            and t.order_status =#{orderStatus}
+        </if>
+        and is_del=0;
+
+    </select>
+
+
+    <!-- 根据回收流水号查询记录-->
+    <select id="queryByQuoteId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_order t where t.check_id=#{checkId} and is_del=0;
+    </select>
+
+    <!-- 根据回收订单号查询记录-->
+    <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_order t where t.order_no=#{orderNo} and is_del=0;
+    </select>
+
+    <!-- 根据手机号查询正在信用回收状态的订单-->
+    <select id="queryByMobile" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_order t where t.mobile=#{mobile} and t.is_del=0 and t.zhima_status not in(0,2);
+    </select>
+
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+		delete from kx_recycle_order where id = #{id}
+	</delete>
+
+    <!-- 根据id查询 -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_order t where t.id = #{id}
+    </select>
+
+
+    <!-- 根据抬价订单号查询 -->
+    <select id="queryByIncreaseOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_order t where t.increase_order_no = #{increaseOrderNo}
+    </select>
+
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,c.name name,c.address address,c.area area
+        from kx_recycle_order t
+        left join kx_recycle_customer c on t.customer_id = c.id
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="userId != null and userId != ''">
+            and t.user_id=#{userId}
+        </if>
+        <if test="checkId != null and checkId != ''">
+            and t.check_id=#{checkId}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and t.mobile=#{mobile}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and t.order_no=#{orderNo}
+        </if>
+        <if test="productName != null and productName != ''">
+            and t.product_name=#{productName}
+        </if>
+        <if test="recycleType != null">
+            and t.recycle_type =#{recycleType}
+        </if>
+        <if test="exchangeType != null">
+            and t.exchange_type =#{exchangeType}
+        </if>
+        <if test="orderType != null">
+            and t.order_type =#{orderType}
+        </if>
+        <if test="orderStatus != null">
+            and t.order_status =#{orderStatus}
+        </if>
+        <if test="sfOrderNo != null">
+            and t.sf_order_no =#{sfOrderNo}
+        </if>
+        <if test="customerId != null">
+            and t.customer_id =#{customerId}
+        </if>
+        <if test="sourceType != null">
+            and t.source_type =#{sourceType}
+        </if>
+        <if test="mailType != null">
+            and t.mail_type =#{mailType}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="wechatOpenId != null">
+            and t.wechat_openId is not null
+        </if>
+        <if test="isSale != null">
+            and t.is_sale =#{isSale}
+        </if>
+        order by in_time desc
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,c.name name,c.address address,c.area area
+        from kx_recycle_order t
+        left join kx_recycle_customer c on t.customer_id = c.id
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="userId != null and userId != ''">
+            and t.user_id=#{userId}
+        </if>
+        <if test="checkId != null and checkId != ''">
+            and t.check_id=#{checkId}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and t.mobile=#{mobile}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and t.order_no=#{orderNo}
+        </if>
+        <if test="productName != null and productName != ''">
+            and t.product_name=#{productName}
+        </if>
+        <if test="recycleType != null">
+            and t.recycle_type =#{recycleType}
+        </if>
+        <if test="exchangeType != null">
+            and t.exchange_type =#{exchangeType}
+        </if>
+        <if test="orderType != null">
+            and t.order_type =#{orderType}
+        </if>
+        <if test="orderStatus != null">
+            and t.order_status =#{orderStatus}
+        </if>
+        <if test="sfOrderNo != null">
+            and t.sf_order_no =#{sfOrderNo}
+        </if>
+        <if test="customerId != null">
+            and t.customer_id =#{customerId}
+        </if>
+        <if test="sourceType != null">
+            and t.source_type =#{sourceType}
+        </if>
+        <if test="mailType != null">
+            and t.mail_type =#{mailType}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="wechatOpenId != null">
+            and t.wechat_openId is not null
+        </if>
+        <if test="isSale != null">
+            and t.is_sale =#{isSale}
+        </if>
+        order by in_time desc
+    </select>
+
+
+</mapper>

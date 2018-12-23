@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.user.dao.SysUserRoleMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.user.entity.SysUserRole" >
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="role_id" property="roleId"/>
+        <result column="state" property="state"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- sys_user_role table all fields -->
+    <sql id="Base_Column_List" >
+        id,user_id,role_id,state,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_user_role
+        (user_id,role_id,state,create_time)
+        values
+        (#{userId},#{roleId},#{state},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_user_role 
+        set 
+            user_id=#{userId},
+            role_id=#{roleId},
+            state=#{state}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_user_role where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_role where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_role
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="userId != null and userId != ''" >
+            and user_id = #{userId}
+        </if>
+        <if test="roleId != null and roleId != ''" >
+            and role_id = #{roleId}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_role
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="userId != null and userId != ''" >
+            and user_id = #{userId}
+        </if>
+        <if test="roleId != null and roleId != ''" >
+            and role_id = #{roleId}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryByRoleId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_role where role_id = #{roleId}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryByUserId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_role where user_id = #{userId}
+    </select>
+
+</mapper>   

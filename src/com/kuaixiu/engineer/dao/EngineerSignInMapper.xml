@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.engineer.dao.EngineerSignInMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.engineer.entity.EngineerSignIn" >
+        <result column="id" property="id"/>
+        <result column="engineer_no" property="engineerNo"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="areas" property="areas"/>
+        <result column="address" property="address"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- kx_sign_in table all fields -->
+    <sql id="Base_Column_List" >
+        id,engineer_no,order_no,longitude,latitude,province,city,county,areas,address,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_sign_in
+        (id,engineer_no,order_no,longitude,latitude,province,city,county,areas,address,create_time)
+        values
+        (#{id},#{engineerNo},#{orderNo},#{longitude},#{latitude},#{province},#{city},#{county},#{areas},#{address},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_sign_in 
+        set 
+            id=#{id},
+            engineer_no=#{engineerNo},
+            order_no=#{orderNo},
+            longitude=#{longitude},
+            latitude=#{latitude},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            areas=#{areas},
+            address=#{address},
+            create_time=#{createTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_sign_in where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_sign_in where id = #{id}
+    </select>
+
+    <!-- 根据订单编号查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_sign_in where order_no=#{orderNo}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_sign_in
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="engineerNo != null and engineerNo != ''" >
+            and engineer_no=#{engineerNo}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no=#{orderNo}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        order BY create_time DESC
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_sign_in
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="engineerNo != null and engineerNo != ''" >
+            and engineer_no=#{engineerNo}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no=#{orderNo}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        order BY create_time DESC
+    </select>
+
+</mapper>   

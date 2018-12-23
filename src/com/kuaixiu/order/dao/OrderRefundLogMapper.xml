@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.order.dao.OrderRefundLogMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.OrderRefundLog" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="pay_order_no" property="payOrderNo"/>
+        <result column="transaction_id" property="transactionId"/>
+        <result column="pay_refund_no" property="payRefundNo"/>
+        <result column="refund_id" property="refundId"/>
+        <result column="refund_channel" property="refundChannel"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_mobile" property="customerMobile"/>
+        <result column="refund_status" property="refundStatus"/>
+        <result column="repeat_number" property="repeatNumber"/>
+        <result column="total_fee" property="totalFee"/>
+        <result column="refund_fee" property="refundFee"/>
+        <result column="settlement_refund_fee" property="settlementRefundFee"/>
+        <result column="cash_fee" property="cashFee"/>
+        <result column="cash_refund_fee" property="cashRefundFee"/>
+        <result column="refund_time" property="refundTime"/>
+        <result column="refund_type" property="refundType"/>
+        <result column="refund_account" property="refundAccount"/>
+        <result column="expense_type" property="expenseType"/>
+        <result column="account_status" property="accountStatus"/>
+        <result column="account_time" property="accountTime"/>
+        <result column="balance_status" property="balanceStatus"/>
+        <result column="balance_time" property="balanceTime"/>
+        <result column="fee_type" property="feeType"/>
+        <result column="device_info" property="deviceInfo"/>
+        <result column="nonce_str" property="nonceStr"/>
+        <result column="sign" property="sign"/>
+        <result column="openid" property="openid"/>
+        <result column="err_code" property="errCode"/>
+        <result column="err_code_des" property="errCodeDes"/>
+        <result column="coupon_fee" property="couponFee"/>
+        <result column="coupon_count" property="couponCount"/>
+        <result column="coupon_data" property="couponData"/>
+    </resultMap>
+    
+    <!-- kx_pay_refund_log table all fields -->
+    <sql id="Base_Column_List" >
+        id,order_no,pay_order_no,transaction_id,pay_refund_no,refund_id,refund_channel,customer_id,customer_name,customer_mobile,refund_status,repeat_number,total_fee,refund_fee,settlement_refund_fee,cash_fee,cash_refund_fee,date_format(`refund_time`,'%Y-%m-%d %H:%i:%s')refund_time,refund_type,refund_account,expense_type,account_status,date_format(`account_time`,'%Y-%m-%d %H:%i:%s')account_time,balance_status,date_format(`balance_time`,'%Y-%m-%d %H:%i:%s')balance_time,fee_type,device_info,nonce_str,sign,openid,err_code,err_code_des,coupon_fee,coupon_count,coupon_data
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_pay_refund_log
+        (id,order_no,pay_order_no,transaction_id,pay_refund_no,refund_id,refund_channel
+        ,customer_id,customer_name,customer_mobile,refund_status,repeat_number
+        ,total_fee,refund_fee,settlement_refund_fee,cash_fee,cash_refund_fee
+        ,refund_time,refund_type,refund_account,expense_type
+        ,fee_type,device_info,nonce_str,sign,openid,err_code,err_code_des
+        ,coupon_fee,coupon_count,coupon_data)
+        values
+        (#{id},#{orderNo},#{payOrderNo},#{transactionId},#{payRefundNo},#{refundId},#{refundChannel}
+        ,#{customerId},#{customerName},#{customerMobile},#{refundStatus},#{repeatNumber}
+        ,#{totalFee},#{refundFee},#{settlementRefundFee},#{cashFee},#{cashRefundFee}
+        ,now(),#{refundType},#{refundAccount},#{expenseType}
+        ,#{feeType},#{deviceInfo},#{nonceStr},#{sign},#{openid},#{errCode},#{errCodeDes}
+        ,#{couponFee},#{couponCount},#{couponData})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_pay_refund_log 
+        set 
+            refund_id=#{refundId},
+            refund_channel=#{refundChannel},
+            refund_status=#{refundStatus},
+            repeat_number=#{repeatNumber},
+            total_fee=#{totalFee},
+            refund_fee=#{refundFee},
+            settlement_refund_fee=#{settlementRefundFee},
+            cash_fee=#{cashFee},
+            cash_refund_fee=#{cashRefundFee},
+            refund_type=#{refundType},
+            refund_account=#{refundAccount},
+            expense_type=#{expenseType},
+            account_status=#{accountStatus},
+            account_time=#{accountTime},
+            balance_status=#{balanceStatus},
+            balance_time=#{balanceTime},
+            fee_type=#{feeType},
+            device_info=#{deviceInfo},
+            nonce_str=#{nonceStr},
+            sign=#{sign},
+            openid=#{openid},
+            err_code=#{errCode},
+            err_code_des=#{errCodeDes},
+            coupon_fee=#{couponFee},
+            coupon_count=#{couponCount},
+            coupon_data=#{couponData}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_pay_refund_log where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_pay_refund_log where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_pay_refund_log
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="payOrderNo != null and payOrderNo != ''" >
+            and pay_order_no = #{payOrderNo}
+        </if>
+        <if test="transactionId != null and transactionId != ''" >
+            and transaction_id = #{transactionId}
+        </if>
+        <if test="payRefundNo != null and payRefundNo != ''" >
+            and pay_refund_no = #{payRefundNo}
+        </if>
+        <if test="refundId != null and refundId != ''" >
+            and refund_id = #{refundId}
+        </if>
+        <if test="refundChannel != null and refundChannel != ''" >
+            and refund_channel = #{refundChannel}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+            and customer_name = #{customerName}
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and customer_mobile = #{customerMobile}
+        </if>
+        <if test="refundStatus != null and refundStatus != ''" >
+            and refund_status = #{refundStatus}
+        </if>
+        <if test="repeatNumber != null and repeatNumber != ''" >
+            and repeat_number = #{repeatNumber}
+        </if>
+        <if test="totalFee != null and totalFee != ''" >
+            and total_fee = #{totalFee}
+        </if>
+        <if test="refundFee != null and refundFee != ''" >
+            and refund_fee = #{refundFee}
+        </if>
+        <if test="settlementRefundFee != null and settlementRefundFee != ''" >
+            and settlement_refund_fee = #{settlementRefundFee}
+        </if>
+        <if test="cashFee != null and cashFee != ''" >
+            and cash_fee = #{cashFee}
+        </if>
+        <if test="cashRefundFee != null and cashRefundFee != ''" >
+            and cash_refund_fee = #{cashRefundFee}
+        </if>
+        <if test="refundTime != null and refundTime != ''" >
+            and refund_time = #{refundTime}
+        </if>
+        <if test="refundType != null and refundType != ''" >
+            and refund_type = #{refundType}
+        </if>
+        <if test="refundAccount != null and refundAccount != ''" >
+            and refund_account = #{refundAccount}
+        </if>
+        <if test="expenseType != null and expenseType != ''" >
+            and expense_type = #{expenseType}
+        </if>
+        <if test="accountStatus != null and accountStatus != ''" >
+            and account_status = #{accountStatus}
+        </if>
+        <if test="accountTime != null and accountTime != ''" >
+            and account_time = #{accountTime}
+        </if>
+        <if test="balanceStatus != null and balanceStatus != ''" >
+            and balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceTime != null and balanceTime != ''" >
+            and balance_time = #{balanceTime}
+        </if>
+        <if test="feeType != null and feeType != ''" >
+            and fee_type = #{feeType}
+        </if>
+        <if test="deviceInfo != null and deviceInfo != ''" >
+            and device_info = #{deviceInfo}
+        </if>
+        <if test="nonceStr != null and nonceStr != ''" >
+            and nonce_str = #{nonceStr}
+        </if>
+        <if test="sign != null and sign != ''" >
+            and sign = #{sign}
+        </if>
+        <if test="openid != null and openid != ''" >
+            and openid = #{openid}
+        </if>
+        <if test="errCode != null and errCode != ''" >
+            and err_code = #{errCode}
+        </if>
+        <if test="errCodeDes != null and errCodeDes != ''" >
+            and err_code_des = #{errCodeDes}
+        </if>
+        <if test="couponFee != null and couponFee != ''" >
+            and coupon_fee = #{couponFee}
+        </if>
+        <if test="couponCount != null and couponCount != ''" >
+            and coupon_count = #{couponCount}
+        </if>
+        <if test="couponData != null and couponData != ''" >
+            and coupon_data = #{couponData}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_pay_refund_log
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="payOrderNo != null and payOrderNo != ''" >
+            and pay_order_no = #{payOrderNo}
+        </if>
+        <if test="transactionId != null and transactionId != ''" >
+            and transaction_id = #{transactionId}
+        </if>
+        <if test="payRefundNo != null and payRefundNo != ''" >
+            and pay_refund_no = #{payRefundNo}
+        </if>
+        <if test="refundId != null and refundId != ''" >
+            and refund_id = #{refundId}
+        </if>
+        <if test="refundChannel != null and refundChannel != ''" >
+            and refund_channel = #{refundChannel}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+            and customer_name = #{customerName}
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and customer_mobile = #{customerMobile}
+        </if>
+        <if test="refundStatus != null and refundStatus != ''" >
+            and refund_status = #{refundStatus}
+        </if>
+        <if test="repeatNumber != null and repeatNumber != ''" >
+            and repeat_number = #{repeatNumber}
+        </if>
+        <if test="totalFee != null and totalFee != ''" >
+            and total_fee = #{totalFee}
+        </if>
+        <if test="refundFee != null and refundFee != ''" >
+            and refund_fee = #{refundFee}
+        </if>
+        <if test="settlementRefundFee != null and settlementRefundFee != ''" >
+            and settlement_refund_fee = #{settlementRefundFee}
+        </if>
+        <if test="cashFee != null and cashFee != ''" >
+            and cash_fee = #{cashFee}
+        </if>
+        <if test="cashRefundFee != null and cashRefundFee != ''" >
+            and cash_refund_fee = #{cashRefundFee}
+        </if>
+        <if test="refundTime != null and refundTime != ''" >
+            and refund_time = #{refundTime}
+        </if>
+        <if test="refundType != null and refundType != ''" >
+            and refund_type = #{refundType}
+        </if>
+        <if test="refundAccount != null and refundAccount != ''" >
+            and refund_account = #{refundAccount}
+        </if>
+        <if test="expenseType != null and expenseType != ''" >
+            and expense_type = #{expenseType}
+        </if>
+        <if test="accountStatus != null and accountStatus != ''" >
+            and account_status = #{accountStatus}
+        </if>
+        <if test="accountTime != null and accountTime != ''" >
+            and account_time = #{accountTime}
+        </if>
+        <if test="balanceStatus != null and balanceStatus != ''" >
+            and balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceTime != null and balanceTime != ''" >
+            and balance_time = #{balanceTime}
+        </if>
+        <if test="feeType != null and feeType != ''" >
+            and fee_type = #{feeType}
+        </if>
+        <if test="deviceInfo != null and deviceInfo != ''" >
+            and device_info = #{deviceInfo}
+        </if>
+        <if test="nonceStr != null and nonceStr != ''" >
+            and nonce_str = #{nonceStr}
+        </if>
+        <if test="sign != null and sign != ''" >
+            and sign = #{sign}
+        </if>
+        <if test="openid != null and openid != ''" >
+            and openid = #{openid}
+        </if>
+        <if test="errCode != null and errCode != ''" >
+            and err_code = #{errCode}
+        </if>
+        <if test="errCodeDes != null and errCodeDes != ''" >
+            and err_code_des = #{errCodeDes}
+        </if>
+        <if test="couponFee != null and couponFee != ''" >
+            and coupon_fee = #{couponFee}
+        </if>
+        <if test="couponCount != null and couponCount != ''" >
+            and coupon_count = #{couponCount}
+        </if>
+        <if test="couponData != null and couponData != ''" >
+            and coupon_data = #{couponData}
+        </if>
+    </select>
+
+</mapper>   

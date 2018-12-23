@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.user.dao.SysRoleMenuMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.user.entity.SysRoleMenu" >
+        <result column="id" property="id"/>
+        <result column="role_id" property="roleId"/>
+        <result column="menu_code" property="menuCode"/>
+    </resultMap>
+    
+    <!-- sys_role_menu table all fields -->
+    <sql id="Base_Column_List" >
+        id,role_id,menu_code
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_role_menu
+        (id,role_id,menu_code)
+        values
+        (#{id},#{roleId},#{menuCode})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_role_menu 
+        set 
+            id=#{id},
+            role_id=#{roleId},
+            menu_code=#{menuCode}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_role_menu where id = #{id}
+    </delete>
+
+    <!-- 删除记录 -->
+    <delete id="deleteBYCode" parameterType="Object">
+        delete from sys_role_menu where menu_code = #{menuCode}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_role_menu where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role_menu
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="roleId != null and roleId != ''" >
+            and role_id = #{roleId}
+        </if>
+        <if test="menuCode != null and menuCode != ''" >
+            and menu_code = #{menuCode}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role_menu
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="roleId != null and roleId != ''" >
+            and role_id = #{roleId}
+        </if>
+        <if test="menuCode != null and menuCode != ''" >
+            and menu_code = #{menuCode}
+        </if>
+    </select>
+
+</mapper>   

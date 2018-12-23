@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="loginWrap">
+        <div class="pageTitle">
+            <a href="javascript:window.history.back();">
+                <img src="img/icon_arrow.png" alt="">
+            </a>
+            <h3>我的订单</h3>
+        </div>
+        <div class="main">
+            <section>
+                <input type="text" name="" id="inputtel" placeholder="请输入下单手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                <a href="javascript:;" id="clear"><img src="img/icon_fork.png" alt=""></a>
+                <a href="javascript:;" id="submit" class="btn-large">查询</a>
+            </section>
+        </div>
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
+        <!--错误提示end-->
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        $(function(){
+        	var tip=GetQueryString('tip');
+			var fm = GetQueryString( 'fm' ) ;
+			eCacheUtil.storage.cache( CacheKey.source, fm );
+        	if(tip==1){
+        		 eCacheUtil.storage.cache(CacheKey.happyGo,true);
+        	}
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            document.title = 'M超人回收';
+            $('input').focus(function(){
+                $('#clear').show();
+            });
+            $('#clear').click(function(){
+                $('input').attr('value','');
+                $(this).hide();
+            })
+            $('#submit').click(function(){
+                var dianhua = $("#inputtel").val();
+                if(!isMobile.test(dianhua)){
+                    alertTip('请输入正确的下单手机号');
+                    $("#inputtel").focus();
+                    return false;
+                }else {
+                    eCacheUtil.storage.cache(CacheKey.loginPhone,dianhua);
+                    location.href = 'orderlist.html';
+                }
+            })
+        })
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

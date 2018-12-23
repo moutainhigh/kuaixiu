@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.provider.dao.ProviderMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.provider.entity.Provider" >
+        <result column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="manager_name" property="managerName"/>
+        <result column="manager_mobile" property="managerMobile"/>
+        <result column="tel" property="tel"/>
+        <result column="email" property="email"/>
+        <result column="account_bank" property="accountBank"/>
+        <result column="account_bank_branch" property="accountBankBranch"/>
+        <result column="account_name" property="accountName"/>
+        <result column="account_number" property="accountNumber"/>
+        <result column="proportion" property="proportion"/>
+        <result column="amount_price" property="amountPrice"/>
+        <result column="withdraw_price" property="withdrawPrice"/>
+        <result column="balance" property="balance"/>
+        <result column="description" property="description"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="street" property="street"/>
+        <result column="areas" property="areas"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status"/>
+        <result column="sort" property="sort"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_provider table all fields -->
+    <sql id="Base_Column_List" >
+        id,code,name,manager_name,manager_mobile,tel,email
+        ,account_bank,account_bank_branch,account_name,account_number
+        ,proportion,amount_price,withdraw_price,balance,description
+        ,province,city,county,street,areas,address,status,sort,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_provider
+        (id,code,name,manager_name,manager_mobile,tel,email,
+        account_bank,account_bank_branch,account_name,account_number,
+        proportion,amount_price,withdraw_price,balance,description,
+        province,city,county,street,areas,address,status,
+        sort,is_del,create_time,create_userid)
+        values
+        (uuid(),#{code},#{name},#{managerName},#{managerMobile},#{tel},#{email},
+        #{accountBank},#{accountBankBranch},#{accountName},#{accountNumber},
+        #{proportion},#{amountPrice},#{withdrawPrice},#{balance},#{description},
+        #{province},#{city},#{county},#{street},#{areas},#{address},#{status},
+        #{sort},#{isDel},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_provider 
+        set 
+            name=#{name},
+            manager_name=#{managerName},
+            manager_mobile=#{managerMobile},
+            tel=#{tel},
+            email=#{email},
+            account_bank=#{accountBank},
+            account_bank_branch=#{accountBankBranch},
+            account_name=#{accountName},
+            account_number=#{accountNumber},
+            proportion=#{proportion},
+            amount_price=#{amountPrice},
+            withdraw_price=#{withdrawPrice},
+            balance=#{balance},
+            description=#{description},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            street=#{street},
+            areas=#{areas},
+            address=#{address},
+            status=#{status},
+            sort=#{sort},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_provider where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_provider where id = #{id}
+    </select>
+    
+    <!-- 根据code查询  -->
+    <select id="queryByCode"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_provider where code = #{code}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_provider
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="code != null and code != ''" >
+            and code like CONCAT('%', #{code}, '%')
+        </if>
+        <if test="name != null and name != ''" >
+            and name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="managerName != null and managerName != ''" >
+            and managerName like CONCAT('%', #{managerName}, '%')
+        </if>
+        <if test="managerMobile != null and managerMobile != ''" >
+            and managerMobile like CONCAT('%', #{managerMobile}, '%')
+        </if>
+        <if test="tel != null and tel != ''" >
+            and tel like CONCAT('%', #{tel}, '%')
+        </if>
+
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by create_time desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_provider
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="code != null and code != ''" >
+            and code like CONCAT('%', #{code}, '%')
+        </if>
+        <if test="name != null and name != ''" >
+            and name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="managerName != null and managerName != ''" >
+            and managerName like CONCAT('%', #{managerName}, '%')
+        </if>
+        <if test="managerMobile != null and managerMobile != ''" >
+            and managerMobile like CONCAT('%', #{managerMobile}, '%')
+        </if>
+        <if test="tel != null and tel != ''" >
+            and tel like CONCAT('%', #{tel}, '%')
+        </if>
+
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        order by create_time desc
+    </select>
+    
+    <!-- 得到日期内需要结算的连锁商 -->
+    <select id="queryProviderForBalance" resultMap="BaseResultMap" resultType="Object">
+        select <include refid="Base_Column_List"/>
+        from kx_provider t
+        where t.is_del = 0
+            and t.status = 0
+            and EXISTS (
+                select 1 from kx_order t1
+                where t1.is_del = 0
+                and t1.order_status = 50
+                and t1.balance_status = 0 
+                and t.`code` = t1.provider_code
+                and t1.end_time &gt;= #{queryStartTime}
+                and t1.end_time &lt;= #{queryEndTime}
+                limit 1
+            )
+    </select>
+
+</mapper>   

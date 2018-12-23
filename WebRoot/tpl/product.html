@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-品牌搜索</title>
+</head>
+<body>
+<div id="wrap" class="proWrap">
+	<div class="top">
+        <header>
+            <a href="javascript:window.history.back();" class="back"><img src="img/back.png" alt=""></a>
+            <div class="search">
+                <input type="search" placeholder="搜索您要卖的型号">
+            </div>
+        </header>
+        <div class="sellKind">
+            <a href="#1" class="active">手机</a>
+            <a href="#2">平板</a>
+            <a href="#3">电脑</a>
+        </div>
+    </div>
+    <div class="main clearfix">
+        <div class="mainLeft fl">
+            <ul class="swiper-wrapper">
+                <li class="swiper-slide"></li>
+            </ul>
+        </div>
+        <div class="mainRight fl">
+
+            <p class="loading"></p>
+        </div>
+    </div>
+    <div id="template" style="display: none">
+        <div class="contentDiv">
+            <span></span>
+            <a href="javascript:;"></a>
+        </div>
+    </div>
+</div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--遮盖层-->
+<div id="mask_boxs" style="display: none;">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/swiper.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function () {
+        eCacheUtil.storage.removeCache(CacheKey.SelectItems);
+        eCacheUtil.storage.removeCache(CacheKey.itemsName);
+        cidType();
+    });
+
+    //选择类型
+    $('.sellKind').on('click','a',function () {
+        if (!$(this).hasClass('active')){
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.swiper-wrapper').empty();
+            cidType();
+        }
+    });
+    function cidType() {
+        var cid = location.hash.substr(1,1);
+        if (!isEmpty(cid)){
+            searchBrand(cid);
+        }else {
+            searchBrand('1');
+        }
+    }
+    
+    var page = 1, //分页码
+        off_on = false,//分页开关
+        bid = '1',
+        num = 1;
+
+    //选择品牌
+    $('.mainLeft').on('click','li',function () {
+       if (!$(this).hasClass('active')){
+           $(this).addClass('active').siblings().removeClass('active');
+           bid = $(this).attr('data-bid');
+           $('.mainRight div').remove();
+           num = 1;
+           searchModel(bid);
+       }
+    });
+
+    //加载品牌
+    function searchBrand(cid) {
+        fn_loading();
+        $.post(linkUrl+"/recycle/getBrandList.do",{},function(data){
+            if (data.success){
+                var s = '',dataInfo = data.result.datainfo;
+                for (var i = 0;i < dataInfo.length;i++){
+                    s += '<li class="swiper-slide" data-bid="'+dataInfo[i].brandid+'"><a href="javascript:;">'+dataInfo[i].brandname+'</a></li>';
+                }
+                loading_hide();
+                $('.swiper-wrapper').append(s);
+                searchModel(dataInfo[0].brandid);
+                $('.swiper-wrapper .swiper-slide').eq(0).addClass('active');
+                var mySwiper1 = new Swiper('.mainLeft',{
+                    freeMode : true,
+                    slidesPerView : 'auto',
+                    slideToClickedSlide:true,
+                    direction: 'vertical'
+                });
+            }else {
+                loading_hide();
+                alertTip(data.resultMessage);
+            }
+        });
+    }
+
+    //加载机型
+    function searchModel(bid) {
+        var param = {
+            pageindex:page,
+            pagesize:'12',
+            brandid:bid
+        };
+z
+        $('.loading').html('正在加载中...');
+        $.post(linkUrl+"/recycle/getModelList.do",{params:JSON.stringify(param)},function(data){
+            if (data.success){
+                var dataInfo = data.result.datainfo;
+
+                if (dataInfo.length > 0){
+                    var sublist = dataInfo[0].sublist;
+                    eachFull(sublist);
+                    off_on = true;
+                }else {
+                    $('.loading').html('- 我是有底线的 -');
+                }
+            }else {
+                alertTip(data.resultMessage);
+            }
+        })
+    }
+
+    function eachFull(info) {
+        $.each(info, function (i, n) {
+            var tmp = $("#template").clone();
+            tmp.removeAttr("id");
+            $(".contentDiv",tmp).on('click', function () {
+                eCacheUtil.storage.cache(CacheKey.ProjectId,n.productid);
+                eCacheUtil.storage.cache(CacheKey.ModelName,n.modelname);
+                eCacheUtil.storage.cache(CacheKey.imgHref,n.modellogo);
+                setHistoryItems(n.modelname,n.productid,n.modellogo);
+                location.href = 'ceping.html';
+            });
+
+            tmp.show();
+            $(".contentDiv",tmp).attr('data-mid',n.productid).html('<span>'+(num++)+'</span><a href="javascript:;">'+n.modelname+'</a>');
+            //追加到对应区块
+            $(".loading").before(tmp);
+        });
+    }
+
+    //滚动加载
+    $('.mainRight').scroll(function() {
+        //当时滚动条离底部10px时开始加载下一页的内容
+        if (($(this)[0].scrollTop + $(this).height() + 10) >= $(this)[0].scrollHeight) {
+            //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+            if (off_on) {
+                off_on = false;
+                page++;
+                console.log("第"+page+"页");
+                searchModel(bid);  //调用执行上面的加载方法
+            }
+        }
+    });
+    $('input[type="search"]').focus(function () {
+        location.href = 'search.html';
+    });
+
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

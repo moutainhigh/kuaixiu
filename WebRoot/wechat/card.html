@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>M-超人</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+    <div id="wrap" class="cardWrap">
+        <div class="pageTitle">
+            <a href="javascript:window.location.back();"><img src="img/arrw.png" alt=""></a>
+            <h3>我的卡券</h3>
+        </div>
+        <div class="main">
+            <ul class="tabnav">
+                <li class="active">未使用(<span>0</span>)</li>
+                <li class="">已使用(<span>0</span>)</li>
+                <li>已过期(<span>0</span>)</li>
+            </ul>
+            <div class="tabCont">
+                <div class="tab_0 active">
+                    
+                </div>
+                <div class="tab_1">
+                    
+                </div>
+                <div class="tab_2 ">
+                    
+                </div>
+            </div>
+            <div id="tab0" class="card" style="display:none;">
+                <div class="card_code">
+                    <p class="price"></p>
+                    <p>优惠码</p>
+                    <p class="code"></p>
+                </div>
+                <div class="card_info">
+                    <p class="card_name"></p>
+                    <p class="time"></p>
+                    <p>品牌限制：<span class="limit_brand"></span></p>
+                    <p>项目限制：<span class="limit_project"></span></p>
+                </div>
+                <div class="card_usage">
+                    <span>去</span>
+                    <span>使</span>
+                    <span>用</span>
+                    <a><img src="img/card_arrow.png" alt=""></a>
+                </div>
+            </div>
+            <div id="tab1" class="cardBox" style="display:none;">
+                <div class="card">
+                    <div class="card_code">
+                        <p class="price"></p>
+                        <p>优惠码</p>
+                        <p class="code"></p>
+                    </div>
+                    <div class="card_info">
+                        <p class="card_name"></p>
+                        <p class="time"></p>
+                        <p>品牌限制：<span class="limit_brand"></span></p>
+                        <p>项目限制：<span class="limit_project"></span></p>
+                    </div>
+                    <div class="card_usage card_used">
+                        <span>查</span>
+                        <span>看</span>
+                        <span>使</span><span>用</span>
+                        <span>详</span>
+                        <span>情</span>
+                        <a><img src="img/card_pull.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="usedDetail">
+                    <p>使用时间:<span class="use_time"></span></p>
+                    <p>使用门店:<span class="use_shop"></span></p>
+                </div>
+            </div>
+            <div id="empty" style="display:none;">
+                <img src="img/card_empty.png" alt="">
+            </div>
+        </div>
+
+        <!--遮盖层-->
+        <div id="mask_boxs">
+            <div id="mcon">
+                <img src="img/loadings.gif"/>
+            </div>
+        </div>
+        <!--遮盖层end-->
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
+        <!--错误提示end-->
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=leGuAv2GX5RNogNLUFj1WkGfATZBpNGM"></script>
+    <script>
+    $(function(){
+        var code = GetQueryString("code");
+        if(code == undefined){
+            location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appId+"&redirect_uri="+ linkUrl+"/wechat/card.html" + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
+            return;
+        }
+           $.ajax({
+               type:'post',
+               url:linkUrl + '/wechat/repair/getCouponNews.do',
+               data:{
+                    code : GetQueryString("code")
+               },
+               dataType:'json',
+               xhrFields: {
+                   withCredentials: true
+               },
+               crossDomain: true,
+               success: function(data){
+                   if (data.success){
+                       let couponList = data.result.couponList;
+                       eachFull(couponList);
+                       $('.tabCont div[class ^="tab_"]').each(function(i,n){
+                           $('.tabnav li').eq(i).find('span').html($(this).children().length);
+                           if ($(this).find('.card').length == 0){
+                               empty($(this));
+                           }
+                       })
+                       loading_hide();
+                   }else {
+                       loading_hide();
+                       alertTip(data.resultMessage);
+                   }
+               }
+           });
+       $('.tabnav li').click(function(){
+           var index = $(this).index();
+           $(this).addClass('active').siblings().removeClass('active');
+           $('.tab_'+index).addClass('active').siblings().removeClass('active');
+       });
+   });
+        function eachFull(info){
+            $.each(info, function (i, n) {
+                var tmp;
+                var limit_brand = [],limit_project = [],limit_brandId = [],limit_projectId = [];
+                if (n.is_use == 1){//已使用
+                    tmp = $("#tab1").clone();
+                    tmp.removeAttr("id");
+                    tmp.show();
+                    $('.price',tmp).html(n.coupon_price);
+                    $('.code',tmp).html(n.coupon_code);
+                    $('.card_name',tmp).html(n.coupon_name);
+                    $('.time',tmp).html(n.begin_time.substring(0,n.begin_time.indexOf(' '))+' 至 '+n.end_time.substring(0,n.end_time.indexOf(' ')));
+                    $('.use_time',tmp).html(n.use_time);
+                    $('.use_shop',tmp).html(n.shop_name);
+                    $('.card_used',tmp).toggle(function(){
+                        $(this).find('img').css({"transform": "rotate(180deg)","transition":".3s"});
+                        $('.usedDetail',tmp).slideDown(100);
+                    },function(){
+                        $(this).find('img').css({"transform": "rotate(0deg)","transition":".3s"});
+                        $('.usedDetail',tmp).slideUp(100);
+                    });
+                    $(".tab_1").append(tmp);
+                }else{
+                    tmp = $("#tab0").clone();
+                    tmp.removeAttr("id");
+                    tmp.show();
+                    $('.price',tmp).html(n.coupon_price);
+                    $('.code',tmp).html(n.coupon_code);
+                    $('.card_name',tmp).html(n.coupon_name);
+                    $('.time',tmp).html(n.begin_time.substring(0,n.begin_time.indexOf(' '))+' 至 '+n.end_time.substring(0,n.end_time.indexOf(' ')));
+
+                    
+                    if (n.is_overdue == 1){//已过期
+                        $('.card_usage',tmp).remove();
+                        //追加到对应区块
+                        $(".tab_2").append(tmp);
+                    }else {//未使用tab0
+                        $('.card_usage',tmp).addClass('card_unused').html('<span>去</span><span>使</span><span>用</span><a><img src="img/card_arrow.png" alt=""></a>');
+                        $(".tab_0").append(tmp);
+                        
+                        if (n.type == 2){//贴膜>跳转附近门店.html
+                            $('.card_usage',tmp).click(function(){
+                                nearStore();
+                            });
+                        }else{//其他
+                            $('.card_usage',tmp).click(function(){
+                                sessionStorage.clear();
+                                if (limit_brandId.length > 0){
+                                    eCacheUtil.storage.cache(CacheKey.limitBrand,limit_brandId);
+                                }
+                                if (limit_projectId.length > 0){
+                                    eCacheUtil.storage.cache(CacheKey.limitProject,limit_projectId);
+                                }
+                                eCacheUtil.storage.cache(CacheKey.limitCode,n.coupon_code);
+                                location.href = 'sel_brand.html#limit';
+                            });
+                        }
+                    }
+                }
+                for (var k = 0;k < n.models.length;k++){
+                    limit_brand.push(n.models[k].brandName);
+                    if (n.models[k].hasOwnProperty('brandId')){
+                        limit_brandId.push(n.models[k].brandId);
+                    }
+                }
+                for( var j = 0;j < n.projects.length;j++){
+                    limit_project.push(n.projects[j].projectName);
+                    if (n.projects[j].hasOwnProperty('projectId')){
+                        limit_brandId.push(n.projects[j].projectId);
+                    }
+                }
+                $('.limit_brand',tmp).html(limit_brand.join('、'));
+                $('.limit_project',tmp).html(limit_project.join('、'));
+            })
+        }
+        function empty(ele){
+            var emp = $('#empty').clone();
+            emp.show();
+            $(ele).html(emp);
+        }
+    </script>
+    <!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

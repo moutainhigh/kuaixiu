@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+    <title>M超人回收-型号搜索</title>
+</head>
+<body>
+<div id="wrap" class="searchWrap">
+    <div class="top">
+        <header>
+            <a href="javascript:window.history.back();" class="back"><img src="img/back.png" alt=""></a>
+            <div class="search">
+                <input type="search" id="gover_search_key" placeholder="输入您要卖的型号">
+            </div>
+            <a href="javascript:;" class="search-btn" onclick="SiteSearch();">搜索</a>
+        </header>
+    </div>
+
+    <div class="search_suggest" id="gov_search_suggest">
+
+    </div>
+
+    <div class="main bg">
+        <div class="history">
+            <h3>历史搜索<a href="javascript:;" class="scls" onclick="clearHistory();"></a></h3>
+            <div id="lssslb"></div>
+        </div>
+    </div>
+</div>
+<div id="template" class="item" style="display: none;">
+    <div class="contentDiv">
+        <span></span>
+        <i></i>
+    </div>
+</div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--遮盖层-->
+<div id="mask_boxs" style="display: none;">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    function oSearchSuggest(searchFuc){
+        var input = $('#gover_search_key');
+        var suggestWrap = $('#gov_search_suggest');
+        var key = "";
+        var init = function(){
+            input.bind('keyup',sendKeyWord);
+        };
+
+        var hideSuggest = function(){
+            suggestWrap.hide();
+        };
+        //发送请求，根据关键字到后台查询
+        var sendKeyWord = function(event){
+            //键盘选择下拉项
+            if(suggestWrap.css('display')=='block'&&event.keyCode == 38||event.keyCode == 40) {
+                var current = suggestWrap.find('div.hover');
+                if(event.keyCode == 38){//up
+                    if(current.length>0){
+                        var prevLi = current.removeClass('hover').prev();
+                        if(prevLi.length>0){
+                            prevLi.addClass('hover');
+                            input.val(prevLi.html());
+                        }
+                    }else{
+                        var last = suggestWrap.find('.item:last');
+                        last.addClass('hover');
+                        input.val(last.html());
+                    }
+                }else if(event.keyCode == 40){//down
+                    if(current.length>0){
+                        var nextLi = current.removeClass('hover').next();
+                        if(nextLi.length>0){
+                            nextLi.addClass('hover');
+                            input.val(nextLi.html());
+                        }
+                    }else{
+                        var first = suggestWrap.find('.item:first');
+                        first.addClass('hover');
+                        input.val(first.html());
+                    }
+                }
+                //输入字符
+            }else {
+                var valText = $.trim(input.val());
+                if(valText ==''||valText==key){
+                    suggestWrap.hide();
+                    return;
+                }
+                searchFuc(valText);
+                key = valText;
+            }
+        };
+        //请求返回后，执行数据展示
+        this.dataDisplay = function(data){
+            if(data.length<=0){
+                suggestWrap.hide();
+                return;
+            }
+            $('#gov_search_suggest').empty();
+            $.each(data, function (i, n) {
+                var tmp = $("#template").clone();
+                tmp.removeAttr("id");
+                $(".contentDiv",tmp).on('click', function () {
+                    eCacheUtil.storage.cache(CacheKey.ProjectId,n.productid);
+                    eCacheUtil.storage.cache(CacheKey.ModelName,n.modelname);
+                    eCacheUtil.storage.cache(CacheKey.imgHref,n.modellogo);
+                    setHistoryItems(n.modelname,n.productid,n.modellogo);
+                    location.href = 'ceping.html';
+                });
+
+                tmp.show();
+                $(".contentDiv",tmp).attr('data-mid',n.productid).html('<span data-mid="'+n.productid+'">'+n.modelname+'</span><p class="num_right">回收最高价 <span class="colRed">¥4440</span></p>');
+                //追加到对应区块
+                $(".search_suggest").append(tmp);
+            });
+
+            //为下拉选项绑定鼠标事件
+            suggestWrap.find('.item').hover(function(){
+                suggestWrap.find('item').removeClass('hover');
+                $(this).addClass('hover');
+            },function(){
+                $(this).removeClass('hover');
+            });
+        };
+
+        init();
+    }
+    //实例化输入提示的JS,参数为进行查询操作时要调用的函数名
+    var searchSuggest = new oSearchSuggest(sendKeyWordToBack);
+    //参数为一个字符串，是搜索输入框中当前的内容
+    function sendKeyWordToBack(keyword){
+        var param = {
+            pageindex:1,
+            pagesize:'50',
+            keyword:keyword
+        },aData = [];
+        $.post(linkUrl+"/recycle/getModelList.do",{params:JSON.stringify(param)},function(data){
+            if (data.success){
+                var dataInfo = data.result.datainfo;
+                for (var j = 0;j < dataInfo.length;j++){
+                    //eachFull(dataInfo[j].sublist);
+                    //将返回的数据传递给实现搜索输入框的输入提示js类
+                    searchSuggest.dataDisplay(dataInfo[j].sublist);
+                }
+            }else {
+                alertTip(data.resultMessage);
+            }
+        });
+    }
+
+    //产品搜索
+    function SiteSearch(){
+        var sszd = $("#gover_search_key").val();
+        sendKeyWordToBack(sszd);
+        $('#gov_search_suggest').show();
+    }
+
+    //取值写入页面
+    $(function(){
+        var str=localStorage.historyItems;
+        if(str!==undefined){
+            var strs = new Array();
+            strs = str.split("|");
+            $.each(strs, function (i, n) {
+                var index = n.split(','),
+                    tmp = '<a href="javascript:;" data-mid="'+index[1]+'">'+index[0]+'</a>';
+                //追加到对应区块
+                $("#lssslb").append(tmp);
+                $("#lssslb a").eq(i).click(function () {
+                    eCacheUtil.storage.cache(CacheKey.ModelName,index[0]);
+                    eCacheUtil.storage.cache(CacheKey.ProjectId,index[1]);
+                    eCacheUtil.storage.cache(CacheKey.imgHref,index[2]);
+                    setHistoryItems(index[0],index[1],index[2]);
+                    location.href = 'ceping.html';
+                })
+            });
+            $('.history').show();
+        }else {
+            $( "#lssslb").empty();
+            $('.history').hide();
+        }
+    });
+
+    //清除值
+    function clearHistory() {
+        localStorage.removeItem('historyItems');
+        var div = document.getElementById("lssslb");
+        $('#lssslb').empty();
+        $('.history').hide();
+    }
+</script>
+</body>
+</html>

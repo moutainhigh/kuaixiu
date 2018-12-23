@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.order.dao.OrderLogMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.OrderLog" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="type" property="type"/>
+        <result column="content" property="content"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="in_time" property="inTime"/>
+    </resultMap>
+    
+    <!-- kx_order_log table all fields -->
+    <sql id="Base_Column_List" >
+        id,order_no,type,content,user_id,user_name,date_format(`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_order_log
+        (id,order_no,type,content,user_id,user_name,in_time)
+        values
+        (#{id},#{orderNo},#{type},#{content},#{userId},#{userName},#{inTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_order_log 
+        set 
+            id=#{id},
+            order_no=#{orderNo},
+            type=#{type},
+            content=#{content},
+            user_id=#{userId},
+            user_name=#{userName},
+            in_time=#{inTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_order_log where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_order_log where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_order_log
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="content != null and content != ''" >
+            and content = #{content}
+        </if>
+        <if test="userId != null and userId != ''" >
+            and user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''" >
+            and user_name = #{userName}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_order_log
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="content != null and content != ''" >
+            and content = #{content}
+        </if>
+        <if test="userId != null and userId != ''" >
+            and user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''" >
+            and user_name = #{userName}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/main.css?version=1.6.1">
+    <title>企业手机回收</title>
+</head>
+<body>
+    <div class="firm-login-wrapper">
+		<div id="login-box" class="login-box">
+			<div class="tipinfo-box"><span>回收信息查询</span></div>
+			<div class="input-item">
+				<input id="phoneNum" type="text" placeholder="请输入手机号" />
+			</div>
+			<div class="input-item">
+				<input id="codeNum" class="short-input" type="text" placeholder="请填写验证码" />
+				<span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
+				<span id="secondLabel" class="input-label info-box">60秒</span>
+			</div>
+			<div class="input-item">
+				<span id="queryBtn" class="query-btn">查询</span>
+			</div>
+		</div>
+	</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function(){
+		var G = {};
+		
+		function getRealPath(){
+			var pathName=location.pathname;  
+			var allPath=location.href;
+			var pos=allPath.indexOf(pathName);
+			var linkUrl=allPath.substring(0,pos);
+			var u='zj.189.cn'; //欢GO
+			if(linkUrl.indexOf(u)>0){
+				linkUrl='http://m-super.com';
+			}
+			return linkUrl;
+		}
+		
+		
+		//a.获取验证码
+		$('#getCodeBtn').click( function(){
+			var phoneNum = $('#phoneNum').val();
+			
+			if( phoneNum === '' ){
+				alert( '请先输入手机号' );
+				$('#phoneNum').focus();
+				return ;
+			}
+			
+			if( G.isPosting ){
+				return ;
+			}
+			G.isPosting = true ;
+
+			//发送服务器请求
+			var param = {
+				"mobile":phoneNum
+			}
+			 //TODO
+			 $.post(
+					 getRealPath()+"/wechat/sendSmsCode.do",
+				{
+					params:JSON.stringify(param)
+				},
+				function(data){
+					if (data.success){
+						//启动计数定时器
+						startSecondCount();
+						//设置发送验证码的状态
+						$('#login-box').addClass( 'sending-code' );
+						
+					}else{
+						alert(data.resultMessage);
+					}
+					
+					G.isPosting = false ;
+				});
+			
+		});
+		
+		//b. 开始倒计时
+		function startSecondCount( ){
+			G.secondValue = 60 ;
+			$('#secondLabel').html( G.secondValue + '秒' );
+			updateSecondCount();
+		}
+		function updateSecondCount( ){
+			setTimeout( function(){
+				G.secondValue = G.secondValue -1 ;
+				if( G.secondValue > 0  ){
+					$('#secondLabel').html( G.secondValue + '秒' );
+					//调用自身
+					updateSecondCount();
+				}
+				else{
+					$('#login-box').removeClass( 'sending-code' );
+				}
+			},1000 );
+			return ;
+		}
+		
+		//c. 查询
+		$('#queryBtn').click( function(){
+			var phoneNum = $('#phoneNum').val();
+			var codeNum = $('#codeNum').val();
+			
+			if( phoneNum === '' ){
+				alert( '手机号不能为空' );
+				$('#phoneNum').focus();
+				return ;
+			}
+			
+			//if(!isMobile.test( phoneNum )){
+			//	alert('请输入正确的手机号码');
+			//	$("#inputtel").focus();
+			//	return false;
+			//}
+			
+			if( codeNum === '' ){
+				alert( '验证码不能为空' );
+				$('#codeNum').focus();
+				return ;
+			}
+			
+			//TODO 向后台请求数据
+			G.isPosting = true ;
+			
+			//a 登录
+			var param = {
+				"mobile":phoneNum,
+				"code":codeNum
+			};
+			$.post(
+					getRealPath()+"/recycleNew/login.do",
+				{
+					params:JSON.stringify(param)
+				},
+				function(data){
+					if ( data.success){
+						//获得验证码
+						var tokenId = data.result ;
+						if( window.localStorage ){
+							localStorage.setItem( 'tokenid' , tokenId );
+							localStorage.setItem( 'mobile' , phoneNum );
+						}
+						//跳转到订单列表页面
+						window.location.href = 'firmPhoneList.html' ;
+						
+					}else{
+						alert(data.resultMessage);
+					}
+					
+					G.isPosting = false ;
+				});
+			
+		});
+		
+    });    
+</script>
+</body>
+</html>

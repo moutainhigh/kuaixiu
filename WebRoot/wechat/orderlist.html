@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>订单列表</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="orderWrap">
+    <div class="main">
+        <div class="orderList">
+            
+        </div>
+    </div>
+
+    <div id="template" class="order_item" style="display:none;">
+        <div class="order_inside">
+            <div class="order_title">
+                <img src="img/service1.png" alt="">
+                <div>
+                    <p class="shop_name"></p>
+                    <p class="time"></p>
+                </div>
+                <p class="status"></p>
+            </div>
+            <div class="order_cont">
+                <div class="left bar">
+                    <p class="model"><span></span></p>
+                    <p class="repair"><span></span></p>
+                </div>
+                <div class="right">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <div class="order_but">
+                <a href="javascript:void(0);" class="btn-mini" name="rebtn_status"></a>
+                <a href="javascript:void(0);" class="btn-mini" name="btn_status"></a>
+            </div>
+    </div>
+
+    <div id="oldtonew" class="order_item" style="display:none;">
+        <div class="order_inside">
+            <div class="order_title">
+                <img src="img/service2.png" alt="">
+                <div>
+                    <p class="shop_name"></p>
+                    <p class="time"></p>
+                </div>
+                <p class="status"></p>
+            </div>
+            <div class="order_cont">
+                <div class="left">
+                    <p></p>
+                </div>
+                <div class="right">
+                    <p></p>
+                </div>
+            </div>
+            <div class="order_but" style="display: none;">
+                <a href="javascript:;" class="btn-mini" name="rebtn_status"></a>
+                <a href="javascript:;" class="btn-mini" name="btn_status"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li class="bottom_in"><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+
+    <!--遮盖层-->
+    <div id="mask_boxs">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+    <!--遮盖层end-->
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <!--确认提示-->
+    <div class="popup_bg">
+        <div class="popup_content">
+            <div class="popup_title"></div>
+            <div class="popup_font"></div>
+            <div class="popup_but">
+                <a class="btn-normal cancel" href="javascript:void(0);">取 消</a>
+                <a class="btn-normal btn-normal-confirm confirm" href="javascript:void(0);">确 认</a>
+            </div>
+        </div>
+    </div>
+    <!--确认提示end-->
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script src="js/jbase64.js"></script>
+<script language="javascript">
+$(document).ready(function () {
+　　$('.orderWrap').height(GetQueryString('h')+'px');
+});
+</script>
+<script src="js/orderlist.js"></script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

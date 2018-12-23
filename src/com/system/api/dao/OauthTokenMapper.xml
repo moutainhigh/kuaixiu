@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.api.dao.OauthTokenMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.api.entity.OauthToken" >
+        <result column="id" property="id"/>
+        <result column="access_token" property="accessToken"/>
+        <result column="refresh_token" property="refreshToken"/>
+        <result column="expires_in" property="expiresIn"/>
+        <result column="time" property="time"/>
+        <result column="token_type" property="tokenType"/>
+        <result column="client_id" property="clientId"/>
+        <result column="scope" property="scope"/>
+        <result column="token_data" property="tokenData"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- sys_oauth_token table all fields -->
+    <sql id="Base_Column_List" >
+        id,access_token,refresh_token,expires_in,time,token_type,client_id,scope,token_data,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_oauth_token
+        (id,access_token,refresh_token,expires_in,time,token_type,client_id,scope,token_data,create_time)
+        values
+        (#{id},#{accessToken},#{refreshToken},#{expiresIn},#{time},#{tokenType},#{clientId},#{scope},#{tokenData},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_oauth_token 
+        set 
+            access_token=#{accessToken},
+            refresh_token=#{refreshToken},
+            expires_in=#{expiresIn},
+            time=#{time},
+            token_type=#{tokenType},
+            client_id=#{clientId},
+            scope=#{scope},
+            token_data=#{tokenData}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_oauth_token where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_oauth_token where id = #{id}
+    </select>
+    
+    <!-- 根据token查询  -->
+    <select id="queryByToken"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_oauth_token where access_token = #{token}
+    </select>
+    
+    <!-- 根据客户端id查询  -->
+    <select id="queryByClientId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_oauth_token 
+        where client_id = #{clientId} and token_type=#{tokenType}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_oauth_token
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="accessToken != null and accessToken != ''" >
+            and access_token = #{accessToken}
+        </if>
+        <if test="refreshToken != null and refreshToken != ''" >
+            and refresh_token = #{refreshToken}
+        </if>
+        <if test="tokenType != null and tokenType != ''" >
+            and token_type = #{tokenType}
+        </if>
+        <if test="clientId != null and clientId != ''" >
+            and client_id = #{clientId}
+        </if>
+        <if test="scope != null and scope != ''" >
+            and scope = #{scope}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_oauth_token
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="accessToken != null and accessToken != ''" >
+            and access_token = #{accessToken}
+        </if>
+        <if test="refreshToken != null and refreshToken != ''" >
+            and refresh_token = #{refreshToken}
+        </if>
+        <if test="expiresIn != null and expiresIn != ''" >
+            and expires_in = #{expiresIn}
+        </if>
+        <if test="time != null and time != ''" >
+            and time = #{time}
+        </if>
+        <if test="tokenType != null and tokenType != ''" >
+            and token_type = #{tokenType}
+        </if>
+        <if test="clientId != null and clientId != ''" >
+            and client_id = #{clientId}
+        </if>
+        <if test="scope != null and scope != ''" >
+            and scope = #{scope}
+        </if>
+
+    </select>
+
+</mapper>   

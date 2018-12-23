@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>登录</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="loginWrap">
+    <div class="main bg">
+        <div class="login_font">登 录</div>
+        <div class="inputRow">
+            <span>手机号</span>
+            <input class="text" id="inputtel" type="tel" value="" maxlength="11" placeholder="请输入手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+        </div>
+        <div class="inputRow">
+            <span>验证码</span>
+            <input class="text mustText" id="code" type="tel" value="" maxlength="6" placeholder="请输入验证码" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+            <input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" onclick="sendMsg(this)" />
+        </div>
+        <div class="login_submit">
+            <input id="submit" class="btn-large disabled" type="submit" onclick="Login()" value="查询/支付" />
+        </div>
+    </div>
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li class="bottom_in"><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+
+    <!--再次登陆窗口-->
+    <div class="logAgainbg" style="display:none;">
+        <div class="logAgain">
+            <p id="already"></p>
+            <p><a href="javascript:;" onclick="changeUser()">切换其他账号</a></p>
+        </div>
+    </div>
+    <!--再次登陆窗口.end-->
+
+    <!--遮盖层-->
+    <div id="mask_boxs" style="display:none;">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+    <!--遮盖层end-->
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script src="js/login.js"></script>
+<script>
+    $(function(){
+        //因获取微信授权code后重定向到该页面  所以当该页面是微信重定向访问时需向服务器发送code验证登录
+        var code=GetQueryString("code");//判断是否获取了 code
+        if(code!=undefined){
+            var url=linkUrl+'/wechat/login.html';//微信重定向的地址
+            url = encodeURIComponent(url);
+            var wechatUrl="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appId+"&redirect_uri="+ url + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
+            $.ajax({
+                type:'POST',
+                url:linkUrl+'/wechat/order/wechatLogin.do',
+                dataType:'json',
+                data:{
+                    code:code
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success:function (data) {
+                    if (data.success){
+                        if (data.result.is_login == 1){
+                            sessionStorage.setItem('mobile',data.result.mobile);
+                            sessionStorage.setItem('access_token',data.result.access_token);
+                            $('#already').html(sessionStorage.getItem('mobile'));
+                            $('.logAgainbg').show();
+                        }else if(data.result.is_login==3){
+                            location.href=wechatUrl;//向微信服务器发起请求获取授权code
+                        }else{
+                            location.href=linkUrl+"/wechat/login.html";
+                        }
+                    }else {
+                        alertTip(data.resultMessage);
+                    }
+                },
+                error:function () {
+
+                }
+            });
+        }
+    });
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

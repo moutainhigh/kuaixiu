@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleCompanyMapper">
+
+    <!-- 回收企业 -->
+	<resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleCompany">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="model" jdbcType="VARCHAR" property="model" />
+		<result column="recycle_time" jdbcType="TIMESTAMP" property="recycleTime" />
+		<result column="customer_manager" jdbcType="VARCHAR" property="customerManager" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="is_del" jdbcType="INTEGER" property="isDel" />
+		<result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="note" jdbcType="VARCHAR" property="note" />
+		<result column="orderStatus" jdbcType="INTEGER" property="orderStatus" />
+	</resultMap>
+	
+	<!-- 回收企业对应机型信息 -->
+	<resultMap id="CompanyNews" type="com.kuaixiu.recycle.entity.RecycleCompanyNews">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="company_id" jdbcType="VARCHAR" property="companyId" />
+		<result column="brand" jdbcType="VARCHAR" property="brand" />
+		<result column="model" jdbcType="VARCHAR" property="model" />
+		<result column="sum" jdbcType="INTEGER" property="sum" />
+		<result column="productId" jdbcType="VARCHAR" property="productId" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+	</resultMap>
+	
+
+	<sql id="Base_Column_List">
+		id, name, model,recycle_time, customer_manager, mobile, is_del,
+		in_time, update_time,note,orderStatus
+	</sql>
+
+
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		insert into kx_recycle_company
+		(id,name,model,recycle_time,customer_manager,mobile,in_time)
+		values
+		(#{id},#{name},#{model},#{recycleTime},#{customerManager},#{mobile},now())
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update kx_recycle_company
+		set name = #{name,jdbcType=VARCHAR},
+		model = #{model,jdbcType=VARCHAR},
+		recycle_time = #{recycleTime,jdbcType=TIMESTAMP},
+		customer_manager = #{customerManager,jdbcType=VARCHAR},
+		mobile = #{mobile,jdbcType=VARCHAR},
+		note=#{note,jdbcType=VARCHAR},
+		orderStatus = #{orderStatus,jdbcType=INTEGER},
+		is_del = #{isDel,jdbcType=INTEGER}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- 根据id查询记录 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_company where id=#{id} and is_del=0 ;
+	</select>
+
+
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from
+		kx_recycle_company where id = #{id}
+	</delete>
+
+
+
+
+	<!-- 查询列表无分页 -->
+	<select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_company
+		where 1=1 and is_del=0
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			and name=#{name}
+		</if>
+		<if test="customerManager != null and customerManager != ''">
+			and customer_manager =#{customerManager}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			and mobile=#{mobile}
+		</if>
+		<if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+		<if test="recycleStartTime != null and recycleStartTime != ''" >
+            and recycle_time &gt;= #{recycleStartTime}
+        </if>
+       <if test="recycleEndTime != null and recycleEndTime != ''" >
+            and recycle_time &lt;= #{recycleEndTime}
+       </if>
+       <if test="note != null and note != ''">
+			and note is not null
+		</if>
+		<if test="orderStatus != null" >
+			and orderStatus=#{orderStatus}
+		</if>
+		order by in_time desc
+	</select>
+
+	<!-- 查询列表 带分页 -->
+	<select id="queryListForPage" resultMap="BaseResultMap"
+		parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_company
+		where 1=1 and is_del=0
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			and name=#{name}
+		</if>
+		<if test="customerManager != null and customerManager != ''">
+			and customer_manager =#{customerManager}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			and mobile=#{mobile}
+		</if>
+		<if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+		<if test="recycleStartTime != null and recycleStartTime != ''" >
+            and recycle_time &gt;= #{recycleStartTime}
+        </if>
+       <if test="recycleEndTime != null and recycleEndTime != ''" >
+            and recycle_time &lt;= #{recycleEndTime}
+       </if>
+       <if test="orderStatus != null" >
+			and orderStatus=#{orderStatus}
+		</if>
+		order by in_time desc
+	</select>
+	
+	
+	
+	<!-- 插入记录 -->
+	<insert id="insertCompany" parameterType="Object">
+		insert into kx_recycle_companyNews
+		(id,company_id,product_id,brand,model,sum,price)
+		values
+		(uuid(),#{companyId},#{productId},#{brand},#{model},#{sum},#{price})
+	</insert>
+	
+	<!-- 根据企业id查询对应回收信息  -->
+	<select id="queryCompanyNewsList" resultMap="CompanyNews" parameterType="Object">
+		select id,company_id,product_id,brand,model,sum,price
+		from kx_recycle_companyNews
+		where company_id=#{companyId} ;
+	</select>
+
+</mapper>

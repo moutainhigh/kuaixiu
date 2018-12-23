@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.oldtonew.dao.NewOrderMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.oldtonew.entity.NewOrder" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="shop_code" property="shopCode"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="model_id" property="modelId"/>
+        <result column="convert_type" property="convertType"/>
+        <result column="order_price" property="orderPrice"/>
+        <result column="real_price" property="realPrice"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="cancel_type" property="cancelType"/>
+        <result column="cancel_status" property="cancelStatus"/>
+        <result column="from_system" property="fromSystem"/>
+        <result column="is_dispatch" property="isDispatch"/>
+        <result column="dispatch_time" property="dispatchTime"/>
+        <result column="engineer_id" property="engineerId"/>
+        <result column="start_check_time" property="startCheckTime"/>
+        <result column="end_check_time" property="endCheckTime"/>
+        <result column="sort" property="sort"/>
+        <result column="is_comment" property="isComment"/>
+        <result column="balance_status" property="balanceStatus"/>
+        <result column="balance_time" property="balanceTime"/>
+        <result column="balance_no" property="balanceNo"/>
+        <result column="is_lock" property="isLock"/>
+        <result column="is_del" property="isDel"/>
+        <result column="in_time" property="inTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+        <result column="end_time" property="endTime"/>
+        <result column="is_use_coupon" property="isUseCoupon"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="coupon_code" property="couponCode"/>
+        <result column="coupon_name" property="couponName"/>
+        <result column="coupon_type" property="couponType"/>
+        <result column="coupon_price" property="couponPrice"/>
+        <result column="cancel_reason" property="cancelReason"/>
+        <result column="send_agreed_news" property="sendAgreedNews"/>
+        <result column="select_type" property="selectType"/>
+        <association property="shop" column="shop_code" resultMap="ShopMap"></association>
+    </resultMap>
+    
+    <resultMap id="ShopMap" type="com.kuaixiu.shop.entity.Shop" >
+        <result column="shop_id" property="id"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="shop_code" property="code"/>
+        <result column="shop_name" property="name"/>
+        <result column="shop_manager_name" property="managerName"/>
+        <result column="shop_manager_mobile" property="managerMobile"/>
+        <result column="shop_tel" property="tel"/>
+        <result column="shop_email" property="email"/>
+        <result column="shop_areas" property="areas"/>
+        <result column="shop_address" property="address"/>
+    </resultMap>
+    
+    <!-- kx_new_order table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.order_no,t.user_id,t.customer_id,t.provider_code,
+        t.shop_code,t.brand_id,t.model_id,t.convert_type,t.order_price,
+        t.real_price,t.order_status,t.cancel_type,t.cancel_status,t.from_system,
+        t.is_dispatch,date_format(t.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time,
+        t.engineer_id,date_format(t.`start_check_time`,'%Y-%m-%d %H:%i:%s')start_check_time,
+        date_format(t.`end_check_time`,'%Y-%m-%d %H:%i:%s')end_check_time,t.sort,
+        t.is_comment,t.balance_status,date_format(t.`balance_time`,'%Y-%m-%d %H:%i:%s')balance_time,t.balance_no,
+        t.is_lock,t.is_del,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+        date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid,
+        date_format(t.`end_time`,'%Y-%m-%d %H:%i:%s')end_time,
+        t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price,
+        t.send_agreed_news,t.cancel_reason,t.select_type
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_new_order
+        (id,order_no,user_id,customer_id,provider_code,
+        shop_code,brand_id,model_id,convert_type,
+        order_price,real_price,order_status,
+        sort,is_lock,is_del,in_time ,from_system,
+        is_use_coupon,coupon_id,coupon_code,coupon_name,coupon_type,coupon_price,send_agreed_news,select_type)
+        values
+        (#{id},#{orderNo},#{userId},#{customerId},#{providerCode},
+        #{shopCode},#{brandId},#{modelId},#{convertType},
+        #{orderPrice},#{realPrice},#{orderStatus},
+        #{sort},#{isLock},#{isDel},now(),#{fromSystem},
+        #{isUseCoupon},#{couponId},#{couponCode},#{couponName},#{couponType},#{couponPrice},#{sendAgreedNews},#{selectType})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_new_order 
+        set 
+            customer_id=#{customerId},
+            provider_code=#{providerCode},
+            shop_code=#{shopCode},
+            brand_id=#{brandId},
+            model_id=#{modelId},
+            convert_type=#{convertType},
+            order_price=#{orderPrice},
+            real_price=#{realPrice},
+            order_status=#{orderStatus},
+            cancel_type=#{cancelType},
+            cancel_status=#{cancelStatus},
+            is_dispatch=#{isDispatch},
+            dispatch_time=#{dispatchTime},
+            engineer_id=#{engineerId},
+            start_check_time=#{startCheckTime},
+            end_check_time=#{endCheckTime},
+            sort=#{sort},
+            is_comment=#{isComment},
+            balance_status=#{balanceStatus},
+            balance_time=#{balanceTime},
+            balance_no=#{balanceNo},
+            is_lock=#{isLock},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid},
+            end_time=#{endTime},
+            send_agreed_news=#{sendAgreedNews},
+            cancel_reason=#{cancelReason}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_new_order where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        	,s.id shop_id,s.manager_name shop_manager_name, s.manager_mobile shop_manager_mobile
+        	,s.tel shop_tel, s.email shop_email, s.areas shop_areas, s.address shop_address
+        	,fs.name from_system_name
+        from kx_new_order t 
+        left join kx_shop s on t.shop_code = s.code
+        left join kx_from_system fs on t.from_system = fs.id
+        where t.id = #{id}
+    </select>
+
+    <!-- 根据订单号查询  -->
+    <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        	,s.id shop_id,s.manager_name shop_manager_name, s.manager_mobile shop_manager_mobile
+        	,s.tel shop_tel, s.email shop_email, s.areas shop_areas, s.address shop_address
+        	,fs.name from_system_name
+        from kx_new_order t 
+        left join kx_shop s on t.shop_code = s.code
+        left join kx_from_system fs on t.from_system = fs.id
+        where t.order_no = #{orderNo}
+    </select>
+
+    <!-- 统计工程师本月订单数 -->
+    <select id="queryStatisticByEngineer" resultMap="BaseResultMap" parameterType="Object">
+        select count(t.id) sort, t.end_time 
+        from kx_new_order t
+        where 1=1
+        and t.order_status = 50
+        <if test="engineerId != null and engineerId != ''" >
+            and t.engineer_id = #{engineerId}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.dispatch_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.end_time &lt;= #{queryEndTime}
+        </if>
+        group by left(t.end_time, 10) order by t.end_time
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryCount" resultType="Integer"  parameterType="Object">
+        select count(id) from kx_new_order
+        where 1=1
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and model_id = #{modelId}
+        </if>
+        <if test="convertType != null and convertType != ''" >
+            and convert_type = #{convertType}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and order_status = #{orderStatus}
+        </if>
+        <if test="isDispatch != null and isDispatch != ''" >
+            and is_dispatch = #{isDispatch}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and engineer_id = #{engineerId}
+        </if>   
+        <if test="balanceStatus != null and balanceStatus != ''" >
+            and balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and balance_no = #{balanceNo}
+        </if>
+        <if test="isLock != null" >
+            and is_lock = #{isLock}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        <if test="selectType != null" >
+            and select_type = #{selectType}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表无分页 -->
+    <select id="queryAmount" resultType="java.math.BigDecimal"  parameterType="Object">
+        select IFNULL(sum(real_price),0) from kx_new_order
+        where 1=1
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and model_id = #{modelId}
+        </if>
+        <if test="convertType != null and convertType != ''" >
+            and convert_type = #{convertType}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and order_status = #{orderStatus}
+        </if>
+        <if test="isDispatch != null and isDispatch != ''" >
+            and is_dispatch = #{isDispatch}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and engineer_id = #{engineerId}
+        </if>   
+        <if test="balanceStatus != null and balanceStatus != ''" >
+            and balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and balance_no = #{balanceNo}
+        </if>
+        <if test="isLock != null" >
+            and is_lock = #{isLock}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        <if test="selectType != null" >
+            and select_type= #{selectType}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+         select <include refid="Base_Column_List"/>
+        	,s.id shop_id,s.manager_name shop_manager_name, s.manager_mobile shop_manager_mobile
+        	,s.tel shop_tel, s.email shop_email, s.areas shop_areas, s.address shop_address
+        	,fs.name from_system_name
+        from kx_new_order t 
+        left join kx_shop s on t.shop_code = s.code
+        left join kx_from_system fs on t.from_system = fs.id
+        left join kx_oldtonew old on t.user_id=old.id
+        where 1=1
+       <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and t.order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and old.tel = #{customerMobile}
+        </if>
+         <if test="province != null and province != ''" >
+            and old.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and old.city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and old.county = #{county}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and t.order_status = #{orderStatus}
+        </if>
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0" >
+            and t.order_status in 
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>        
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and t.id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isDispatch != null" >
+            and t.is_dispatch = #{isDispatch}
+        </if>
+        <if test="dispatchTime != null and dispatchTime != ''" >
+            and t.dispatch_time &lt; #{dispatchTime}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and t.engineer_id = #{engineerId}
+        </if>
+        <if test="balanceStatus != null" >
+            and t.balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and t.balance_no = #{balanceNo}
+        </if>
+          <if test="customerId != null and customerId != ''" >
+            and t.customer_id = #{customerId}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code like CONCAT('%', #{shopCode}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del = #{isDel}
+        </if>
+        <if test="fromSystem != null and fromSystem != ''" >
+            and t.from_system = #{fromSystem}
+        </if>
+        <if test="sendAgreedNews != null " >
+            and t.send_agreed_news = #{sendAgreedNews}
+        </if>
+        <if test="isComment != null" >
+            and t.is_comment = #{isComment}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and t.in_time &lt; #{inTime}
+        </if>
+        <if test="orderBy != null and orderBy !=''">
+            order by ${orderBy}
+        </if>
+        <if test="selectType != null" >
+            and select_type= #{selectType}
+        </if>
+        <if test="orderBy == null or orderBy ==''">
+            order by t.in_time desc
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select <include refid="Base_Column_List"/>
+        	,s.id shop_id,s.manager_name shop_manager_name, s.manager_mobile shop_manager_mobile
+        	,s.tel shop_tel, s.email shop_email, s.areas shop_areas, s.address shop_address
+        	,fs.name from_system_name
+        from kx_new_order t 
+        left join kx_shop s on t.shop_code = s.code
+        left join kx_from_system fs on t.from_system = fs.id
+        left join kx_oldtonew old on t.user_id=old.id
+        where 1=1
+       <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and t.order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and old.tel = #{customerMobile}
+        </if>
+         <if test="province != null and province != ''" >
+            and old.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and old.city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and old.county = #{county}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and t.order_status = #{orderStatus}
+        </if>
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0" >
+            and t.order_status in 
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>        
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and t.id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isDispatch != null" >
+            and t.is_dispatch = #{isDispatch}
+        </if>
+        <if test="dispatchTime != null and dispatchTime != ''" >
+            and t.dispatch_time &lt; #{dispatchTime}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and t.engineer_id = #{engineerId}
+        </if>
+        <if test="balanceStatus != null" >
+            and t.balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and t.balance_no = #{balanceNo}
+        </if>
+          <if test="customerId != null and customerId != ''" >
+            and t.customer_id = #{customerId}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code like CONCAT('%', #{shopCode}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del = #{isDel}
+        </if>
+        <if test="isComment != null" >
+            and t.is_comment = #{isComment}
+        </if>
+        <if test="orderBy != null and orderBy !=''">
+            order by ${orderBy}
+        </if>
+        <if test="selectType != null" >
+            and select_type= #{selectType}
+        </if>
+        <if test="orderBy == null or orderBy ==''">
+            order by t.in_time desc
+        </if>
+        <if test="fromSystem != null and fromSystem != ''" >
+            and t.from_system = #{fromSystem}
+        </if>
+    </select>
+    
+    
+    
+    
+    <!-- 查询列表 -->
+    <select id="queryListMap" resultType="Map"  parameterType="Object">
+     select
+        t.id,t.order_no,t.customer_id,t.provider_code,
+        t.shop_code,t.brand_id,t.model_id,t.cancel_type,
+        t.convert_type,t.order_price,t.real_price,t.order_status,t.balance_status,
+        date_format(t.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time 
+        ,t.engineer_id,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,s.tel shop_tel,s.manager_mobile shop_manager_mobile,s.manager_name shop_manager_name
+        ,s.name shop_name,old.tel customer_mobile,old.oldMobile old_model,old.newMobile new_model
+        ,old.name customer_name,old.homeAddress address,e.name engineer_name,e.mobile engineer_mobile
+        ,t.from_system
+        <if test="orderStatus == 2 " >s
+        ,(select count(1) from kx_engineer e where e.is_del = 0 and e.is_dispatch = 0 and e.shop_code = t.shop_code ) eng_count
+        </if>
+        
+        ,date_format(now(),'%Y-%m-%d %H:%i:%s') sys_time 
+        ,fs.name from_system_name
+        from kx_new_order t
+        left join kx_shop s on t.shop_code = s.`code`
+        left join kx_engineer e on t.engineer_id=e.id
+        left join kx_from_system fs on t.from_system = fs.id
+        left join kx_oldtonew old on old.id=t.user_id
+        where 1=1
+        <if test="orderNo != null and orderNo != ''" >
+            and t.order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and t.customer_id = #{customerId}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code like CONCAT('%', #{shopCode}, '%')
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and t.model_id = #{modelId}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and t.order_status = #{orderStatus}
+        </if>
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0" >
+            and t.order_status in 
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and t.id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isDispatch != null" >
+            and is_dispatch = #{isDispatch}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and t.engineer_id = #{engineerId}
+        </if>
+        <if test="balanceStatus != null" >
+            and t.balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and t.balance_no = #{balanceNo}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del = #{isDel}
+        </if>
+        <if test="fromSystem != null and fromSystem != ''" >
+            and t.from_system = #{fromSystem}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryMapForPage" resultType="Map"  parameterType="Object">
+         
+        select
+        t.id,t.order_no,t.customer_id,t.provider_code,
+        t.shop_code,t.brand_id,t.model_id,t.cancel_type,
+        t.convert_type,t.order_price,t.real_price,t.order_status,t.balance_status,
+        date_format(t.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time 
+        ,t.engineer_id,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,s.tel shop_tel,s.manager_mobile shop_manager_mobile,s.manager_name shop_manager_name
+        ,s.name shop_name,old.tel customer_mobile,old.oldMobile old_model,old.newMobile new_model
+        ,old.name customer_name,old.homeAddress address,e.name engineer_name,e.mobile engineer_mobile
+        ,t.from_system
+        <if test="orderStatus == 2 " >s
+        ,(select count(1) from kx_engineer e where e.is_del = 0 and e.is_dispatch = 0 and e.shop_code = t.shop_code ) eng_count
+        </if>
+        
+        ,date_format(now(),'%Y-%m-%d %H:%i:%s') sys_time 
+        ,fs.name from_system_name
+        from kx_new_order t
+        left join kx_shop s on t.shop_code = s.`code`
+        left join kx_engineer e on t.engineer_id=e.id
+        left join kx_from_system fs on t.from_system = fs.id
+        left join kx_oldtonew old on old.id=t.user_id
+        where 1=1
+         <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and t.order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and old.tel = #{customerMobile}
+        </if>
+         <if test="province != null and province != ''" >
+            and old.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and old.city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and old.county = #{county}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and t.order_status = #{orderStatus}
+        </if>
+
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0" >
+            and t.order_status in 
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code like CONCAT('%', #{shopCode}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del = #{isDel}
+        </if>
+        <if test="isDispatch != null" >
+            and t.is_dispatch = #{isDispatch}
+        </if>
+        <if test="fromSystem != null and fromSystem != ''" >
+            and t.from_system = #{fromSystem}
+        </if>
+        order by t.in_time desc
+    </select>
+    
+    <!-- 根据订单号，修改订单状态-->
+    <update id="updateByOrderNo" parameterType="Object" >
+        update kx_new_order 
+        set 
+            order_status=#{orderStatus},
+            update_time=#{updateTime},
+        where id=#{id}
+    </update>
+
+    <!-- 得到日期内未结算订单信息 -->
+    <select id="getSummaryOrderListForPage" parameterType="Object" resultType="Map">
+        select t2.id,t1.provider_name providerName,
+        count(t1.provider_code) orderCount,
+        t2.manager_name managerName,
+        t2.manager_mobile managerMobile,
+        t2.account_bank accountBank,
+        t2.account_bank_branch accountBankBranch,
+        t2.account_name accountName,
+        t2.account_number accountNumber,
+        t2.proportion,
+        sum(t1.real_price) amountPrice,
+        t1.end_time
+        from kx_new_order t1
+        left join kx_provider t2
+        on t1.provider_code = t2.code
+        where t1.is_del = 0
+	        and t1.order_status = 50
+	        and t1.balance_status = 0
+	        and t2.is_del = 0
+	        and t2.status = 0
+	        and t1.end_time BETWEEN #{queryStartTime} and #{queryEndTime}
+        GROUP BY t1.provider_code
+        ORDER BY t1.provider_code
+    </select>
+
+    <!-- 得到指定日期内各连锁商结算总金额 -->
+    <select id="queryBalanceAmount" parameterType="Object" resultType="Map">
+        select count(1) orderCount,
+            sum(t1.real_price) amount_price,
+            sum(round(t1.real_price * (1 - t2.proportion),2)) balance_amount,
+            (sum(t1.real_price) - sum(round(t1.real_price * (1 - t2.proportion),2))) profit_price
+        from kx_new_order t1
+        left join kx_provider t2 on t1.provider_code = t2.code
+        where t1.is_del = 0
+            and t1.order_status = 50
+            and t1.balance_status = 0
+            and t2.is_del = 0
+            and t2.status = 0
+            and t1.end_time BETWEEN #{queryStartTime} and #{queryEndTime}
+     
+    </select>
+
+    <!-- 查询待结算的订单 -->
+    <select id="queryOrderForBalance" resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List"/>
+        from kx_new_order t
+        where t.is_del = 0
+            and t.order_status = 50
+            and t.balance_status = 0
+            and t.end_time &gt;= #{queryStartTime}
+                and t.end_time &lt;= #{queryEndTime}
+        <if test="providerCode != null and providerCode != ''" >
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and t.shop_code = #{shopCode}
+        </if>
+    </select>
+
+    <!-- 修改日期内订单balance状态 -->
+    <update id="updateBalanceStatus" parameterType="Object">
+       UPDATE kx_new_order SET
+       balance_status=#{balanceStatus},
+       balance_time=#{balanceTime},
+       balance_no=#{balanceNo}
+       where id = #{id} and balance_status = 0
+    </update>
+    
+    <!-- 清楚balance状态 -->
+    <update id="deleteBalanceStatus" parameterType="Object">
+       UPDATE kx_new_order SET
+       balance_status=0,
+       balance_time=null,
+       balance_no=null
+       where balance_no = #{balanceNo}
+    </update>
+</mapper>   

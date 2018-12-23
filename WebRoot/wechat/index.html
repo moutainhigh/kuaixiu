@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>M超人快修</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="indexWrap">
+    <div class="main">
+        <div class="repair bg">
+            <div class="pageTitle">
+                <p>
+                    请选择维修方式
+                </p>
+                <span></span>
+            </div>
+            <div class="selType">
+                <div class="typeClass active" data-type="0">
+                    <i class="type_icon type_icon1"></i>
+                    <p>上门维修</p>
+                </div>
+                <div class="typeClass" data-type="3">
+                    <i class="type_icon type_icon2"></i>
+                    <p>寄修</p>
+                </div>
+            </div>
+            <a href="javascript:;" class="btn-large" id="nextStep">下一步</a>
+            <div class="typeOther">
+                <a href="tel:0571-88803875" class="tel">试试电话下单</a>
+                <p onclick="nearStore()">看看附近的维修门店</p>
+            </div>
+        </div>
+
+        <div class="purchase bg">
+            <table class="tab">
+                <tr>
+                    <td rowspan="2">
+                        <a class="emption_list" href="javascript:;" data-value="0">
+                            <div class="title">iPhone</div>
+                            <div class="font">换电池</div>
+                            <div class="goods">
+                                <img src="img/img.jpg" alt="" />
+                            </div>
+                            <div class="money">109</div>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="1">
+                            <p class="title">iPhone 6</p>
+                            <p class="font">屏幕破碎（显示正常）</p>
+                            <p class="money">129</p>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="2">
+                            <p class="title">华为 MATE 9</p>
+                            <p class="font">屏幕破碎</p>
+                            <p class="money">219</p>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="3">
+                            <p class="title">iPhone 6 Plus</p>
+                            <p class="font">屏幕破碎（显示正常）</p>
+                            <p class="money">129</p>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="4">
+                            <p class="title">iPhone 6S</p>
+                            <p class="font">屏幕破碎（显示正常）</p>
+                            <p class="money">129</p>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li class="bottom_in"><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/jbase64.js"></script>
+<script src="js/common.js"></script>
+<script src="js/index.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=leGuAv2GX5RNogNLUFj1WkGfATZBpNGM"></script>
+</script>
+ <script>
+  $(function(){
+     var engineerId = GetQueryString( 'engineerId' ) ;
+	 eCacheUtil.storage.cache( CacheKey.engineerId, engineerId );
+  })
+ </script>
+
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

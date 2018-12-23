@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.version.dao.VersionMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.version.entity.Version" >
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="version" property="version"/>
+        <result column="level" property="level"/>
+        <result column="path" property="path"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- kx_version table all fields -->
+    <sql id="Base_Column_List" >
+        id,name,version,level,path,date_format(`update_time`,'%Y-%m-%d')update_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_version
+        (id,name,version,level,path,update_time,create_time)
+        values
+        (#{id},#{name},#{version},#{level},#{path},#{updateTime},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_version 
+        set 
+            id=#{id},
+            name=#{name},
+            version=#{version},
+            level=#{level},
+            path=#{path},
+            update_time=#{updateTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_version where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_version where id = #{id}
+    </select>
+    
+    <!-- 根据名称查询最新版本  -->
+    <select id="queryNewVersion"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_version where name = #{name}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_version
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="version != null and version != ''" >
+            and version = #{version}
+        </if>
+        <if test="level != null and level != ''" >
+            and level = #{level}
+        </if>
+        <if test="path != null and path != ''" >
+            and path = #{path}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        order by version desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_version
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="version != null and version != ''" >
+            and version = #{version}
+        </if>
+        <if test="level != null and level != ''" >
+            and level = #{level}
+        </if>
+        <if test="path != null and path != ''" >
+            and path = #{path}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        order by version desc
+    </select>
+
+</mapper>   

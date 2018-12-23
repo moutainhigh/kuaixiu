@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.screen.dao.ScreenProjectMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.screen.entity.ScreenProject" >
+        <result column="id" property="id"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="max_price" property="maxPrice"/>
+        <result column="max_time" property="maxTime"/>
+        <result column="sort" property="sort"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserId"/>
+        <result column="detail" property="detail"/>
+        <result column="product_code" property="productCode"/>
+    </resultMap>
+    
+    <!-- kx_provider table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.brand_id,t.name,t.price,t.max_price,t.max_time,t.sort,t.is_del,
+        date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,
+        date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid,
+        t.detail,t.product_code
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_screen_project
+        (id,brand_id,name,price,max_price,sort,product_code,max_time,
+         create_time,create_userid,detail)
+        values
+        (uuid(),#{brandId},#{name},#{price},#{maxPrice},#{sort},#{productCode},#{maxTime},
+         now(),#{createUserId},#{detail})
+    </insert>
+
+    <!-- 根据订单号，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_screen_project
+        set 
+            brand_id=#{brandId},
+            name=#{name},
+            product_code=#{productCode},
+            sort=#{sort},
+            price=#{price},
+            max_price=#{maxPrice},
+            is_del=#{isDel},
+            max_time=#{maxTime},
+            detail=#{detail},
+            update_time=#{updateTime},
+            update_userid=#{updateUserId}
+        where id=#{id}
+    </update>
+
+     <!-- 根据名称查询 -->
+    <select id="queryByName"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_project t where t.name = #{name} and is_del = 0
+    </select>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_project t where t.id = #{id}
+    </select>
+    
+  
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+          ,p.name brand_name
+        from kx_screen_project t
+        LEFT JOIN kx_screen_brand p on t.brand_id = p.id
+        where t.is_del = 0
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and t.name = #{name}
+        </if>
+        <if test="productCode != null and productCode != ''" >
+            and t.product_code = #{productCode}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and t.brand_id = #{brandId}
+        </if>
+        order by t.sort
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+         select
+        <include refid="Base_Column_List"/>
+          ,p.name brand_name
+        from kx_screen_project t
+        LEFT JOIN kx_screen_brand p on t.brand_id = p.id
+        where t.is_del = 0
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and t.name = #{name}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="productCode != null and productCode != ''" >
+            and t.product_code = #{productCode}
+        </if>
+        order by t.sort 
+    </select>
+    
+   
+
+</mapper> 

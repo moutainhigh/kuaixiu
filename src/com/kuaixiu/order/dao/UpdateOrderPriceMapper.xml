@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.order.dao.UpdateOrderPriceMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.UpdateOrderPrice" >
+        <result column="id" property="id"/>
+        <result column="up_number_no" property="upNumberNo"/>
+        <result column="up_order_no" property="upOrderNo"/>
+        <result column="up_begin_price" property="upBeginPrice"/>
+        <result column="up_end_price" property="upEndPrice"/>
+        <result column="up_reason" property="upReason"/>
+        <result column="up_in_time" property="upInTime"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_update_price table all fields -->
+    <sql id="Base_Column_List" >
+        id,up_number_no,up_order_no,up_begin_price,up_end_price,up_reason,date_format(`up_in_time`,'%Y-%m-%d %H:%i:%s')up_in_time,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_update_price
+        (id,up_number_no,up_order_no,up_begin_price,up_end_price,up_reason,up_in_time,is_del,create_time,create_userid,update_time,update_userid)
+        values
+        (#{id},#{upNumberNo},#{upOrderNo},#{upBeginPrice},#{upEndPrice},#{upReason},now(),0,now(),#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_update_price 
+        set 
+            id=#{id},
+            up_number_no=#{upNumberNo},
+            up_order_no=#{upOrderNo},
+            up_begin_price=#{upBeginPrice},
+            up_end_price=#{upEndPrice},
+            up_reason=#{upReason},
+            up_in_time=#{upInTime},
+            is_del=#{isDel},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=#{updateTime},
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_update_price where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_update_price where id = #{id}
+    </select>
+
+    <!-- 根据upOrderNo查询  -->
+    <select id="queryByUpOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_update_price where up_order_no = #{upOrderNo}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_update_price
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="upNumberNo != null and upNumberNo != ''" >
+            and up_number_no = #{upNumberNo}
+        </if>
+        <if test="upOrderNo != null and upOrderNo != ''" >
+            and up_order_no = #{upOrderNo}
+        </if>
+        <if test="upBeginPrice != null and upBeginPrice != ''" >
+            and up_begin_price = #{upBeginPrice}
+        </if>
+        <if test="upEndPrice != null and upEndPrice != ''" >
+            and up_end_price = #{upEndPrice}
+        </if>
+        <if test="upReason != null and upReason != ''" >
+            and up_reason = #{upReason}
+        </if>
+        <if test="upInTime != null and upInTime != ''" >
+            and up_in_time = #{upInTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_update_price
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="upNumberNo != null and upNumberNo != ''" >
+            and up_number_no = #{upNumberNo}
+        </if>
+        <if test="upOrderNo != null and upOrderNo != ''" >
+            and up_order_no = #{upOrderNo}
+        </if>
+        <if test="upBeginPrice != null and upBeginPrice != ''" >
+            and up_begin_price = #{upBeginPrice}
+        </if>
+        <if test="upEndPrice != null and upEndPrice != ''" >
+            and up_end_price = #{upEndPrice}
+        </if>
+        <if test="upReason != null and upReason != ''" >
+            and up_reason = #{upReason}
+        </if>
+        <if test="upInTime != null and upInTime != ''" >
+            and up_in_time = #{upInTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+
+</mapper>   

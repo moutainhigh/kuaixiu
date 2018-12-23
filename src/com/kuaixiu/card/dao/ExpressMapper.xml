@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.card.dao.ExpressMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.card.entity.Express">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="express_code" jdbcType="VARCHAR" property="expressCode" />
+    <result column="express_name" jdbcType="VARCHAR" property="expressName" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, express_code,express_name,sort,in_time
+  </sql>
+
+  <insert id="add" parameterType="Object">
+    insert into hk_express (id, express_code,express_name,sort,in_time)
+    values (#{id,jdbcType=VARCHAR}, #{expressCode,jdbcType=VARCHAR},#{expressName,jdbcType=VARCHAR},#{sort,jdbcType=INTEGER},now())
+  </insert>
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_express
+    where 1=1
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    order by sort desc
+  </select>
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_express
+    where 1=1
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    order by sort desc
+  </select>
+
+
+<!--
+  <update id="updateByExampleSelective" parameterType="map">
+    update hk_express
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expressName != null">
+        express_name = #{record.expressName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+-->
+
+
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.2.xsd
+				        http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+	<mvc:annotation-driven />
+	
+	<mvc:resources mapping="/swagger/**" location="/WEB-INF/swagger/"/>
+	<mvc:default-servlet-handler />
+	<!-- 把标记了@Controller注解的类转换为bean -->
+    <context:component-scan base-package="com.**.controller" />
+	
+	<!-- jsp视图解析器 -->
+	<bean id="defalutViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+		<property name="order">
+			<value>1</value>
+		</property>
+	</bean>
+	
+	<!-- html视图解析器 -->
+	<bean id="htmlviewResolver"    
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">   
+        <property name="viewClass" value="com.system.web.HtmlResourceView"/>  
+        <property name="order" value="0" />  
+        <property name="prefix" value="/"/>  
+        <property name="suffix" value=".html" />    
+        <property name="contentType" value="text/html;charset=UTF-8"></property>    
+    </bean>  
+	
+	
+    <!-- 注册拦截器 -->
+    <bean
+        class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="authorityInterceptor" />
+            </list>
+        </property>
+    </bean>
+    
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <ref bean="authorityInterceptor"/>
+        </mvc:interceptor>
+        
+        <mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.system.api.controller.AccessKeyInterceptor" />
+		</mvc:interceptor>
+    </mvc:interceptors>
+    
+   
+    
+    
+    <!-- web端权限拦截器 -->
+    <bean id="authorityInterceptor" class="com.system.web.AuthorityInterceptor">
+        <!-- 匿名用户可访问的地址 -->
+        <property name="anonymousUrls">
+            <list>
+                <!-- 资源路径 -->
+                <value>^/plugins/.*</value>
+                <value>^/resource/.*</value>
+                <value>^/WEB-INF/jsp/.*</value>
+                <!-- 登录 -->
+                <value>^/admin</value>
+                <value>^/admin/</value>
+                <value>^/admin/login\.do.*</value>
+                <value>^/admin/logout\.do.*</value>
+                <value>^/admin/checkLogin\.do.*</value>
+                <value>^/admin/checkCookie\.do.*</value>
+                <value>^/admin/forgot\.do.*</value>
+                <value>^/admin/forgotCheck\.do.*</value>
+                
+                <!--微信端-->
+                <value>^/wechat/repair/.*</value>
+                <value>^/wechat/sendSmsCode\.do.*</value>
+                <value>^/wechat/order/wechatLogin\.do.*</value>
+                <value>^/wechat/order/checkLogin\.do.*</value>
+                <value>^/wechat/order/cancelReason\.do.*</value>
+                <value>^/wechat/order/login\.do.*</value>
+                <value>^/wechat/order/payBalance\.do.*</value>
+                <value>^/wechat/order/startPayBalance\.do.*</value>
+                <value>^/wechat/getNews\.do.*</value>
+                <!--微信接口-->
+                <value>^/wechat/api\.do.*</value>
+                <value>^/wechat/pay/callback\.do.*</value>
+                <!--支付宝接口-->
+                <value>^/alipay/pay/callback\.do.*</value>
+                <!-- 网站 -->
+                <value>^/index\.do.*</value>
+                <value>^/webpc/repair/.*</value>
+                <value>^/webpc/sendSmsCode\.do.*</value>
+                <value>^/webpc/login\.do.*</value>
+                <value>^/webpc/activity/.*</value>
+                <value>^/webpc/checkLogin/.*</value>
+                <value>^/webpc/checkLogin\.do.*</value>
+                <value>^/webpc/newOrder/.*</value>
+                <value>^/coupon/editByBatch\.do.*</value>
+                <value>^/coupon/updateByBatchId\.do.*</value>
+                <value>^/screen/.*</value>
+                <value>^/recycle/.*</value>
+                <value>^//recycle/.*</value>
+                <value>^/recycleNew/.*</value>
+                <value>^/join/.*</value>
+                <!-- 接口 -->
+                <value>^/open/.*</value>
+                <value>^/swagger/.*</value>
+                <value>^/address/.*</value>
+                <!-- WAP -->
+                <value>^/wap/sendSmsCode\.do.*</value>
+                <value>^/wap/coupon/.*</value>
+                <value>^/wap/clerk/.*</value>
+                <value>^/wap/integral/.*</value>
+                <value>^/ty_wap/</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="mappingJacksonHttpMessageConverter"
+        class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+    <bean
+        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <util:list id="beanList">
+                <ref bean="mappingJacksonHttpMessageConverter" />
+            </util:list>
+        </property>
+    </bean>
+   
+	<!-- 支持文件上传 -->
+	<bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    </bean>
+	
+	<!-- 自定义异常处理 -->
+	<bean id="exceptionResolver" class="com.common.handler.MyExceptionHandler"></bean>
+</beans>

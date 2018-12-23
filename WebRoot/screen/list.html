@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <script src="js/include.js"></script>
+    <meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+    <title>碎屏保-产品列表</title>
+   
+</head>
+<body>
+<div id="wrap">
+    <include src="components/header.html"></include>
+    <main>
+        <section class="select">
+            <span>选择产品：</span>
+            <div>
+                <p></p>
+                <a href="javascript:;" id="triangle"></a>
+                <ul class="series_list">
+
+                </ul>
+            </div>
+        </section>
+        <section class="list">
+            
+        </section>
+        <div id="template" style="display: none">
+            <div class="contentDiv">
+                <p class="title"></p>
+                <p class="info"></p>
+                <a></a>
+                <p class="money"></p>
+            </div>
+        </div>
+        <div id="otherLayer" style="display:none">
+            <div class="otherCont">
+                <div class="title">
+                    <p>— 购买碎屏保须知 —</p>
+                </div>
+                <div class="cont">
+                    <!-- 须知内容 -->
+                    <label>
+                        <input type="checkbox" name="check" id="check">
+                        <span>我同意以上条款</span>
+                    </label>
+                </div>
+                <div class="btnBox">
+                    <a href="javascript:;" class="cancel">取消</a>
+                    <a href="javascript:;" class="agree">我同意</a>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+</div>
+<include src="components/global.html"></include>
+<script src="js/jquery-3.1.0.js"></script>
+<script src="js/jbase64.js"></script>
+<script src="js/common.js"></script>
+<script>
+    var phoneId = '7aabd9bf-b338-11e7-b228-d4bed949bdc0',
+        otherId = '276c3918-b494-11e7-b11d-d4bed949bdc0',
+        maimang1 = 'eb3ed297-00cb-11e8-9509-d4bed949bdc0',//1年
+        maimang0 = 'b5616229-00cb-11e8-9509-d4bed949bdc0';//半年
+    $(function () {
+        var base = new Base64(),
+            bandId = eCacheUtil.storage.getCache(CacheKey.phoneBrandId);
+        var list = GetQueryString('list');
+        if (!isEmpty(list)){
+        	if(list=='other'){
+        		bandId = otherId;
+        	}
+        }
+
+        if (!isEmpty(bandId)){
+        	if(bandId == otherId){
+        		$('.select p').html('其他系列');
+        	}else{
+                bandId = base.decode(bandId);
+                $('.select p').html(eCacheUtil.storage.getCache(CacheKey.phoneBrandName));
+        	}
+        }else{
+            bandId = phoneId;
+            $('.select p').html("苹果系列");
+        }
+        var param = {
+                brandId:bandId
+            };
+        searchList(param);
+        searchGoods();
+
+        $('#otherLayer').delegate('#check','change',function(){
+            if ($(this).is(':checked')){
+                $('.agree').addClass('btn-agree');
+                $('label').addClass('active');
+            }else{
+                $('.agree').removeClass('btn-agree');
+                $('label').removeClass('active');
+            }
+        });
+
+        $('.cancel').click(function(){
+            $('#otherLayer').hide();
+            $('#check').prop('checked',false);
+            $('.agree').removeClass('btn-agree');
+            $('label').removeClass('active');
+        });
+        $('.agree').click(function(){
+            if ($(this).hasClass('btn-agree')){
+                if ($('#otherLayer').attr('data-eq') == 3){
+                    window.location.href ='vipInfo.html';
+                    eCacheUtil.storage.cache(CacheKey.time,$('#otherLayer').attr('data-t'));
+                }else{
+                    window.location.href ='userInfo.html';
+                }
+            }
+        })
+    });
+
+    $('#triangle').click(function () {
+        if ($(this).hasClass('active')){
+            $(this).removeClass('active');
+            $('ul.series_list').hide();
+        }else {
+            $(this).addClass('active');
+            $('ul').slideDown(140);
+        }
+    });
+
+    // 搜索“产品”
+    function searchGoods(){
+        let base = new Base64();
+        $.post(linkUrl+"/screen/order/brandList.do",function(data){ 
+            if (data.success){
+                var result = data.result.data;
+                for (var i = 0;i<result.length;i++){
+                    $('.series_list').append('<li>'+result[i].brandName+'系列</li>');
+                }
+                $('.series_list li').on('click', function () {
+                    var i = $(this).index(),
+                        param = {
+                            brandId:result[i].brandId
+                        };
+                    searchList(param);
+                    eCacheUtil.storage.cache(CacheKey.phoneBrandId,base.encode(param.brandId));
+                    eCacheUtil.storage.cache(CacheKey.phoneBrandName,$(this).html());
+                    $('.select p').html($(this).html());
+                    $('#triangle').removeClass('active');
+                    $('ul.series_list').hide();
+                });
+            }else {
+                alertTip(data.resultMessage);
+            }
+        });
+    }
+    // 搜索“产品系列”
+    function searchList(param) {
+        fn_loading();
+        $.post(linkUrl+"/screen/order/projects.do",{ params: JSON.stringify(param) },function(data){
+            loading_hide();
+            if (data.success){
+                $('.list').empty();
+
+                var result = data.result.data;
+                for (var i = 0; i < result.length; i++) {
+                    result[i].price = '购买价：'+result[i].price+'元';
+                    result[i].maxPrice = result[i].maxPrice+'元';
+                }
+                result.splice(0,0,{
+                    "projectName":"VIP回收送碎屏保",
+                    "dataEq":"3",
+                    "price":'购买价：0元',
+                    "maxPrice":'500元',
+                    "maxDate":'180',
+                    "prePrice":'69',
+                    "detail":'<p>1. 所送保障购买次日凌晨0点生效，<span class="fontBold">生效后180天内</span>，手机屏幕受到意外损坏时，将得到一次官方免费维修的服务保障，保障额度500元，超出部分需要您补齐差价；</p><p>2. 您领取了保险需承诺，30天内通过“M超人”回收一台估值超过100元的旧手机（估值以“M超人”公众号估值、或官网www.m-super.cn为准），<span class="fontBold">若30天后未回收，碎屏保服务将终止</span>。</p><p>3. 该碎屏保障<span class="fontBold">零售价69元</span>，如无法提供旧机，30天后需补交69元。</p><p>4. 该保障仅限M超人指定用户领取，在我平台通知您后5个工作日内均可领取，超期无效。</p><p>5. 领取流程：在M超人-免费碎屏保填写相关信息后领取。</p><p>6. 咨询电话：<a href="tel:4001013786">4001013786</a></p>'
+                });
+                if (param.brandId == phoneId){
+                    result.splice(1,0,{
+                        "projectName":"IphoneX",
+                        "price":'待上线',
+                        "maxPrice":'待定'
+                    });
+                }
+                /* else if (param.brandId == otherId){
+                    result.splice(0,0,{
+                        "projectName":"麦芒6（保一年）",
+                        "dataEq":"1",
+                        "price":'购买价：19元',
+                        "maxPrice":'530元',
+                        "prePrice":'99',
+                        "detail":'<p>1、仅限麦芒6用户参加；</p><p>2、不限新机旧机，但需保证无拆无修，屏幕无损伤；</p><p>3、保障自购买之日起一年内，手机屏幕受到意外损坏时，将得到一次官方免费维修的服务保障<span>（价值530元）</span>；</p><p>4、用户需承诺，1年内通过“M超人”回收上述手机（要求能正常使用），或者一台估值超过300元的旧手机（估值以“M超人”公众号估值、或官网<a href="http://www.m-super.cn">www.m-super.cn</a>为准）。</p><p>5、该碎屏保障零售价99元，如无法提供旧机，1年后需补交80元。</p><p>6、购买流程：在m超人-碎屏保-麦芒6用户下单，然后到网址<a href="http://api.linshaolong.cn/Telinfo/login?openid=tel">http://api.linshaolong.cn/Telinfo/login?openid=tel</a>激活，完善相关信息(仅限麦芒6的用户购买)；</p><p>7、该保障由浙江华英通信技术有限公司提供相关服务。</p>'
+                    },{
+                        "projectName":"麦芒6（保半年）",
+                        "dataEq":"0",
+                        "price":'购买价：0元',
+                        "maxPrice":'530元',
+                        "prePrice":'69',
+                        "detail":'<p>1、仅限麦芒6用户参加；</p><p>2、不限新机旧机，但需保证无拆无修，屏幕无损伤；</p><p>3、保障自购买之日起半年内，手机屏幕受到意外损坏时，将得到一次官方免费维修的服务保障<span>（价值530元）</span>；</p><p>4、用户需承诺，半年内通过“M超人”回收上述手机（要求能正常使用），或者一台估值超过300元的旧手机（估值以“M超人”公众号估值、或官网<a href="http://www.m-super.cn">www.m-super.cn</a>为准）。</p><p>5、该碎屏保障零售价69元，如无法提供旧机，半年后需补交69元。</p><p>6、购买流程：在m超人-碎屏保-麦芒6用户下单，然后到网址<a href="http://api.linshaolong.cn/Telinfo/login?openid=tel">http://api.linshaolong.cn/Telinfo/login?openid=tel</a>激活，完善相关信息(仅限麦芒6的用户购买)；</p><p>7、该保障由浙江华英通信技术有限公司提供相关服务。</p>'
+                    });
+                }*/
+                
+                result.push({
+                    "projectName":"新年特惠碎屏保",
+                    "dataEq":"2",
+                    "price":'购买价：0元',
+                    "maxPrice":'500元',
+                    "prePrice":'69',
+                    "detail":'<p><span class="fontBold">天翼用户承诺旧机回收即可免费领取一份“碎屏保”特惠服务</span>（下简称回收送碎屏保），该服务优惠内容是0元即享价值500元的手机碎屏保障180天，具体说明如下：</p><hr style="border:0;border-bottom:1px dashed #4c4c4c;background:0;" color="#4c4c4c" SIZE=1><p>1. 本“碎屏保”<span class="fontBold">仅限自新机购买至激活日起未到1年的手机且在获得本“碎屏保“的7日内激活，且手机所有功能正常且整机无拆无修</span>。</p><p>2. 本碎屏保申领成功后，自<span class="fontBold">生效日（自购买日起30天后为生效日）起180天内</span>，当发生<span class="fontBold">因本人意外手机受外力而引起的屏幕碎裂时</span>，可享受<span class="fontBold">限额500元的一次</span>原厂品质屏幕保修服务，当屏幕维修价格<span class="fontBold">超过500元时，超出的部分由顾客（您）承担；每位顾客只能申请一次“碎屏保“特惠服务</span>。</p><p>3. 用户需承诺30天内回收一台100元以上的旧手机，旧机款全额给用户。如到期没有旧机回收的，<span class="fontBold">平台有权向用户补扣碎屏保服务费69元</span>。旧机回收下单在支付宝生活号“中国电信”-天翼回收栏目或电信网厅<a href="http://zj.189.cn/ty_wap">http://zj.189.cn/ty_wap</a>，微信用户可直接在“M超人”公众号下单。</p><p>4. 购买流程：M超人公众号-碎屏保-“回收送碎屏保”下单，然后激活碎屏保、绑定手机机型及串码等相关信息，完成之后才能生效。当激活时需由您提供相关手机信息与顾客信息，<span class="fontBold">如提供信息有误则无法提供“碎屏保“服务，具体服务范围与规则以激活时您确认勾选的服务条款为准</span>。</p><p>5. 本碎屏保障由浙江华英通信技术有限公司提供相关服务，本产品服务热线<a href="tel:4001013786">4001013786</a></p><hr style="border:0;border-bottom:1px dashed #4c4c4c;background:0;" color="#4c4c4c" SIZE=1><p>* 查询订单、激活、报修请到“phonehero”公众号线上申请，或电话报修、咨询<a href="tel:4001013786">4001013786</a>。</p><p>登陆“phonehero”公众号，进入“个人服务”-“激活验证”，可查验激活信息，并再次查看“服务条款”。网页激活链接：<a href="http://api.linshaolong.cn/Telinfo/login?openid=tel">http://api.linshaolong.cn/Telinfo/login?openid=tel</a></p><p>* 本碎屏保服务由人保财险（PICC）承保</p>'
+                });
+                eachFull(result);
+                
+            }else {
+                loading_hide();
+                alertTip(data.resultMessage);
+            }
+        })
+    }
+    // 展示
+    function eachFull(info) {
+        var base = new Base64();
+        $.each(info, function (i, n) {
+            var tmp = $("#template").clone();
+            tmp.removeAttr("id");
+            if(n.projectId!=maimang0 && n.projectId!=maimang1){//将返回数据中的麦芒筛选
+                tmp.show();
+                $(".title", tmp).text(n.projectName);
+                $(".info", tmp).html("维修保障额最高"+n.maxPrice);
+                $(".money", tmp).html(n.price);
+            	
+                if (!isEmpty(n.prePrice)){
+                    $("a", tmp).html("原价"+n.prePrice);
+                    $(".contentDiv", tmp).addClass('otherDiv');
+                    
+                    if (n.dataEq == 1){//保一年
+                        $(".title", tmp).addClass('hot');
+                        $(".contentDiv",tmp).on('click', function () {
+                            var label = $("#otherLayer label").clone();
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectId,base.encode(maimang1));
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectName,"麦芒6（保一年）");
+                            eCacheUtil.storage.cache(CacheKey.phonePrice,"19".replace(/[^0-9]/ig,""));
+                            $('#otherLayer .cont').empty();
+                            $('#otherLayer .cont').append(n.detail+label[0].outerHTML);
+                            $('#otherLayer').show().attr('data-eq',1);
+                        });
+                    }else if (n.dataEq == 0){//包半年
+                        $(".title", tmp).addClass('hot');
+                        $(".contentDiv",tmp).on('click', function () {
+                            var label = $("#otherLayer label").clone();
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectId,base.encode(maimang0));
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectName,"麦芒6（保半年）");
+                            eCacheUtil.storage.cache(CacheKey.phonePrice,"0".replace(/[^0-9]/ig,""));
+                            $('#otherLayer .cont').empty();
+                            $('#otherLayer .cont').html(n.detail+label[0].outerHTML);
+                            $('#otherLayer').show().attr('data-eq',0);
+                        });
+                    }else if(n.dataEq == 2){//新装
+                        $(".info", tmp).html('<span style="font-weight:bold;">6个月</span>保障最高'+n.maxPrice);
+                        $(".contentDiv",tmp).on('click', function () {
+                            var label = $("#otherLayer label").clone();
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectId,base.encode("b5616229-00cb-11e8-9509-d4bed949bdc0"));
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectName,"新年特惠碎屏保");
+                            eCacheUtil.storage.cache(CacheKey.phonePrice,"0".replace(/[^0-9]/ig,""));
+        
+                            $('#otherLayer .cont').empty();
+                            $('#otherLayer .cont').html(n.detail+label[0].outerHTML);
+                            $('#otherLayer').show().attr('data-eq',2);
+                        });
+                    }else if(n.dataEq == 3){//VIP
+                        $(".contentDiv",tmp).on('click', function () {
+                            var label = $("#otherLayer label").clone();
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectName,"VIP免费碎屏保");
+                            $('#otherLayer .cont').empty();
+                            $('#otherLayer .cont').html(n.detail+label[0].outerHTML);
+                            $('#otherLayer').show().attr('data-eq',3).attr('data-t',n.maxDate);
+                        });
+                    }
+                }else{
+                    $("a", tmp).remove();
+                    $(".contentDiv",tmp).on('click', function () {
+                        if (!isEmpty(n.projectId)){
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectName,n.projectName);
+                            eCacheUtil.storage.cache(CacheKey.phoneProjectId,base.encode(n.projectId));
+                            eCacheUtil.storage.cache(CacheKey.phonePrice,n.price.replace(/[^0-9]/ig,""));
+                            window.location.href = "userInfo.html";
+                        }
+                    });
+                }
+                //追加到对应区块
+                $(".list").append(tmp);
+            }
+        });
+    }
+    
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

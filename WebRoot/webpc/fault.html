@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<title>选择故障-M超人</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script src="js/vue.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=leGuAv2GX5RNogNLUFj1WkGfATZBpNGM"></script>
+</head>
+
+<body>
+<div class="index_topmenubg">
+	<div class="index_topmenu">
+		<a class="logo" href="index.html"><img src="img/logo.jpg" /></a>
+		<div class="index_topright">
+			<div class="inquiry">
+				<input class="text" readonly="readonly" type="text" value="查询/支付" placeholder="查询/支付" />
+				<input class="search" type="button" value="" />
+			</div>
+		</div>
+
+		<div class="top_menus">
+			<a class="href" href="index.html">首页</a>
+			<a class="href hrefin" href="fault.html">手机维修</a>
+			<a class="href" href="http://huishou.m-super.cn/">旧机回收</a>
+			<a class="href" href="http://huishou.m-super.cn/">以旧换新</a>
+		</div>
+	</div>
+</div>
+
+<div class="content_title">
+	<div class="title schedule_list">
+		<span class="blue"><b>1</b><font>选择故障</font></span>
+		<font class="arrow">></font>
+		<span class="blue disabled"><b>2</b><font>提交订单</font></span>
+		<font class="arrow">></font>
+		<span class="blue disabled"><b>3</b><font>上门维修</font></span>
+		<font class="arrow">></font>
+		<span class="blue disabled"><b>4</b><font>维修完成</font></span>
+	</div>
+	<div class="title schedule_list jiXiu_title" style="display:none;">
+		<span class="blue"><b>1</b><span>选择故障</span></span>
+		<span class="arrow">></span>
+		<span class="blue disabled"><b>2</b><span>提交订单</span></span>
+		<span class="arrow">></span>
+		<span class="blue disabled"><b>3</b><span>快递送件</span></span>
+		<span class="arrow">></span>
+		<span class="blue disabled"><b>4</b><span>维修完成</span></span>
+		<span class="arrow">></span>
+		<span class="blue disabled"><b>5</b><span>快递运回</span></span>
+		<span class="arrow">></span>
+		<span class="blue disabled"><b>6</b><span>收货验机</span></span>
+	</div>
+</div>
+
+<div class="tobe_paid">
+	<div class="user_form">
+		<div class="fault_content">
+			<div class="fault_tab">
+				<div class="font">维修方式：</div>
+				<div class="fault_cont" id="way">
+					<label class="label">
+						<input class="radio" checked="checked" name="way" type="radio" value="0" v-model="val" /><i class="radio_icon"></i>
+						<span class="genre">上门维修</span>
+					</label>
+					<label class="label">
+						<input class="radio" name="way" type="radio" value="1" v-model="val" /><i class="radio_icon"></i>
+						<span class="genre">到店维修</span>
+					</label>
+					<label class="label" id="jiXiu">
+						<input class="radio" name="way" type="radio" value="3" v-model="val" /><i class="radio_icon"></i>
+						<span class="genre">寄修</span>
+					</label>
+				</div>
+			</div>
+
+			<div class="fault_tab">
+				<div class="font">手机品牌：</div>
+				<div class="fault_cont" id="brand">
+					<label class="label" v-for="(brand, index) in brands" @mouseup="SelectBrand(brand.brandId,index)">
+						<input class="radio" name="brandId" :checked="index === addrSelected" type="radio"/><i class="radio_icon"></i>
+						<span v-bind:title="brand.brandName" class="genre">{{brand.brandName}}</span>
+					</label>
+				</div>
+			</div>
+
+			<div class="fault_tab">
+				<div class="font">支持机型：</div>
+				<div class="fault_cont" id="model">
+					<label class="label" v-for="model in models" v-on:click="SelectModel">
+						<input class="radio" name="type" type="radio" value="" /><i class="radio_icon"></i>
+						<span v-bind:title="model.modelName" class="genre">{{model.modelName}}</span>
+					</label>
+				</div>
+			</div>
+
+			<div class="fault_tab" v-if="DividingLine">
+				<div class="font1">颜  色：</div>
+				<div class="fault_cont">
+					<ul class="select_typecolor">
+						<li v-for="color in colors" v-on:click="SelectColor">{{color}}</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="fault_tab" v-if="DividingLine">
+				<div class="font2">故  障：</div>
+				<div class="fault_cont">
+					<ul class="breakdown">
+						<!--<li class="colorIn">内屏碎裂</li>-->
+						<li v-for="project in projectList" v-bind:id="project.projectId" v-bind:data-price="project.price" v-on:click="SelectFault">{{project.projectName}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="bond_cont">
+			<span class="bond">维修参考价: ¥ {{price}}</span>
+		</div>
+
+		<div class="remarks_cont">
+			<span class="title">注意事项：</span>
+			<div class="remarks">
+				<p>1.参考价为预测报价，实际以工程师上门检测为准；</p>
+				<p>2.损坏零件需被工程师收回，如需自留，另补差价。</p>
+			</div>
+		</div>
+
+		<div class="provision">
+			<input class="checkbox" checked="checked" type="checkbox" v-on:click="termsService" value="" /><i class="check_icon"></i>
+			提交订单等于同意手机超人的<a class="clause" href="terms_service.html">维修服务条款</a>
+		</div>
+		<div class="paid_but">
+			<a class="but but3" id="submitBut" v-on:click="Submit" href="javascript:;">确 定</a>
+		</div>
+	</div>
+</div>
+
+<div class="index_copyright">
+	<div class="index_copycont">
+		<p>Copyright 2016 All Rights Reserved 杭州翼诺科技有限公司 技术支持 浙ICP备16041546号</p>
+		<div class="code">
+			<img src="img/code.png" />
+			<span>扫码关注微信公众号</span>
+		</div>
+	</div>
+</div>
+
+<!--登录-->
+<div class="login_popupbg loginPopup">
+	<div class="login_popup">
+		<div class="popup_title"><a class="exit_popup" v-on:click="colseLogin" href="javascript:;"><i class="icon"></i></a></div>
+		<div class="login_head">
+			快修账号登录
+		</div>
+		<div class="login_input">
+			<input class="text placeholder" v-model="tel" id="inputtel" maxlength="11" type="text" value="请输入下单手机号" placeholder="请输入下单手机号" />
+		</div>
+		<div class="login_input">
+			<input class="text psw placeholder" v-model="checkCode" type="text" value="请输入短信验证码" placeholder="请输入短信验证码" />
+			<input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" v-on:click="sendMsg($event)" />
+		</div>
+		<div class="login_submit">
+			<input class="submit" type="submit" v-on:click="Login" value="查询/支付" />
+		</div>
+	</div>
+</div>
+
+<!--错误提示-->
+<div class="remind_delivery_bg">
+	<div class="remind_delivery_cont">
+		<p></p>
+	</div>
+</div>
+<!--错误提示end-->
+<!--遮盖层-->
+<div id="mask_boxs" style="position: absolute;top:0;left: 0;width:100%;height:100%;display: none;z-index:50;">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif" style="width: 80px;height:80px;position:fixed; top:50%;left:50%; margin-left:-25px;  margin-top:-25px;z-index:999"/>
+    </div>
+</div>
+<!--遮盖层end-->
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/login.js"></script>
+<script src="js/fault.js"></script>
+<script>
+    var neiping = "6aaa3f6e-6f71-11e6-b930-10c37b579295",//屏幕破碎（显示异常） 内屏碎裂
+        waiping = "fe750fc5-70ff-11e6-80cd-10c37b579295",//屏幕破碎（显示正常） 外屏碎裂
+        screenBroken="89971c83-d95c-11e6-a112-00163e04c890",//屏幕破碎
+        outsideScreenBroken="db3c6320-1aa1-11e7-932d-00163e04c890",//外屏破碎
+        apple = '1',
+        honor = 'ab5d307a-e335-11e6-a80a-00163e04c890';
+
+	var vue = new Vue({
+		el:'.tobe_paid',
+		data:{
+			val:'0',
+			brands:[],
+			brandId:'',
+            modleId:'',
+            modelName:'',
+			models:[],
+			DividingLine:false,
+			colors:[],
+			projectList:[],
+			price:'0.00',
+			selColor:'',
+			selFaultId:[],
+			selFaultName:[],
+			addrSelected:0
+		},
+		created:function () {//chuangjiang
+            fn_loading();
+		},
+		mounted:function () {//已挂在页面
+            var _self = this;
+            //手机品牌列表
+            $.ajax({
+                type:'POST',
+                url:linkUrl+'/wechat/repair/brandList.do',
+                dataType:'json',
+                success:function (data) {
+                    loading_hide();
+                    if (data.success){
+                        _self.brands = data.result.data;
+                        _self.brandId = _self.brands[0].brandId;
+                        _self.ModelList(_self.brandId);
+                    }else {
+                        _self.dataError(data.resultMessage);
+                    }
+                },
+                error:function (jqXHR) {
+                    loading_hide();
+                    _self.dataError(jqXHR.status)
+                }
+            });
+		},
+		methods:{
+			//选择品牌
+			SelectBrand:function (brandid,index) {
+				this.addrSelected = index;
+                this.ModelList(brandid);
+
+				this.brandId = brandid;
+			},
+			//支持机型列表
+			ModelList:function (brandId) {
+			    $('#model input').attr('checked',false);
+                this.modleId = '';
+                this.DividingLine = false;
+                this.colors = [];
+                this.projectList = [];
+                this.selColor = '';
+                this.selFaultId = [];
+                this.selFaultName = [];
+				var _self = this;
+				var params = {
+					brandId:brandId
+				};
+				$.ajax({
+					type:'POST',
+					url:linkUrl+'/wechat/repair/modelList.do',
+					dataType:'json',
+					data:{
+						params:JSON.stringify(params)
+					},
+					success:function (data) {
+						if (data.success){
+							_self.models = data.result.data;
+						}else {
+							dataError(data.resultMessage);
+						}
+					},
+					error:function (jqXHR) {
+
+					}
+				})
+			},
+			//选择机型，并获取颜色、故障列表
+			SelectModel:function (e) {
+                var obj = e.currentTarget;
+                var index = $(obj).index(),
+                    _self = this;
+                this.modleId = this.models[index].modelId;
+                this.modelName = this.models[index].modelName;
+                this.price = '0.00';
+                $('.select_typecolor li').removeClass('colorIn');
+                $('.breakdown li').removeClass('colorIn');
+
+                var params = {
+                    modelId:_self.modleId
+                };
+                $.ajax({
+                    type:'POST',
+                    url:linkUrl+'/wechat/repair/modelInfo.do',
+                    dataType:'json',
+                    data:{
+                        params:JSON.stringify(params)
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success:function (data) {
+                        if (data.success){
+                            _self.DividingLine = true;
+
+                            var modelColor = data.result.modelColor.split(',');
+                            for (var i = 0;i < modelColor.length; i++){
+                                if (modelColor[i] == ''){
+                                    modelColor.splice(i,1);
+                                }
+                            }
+                            _self.colors = modelColor;
+                            _self.projectList = data.result.data;
+                        }else {
+                            _self.dataError(data.resultMessage);
+                        }
+                    },
+                    error:function (jqXHR) {
+
+                    }
+
+                });
+                _self.selColor = '';
+                _self.selFaultId = [];
+                _self.selFaultName = [];
+			},
+			//选择颜色
+			SelectColor:function (e) {
+				var obj = e.currentTarget;
+				$(obj).addClass('colorIn').siblings('.colorIn').removeClass('colorIn');
+				this.selColor = $.trim($(obj).html());
+			},
+			//选择故障
+			SelectFault:function (e) {
+				var obj = e.currentTarget;
+
+				if ($(obj).hasClass('colorIn')){
+					$(obj).removeClass('colorIn');
+					var i = this.selFaultId.indexOf($(obj).attr("id"));
+					if(i >=0){
+						this.selFaultId.splice(i,1);
+						this.selFaultName.splice(i,1);
+					}
+					this.price -= parseFloat($(obj).attr("data-price"));
+				}else {
+					$(obj).addClass('colorIn');
+					var pid = $(obj).attr("id");
+					var pname = $(obj).html();
+					this.selFaultId.push(pid);
+					this.selFaultName.push(pname);
+
+                    this.price = parseFloat(this.price) + parseFloat($(obj).attr("data-price"));
+
+					if (this.brandId == apple){
+                        //判断是否为内屏碎裂或外屏碎裂
+                        if(pid == neiping){
+                            //判断是否同时存在外屏并已选中
+                            var i = this.selFaultId.indexOf(waiping);
+
+                            if(i >=0){
+                                $("#" + waiping).removeClass('colorIn');
+                                this.selFaultId.splice(i,1);
+                                this.selFaultName.splice(i,1);
+                                this.price -= parseFloat($("#" + waiping).attr("data-price"));
+                            }
+                        }
+                        else if(pid == waiping){
+                            //判断是否同时存在内屏并已选中
+                            var i = this.selFaultId.indexOf(neiping);
+
+                            if(i >=0){
+                                $("#" + neiping).removeClass('colorIn');
+                                this.selFaultId.splice(i,1);
+                                this.selFaultName.splice(i,1);
+                                this.price -= parseFloat($("#" + neiping).attr("data-price"));
+                            }
+                        }
+                    }else if (this.brandId == honor){
+                        if(pid==outsideScreenBroken){
+                            //判断是否同时存在屏幕破碎并已选中
+                            var i = this.selFaultId.indexOf(screenBroken);
+                            if(i >=0){
+                                $("#" + screenBroken).removeClass('colorIn');
+                                this.selFaultId.splice(i,1);
+                                this.selFaultName.splice(i,1);
+                                this.price -= parseFloat($("#" + screenBroken).attr("data-price"));
+                            }
+                        }else if(pid==screenBroken){
+                            //判断是否同时存在外屏破碎并已选中
+                            var i = this.selFaultId.indexOf(outsideScreenBroken);
+                            if(i >=0){
+                                $("#" + outsideScreenBroken).removeClass('colorIn');
+                                this.selFaultId.splice(i,1);
+                                this.selFaultName.splice(i,1);
+                                this.price -= parseFloat($("#" + outsideScreenBroken).attr("data-price"));
+                            }
+                        }
+                    }
+				}
+				this.price = this.price.toFixed(2);
+			},
+			termsService:function () {
+				if ($('.provision .checkbox').is(':checked')){
+					$('#submitBut').removeClass('disabled');
+				}else {
+					$('#submitBut').addClass('disabled');
+				}
+			},
+			Submit:function (e) {
+				var obj = e.currentTarget;
+				if ($(obj).hasClass('disabled')){
+					$(obj).attr('href','javascript:;');
+				}else {
+					if (this.DividingLine == false){
+						this.dataError("请选择机型！");
+					}else if (this.selColor == ''){
+						this.dataError("请选择颜色！");
+					}else if (this.selFaultId == ''){
+						this.dataError("请选择故障类型！");
+					}else {
+						eCacheUtil.storage.cache(CacheKey.phoneSelProjectId,this.selFaultId);
+						eCacheUtil.storage.cache(CacheKey.phoneBrandId,this.brandId);
+                        eCacheUtil.storage.cache(CacheKey.phoneModelId,this.modleId);
+                        eCacheUtil.storage.cache(CacheKey.phoneModelName,this.modelName);
+						eCacheUtil.storage.cache(CacheKey.phoneSelProjectName,this.selFaultName);
+                        eCacheUtil.storage.cache(CacheKey.phoneSelColor,this.selColor);
+						eCacheUtil.storage.cache(CacheKey.orderPrice,this.price);
+						eCacheUtil.storage.cache(CacheKey.repairWay,this.val);
+						if (this.val == 1){
+							$(obj).attr('href','storeList.html');
+						}else {
+							$(obj).attr('href','userInput.html');
+						}
+					}
+
+				}
+
+			},
+			dataError:function(text) {
+				$('.remind_delivery_bg .remind_delivery_cont p').text(text);
+				$(".remind_delivery_bg").show();
+				window.setTimeout(function(){ $(".remind_delivery_bg").fadeOut();},2000);
+			}
+		}
+	});
+
+</script>
+
+</body>
+</html>

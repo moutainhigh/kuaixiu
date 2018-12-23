@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleExternalSubmitMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleExternalSubmit" >
+        <result column="id" property="id"/>
+        <result column="test_id" property="testId"/>
+        <result column="token" property="token"/>
+        <result column="login_mobile" property="loginMobile"/>
+        <result column="source" property="source"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="note" property="note"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="area" property="area"/>
+        <result column="street" property="street"/>
+        <result column="test_price" property="testPrice"/>
+        <result column="TS_message" property="TSMessage"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- hs_external_submit table all fields -->
+    <sql id="Base_Column_List" >
+        id,test_id,token,login_mobile,source,name,mobile,note,province,city,county,area,street,test_price,TS_message,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_external_submit
+        (id,test_id,token,login_mobile,source,name,mobile,note,province,city,county,area,street,test_price,TS_message,create_time,update_time)
+        values
+        (#{id},#{testId},#{token},#{loginMobile},#{source},#{name},#{mobile},#{note},#{province},#{city},#{county},#{area},#{street},#{testPrice},#{TSMessage},now(),now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_external_submit
+        set
+            id=#{id},
+            test_id=#{testId},
+            token=#{token},
+            login_mobile=#{loginMobile},
+            source=#{source},
+            name=#{name},
+            mobile=#{mobile},
+            note=#{note},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            area=#{area},
+            street=#{street},
+            test_price=#{testPrice},
+            TS_message=#{TSMessage},
+            update_time=now()
+        where id=#{id}
+    </update>
+
+    <!-- 根据id，修改记录-->
+    <update id="updateByToken" parameterType="Object" >
+        update hs_external_submit
+        set
+        TS_message=#{TSMessage},
+        update_time=now()
+        where token=#{token}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_external_submit where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_external_submit where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_external_submit
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="token != null and token != ''" >
+            and token = #{token}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''" >
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="source != null and source != ''" >
+            and source = #{source}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county=#{county},
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="testPrice != null and testPrice != ''" >
+            and test_price = #{testPrice}
+        </if>
+        <if test="TSMessage != null and TSMessage != ''" >
+            and TS_message=#{TSMessage}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_external_submit
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="token != null and token != ''" >
+            and token = #{token}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''" >
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="source != null and source != ''" >
+            and source = #{source}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county=#{county},
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="testPrice != null and testPrice != ''" >
+            and test_price = #{testPrice}
+        </if>
+        <if test="TSMessage != null and TSMessage != ''" >
+            and TS_message=#{TSMessage}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+</mapper>   

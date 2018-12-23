@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>分享</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="shareWrap">
+    <div class="main">
+        <div class="share_top">
+            <img src="img/m-man.png" alt="">
+            <p>手机上门维修专家</p>
+        </div>
+        <div class="share_list">
+            <p>我的维修订单：</p>
+            <ul class="my_order">
+                <li><span>维修机型：</span><span id="model"></span></li>
+                <li>
+                    <span>工程师检测故障为：</span><span></span>
+                </li>
+                <li>
+                    <ul class="fault_item">
+                        <li>
+                            <span>外屏破裂</span>
+                            <span>￥200.00</span>
+                        </li>
+                        <li>
+                            <span>内屏破裂</span>
+                            <span>￥300.00</span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <span>维修总价：</span>
+                    <span class="color-red" id="total">￥500.00</span>
+                </li>
+            </ul>
+        </div>
+        <div class="intro">
+            <p>M超人快修 ：线上快速下单、2小时上门维修服务，价格合理、半年质保。更多机型及维修故障请关注M超人微信公众号或访问<a href="https://m-super.com/">http://m-super.com/</a></p>
+        </div>
+        <!--3-14添加-->
+        <div class="purchase bg">
+            <table class="tab">
+                <tr>
+                    <td rowspan="2">
+                        <a class="emption_list" href="javascript:;" data-value="0">
+                            <div class="title">iPhone</div>
+                            <div class="font">换电池</div>
+                            <div class="goods">
+                                <img src="img/img.jpg" alt="" />
+                            </div>
+                            <div class="money">128</div>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="1">
+                            <p class="title">iPhone 6</p>
+                            <p class="font">屏幕破碎（显示正常）</p>
+                            <p class="money">300</p>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="2">
+                            <p class="title">华为 MATE 8</p>
+                            <p class="font">屏幕破碎</p>
+                            <p class="money">430</p>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="3">
+                            <p class="title">iPhone 6 Plus</p>
+                            <p class="font">屏幕破碎（显示正常）</p>
+                            <p class="money">320</p>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="ware_cont" href="javascript:;" data-value="4">
+                            <p class="title">iPhone 6S</p>
+                            <p class="font">屏幕破碎（显示正常）</p>
+                            <p class="money">350</p>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--3-14添加end-->
+        <div class="intro">
+            <p>扫描下方二维码关注M超人公众号，还可以了解最近的活动优惠哦！</p>
+        </div>
+        <div class="footer bg">
+            <div class="footer_img">
+                <img src="img/public_icon.png" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script src="js/jbase64.js"></script>
+<script>
+    $(function(){
+        var orderId = GetQueryString('id'),
+            params={
+                id:orderId
+            };
+        $.ajax({
+            url: linkUrl+"/wechat/repair/shareData.do",
+            type: "POST",
+            data: {
+                params:JSON.stringify(params)
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    var order=data.result.order,
+                        modelName = order.modelName,
+                        realPrice = order.realPrice.toFixed(2),
+                        project=order.details;
+
+                    $('#model').html(modelName);
+                    var spePro = [];
+                    for (var i = 0;i<project.length;i++){
+                        if (project[i].type == 1){
+                            $('.fault_item').empty().append('<li>' +
+                                    '<span>'+project[i].projectName+'</span>' +
+                                    '<span>￥'+project[i].price.toFixed(2)+'</span>' +
+                                    '</li>');
+                        }
+                    }
+
+                    $('#total').html("￥"+realPrice);
+
+                    if (order.isUseCoupon == 1){
+                        $('.my_order').append('<li>' +
+                            '<span>优惠劵抵用</span>' +
+                            '<span class="color-red">-￥'+order.couponPrice.toFixed(2)+'</span>' +
+                            '</li>' +
+                            '<li>' +
+                            '<span>订单实付金额</span>' +
+                            '<span class="color-red">￥'+(realPrice-order.couponPrice).toFixed(2)+'</span>' +
+                            '</li>');
+                    }
+                }else {
+                    if (data.exceptionType){
+                        eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                        eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                        window.location.href = 'error.html';
+                    }else {
+                        alertTip(data.resultMessage)
+                    }
+                }
+            },
+            error : function() {
+                alertTip("系统异常，请稍后再试");
+                loading_hide();
+            }
+        });
+
+        var linkInfo = [
+                {repairType:0,url:'sel_phone.html',brandId:'1'},
+                {repairType:0,url:'sel_other.html',brandId:'1',modelId:'29ce0489-533c-4689-a3cd-411e67716cd4',projectId:"fe750fc5-70ff-11e6-80cd-10c37b579295"},
+                {repairType:0,url:'sel_other.html',brandId:'ab5d307a-e335-11e6-a80a-00163e04c890',modelId:'7c2ad8f1-d70c-4083-8acc-aa21a97bdb03',projectId:"89971c83-d95c-11e6-a112-00163e04c890"},
+                {repairType:0,url:'sel_other.html',brandId:'1',modelId:'6d3ed3b8-0a7e-463a-95f3-439899afd72a',projectId:"fe750fc5-70ff-11e6-80cd-10c37b579295"},
+                {repairType:0,url:'sel_other.html',brandId:'1',modelId:'b2e12d18-9ce6-4d44-a282-a00e95b8cf3b',projectId:"fe750fc5-70ff-11e6-80cd-10c37b579295"}
+            ];
+        $('.purchase a').click(function () {
+            var i = $(this).attr('data-value');
+            eCacheUtil.storage.cache(CacheKey.repairWay,linkInfo[i].repairType);
+            eCacheUtil.storage.cache(CacheKey.phoneBrandId,base.encode(linkInfo[i].brandId));
+            if (linkInfo[i].hasOwnProperty('modelId')){
+                eCacheUtil.storage.cache(CacheKey.phoneModelId,base.encode(linkInfo[i].modelId));
+                eCacheUtil.storage.cache(CacheKey.faultId,base.encode(linkInfo[i].projectId));
+                eCacheUtil.storage.cache(CacheKey.phoneModelName,$(this).find('.title').html());
+            }
+            window.location.href = linkInfo[i].url;
+        });
+    })
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>
