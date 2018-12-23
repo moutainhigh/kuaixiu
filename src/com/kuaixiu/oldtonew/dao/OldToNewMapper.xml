@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.oldtonew.dao.OldToNewMapper" >
+       <resultMap type="com.kuaixiu.oldtonew.entity.OldToNewUser" id="BaseResultMap">
+          <result column="id" property="id"/>
+          <result column="name" property="name"/>
+          <result column="tel" property="tel"/>
+          <result column="code" property="code"/>
+          <result column="oldMobile" property="oldMobile"/>
+          <result column="newMobile" property="newMobile"/>
+          <result column="homeAddress" property="homeAddress"/>
+          <result column="is_del" property="isDel"/>
+          <result column="update_time" property="updateTime"/>
+          <result column="update_userid" property="updateUserid"/>
+          <result column="in_time" property="inTime"/>
+          <result column="postscript" property="postscript"/> 
+       </resultMap>
+         
+       <sql id="Base_Column_List">
+          id,name,tel,code,oldMobile,newMobile,homeAddress,is_del,in_time,province,city,county,street,areas,update_time,postscript
+       </sql> 
+       <!-- 插入记录 -->
+       <insert id="addNews" parameterType="Object">
+         insert into kx_oldtonew(id,name,tel,code,oldMobile,newMobile,homeAddress,in_time,province,city,county,street,areas) values
+         (#{id},#{name},#{tel},#{code},#{oldMobile},#{newMobile},#{homeAddress},now(),#{province},#{city},#{county},#{street},#{areas})
+       </insert>
+       
+        <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+       select 
+           <include refid="Base_Column_List"/>
+           from kx_oldtonew  where is_del = 0 
+       <if test="id != null and id != ''" >
+            and id = #{id}
+       </if>
+       <if test="tel != null and tel != ''" >
+            and tel like CONCAT('%', #{tel}, '%')
+        </if>
+         <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+       </select>
+        
+       <!-- 查询列表带分页 -->
+       <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+          select 
+           <include refid="Base_Column_List"/>
+           from kx_oldtonew  where is_del = 0 
+        <if test="tel != null and tel != ''" >
+            and tel like CONCAT('%', #{tel}, '%')
+        </if>
+         <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        order by in_time desc
+       </select>
+
+       <!-- 修改记录 -->
+       <update id="update" parameterType="Object">
+          update kx_oldtonew 
+            set name=#{name},
+                 tel=#{tel},
+                code=#{code},
+                oldMobile=#{oldMobile},
+                newMobile=#{newMobile},
+                homeAddress=#{homeAddress},
+                province=#{province},
+                city=#{city},
+                county=#{county},
+                areas=#{areas},
+                is_del=#{isDel},
+                update_time=now(),
+                update_userid=#{updateUserid}
+                where id=#{id}
+       </update>
+       
+       <!-- 删除记录 -->
+       <delete id="delete" parameterType="Object">
+        delete from kx_oldtonew where id=#{id} 
+       </delete>
+       
+       <!-- 根据id查询 -->
+       <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+       select 
+         <include refid="Base_Column_List"/>
+         from kx_oldtonew where id=#{id}
+       </select>
+</mapper>

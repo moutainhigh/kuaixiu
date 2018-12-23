@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-提交成功</title>
+</head>
+<body>
+<div id="wrap" class="successWrap">
+    <div class="main">
+        <div class="tip bg">
+            <img src="img/successBg.png" alt="">
+            <p>订单提交成功</p>
+            <p>根据你的芝麻信用评估结果</p>
+            <p>预付款<span class="colRed" id="preMoney"></span>已到达您的支付宝账户</p>
+            <p>最终以商家质检价格为准，多退少补</p>
+        </div>
+        <div class="bg marb12">
+            <p>顺丰将在<span id="pickTime"></span>上门收取快递；</p>
+            <p>工作人员将会提前1小时与您联系，请保持手机畅通！</p>
+        </div>
+        <div class="bg" style="flex-grow: 1;">
+            <div class="hope">
+                <p>达成以下两点，可提高<span id="percent"></span>结算速度</p>
+                <p>1.寄出前保留机器电量在50%以上；</p>
+                <p>2.请确保已解除机器开机密码；</p>
+                <p><img src="img/zhimaCredit.png" alt=""></p>
+                <p>- 芝麻信用·因为信用所以简单 -</p>
+            </div>
+            <div class="linkBox bg">
+                <a href="product.html">继续卖宝贝</a>
+                <a href="javascript:;" onclick="seeDetails();">查看订单</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function () {
+        $('#preMoney').html(eCacheUtil.storage.getCache(CacheKey.prePrice));
+        $('#pickTime').html(eCacheUtil.storage.getCache(CacheKey.pickTime));
+        var percent = eCacheUtil.storage.getCache(CacheKey.percent);
+        if (percent == 0){
+            $('#percent').html('');
+        }else {
+            $('#percent').html((100 - percent)+'%尾款');
+        }
+    });
+
+    function seeDetails() {
+        location.href = 'details.html?orderid='+GetQueryString('orderid');
+    }
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

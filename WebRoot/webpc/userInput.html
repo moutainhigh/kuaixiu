@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<title>填写用户信息-M超人</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script src="js/vue.min.js"></script>
+</head>
+
+<body>
+	<div class="index_topmenubg">
+		<div class="index_topmenu">
+			<a class="logo" href="#"><img src="img/logo.jpg" /></a>
+			<div class="index_topright">
+				<div class="inquiry">
+					<input class="text placeholder" type="text" value="查询/支付" placeholder="查询/支付" />
+					<input class="search" type="button" value="" />
+				</div>
+			</div>
+			<div class="top_menus">
+				<a class="href" href="index.html">首页</a>
+				<a class="href hrefin" href="fault.html">手机维修</a>
+				<a class="href" href="http://huishou.m-super.cn/" target="_blank">旧机回收</a>
+				<a class="href" href="http://huishou.m-super.cn/" target="_blank">以旧换新</a>
+			</div>
+		</div>
+	</div>
+	<div class="main" style="disply:none;">
+		<div class="content_title">
+			<div class="title schedule_list" v-if="repairType == 0">
+				<span class="blue"><b>1</b><font>选择故障</font></span>
+				<font class="arrow">></font>
+				<span class="blue"><b>2</b><font>提交订单</font></span>
+				<font class="arrow">></font>
+				<span class="blue disabled"><b>3</b><font>上门维修</font></span>
+				<font class="arrow">></font>
+				<span class="blue disabled"><b>4</b><font>维修完成</font></span>
+			</div>
+			<div class="title schedule_list jiXiu_title" v-else-if="repairType == 3">
+				<span class="blue"><b>1</b><span>选择故障</span></span>
+				<span class="arrow">></span>
+				<span class="blue"><b>2</b><span>提交订单</span></span>
+				<span class="arrow">></span>
+				<span class="blue disabled"><b>3</b><span>快递送件</span></span>
+				<span class="arrow">></span>
+				<span class="blue disabled"><b>4</b><span>维修完成</span></span>
+				<span class="arrow">></span>
+				<span class="blue disabled"><b>5</b><span>快递运回</span></span>
+				<span class="arrow">></span>
+				<span class="blue disabled"><b>6</b><span>收货验机</span></span>
+			</div>
+		</div>
+		<div class="tobe_paid">
+			<div class="user_conten">
+				<p>您的机型 <span class="gray">{{modelName}}</span>,故障为 [<span class="gray">{{proName}}</span>],</p>
+				<p>维修参考价 <span class="gray">¥ {{proPrice}}</span>
+				<p>维修方式 
+					<span class="gray" v-if="repairType == 0">上门维修</span>
+					<span class="gray" v-else-if="repairType == 3">寄修</span>
+				</p>
+			</div>
+
+			<div class="user_form">
+				<table class="user_table">
+					<tr>
+						<td width="75"><b class="red">*</b>姓名</td>
+						<td>
+							<div class="cont">
+								<input class="txt placeholder judge" type="text" placeholder="请填写姓名" v-model="customerName">
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="75"><b class="red">*</b>手机</td>
+						<td>
+							<div class="cont">
+								<input v-model="mobile" class="txt placeholder judge" id="inputte2" maxlength="11" type="text" value="" placeholder="请输入下单手机号" />
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="75"><b class="red">*</b>验证码</td>
+						<td>
+							<div class="cont">
+								<input v-model="checkCode" class="txt placeholder judge" type="text" value="" maxlength="6" placeholder="请填写验证码">
+								<input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" v-on:click="sendCode($event)" />
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="75"><b class="red">*</b>地址</td>
+						<td>
+							<select class="select" id="s_Province" name="s_Province" v-model="ProId" onchange="fn_select_address(2, this.value, '', 's_');"><option value="" disabled selected>--省份--</option></select>
+							<select class="select" id="s_City" name="s_City" v-model="cityId" onchange="fn_select_address(3, this.value, '', 's_');"><option value="" disabled selected>--地级市--</option></select>
+							<select class="select" id="s_County" name="s_County" v-model="areaId" onchange="fn_select_address(4, this.value, '', 's_');"><option value="" disabled selected>--区/县--</option></select>
+							<select class="select1" id="s_Street" name="s_Street" v-model="countyId"><option value="" disabled selected>--街/道--</option></select>
+							<div id="show"></div>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="75"></td>
+						<td>
+							<div class="cont"><input class="txt placeholder judge" type="text" value="" v-model="Address"  placeholder="街道、小区、楼号等"></div>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="75">备注</td>
+						<td>
+							<div class="cont"><input class="txt placeholder" type="text" v-model="node" value="" placeholder="请填写您的需要"></div>
+						</td>
+					</tr>
+					<tr>
+						<td width="75">优惠码</td>
+						<td>
+							<div class="cont">
+								<input v-model="couponCode" @input="changeCode($event)" class="txt placeholder" type="text" value="" placeholder="请填写您的优惠码">
+								<input v-on:click="sendCouponCode" class="get_validate" type="button" value="查询" data-verify="查询" style="width: 110px;" />
+							</div>
+						</td>
+					</tr>
+					<tr v-if="isCoupon">
+						<td>&nbsp;</td>
+						<td>
+							<div id="couponInfo">
+								<p>优惠码名称：{{couponName}}，优惠金额：<span class="red">¥ {{couponPrice}}</span></p>
+								<p>有效时间：{{couponTime}}</p>
+								<p>限定项目：{{couponProject}}</p>
+								<p>限定品牌：{{couponBrand}}</p>
+								<p>备注：{{couponRemark}}</p>
+							</div>
+						</td>
+					</tr>
+					<tr v-if="isPost">
+						<td colspan="2" class="red">
+							<p>邮寄地址：{{fullAddress}}</p>
+							<p>{{managerInfo}}</p>
+						</td>
+					</tr>
+				</table>
+
+				<div class="paid_but">
+					<a class="but but1" href="javascript:window.history.back();">上一步</a>
+					<a class="but but2" id="submitBut" v-on:click="Submit" href="javascript:;">提交订单</a>
+				</div>
+			</div>
+		</div>
+		<div class="index_copyright">
+			<div class="index_copycont">
+				<p>Copyright 2016 All Rights Reserved 杭州翼诺科技有限公司 技术支持 浙ICP备16041546号</p>
+				<div class="code">
+					<img src="img/code.png" />
+					<span>扫码关注微信公众号</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--登录-->
+	<div class="login_popupbg loginPopup">
+		<div class="login_popup">
+			<div class="popup_title"><a class="exit_popup" v-on:click="colseLogin" href="javascript:;"><i class="icon"></i></a></div>
+			<div class="login_head">
+				快修账号登录
+			</div>
+			<div class="login_input">
+				<input class="text placeholder" v-model="tel" id="inputtel" maxlength="11" type="text" value="请输入下单手机号" placeholder="请输入下单手机号" />
+			</div>
+			<div class="login_input">
+				<input class="text psw placeholder" v-model="checkCode" type="text" value="请输入短信验证码" placeholder="请输入短信验证码" />
+				<input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" v-on:click="sendMsg($event)" />
+			</div>
+			<div class="login_submit">
+				<input class="submit" type="submit" v-on:click="Login" value="查询/支付" />
+			</div>
+		</div>
+	</div>
+
+	<!--错误提示-->
+	<div class="remind_delivery_bg">
+		<div class="remind_delivery_cont">
+			<p></p>
+		</div>
+	</div>
+	<!--错误提示end-->
+	<!--确认提示-->
+	<div class="popup_bg" style="display: none;"></div>
+	<div class="popup_content" style="display: none;">
+		<div class="popup_cont">
+			<div class="popup_title"></div>
+			<div class="popup_font"></div>
+			<div class="popup_but">
+				<a class="but cancel" href="javascript:void(0);">取 消</a>
+				<a class="but confirm" href="javascript:void(0);">确 认</a>
+			</div>
+			<a class="popup_exit" href="javascript:void(0);"></a>
+		</div>
+	</div>
+	<!--确认提示end-->
+	<!--遮盖层-->
+	<div id="mask_boxs" style="position: absolute;top:0;left: 0;width:100%;height:100%;display: none;z-index:50;">
+		<div id="masks"></div>
+		<div id="mcon">
+			<img src="img/loadings.gif" style="width: 80px;height:80px;position:fixed; top:50%;left:50%; margin-left:-25px;  margin-top:-25px;z-index:999"/>
+		</div>
+	</div>
+	<!--遮盖层end-->
+
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/address.js"></script>
+	<script src="js/userInfo.js"></script>
+</body>
+</html>

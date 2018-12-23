@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.balance.dao.BalanceShopMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.balance.entity.BalanceShop" >
+        <result column="id" property="id"/>
+        <result column="balance_no" property="balanceNo"/>
+        <result column="balance_name" property="balanceName"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="shop_code" property="shopCode"/>
+        <result column="shop_name" property="shopName"/>
+        <result column="order_count" property="orderCount"/>
+        <result column="proportion" property="proportion"/>
+        <result column="amount_price" property="amountPrice"/>
+        <result column="balance_price" property="balancePrice"/>
+        <result column="profit_price" property="profitPrice"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- kx_balance_shop table all fields -->
+    <sql id="Base_Column_List" >
+        id,balance_no,balance_name,provider_code,provider_name,shop_code,shop_name,order_count,proportion,amount_price,balance_price,profit_price,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_balance_shop
+        (id,balance_no,balance_name,provider_code,provider_name,shop_code,shop_name,order_count,proportion,amount_price,balance_price,profit_price,create_time)
+        values
+        (uuid(),#{balanceNo},#{balanceName},#{providerCode},#{providerName},#{shopCode},#{shopName},#{orderCount},#{proportion},#{amountPrice},#{balancePrice},#{profitPrice},#{createTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_balance_shop 
+        set 
+            balance_name=#{balanceName},
+            provider_code=#{providerCode},
+            provider_name=#{providerName},
+            shop_code=#{shopCode},
+            shop_name=#{shopName},
+            order_count=#{orderCount},
+            proportion=#{proportion},
+            amount_price=#{amountPrice},
+            balance_price=#{balancePrice},
+            profit_price=#{profitPrice}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_balance_shop where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_balance_shop where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_balance_shop
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and balance_no = #{balanceNo}
+        </if>
+        <if test="balanceName != null and balanceName != ''" >
+            and balance_name = #{balanceName}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''" >
+            and provider_name = #{providerName}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="shopName != null and shopName != ''" >
+            and shop_name = #{shopName}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_balance_shop
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and balance_no = #{balanceNo}
+        </if>
+        <if test="balanceName != null and balanceName != ''" >
+            and balance_name = #{balanceName}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''" >
+            and provider_name = #{providerName}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="shopName != null and shopName != ''" >
+            and shop_name = #{shopName}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.SingleLoginMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.SingleLogin">
+    <id column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="ticket" jdbcType="VARCHAR" property="ticket" />
+    <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+     mobile, ticket, transaction_id, url, in_time, update_time
+  </sql>
+
+
+  <!-- 根据mobile查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hs_single_login  where mobile = #{mobile};
+  </select>
+
+
+  <!-- 插入记录 -->
+  <insert id="add" parameterType="Object">
+      insert into hs_single_login (mobile, ticket, transaction_id,
+      url, in_time
+      )
+    values (#{mobile,jdbcType=VARCHAR}, #{ticket,jdbcType=VARCHAR}, #{transactionId,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR},now())
+  </insert>
+
+
+  <!-- 根据id，修改记录 -->
+  <update id="update" parameterType="Object">
+     update hs_single_login
+      set ticket = #{ticket,jdbcType=VARCHAR},
+      transaction_id = #{transactionId,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR}
+    where mobile = #{mobile,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+</mapper>

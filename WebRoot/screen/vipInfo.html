@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main1.css?version=2.1">
+    <title>碎屏保-用户信息</title>
+    <script src="js/include.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="wrap" class="vipWrap">
+    <include src="components/header.html"></include>
+    <main>
+        <h2>— 填写用户信息 —</h2>
+        <div class="form">
+            <div class="labelBox">
+                <label for="name">维保人姓名：</label>
+                <input type="text" id="name" placeholder="请填写维保人姓名">
+            </div>
+            <div class="labelBox">
+                <label for="tel">激活手机号：</label>
+                <input type="tel" id="tel" placeholder="请填写维保手机号" maxlength="12">
+            </div>
+            <div class="labelBox">
+                <label for="code">手机验证码：</label>
+                <input type="text" id="code" placeholder="请填写验证码" maxlength="6">
+                <input type="button" value="获取验证码" id="getCode" onclick="sendMsg(this)">
+            </div>
+            <div class="labelBox vipBox">
+                <label for="tel">手机品牌：</label>
+                <input type="text" id="brand" placeholder="请选择手机品牌" disabled>
+                <a href="javascript:;" onclick="selectBrand(this)"><img src="img/icon_arrow.png"></a>
+                <div class="selectList">
+                    
+                </div>
+            </div>
+            <div class="labelBox vipBox">
+                <label for="tel">手机型号：</label>
+                <input type="text" id="model" placeholder="请选择手机型号" disabled>
+                <a href="javascript:;" onclick="selectModel(this)"><img src="img/icon_arrow.png"></a>
+                <div class="selectList">
+                    
+                </div>
+            </div>
+            <div class="agree_clause">
+                <input class="checkbox" id="checkbox" type="checkbox" value="" />
+                <i class="check_icon"></i>
+                <label for="checkbox">我同意</label><a class="clause" href="notes.html">购买须知</a>
+            </div>
+            <a href="javascript:;" class="submit disabled" onclick="confirmFun(this)">提交订单</a>
+        </div>
+    </main>
+    <!-- 下拉选择遮罩层 -->
+    <div class="selectLay"></div>
+    <!-- 信息核对弹框 -->
+    <div class="confirmLay">
+        <div class="confirmCont">
+            <a href="javascript:;" onclick="confirmClose()"><img src="img/icon_close.png" alt=""></a>
+            <div class="confirmInfo">
+                <h2>碎屏保信息核对</h2>
+                <p>尊敬的 <span class="fontBold" id="confirmName"></span> 手机号为<span class="fontBold" id="confirmTel"></span> 的用户，您将要为手机品牌为 <span class="fontBold blue" id="confirmBrand"></span> 型号为 <span class="fontBold blue" id="confirmModel"></span> 的手机领取 <span class="fontBold blue" id="confirmTime"></span> 的碎屏保，请您核对以上信息无误后再点击<span class="fontBold">确认</span>，如有任何疑问请拨打我们的客服热线 <a href="tel:4008110299" class="fontBold blue">4008110299</a> </p>
+                <div class="confirmBox">
+                    <a href="javascript:;" onclick="submitOrder(this)">确定</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<include src="components/global.html"></include>
+<script src="js/jquery-3.1.0.js"></script>
+<script src="js/jbase64.js"></script>
+<script src="js/common.js"></script>
+<script src="js/vipuser.js"></script>
+<script>
+    $('.selectLay').click(function(e){
+        var con = $(".selectList");
+        if(!con.is(e.target) && con.has(e.target).length === 0){
+            $('.selectLay,.selectList').removeClass('active');
+        }
+    });
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

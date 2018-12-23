@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.model.dao.ModelMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.model.entity.Model">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="color" property="color"/>
+        <result column="sort" property="sort"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+        <result column="logo" property="logo"/>
+    </resultMap>
+
+    <!-- kx_model table all fields -->
+    <sql id="Base_Column_List">
+        t.id,t.name,t.brand_id,t.color,t.sort,t.is_del,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,
+        t.update_userid,t.logo
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into kx_model
+        (id,name,brand_id,brand_name,color,sort,is_del,create_time,create_userid,logo)
+        values
+        (#{id},#{name},#{brandId},#{brandName},#{color},#{sort},#{isDel},now(),#{createUserid},#{logo})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="updateByNmae" parameterType="Object">
+        update kx_model
+        set
+            brand_id=#{brandId},
+            brand_name=#{brandName},
+            color=#{color},
+            sort=#{sort},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid},
+            logo=#{logo}
+        where name=#{name}
+    </update>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update kx_model 
+        set
+            name=#{name},
+            brand_id=#{brandId},
+            brand_name=#{brandName},
+            color=#{color},
+            sort=#{sort},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid},
+            logo=#{logo}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_model where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,b.name brand_name
+        from kx_model t
+        left join kx_brand b on t.brand_id = b.id
+        where t.id = #{id}
+    </select>
+
+    <!-- 根据名称查询 -->
+    <select id="queryByName" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,b.name brand_name
+        from kx_model t
+        left join kx_brand b on t.brand_id = b.id
+        where 1=1
+        <if test="name != null and name != ''">
+            and t.name = #{name}
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and t.brand_id = #{brandId}
+        </if>
+        and t.is_del = 0
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,b.name brand_name
+        from kx_model t
+        left join kx_brand b on t.brand_id = b.id
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and t.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="brandName != null and brandName != ''">
+            and b.name like CONCAT('%', #{brandName}, '%')
+        </if>
+        <if test="color != null and color != ''">
+            and t.color like CONCAT('%', #{color}, '%')
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and t.id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by t.sort,t.id desc
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,b.name brand_name
+        from kx_model t
+        left join kx_brand b on t.brand_id = b.id
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and t.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="brandName != null and brandName != ''">
+            and b.name like CONCAT('%', #{brandName}, '%')
+        </if>
+        <if test="color != null and color != ''">
+            and t.color like CONCAT('%', #{color}, '%')
+        </if>
+        order by t.sort,t.id desc
+    </select>
+
+    <select id="queryModelPriceGroupByProject" resultType="Map" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        , mp.*,b.name brand_name
+        from kx_model t
+        left join kx_brand b on t.brand_id = b.id
+        left join (${subSql}) mp on t.id = mp.model_id
+        order by t.sort, t.id desc
+    </select>
+
+</mapper>   

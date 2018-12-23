@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/resultList.css">
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+    <title></title>
+</head>
+<body id="result-list"  class="result-list">
+	<!--start of 顶部区域-->
+	<div class="top-box">
+		<dl class="type-tab-list">
+			<dd class="type-tab-item active">未使用(<span>1</span>)</dd>
+			<dd class="type-tab-item">已使用(<span>0</span>)</dd>
+			<dd class="type-tab-item">已过期(<span>0</span>)</dd>
+		</dl>
+	</div>
+	<!--end of 顶部区域-->
+    <!--start of 主内容区域-->
+	<div class="main-container">
+		<dl id="prizeItemList" class="prize-item-list">
+			<dd class="prize-item active">
+				<div class="pi-title">一等奖</div>
+				<div class="pi-content">
+					<p>华为P20一部<span></span></p>
+					<p>99元不限量体验卡<span>(免费体验两个月)</span></p>
+				</div>
+				<div class="pi-intr"><span class="circle-label">!</span>使用说明</div>
+				<div class="pi-btn">立即使用</div>
+			</dd>
+		</dl>
+	</div>
+	<!--end of  主内容区域-->
+
+    <script src="js/jquery.js"></script>
+	<script src="js/util.js"></script>
+	<script>  
+		function getUrlParam(key){
+			var url = window.location.search;
+			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+			var result = url.substr(1).match(reg);
+			return result ? decodeURIComponent(result[2]) : null;
+		}
+		
+
+		if (getUrlParam("SelectItems") && getUrlParam("productid")){
+			eCacheUtil.storage.cache(CacheKey.SelectItems,getUrlParam("SelectItems"));
+			eCacheUtil.storage.cache(CacheKey.ProjectId,getUrlParam("productid"));
+			eCacheUtil.storage.cache(CacheKey.prizeMobile,getUrlParam("prizeMobile"));
+
+			eCacheUtil.storage.cache(CacheKey.isSelect,true);
+		}
+		
+		if(getUrlParam("openId")){
+		  eCacheUtil.storage.cache(CacheKey.OpenId,getUrlParam("openId"));
+		  eCacheUtil.storage.cache(CacheKey.prizeMobile,getUrlParam("prizeMobile"));
+		}
+		
+		
+		if(getUrlParam("prizeinfo")){
+		   if( window.localStorage ){
+				localStorage.setItem( 'prizeinfo' , getUrlParam("prizeinfo") );
+			};
+		}
+
+    </script>
+	
+    <script>
+	   var mGrade='';
+	 
+        $(function(){
+			window.G = window.G || {};
+			//b.
+			//b.1 响应立即使用的事件
+			$('#prizeItemList').delegate( '.prize-item.active .pi-btn' , 'click' , function(){
+
+               if(mGrade == '4'){//跳转到快修
+			     wx.miniProgram.reLaunch({url:'/pages/toMSuper/toMSuper'});
+			   }else{
+			   	 var prizeMobile = eCacheUtil.storage.getCache(CacheKey.prizeMobile);
+				 var val="&prizeMobile="+prizeMobile;
+				 wx.miniProgram.reLaunch({url:'/pages/toOtherView/toOtherView'});
+				 wx.miniProgram.postMessage({ data: {val:val} });
+			   }
+
+
+			});
+			//b.2 响应使用说明的事件
+			$('#prizeItemList').delegate( '.prize-item.active .pi-intr' , 'click' , function(){
+				window.location.href = 'resultPrizeIntr.html' ;
+				return ;				
+			});
+			
+			//c.
+			//c.1 更新获奖信息
+			var updatePrizeInfo = function( prizeInfo ){
+				var itemContent = renderItem( prizeInfo );
+				$('#prizeItemList').html( itemContent );
+				return ;
+			}
+			//c.2 渲染优惠券的内容
+			var renderItem = function( itemData ){
+			    mGrade = itemData.grade;
+				var gradeName = formatGradeValue( itemData.grade );
+				var firstDesc = formatDescValue( itemData.firstDetails );
+				if(itemData.grade == '4'){//为4等奖快修劵，把优惠码显示出来
+				  var secondDesc = formatDescValue("优惠码：" + itemData.couponCode);
+				}else{
+				var secondDesc = formatDescValue( itemData.secondDetails );
+				}
+				
+				//默认为未使用
+				var result =   '<dd class="prize-item active">'
+								+'<div class="pi-title">'+gradeName+'</div>'
+								+'<div class="pi-content">'
+								+firstDesc
+								+secondDesc
+								+'</div>'
+								+'<div class="pi-intr"><span class="circle-label">!</span>使用说明</div>'
+								+'<div class="pi-btn">立即使用</div>'
+								+'</dd>' ;
+				return result ;
+			}
+			
+			//c.3 格式化获奖信息
+			var formatGradeValue = function( gradeValue ){
+				var prizeName = '';
+				switch( gradeValue ){
+					case '1':
+						prizeName = '一等奖' ;
+						break ;
+					case '2':
+						prizeName = '二等奖' ;
+						break ;
+					case '3':
+						prizeName = '三等奖' ;
+						break ;
+					case '4':
+						prizeName = '四等奖' ;
+						break ;
+				}
+				return prizeName ;
+			}
+			
+			//c.4 格式化描述信息
+			var formatDescValue = function( descInfo ){
+				var result = descInfo.replace( '(' , '<span>(' ) ;
+				result = result.replace( ')' , ')</span>' ) ;
+				result = '<p>'+ result + '</p>' ;
+				return result;
+			}
+			
+			//c.end 
+			//初始化函数
+			var init = function(){
+			
+			//向后台请求数据
+			G.isPosting = true ;
+			
+			
+			
+			//a 登录
+			var param = {
+				"openId":eCacheUtil.storage.getCache( CacheKey.OpenId )
+			};
+			$.post(
+				getRealPath()+"/recycleNew/queryPrize.do",
+				{
+					params:JSON.stringify(param)
+				},
+				function(data){
+					if ( data.success){
+						//将获奖信息缓存到缓存中
+						if( window.localStorage ){
+							localStorage.setItem( 'prizeinfo' , JSON.stringify( data.result.prizeInfo ) );
+						};
+						
+						var prizeInfo = '';
+						if( window.localStorage ){
+							prizeInfo = localStorage.getItem( 'prizeinfo');
+						}
+						if( prizeInfo ){
+							G.prizeInfo = JSON.parse( prizeInfo );
+							//更新获奖信息
+							updatePrizeInfo( G.prizeInfo );
+						}else{
+						  getData();
+						}
+					}else{
+						alert(data.resultMessage);
+					}
+					
+					G.isPosting = false ;
+				});
+			}
+			
+			//e.
+			init();
+        });
+    </script>
+</body>
+</html>

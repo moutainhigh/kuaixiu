@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta http-equiv="cache-control" content="must-revalidate">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-提交订单</title>
+</head>
+<body>
+<div id="wrap" class="orderWrap">
+    <div class="main">
+        <div class="verify bg marb12">
+            <div class="pass" data-type="0">
+                <img src="img/bingo.png" alt="">
+                <div>
+                    <p>恭喜您通过信用审核,可享受<img src="img/zhima.png"><span>芝麻信用·先得款</span>特权</p>
+                </div>
+            </div>
+            <div class="notPass" data-type="1">
+                <img src="img/false.png" alt="">
+                <div>
+                    <p>暂无法享受信用预付，请将芝麻信分提升至600</p>
+                    <p>送您<span>48小时换钱</span>特权，机器送达后48小时收钱 !</p>
+                </div>
+            </div>
+        </div>
+        <div class="orderInfor bg">
+            <p class="title">订单信息</p>
+            <div class="proInfor">
+                <div class="image"></div>
+                <div class="text">
+                </div>
+            </div>
+            <div class="price">
+                <p>预估价</p>
+                <p class="money" id="prePrice"></p>
+            </div>
+            <div class="price">
+                <p>回收劵</p>
+                <p class="money" id="recPrice">￥0.00</p>
+            </div>
+            <div class="price">
+                <p>合计</p>
+                <p class="money" id="totalPrice"></p>
+            </div>
+            <div class="Alipay">
+                <div class="price">
+                    <p>下单后极速支付宝到账</p>
+                    <p class="money quickMon"></p>
+                </div>
+                <p>说明：质检后结算尾款，最终以商家质检价格为准，多退少补。</p>
+            </div>
+            <div class="price SF">
+                <p>顺丰上门取件时间：</p>
+                <p><input id="postTime" type="text" placeholder="请选择" readonly></p>
+            </div>
+        </div>
+        <div class="confirmBox bg">
+            <div data-type="0">
+                <p>提交后极速到账预付款<span class="colRed quickMon"></span></p>
+                <p>提交表示同意<a href="javascript:;">《超人回收用户协议》</a></p>
+            </div>
+            <div data-type="1">
+                <p>提交表示同意<a href="javascript:;">《超人回收用户协议》</a></p>
+            </div>
+            <a href="javascript:;" class="submitBtn">提交订单</a>
+        </div>
+    </div>
+
+    <div id="timeLayer">
+        <div class="timeCont">
+            <div class="timeTitle">
+                <a href="javascript:;" id="cancel">取消</a>
+                <p>选择上门取件时间</p>
+                <a href="javascript:;" id="confirm">确认</a>
+            </div>
+            <div class="selTime clearfix">
+                <div class="timeLeft fl">
+                    <ul>
+                    </ul>
+                </div>
+                <div class="timeRight fl">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="template" style="display: none;">
+        <ul>
+            <li>9:00-10:00</li>
+            <li>10:00-11:00</li>
+            <li>11:00-12:00</li>
+            <li>12:00-13:00</li>
+            <li>13:00-14:00</li>
+            <li>14:00-15:00</li>
+            <li>15:00-16:00</li>
+            <li>16:00-17:00</li>
+        </ul>
+    </div>
+
+</div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--遮盖层-->
+<div id="mask_boxs">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function () {
+        var param = {
+                orderNo:GetQueryString("orderNo")
+            },quoteid = '',percent = '';
+        $.post(linkUrl+'/recycle/zhimaNews.do',{params:JSON.stringify(param)},function (data) {
+            if (data.success){
+                var dataInfo = data.result,
+                    totalPrice = parseFloat(dataInfo.price) + parseFloat($('#recPrice').html().replace(/[^0-9]/ig,""));
+                $('.image').html('<img src="'+dataInfo.imagePath+'">');
+                $('.text').html('<p>'+dataInfo.modelName+'</p><p>'+dataInfo.detail+'</p>');
+                $('#prePrice').html('￥'+ dataInfo.price);
+                $('#totalPrice').html('￥'+ totalPrice);
+                $('.quickMon').html('￥'+dataInfo.preparePrice);
+
+                var type = dataInfo.type;
+                if (type == 0){//0信用回收,1普通回收
+                    $('[data-type="0"]').addClass('active').siblings().removeClass('active');
+                    $('.Alipay').show();
+                }else {
+                    $('[data-type="1"]').addClass('active').siblings().removeClass('active');
+                }
+                percent = dataInfo.percent;
+                quoteid = dataInfo.quoteid;
+                loading_hide();
+            }else {
+                eCacheUtil.storage.cache(CacheKey.resultMsg,data.resultMessage);
+                location.href = "error.html";
+            }
+        });
+
+        var num = 0,checkSubmitFlg = false;
+        $('#postTime').click(function () {
+            if (num == 0){
+                num = 1;
+                date();
+                $('.timeLeft ul li').eq(0).addClass('active');
+                $('.timeRight ul li').eq(0).addClass('active');
+            }
+            $('#timeLayer').show();
+            $('.timeCont').animate({
+                top:$('#wrap').height()-$('.timeCont').height()
+            },300);
+        });
+
+        $('.timeLeft').on('click','li',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var html = $(this).html();
+            tabTime(html.substring(html.indexOf('月')+1,html.indexOf('日')));
+        });
+
+        $('.timeRight').on('click','li',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var obj = $('.timeLeft li.active').html();
+            $('#postTime').val(obj+' '+$(this).html());
+            $('#timeLayer').hide();
+        });
+
+        $('#cancel').click(function () {
+            $('#timeLayer').hide();
+        });
+        $('#confirm').click(function () {
+            if ($('.timeLeft li').hasClass('active')&&$('.timeRight li').hasClass('active')){
+                $('#postTime').val($('.timeLeft li.active').html()+' '+$('.timeRight li.active').html());
+            }else {
+                alertTip('请选择上门取件时间！');
+            }
+            $('#timeLayer').hide();
+        });
+
+        $('.submitBtn').click(function () {
+            if(checkSubmitFlg ==true){
+                return false; //当表单被提交过一次后checkSubmitFlg将变为true,根据判断将无法进行提交。
+            }
+            var str = $('#postTime').val(),
+                reg = /\(([^()]+)\)/g,
+                res = str.match(reg);
+            if (isEmpty(str)){
+                alertTip('请选择上门取件时间！');
+                return false;
+            }
+            checkSubmitFlg ==true;
+            var param = {
+                    quoteid:quoteid,
+                    takeTime:str.replace(res," ")
+                };
+            $.post(linkUrl+'/recycle/createOrder.do',{params:JSON.stringify(param)},function (data) {
+                if (data.success){
+                    eCacheUtil.storage.cache(CacheKey.pickTime,param.takeTime);
+                    eCacheUtil.storage.cache(CacheKey.prePrice,$('.quickMon').html());
+                    eCacheUtil.storage.cache(CacheKey.percent,percent);
+                    location.href = 'success.html?orderid='+data.result.datainfo.orderid;
+                }else {
+                    alertTip(data.resultMessage);
+                    checkSubmitFlg = false;
+                }
+            })
+        });
+    });
+
+    function date() {
+        var myDate = new Date(),
+            year = myDate.getFullYear(),//年
+            month = myDate.getMonth() + 1,//月
+            day = myDate.getDate(),//日
+            week = myDate.getDay(),//星期几
+            hour = myDate.getHours();//时
+
+        var s = '',
+            weekArr = ['今天','明天',weekText(week+2),weekText(week+3),weekText(week+4),weekText(week+5),weekText(week+6),weekText(week+7)],
+            index = 0;
+        if ((hour+1) >= 17){
+            day += 1;
+            index = 1;
+        }
+        tabTime(day);
+        for (var i = 0;i < 7;i++){
+            if (day > getlastday(year,month)){
+                month += 1;
+                day = 1;
+            }
+            s += '<li>'+month+'月'+day+'日('+weekArr[index]+')</li>';
+            day++;
+            index++;
+        }
+        $('.timeLeft ul').html(s);
+    }
+
+    function tabTime(day) {
+        var date = new Date(),
+            hour = date.getHours();
+        if (day == date.getDate()){//从今天
+            var s = '<ul>';
+            for (var i = (hour+1);i < 17;i++){
+                s += '<li>'+i+':00-'+(i+1)+':00</li>';
+            }
+            $(".timeRight").html(s+'</ul>');
+        }else {//非今天
+            var tmp = $("#template").clone();
+            tmp.removeAttr("id");
+            //追加到对应区块
+            $(".timeRight").html(tmp.html());
+        }
+    }
+
+    function weekText(week) {
+        if (week > 7){
+            week -= 7;
+        }
+        switch (week){
+            case 1:
+                return '星期一';
+            break;
+            case 2:
+                return "星期二";
+                break;
+            case 3:
+                return "星期三";
+                break;
+            case 4:
+                return "星期四";
+                break;
+            case 5:
+                return "星期五";
+                break;
+            case 6:
+                return "星期六";
+                break;
+            case 7:
+                return "星期日";
+                break;
+        }
+    }
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

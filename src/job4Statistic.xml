@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!-- 定时统计-->
+    <bean id="statisticJob" class="com.kuaixiu.timer.Job4Statistic"></bean>
+    
+    <!-- 定时统计 -->
+    <bean id="dealAutoStatisticDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject"><ref bean="statisticJob"/></property>
+        <property name="targetMethod"><value>dealAutoStatistic</value></property>
+    </bean>
+    <bean id="dealAutoStatisticTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dealAutoStatisticDetail"/>
+        </property>        
+        <property name="cronExpression">
+          <value>10 21 3 * * ?</value>  <!-- 启动10s后，每隔2分钟执行一次 -->     
+        </property>        
+    </bean>
+    
+    
+    <!-- 配置启用的定时器 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+          <list>
+             <!-- 定时统计 -->
+             <ref local="dealAutoStatisticTrigger"/>  
+          </list>
+        </property>
+    </bean>
+</beans>

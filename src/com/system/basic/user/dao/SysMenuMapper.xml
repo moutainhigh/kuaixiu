@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.user.dao.SysMenuMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.user.entity.SysMenu">
+        <result column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="pcode" property="pcode"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="icon" property="icon"/>
+        <result column="is_show" property="isShow"/>
+        <result column="sort" property="sort"/>
+        <result column="href" property="href"/>
+        <result column="target" property="target"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+
+    <!-- sys_menu table all fields -->
+    <sql id="Base_Column_List">
+        t.id,t.code,t.pcode,t.name,t.type,t.icon,t.is_show,t.sort,t.href,t.target,t.is_del,
+        date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,
+        date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into sys_menu
+        (id,code,pcode,name,type,icon,is_show,sort,href,target,is_del,create_time,create_userid,update_time,update_userid)
+        values
+        (#{id},#{code},#{pcode},#{name},#{type},#{icon},#{isShow},#{sort},#{href},#{target},#{isDel},now(),#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update sys_menu 
+        set 
+            id=#{id},
+            code=#{code},
+            pcode=#{pcode},
+            name=#{name},
+            type=#{type},
+            icon=#{icon},
+            is_show=#{isShow},
+            sort=#{sort},
+            href=#{href},
+            target=#{target},
+            is_del=#{isDel},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=#{updateTime},
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_menu where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu t
+        where is_del = 0
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="code != null and code != ''">
+            and code = #{code}
+        </if>
+        <if test="pcode != null and pcode != ''">
+            and pcode = #{pcode}
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="icon != null and icon != ''">
+            and icon = #{icon}
+        </if>
+        <if test="isShow != null and isShow != ''">
+            and is_show = #{isShow}
+        </if>
+        <if test="sort != null and sort != ''">
+            and sort = #{sort}
+        </if>
+        <if test="href != null and href != ''">
+            and href = #{href}
+        </if>
+        <if test="target != null and target != ''">
+            and target = #{target}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu t
+        where is_del = 0
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="code != null and code != ''">
+            and code = #{code}
+        </if>
+        <if test="pcode != null and pcode != ''">
+            and pcode = #{pcode}
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="icon != null and icon != ''">
+            and icon = #{icon}
+        </if>
+        <if test="isShow != null and isShow != ''">
+            and is_show = #{isShow}
+        </if>
+        <if test="sort != null and sort != ''">
+            and sort = #{sort}
+        </if>
+        <if test="href != null and href != ''">
+            and href = #{href}
+        </if>
+        <if test="target != null and target != ''">
+            and target = #{target}
+        </if>
+    </select>
+
+    <!-- 根据用户id查询用户菜单 -->
+    <select id="queryMenusByUserId" resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT
+        <include refid="Base_Column_List"/>
+        from sys_user_role ur
+        LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+        LEFT JOIN sys_menu t on rm.menu_code = t.`code`
+        where ur.user_id = #{uid} and t.is_del = 0
+        order by t.sort, t.code
+    </select>
+
+    <!-- 根据角色id查询角色菜单 -->
+    <select id="queryMenusByRoleId" resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT
+        <include refid="Base_Column_List"/>
+        from sys_role_menu rm
+        LEFT JOIN sys_menu t on rm.menu_code = t.`code`
+        where rm.role_id = #{roleId} and t.is_del = 0
+        order by t.sort, t.code
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="queryMenuList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu t
+        LEFT JOIN sys_role_menu rm on t.`code` = rm.menu_code
+        LEFT JOIN sys_role r on r.id = rm.role_id
+        LEFT JOIN sys_user_role ur on ur.role_id = rm.role_id
+        <if test="userName != null and userName != ''">
+            LEFT JOIN sys_user u on u.login_id=ur.user_id
+        </if>
+        where t.is_del = 0 and r.is_del = 0
+        <if test="roleName != null and roleName != ''">
+            and r.name = #{roleName}
+        </if>
+        <if test="userId != null and userId != ''">
+            and ur.user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''">
+            and u.is_del = 0
+            and u.uname = #{userName}
+        </if>
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="code != null and code != ''">
+            and code = #{code}
+        </if>
+        <if test="pcode != null and pcode != ''">
+            and pcode = #{pcode}
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="isShow != null and isShow != ''">
+            and is_show = #{isShow}
+        </if>
+    </select>
+
+</mapper>   

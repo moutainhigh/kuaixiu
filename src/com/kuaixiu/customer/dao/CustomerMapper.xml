@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.customer.dao.CustomerMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.customer.entity.Customer" >
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="street" property="street"/>
+        <result column="areas" property="areas"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status"/>
+        <result column="sort" property="sort"/>
+        <result column="is_mobile" property="isMobile"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_customer table all fields -->
+    <sql id="Base_Column_List" >
+        id,name,mobile,email,longitude,latitude,province,city,county,street,areas,address,status,sort,is_mobile,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_customer
+        (id,name,mobile,email,longitude,latitude,province,city,county,street,areas,address,status,sort,is_mobile,is_del,create_time,create_userid)
+        values
+        (#{id},#{name},#{mobile},#{email},#{longitude},#{latitude},#{province},#{city},#{county},#{street},#{areas},#{address},#{status},#{sort},#{isMobile},#{isDel},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_customer 
+        set 
+            name=#{name},
+            email=#{email},
+            longitude=#{longitude},
+            latitude=#{latitude},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            street=#{street},
+            areas=#{areas},
+            address=#{address},
+            status=#{status},
+            sort=#{sort},
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_customer where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_customer where id = #{id}
+    </select>
+    
+    <!-- 根据手机号查询客户信息  -->
+    <select id="queryByMobile"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_customer where mobile = #{mobile}
+    </select>
+    
+    <!-- 查询用户数量 -->
+    <select id="queryCount" resultType="Integer"  parameterType="Object">
+        select count(id)
+        from kx_customer
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_customer
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_customer
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>   

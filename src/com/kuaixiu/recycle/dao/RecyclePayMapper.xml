@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecyclePayMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecyclePay">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="recycle_order_no" jdbcType="VARCHAR" property="recycleOrderNo" />
+    <result column="out_biz_no" jdbcType="VARCHAR" property="outBizNo" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="pay_launch_type" jdbcType="INTEGER" property="payLaunchType" />
+    <result column="payee_type" jdbcType="VARCHAR" property="payeeType" />
+    <result column="payee_account" jdbcType="VARCHAR" property="payeeAccount" />
+    <result column="pay_show_name" jdbcType="VARCHAR" property="payShowName" />
+    <result column="payee_real_name" jdbcType="VARCHAR" property="payeeRealName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="alipay_transaction_no" jdbcType="VARCHAR" property="alipayTransactionNo" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+    <result column="pay_type" jdbcType="INTEGER" property="payType" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="pay_success_time" jdbcType="VARCHAR" property="paySuccessTime" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, recycle_order_no, out_biz_no, user_id, pay_launch_type, payee_type, payee_account, 
+    pay_show_name, payee_real_name, remark, amount, alipay_transaction_no, msg, pay_status, 
+    pay_type, in_time, pay_success_time
+  </sql>
+ <!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		insert into kx_recycle_pay
+		(id,recycle_order_no,out_biz_no,user_id,pay_launch_type,payee_type,payee_account,pay_show_name,
+		payee_real_name,remark,amount,alipay_transaction_no,msg,pay_status,pay_type,in_time,pay_success_time)
+		values
+		(#{id},#{recycleOrderNo},#{outBizNo},#{userId},#{payLaunchType},#{payeeType},#{payeeAccount},#{payShowName},
+		#{payeeRealName},#{remark},#{amount},#{alipayTransactionNo},#{msg},#{payStatus},#{payType},#{inTime},#{paySuccessTime})
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update kx_recycle_pay
+		set
+		pay_status=#{payStatus},
+		pay_success_time=#{paySuccessTime}
+		where id=#{id}
+	</update>
+	
+	
+	<!-- 根据回收订单号号查询记录-->
+	<select id="queryByRecycleOrderNo" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_pay where recyle_order_no=#{recycleOrderNo} ;
+	</select>
+	
+	<!-- 根据支付宝商户转账唯一订单号查询记录-->
+	<select id="queryByOutBizNo" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_pay where  out_biz_no=#{outBizNo} ;
+	</select>
+
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from kx_recycle_pay where id = #{id}
+	</delete>
+
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_pay where id = #{id}
+	</select>
+
+
+
+	<!-- 查询列表无分页 -->
+	<select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_pay
+		where 1=1
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="userId != null and userId != ''">
+			and user_id=#{userId}
+		</if>
+		<if test="recycleOrderNo != null and recycleOrderNo != ''">
+			and recycle_order_no =#{recycleOrderNo}
+		</if>
+		<if test="outBizNo != null and outBizNo != ''">
+			and out_biz_no=#{outBizNo}
+		</if>
+		<if test="alipayTransactionNo != null and alipayTransactionNo != ''">
+			and alipay_transaction_no =#{alipayTransactionNo}
+		</if>
+		<if test="payStatus != null">
+			and pay_status =#{payStatus}
+		</if>	
+		<if test="payType != null">
+			and pay_type =#{payType}
+		</if>	
+		<if test="payLaunchType != null">
+			and pay_launch_type =#{payLaunchType}
+		</if>
+		order by in_time desc
+	</select>
+
+	<!-- 查询列表 带分页 -->
+	<select id="queryListForPage" resultMap="BaseResultMap"
+		parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_pay
+		where 1=1
+			<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="userId != null and userId != ''">
+			and user_id=#{userId}
+		</if>
+		<if test="recycleOrderNo != null and recycleOrderNo != ''">
+			and recycle_order_no =#{recycleOrderNo}
+		</if>
+		<if test="outBizNo != null and outBizNo != ''">
+			and out_biz_no=#{outBizNo}
+		</if>
+		<if test="alipayTransactionNo != null and alipayTransactionNo != ''">
+			and alipay_transaction_no =#{alipayTransactionNo}
+		</if>
+		<if test="payStatus != null">
+			and pay_status =#{payStatus}
+		</if>	
+		<if test="payType != null">
+			and pay_type =#{payType}
+		</if>	
+		<if test="payLaunchType != null">
+			and pay_launch_type =#{payLaunchType}
+		</if>
+		order by in_time desc
+	</select>
+ 
+</mapper>

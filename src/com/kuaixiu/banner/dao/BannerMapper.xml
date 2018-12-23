@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.banner.dao.BannerMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.banner.entity.Banner" >
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="img" property="img"/>
+        <result column="link" property="link"/>
+        <result column="state" property="state"/>
+        <result column="sort" property="sort"/>
+        <result column="in_time" property="inTime"/>
+    </resultMap>
+    
+    <!-- kx_banner table all fields -->
+    <sql id="Base_Column_List" >
+        id,title,img,link,state,sort,date_format(`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_banner
+        (id,title,img,link,state,sort,in_time)
+        values
+        (#{id},#{title},#{img},#{link},#{state},#{sort},#{inTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_banner 
+        set 
+            id=#{id},
+            title=#{title},
+            img=#{img},
+            link=#{link},
+            state=#{state},
+            sort=#{sort},
+            in_time=#{inTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_banner where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_banner where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_banner
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="title != null and title != ''" >
+            and title = #{title}
+        </if>
+        <if test="img != null and img != ''" >
+            and img = #{img}
+        </if>
+        <if test="link != null and link != ''" >
+            and link = #{link}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_banner
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="title != null and title != ''" >
+            and title = #{title}
+        </if>
+        <if test="img != null and img != ''" >
+            and img = #{img}
+        </if>
+        <if test="link != null and link != ''" >
+            and link = #{link}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+    </select>
+
+</mapper>   

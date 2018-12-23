@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <!-- <base href="/recycle/"> -->
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/main.css?version=2.1">
+    <script src="js/include.js"></script>
+    <title>碎屏保-首页</title>
+</head>
+<body>
+<div id="wrap">
+    <header>
+        <a href="javascript:;" style="display:inline-block;width:98px;"> </a>
+        <p>碎屏保</p>
+        <a href="http://api.linshaolong.cn/Telinfo/login?openid=tel" class="person"><img src="img/icon_personal.png" alt=""></a>
+    </header>
+    <main>
+        <!--轮播图-->
+        <!-- Swiper -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide big-item newYear"><img src="img/banner4.jpg"></div>
+                <div class="swiper-slide big-item vip"><img src="img/banner6.jpg"></div>
+                <div class="swiper-slide big-item"><img src="img/banner2.png"></div>
+                <div class="swiper-slide big-item maimang"><img src="img/banner3.jpg"></div>
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="indexBox">
+            <div class="indexCont">
+                <a href="intro.html">
+                    <i class="notePad"></i>
+                    <p>碎屏保介绍</p>
+                </a>
+                <a href="notes.html">
+                    <i class="ribbon"></i>
+                    <p>购买须知</p>
+                </a>
+                <a href="process.html">
+                    <i class="paperPlane"></i>
+                    <p>激活步骤</p>
+                </a>
+                <a href="step.html">
+                    <i class="radiation"></i>
+                    <p>报修流程</p>
+                </a>
+            </div>
+
+        </div>
+        <div class="proSeries">
+            <div class="proTitle">
+                <p>碎屏保购买</p>
+                <p>（本碎屏保需激活后生效）</p>
+            </div>
+            <ul>
+                <li>
+                    <div>
+                        <p><img src="img/iphone.png" alt=""></p>
+                        苹果系列
+                    </div>
+                    <p>维修保障额最高1488元</p>
+                </li>
+                <li>
+                    <div>
+                        <p><img src="img/samsung.png" alt=""></p>
+                        三星系列
+                    </div>
+                    <p>维修保障额最高1750元</p>
+                </li>
+                <li>
+                    <div>
+                        <p><img src="img/android.png" alt=""></p>
+                        其他品牌
+                    </div>
+                    <p>维修保障额最高1500元</p>
+                </li>
+            </ul>
+        </div>
+    </main>
+</div>
+<include src="components/global.html"></include>
+<script src="js/jquery-3.1.0.js"></script>
+<script src="js/jbase64.js"></script>
+<script src="js/common.js"></script>
+<script>
+    sessionStorage.clear();
+    var source = GetQueryString('fm');
+    if (!isEmpty(source)){
+        eCacheUtil.storage.cache(CacheKey.source,source);
+    }
+    var base = new Base64();
+    $.post(linkUrl+"/screen/order/brandList.do",function(data){
+        if (data.success){
+            $('.proSeries li').on('click', function () {
+                var i = $(this).index();
+                eCacheUtil.storage.cache(CacheKey.phoneBrandId,base.encode(data.result.data[i].brandId));
+                eCacheUtil.storage.cache(CacheKey.phoneBrandName,data.result.data[i].brandName+'系列');
+             //   window.location.href = 'list.html?r='+getRandomStr();
+                window.location.href = 'list.html';
+            });
+        }else {
+            alertTip(data.resultMessage);
+        }
+    });
+    $('.maimang').click(function(){
+        eCacheUtil.storage.cache(CacheKey.phoneBrandId,base.encode("276c3918-b494-11e7-b11d-d4bed949bdc0"));
+        eCacheUtil.storage.cache(CacheKey.phoneBrandName,'其他系列');
+        window.location.href = 'list.html?r='+getRandomStr();
+    });
+    $('.newYear,.vip').click(function(){
+        window.location.href = 'list.html?r='+getRandomStr();
+    });
+
+</script>
+<script src="js/swiper.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        slidesPerView: 1,
+        paginationClickable: true,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: 2500
+    });
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

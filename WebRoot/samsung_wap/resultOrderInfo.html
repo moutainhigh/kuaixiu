@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id='map-container'></div>
+    <div id="wrap" class="orderWrap orderInfo">
+        <div class="main">
+            <div class="baseInfo">
+                <div class="inputRow">
+                    <p>联系人</p>
+                    <input type="text" id="connect" maxlength="12" placeholder="请输入姓名">
+                </div>
+                <div class="inputRow">
+                    <p>手机号</p>
+                    <input class="text" id="inputtel" type="tel" value="" maxlength="11" placeholder="填写手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+                </div>
+				<div class="inputRow location-info">
+                    <p>所在地区</p>
+					<span id="selectAddress" class="default-addr">选择所在地区</span>
+					<span id="selectAddressBtn" class="location-icon"><img src="img/result-location-icon.png" /></span>
+                </div>
+                <div class="inputRow">
+                    <p>详细信息</p>
+                    <input type="text" id="address" maxlength="128" placeholder="填写详细地址">
+                </div>
+
+            </div>
+			<div class="footer">
+                <a href="javascript:;" id="submit" class="btn-large">提交</a>
+            </div>
+            
+        <!-- 选择地区layer -->
+        <div id="addrLayer">
+            <div class="layerCont">
+                <div class="layerTitle">
+                    <p>所选地区</p>
+                    <a href="javascript:;" class="cancel" onclick="fn_close('addrLayer')">×</a>
+                </div>
+                <div class="selectAddr">
+                    <div id="selected">
+                        <span id="s_Province"></span>
+                        <span id="s_City"></span>
+                        <span id="s_County"></span>
+                        <span class="show active">请选择</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
+        <!--错误提示end-->
+        <!--确认提示-->
+        <div class="popup_bg">
+            <div class="popup_content">
+                <div class="popup_title"></div>
+                <div class="popup_font"></div>
+                <div class="popup_but">
+                    <a class="btn-normal cancel" href="javascript:void(0);">取 消</a>
+                    <a class="btn-normal btn-normal-confirm confirm" href="javascript:void(0);">确 认</a>
+                </div>
+            </div>
+        </div>
+        <!--确认提示end-->
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/address.js"></script>
+    <script src="js/jbase64.js"></script>
+
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=0db9bfb678ada40b29eb757e132f63f1"></script>
+    <script src="js/location.js"></script>
+    <script>
+		G = window.G || {};
+		function fn_close(ele){
+			$('#'+ele).hide().find('.layerCont').css({top:'100%'});
+		}
+        $(function(){
+			//调用location.js中的高德定位插件，定位当前地址
+            getAddr();
+			
+			//从缓存中获得手机号码
+			G.HappyGoMobile = eCacheUtil.storage.getCache( CacheKey.HappyGoMobile );
+			//从缓存中获的提交成功后跳转的页面
+			G.ToHappyGoPage = eCacheUtil.storage.getCache( CacheKey.ToHappyGoPage );
+
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            var tip = GetQueryString('tip');
+            var fm = eCacheUtil.storage.getCache(CacheKey.source);
+            console.log("fm:"+fm);
+            if(isEmpty(fm)){
+                console.log("fm缓存中不存在重新取值："+GetQueryString('fm'));
+                eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+            }
+            if(isGo == 'true'||tip == 1){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }  
+
+            var checkSubmitFlg = false;
+            $('#submit').click(function(){
+                if (isEmpty($('#connect').val())){
+                    alertTip('请输入联系人');
+                    return false;
+                }else if (isEmpty($('#inputtel').val())){
+                    alertTip('请输入手机号');
+                    return false;
+                }else if (!$('#selectAddress').hasClass('active')){
+                    alertTip('请选择所在地区');
+                    return false;
+                }else if (isEmpty($('#address').val())){
+                    alertTip('请输入详细地址');
+                    return false;
+                }else if (checkSubmitFlg == true){
+                    return false;
+                }
+                
+                checkSubmitFlg = true;
+ 
+                var params = {
+                    name:$('#connect').val(),
+                    mobile:$('#inputtel').val(),
+                    province:$('#s_Province').attr('data-id'),
+                    city:$('#s_City').attr('data-id'),
+                    area:$('#s_County').attr('data-id'),
+                    street:$('#address').val(),
+					loginMobile:G.HappyGoMobile
+                }
+				$.ajax({
+                    type:'post',
+                    url:linkUrl + '/recycleNew/saveAddressNews.do',
+                    data:{
+                        params:JSON.stringify(params)
+                    },
+                    dataType:'json',
+                    success:function(data){
+                        if (data.success){
+                            //已经保存了收获地址
+							alert( '收货地址已保存成功' );
+							//TODO 跳转
+							if(G.ToHappyGoPage != ""){
+						    	window.location.href = G.ToHappyGoPage ;
+							}
+							
+                        }else{
+                            checkSubmitFlg = false;
+                            alertTip(data.resultMessage);
+                        }
+                    }
+                })
+            })
+        })
+        
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>天翼回收加价劵</title>
+		<style>
+		.popo-dialog.top-status{
+			justify-content: flex-start;
+		}
+	</style>
+    <script src="./js/adapter.js"></script>
+    <link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/ticket.css">
+   
+</head>
+<body>
+    <div id="ticket-box" class="ticket">
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>20</span><span>.00元(满100元)</span>
+                    <img src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A001">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>60</span><span>.00元(满1000元)</span>
+                    <img src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A002">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>120</span><span>.00元(满2000元)</span>
+                    <img class="price" src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A003">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg">
+            <div class="bg-pic">
+                <div class="add">
+                    <span>300</span><span>.00元(满4000元)</span>
+                    <img class="price" src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A004">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="ticket-bg ">
+            <div class="bg-pic">
+                <div class="add">
+                    <span class="size">10%</span><span>.00元(满300元)</span>
+                    <img class="price1" src="./img/ticket.png" alt="">
+                </div>
+                <div class="receive">
+                    <p>翼回收</p>
+                    <div class ="rece" data-batchid="A002">
+                        <p>马上领取</p>
+                    </div>
+                    <div class="led">
+                        <p>已领取</p>
+                    </div>
+                </div>
+            </div>
+            <p class="time">有效期时间：2018-08-01 12:20——2019-08-01 12:20</p>
+        </div>
+        <div class="pop">已领取过，请使用后再来领取</div>
+    </div>
+	
+	<!--start of 弹出对话框  hide-->
+	<div id="popoDialog" class="popo-dialog hide">
+		<div id="phone-dialog-box" class="dialog-box">
+			<div class="dialog-title">温馨提示</div>
+			<div class="dialog-body">
+				<div class="tipinfo-box">领取成功后，系统会下发优惠码到该手机号，请注意查收短信。</div>
+				<div class="input-item">
+					<input id="phoneNum" class="popodlg-input" type="text" placeholder="请输入手机号" />
+				</div>
+				<div class="input-item">
+					<input id="codeNum" class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
+					<span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
+					<span id="secondLabel" class="input-label info-box">60秒</span>
+				</div>
+				<div class="input-item">
+					<span id="doPrizeBtn" class="do-prize-btn">提交</span>
+				</div>
+			</div>
+			<span id="closePopoDialogBtn" class="close-btn">x</span>
+		</div>
+	</div>
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/util.js"></script>
+<script>   
+    $(function(){
+		window.G = window.G || {};
+		
+		G.HappyGoMobile = eCacheUtil.storage.getCache( CacheKey.HappyGoMobile );  //获得手机号
+		if(G.HappyGoMobile == undefined){
+		 G.HappyGoMobile ='';
+		}
+		
+		var isCheckCode='';
+		
+		$('#ticket-box').delegate( '.rece' , 'click' , function(){
+			 if(isCheckCode !='' || G.HappyGoMobile != ''){
+			    var self = $(this);
+			    getCoupons(self.data( 'batchid' ),self);
+			 
+			 }else{//显示输入手机号的框
+				$('#phoneNum').val( '' );
+				$('#codeNum').val( '' );
+				$('#popoDialog').removeClass( 'hide' );
+			 }
+		}); //end of 响应按钮事件
+	
+    //获取验证码
+	$('#getCodeBtn').click( function(){
+		var phoneNum = $('#phoneNum').val();
+	
+		if( phoneNum === '' ){
+			alert( '请先输入手机号' );
+			$('#phoneNum').focus();
+			return ;
+		}
+		
+		if( G.isPosting ){
+			return ;
+		}
+		G.isPosting = true ;
+
+		//发送服务器请求
+		var param = {
+			"mobile":phoneNum
+		}
+		 //Post请求
+		 $.post(getRealPath()+"/wechat/sendSmsCode.do",{params:JSON.stringify(param)},
+			function(data){
+				if (data.success){
+					//启动计数定时器
+					startSecondCount();
+					//设置发送验证码的状态
+					$('#phone-dialog-box').addClass( 'sending-code' );
+					
+				}else{
+					alert(data.resultMessage);
+				}
+				
+				G.isPosting = false ;
+			});
+		
+	});	
+	
+	//领取加价劵
+	function getCoupons(batchid,self){
+			var param='';
+			
+			if( isCheckCode != ''){
+				param = {
+						isCheckCode:isCheckCode,
+						batchId:batchid
+				};
+			}else if( G.HappyGoMobile != ''){
+				//判断是否有有效的手机号码
+				if( ! (G.HappyGoMobile) ){
+					alert( '手机号码为空！' )
+					return ;
+				}
+			
+				param = {
+						mobile:G.HappyGoMobile,
+						batchId:batchid
+				};
+			}
+
+			
+			if( G.isPosting == true ){
+				return ;
+			}
+			G.isPosting = true ;
+			
+			
+			//获取客户领取加价券
+			$.post(
+				linkUrl+'/recycle/receiveCoupons.do',
+				{
+					params:JSON.stringify(param)
+				},
+				function(data){
+				    if(data.success){
+				    	if( data.resultCode == "0" ){
+							//已经领取
+							var parentBox = self.parent() ;
+							var ledBtn = parentBox.find( '.led' );
+							//隐藏当前的按钮，并显示'已领取'的按钮
+							self.attr( 'style' , 'display:none' );
+							ledBtn.attr( 'style' , 'display:block' );
+						}
+					}else{						
+						//TODO
+						if( data.resultCode == "1" ){
+							//已经领取
+							var parentBox = self.parent() ;
+							var ledBtn = parentBox.find( '.led' );
+							//隐藏当前的按钮，并显示'已领取'的按钮
+							self.attr( 'style' , 'display:none' );
+							ledBtn.attr( 'style' , 'display:block' );
+							
+							//提示已经领取过
+							alert( '您已经领取过该加价劵' );
+						}else if(data.resultCode == "2"){
+						  alert( '该加价券已被领完,下次记得早点来哦!' );
+						}
+					 } 
+					console.log(data) 
+					
+					G.isPosting = false ;
+				});
+	}
+	
+	//b. 开始倒计时
+	function startSecondCount( ){
+		G.secondValue = 60 ;
+		$('#secondLabel').html( G.secondValue + '秒' );
+		updateSecondCount();
+	}
+	function updateSecondCount( ){
+		setTimeout( function(){
+			G.secondValue = G.secondValue -1 ;
+			if( G.secondValue > 0  ){
+				$('#secondLabel').html( G.secondValue + '秒' );
+				//调用自身
+				updateSecondCount();
+			}
+			else{
+				$('#phone-dialog-box').removeClass( 'sending-code' );
+			}
+		},1000 );
+		return ;
+	}
+	
+	//b.提交
+	$('#doPrizeBtn').click( function(){
+	    var phoneNum = $('#phoneNum').val();
+		if( phoneNum === '' ){
+			alert( '请先输入手机号' );
+			$('#phoneNum').focus();
+			return ;
+		}
+		
+		var codeNum = $('#codeNum').val();
+		if( codeNum === '' ){
+			alert( '请先输入验证码' );
+			$('#codeNum').focus();
+			return ;
+		}
+		
+		if( G.isPosting ){
+			return ;
+		}
+		G.isPosting = true ;
+
+		//发送服务器请求
+		var param = {
+			"mobile":phoneNum,
+			"checkCode":codeNum
+		}
+		
+	 //post请求
+	 $.post(getRealPath()+"/recycle/receiveRole.do",{params:JSON.stringify(param)},
+		function(data){
+			if (data.success){
+				isCheckCode=data.result.isCheckCode;
+				$('#popoDialog').addClass( 'hide' );
+			}else{
+				alert(data.resultMessage);
+			}
+			
+			G.isPosting = false ;
+		});
+	});
+  
+  	//关闭手机号弹出框
+	$('#closePopoDialogBtn').click( function(){
+		$('#popoDialog').addClass( 'hide' );
+	});
+  })		
+</script>
+</html>

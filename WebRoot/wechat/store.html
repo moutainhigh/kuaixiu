@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>附近门店</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="storeWrap">
+    <div class="main">
+        
+    </div>
+    <div id="template" class="store_list" style="display: none;">
+        <div class="store_name">
+            <p class="name_font"></p>
+            <p class="distance"></p>
+        </div>
+        <ul class="store_ul">
+            <li class="addr"><i class="icon"></i><p></p></li>
+            <li class="photo"><i class="icon"></i></li>
+        </ul>
+    </div>
+
+    <div class="bottom">
+        <ul class="bottom_list">
+            <li class="bottom_in"><a href="index.html"><i class="icon1"></i>维修</a></li>
+            <li><a href="javascript:void(0);" onclick="selectLogin()"><i class="icon2"></i>订单</a></li>
+            <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
+        </ul>
+    </div>
+
+    <!--遮盖层-->
+    <div id="mask_boxs">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+    <!--遮盖层end-->
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <!--确认提示-->
+    <div class="popup_bg">
+        <div class="popup_content">
+            <div class="popup_title"></div>
+            <div class="popup_font"></div>
+            <div class="popup_but">
+                <a class="btn-normal cancel" href="javascript:void(0);">取 消</a>
+                <a class="btn-normal btn-normal-confirm confirm" href="javascript:void(0);">确 认</a>
+            </div>
+        </div>
+    </div>
+    <!--确认提示end-->
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script>
+    var pIndex = 1;
+    $(function () {
+        getSelInfo(pIndex);
+    });
+    //加载数据
+    function getSelInfo(index) {
+        var param = {
+            pageIndex:index,
+            pageSize:'10',
+            longitude:eCacheUtil.storage.getCache(CacheKey.lang),
+            latitude:eCacheUtil.storage.getCache(CacheKey.latitude)
+        };
+
+        $.post(linkUrl+"/wechat/repair/loadShopList.do",{params:JSON.stringify(param)},function(data){
+            if (data.success){
+                var size = data.result.shopSize;
+                if (size == 0){
+                    confirmTip('系统提示','亲，附近没有维修门店，是否选择寄修？',function () {
+                        fn_loading();
+                        eCacheUtil.storage.cache(CacheKey.repairWay,3);
+                        window.location.href = 'sel_brand.html';
+                        loading_hide();
+                    });
+                }else {
+                    var shopInfo = data.result.data;
+                    eachFull(shopInfo);
+                    off_on = true;
+                    loading_hide();
+                }
+            }else {
+                alertTip(data.resultMessage);
+            }
+        })
+    }
+
+    function eachFull(info) {
+        $.each(info, function (i, n) {
+            var tmp = $("#template").clone();
+            tmp.removeAttr("id");
+
+            tmp.show();
+            $(".name_font",tmp).html(n.name);
+            $(".distance",tmp).html(n.distance.toFixed(2)+' km');
+            $(".addr p",tmp).html(n.shopFullAddress);
+            $(".photo",tmp).append('<a href="tel:'+n.tel+'">'+n.tel+'</a>');
+            //追加到对应区块
+            $(".main").append(tmp);
+        });
+    }
+
+    //滚动加载
+    $('.main').scroll(function() {
+        //当时滚动条离底部10px时开始加载下一页的内容
+        if (($(this)[0].scrollTop + $(this)[0].offsetHeight + 10) >= $(this)[0].scrollHeight) {
+            //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）   
+            if (off_on) {
+                off_on = false;
+                pIndex++;
+                console.log("第"+pIndex+"页");
+                getSelInfo(pIndex);  //调用执行上面的加载方法
+            }
+        }
+    });
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.PrizeRecordMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.PrizeRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
+    <result column="prize_id" jdbcType="VARCHAR" property="prizeId" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="is_get" jdbcType="INTEGER" property="isGet" />
+    <result column="batch" jdbcType="VARCHAR" property="batch" />
+    <result column="grade" jdbcType="INTEGER" property="grade" />
+    <result column="coupon_code" jdbcType="VARCHAR" property="couponCode" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List">
+    id, mobile, wechat_id, prize_id, in_time,is_get,batch,grade,coupon_code,type
+  </sql>
+
+  <insert id="add" parameterType="Object">
+    insert into kx_prize_record (id, mobile, wechat_id, 
+      prize_id, in_time,is_get,batch,grade,coupon_code,type)
+    values (uuid(), #{mobile,jdbcType=VARCHAR}, #{wechatId,jdbcType=VARCHAR},
+      #{prizeId,jdbcType=VARCHAR}, now(),#{isGet,jdbcType=INTEGER},#{batch,jdbcType=VARCHAR},
+      #{grade,jdbcType=INTEGER},#{couponCode,jdbcType=VARCHAR},#{type,jdbcType=INTEGER})
+  </insert>
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_prize_record
+    where 1=1
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="wechatId != null and wechatId != ''">
+      and wechat_id=#{wechatId}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and mobile =#{mobile}
+    </if>
+    <if test="batch != null and batch != ''">
+      and batch=#{batch}
+    </if>
+    <if test="prizeId != null and prizeId != ''">
+      and prize_id=#{prizeId}
+    </if>
+    <if test="couponCode != null and couponCode != ''">
+      and coupon_code=#{couponCode}
+    </if>
+    <if test="isGet != null">
+      and is_get=#{isGet}
+    </if>
+    <if test="type != null">
+      and type=#{type}
+    </if>
+    <if test="grade != null">
+      and grade=#{grade}
+    </if>
+    order by in_time desc
+  </select>
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap"
+          parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_prize_record
+    where 1=1
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="wechatId != null and wechatId != ''">
+      and wechat_id=#{wechatId}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and mobile =#{mobile}
+    </if>
+    <if test="batch != null and batch != ''">
+      and batch=#{batch}
+    </if>
+    <if test="prizeId != null and prizeId != ''">
+      and prize_id=#{prizeId}
+    </if>
+    <if test="couponCode != null and couponCode != ''">
+      and coupon_code=#{couponCode}
+    </if>
+    <if test="isGet != null">
+      and is_get=#{isGet}
+    </if>
+    <if test="type != null">
+      and type=#{type}
+    </if>
+    <if test="grade != null">
+      and grade=#{grade}
+    </if>
+    order by in_time desc
+  </select>
+  
+  
+ 
+ 
+</mapper>

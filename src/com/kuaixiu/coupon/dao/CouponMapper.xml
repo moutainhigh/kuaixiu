@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.coupon.dao.CouponMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.coupon.entity.Coupon" >
+        <result column="id" property="id"/>
+        <result column="batch_id" property="batchId"/>
+        <result column="coupon_code" property="couponCode"/>
+        <result column="coupon_name" property="couponName"/>
+        <result column="type" property="type"/>
+        <result column="coupon_price" property="couponPrice"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="status" property="status"/>
+        <result column="is_use" property="isUse"/>
+        <result column="use_time" property="useTime"/>
+        <result column="is_receive" property="isReceive"/>
+        <result column="receive_mobile" property="receiveMobile"/>
+        <result column="is_brand_currency" property="isBrandCurrency"/>
+        <result column="is_project_currency" property="isProjectCurrency"/>
+        <result column="is_del" property="isDel"/>
+        <result column="note" property="note"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_coupon table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.batch_id,t.coupon_code,t.coupon_name,t.type,t.coupon_price,
+        t.begin_time,t.end_time,t.status,t.is_use,date_format(t.`use_time`,'%Y-%m-%d %H:%i:%s')use_time,
+        t.is_del,t.note,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
+        t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,
+        t.update_userid,t.is_receive,t.receive_mobile,t.is_brand_currency,t.is_project_currency
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_coupon
+        (id,batch_id,coupon_code,coupon_name,type,coupon_price,begin_time,end_time,status,is_use,is_del,is_brand_currency,note,is_project_currency,use_time,create_time,create_userid,is_receive)
+        values
+        (#{id},#{batchId},#{couponCode},#{couponName},#{type},#{couponPrice},#{beginTime},#{endTime},#{status},#{isUse},#{isDel},#{isBrandCurrency},#{note},#{isProjectCurrency},#{useTime},now(),#{createUserid},#{isReceive})
+    </insert>
+
+    <!-- 插入记录 -->
+    <insert id="addList" parameterType="java.util.ArrayList" >
+        insert into kx_coupon
+        (id,batch_id,coupon_code,coupon_name,type,coupon_price,begin_time,
+        end_time,status,is_use,is_del,is_brand_currency,note,is_project_currency,
+        use_time,create_time,create_userid,is_receive)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (uuid(),#{item.batchId},#{item.couponCode},#{item.couponName},#{item.type},
+            #{item.couponPrice},#{item.beginTime},#{item.endTime},#{item.status},#{item.isUse},
+            #{item.isDel},#{item.isBrandCurrency},#{item.note},#{item.isProjectCurrency},
+            #{item.useTime},now(),#{item.createUserid},#{item.isReceive})
+        </foreach>
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_coupon 
+        set 
+            coupon_code=#{couponCode},
+            coupon_name=#{couponName},
+            type=#{type},
+            coupon_price=#{couponPrice},
+            begin_time=#{beginTime},
+            end_time=#{endTime},
+            status=#{status},
+            is_use=#{isUse},
+            use_time=#{useTime},
+            is_receive=#{isReceive},
+            receive_mobile=#{receiveMobile},
+            is_brand_currency=#{isBrandCurrency},
+            is_project_currency=#{isProjectCurrency},
+            is_del=#{isDel},
+            note=#{note},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_coupon where id = #{id}
+    </delete>
+    
+    <!-- 根据id，修改记录-->
+    <update id="deleteByBatchId" parameterType="Object" >
+        update kx_coupon 
+        set 
+            is_del=#{isDel},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where batch_id=#{batchId}
+    </update>
+    
+    
+      <!-- 根据批次号 批量修改信息-->
+    <update id="updateByBatchId" parameterType="Object" >
+        update kx_coupon 
+        <set>
+            coupon_name=#{couponName},
+            coupon_price=#{couponPrice},
+            <if test="isBrandCurrency != null and isBrandCurrency != ''" >
+                is_brand_currency=#{isBrandCurrency},
+            </if>
+            <if test="isProjectCurrency != null and isProjectCurrency != ''" >
+                is_project_currency=#{isProjectCurrency},
+            </if>
+            begin_time=#{beginTime},
+            end_time=#{endTime},
+            note=#{note},
+            update_userid=#{updateUserid}
+        </set>
+        where batch_id=#{batchId}
+    </update>
+   
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_coupon t where t.id = #{id}
+    </select>
+    
+    <!-- 根据Code查询  -->
+    <select id="queryByCode"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_coupon t where t.coupon_code = #{code}
+    </select>
+
+    <!-- 查询个数  -->
+    <select id="queryCount"  resultType="int" parameterType="Object">
+        select count(1)
+        from kx_coupon t
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and t.batch_id = #{batchId}
+        </if>
+        <if test="couponCode != null and couponCode != ''" >
+            and t.coupon_code = #{couponCode}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and t.coupon_name = #{couponName}
+        </if>
+        <if test="type != null " >
+            and t.type = #{type}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and t.coupon_price = #{couponPrice}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and t.begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and t.end_time = #{endTime}
+        </if>
+        <if test="status != null" >
+            and t.status = #{status}
+        </if>
+        <if test="isUse != null" >
+            and t.is_use = #{isUse}
+        </if>
+        <if test="isReceive != null" >
+            and t.is_receive = #{isReceive}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del=#{isDel}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_coupon t
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and t.batch_id = #{batchId}
+        </if>
+        <if test="couponCode != null and couponCode != ''" >
+            and t.coupon_code = #{couponCode}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and t.coupon_name = #{couponName}
+        </if>
+        <if test="type != null " >
+            and t.type = #{type}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and t.coupon_price = #{couponPrice}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and t.begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and t.end_time = #{endTime}
+        </if>
+        <if test="status != null" >
+            and t.status = #{status}
+        </if>
+        <if test="isUse != null" >
+            and t.is_use = #{isUse}
+        </if>
+        <if test="isReceive != null" >
+            and t.is_receive = #{isReceive}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del=#{isDel}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_coupon t
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and t.batch_id = #{batchId}
+        </if>
+        <if test="couponCode != null and couponCode != ''" >
+            and t.coupon_code like CONCAT('%', #{couponCode}, '%')
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and t.coupon_name = #{couponName}
+        </if>
+        <if test="type != null " >
+            and t.type = #{type}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and t.coupon_price = #{couponPrice}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and t.begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and t.end_time = #{endTime}
+        </if>
+        <if test="status != null" >
+            and t.status = #{status}
+        </if>
+        <if test="isUse != null" >
+            and t.is_use = #{isUse}
+        </if>
+        <if test="isReceive != null" >
+            and t.is_receive = #{isReceive}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del=#{isDel}
+        </if>
+        order by t.create_time desc,t.coupon_code
+    </select>
+
+	<!-- 根据id，修改记录-->
+    <update id="updateForUse" parameterType="Object" >
+    	update kx_coupon 
+        set 
+            is_use=1,
+            use_time=now(),
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id} and is_use = 0
+    </update>
+    
+    <!-- 根据id，修改记录-->
+    <update id="updateForReceive" parameterType="Object" >
+    	update kx_coupon 
+        set 
+            is_receive=1,
+            receive_mobile=#{receiveMobile},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id} and is_receive = 0
+    </update>
+    
+    <!-- 查询列表无分页 -->
+    <select id="queryUnReceive" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_coupon t
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and t.batch_id = #{batchId}
+        </if>
+        <if test="couponCode != null and couponCode != ''" >
+            and t.coupon_code = #{couponCode}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and t.coupon_name = #{couponName}
+        </if>
+        <if test="type != null " >
+            and t.type = #{type}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and t.coupon_price = #{couponPrice}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and t.begin_time &lt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and t.end_time &gt;= #{endTime}
+        </if>
+        <if test="status != null" >
+            and t.status = #{status}
+        </if>
+        <if test="isUse != null" >
+            and t.is_use = #{isUse}
+        </if>
+        <if test="isReceive != null" >
+            and t.is_receive = #{isReceive}
+        </if>
+        <if test="receiveMobile != null and receiveMobile != ''" >
+            and t.receive_mobile=#{receiveMobile}
+        </if>
+        <if test="isDel != null" >
+            and t.is_del=#{isDel}
+        </if>
+        limit 1
+    </select>
+</mapper>   

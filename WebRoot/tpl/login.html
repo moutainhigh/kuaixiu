@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+    <title>M超人回收-登录</title>
+</head>
+<body>
+<div id="wrap" class="loginWrap bg">
+    <div class="main">
+        <div class="login_input">
+            手机号<input class="text" id="tel" type="tel" value="" maxlength="11" placeholder="请输入手机号" />
+        </div>
+        <div class="login_submit">
+            <input class="login_but" type="submit" onclick="Login()" value="查询" />
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+ <script>
+        function Login(){
+        	  var dianhua = $("#tel").val();
+        	  eCacheUtil.storage.cache(CacheKey.loginPhone,dianhua);
+              location.href = 'order_list.html';
+        }
+    </script>
+</body>
+</html>

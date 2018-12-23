@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleCustomerMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleCustomer">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="cert_no" jdbcType="VARCHAR" property="certNo" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="county" jdbcType="VARCHAR" property="county" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="address_type" jdbcType="INTEGER" property="addressType" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="zm_risk" jdbcType="INTEGER" property="zmRisk" />
+    <result column="zm_score" jdbcType="INTEGER" property="zmScore" />
+    <result column="zm_face" jdbcType="INTEGER" property="zmFace" />
+    <result column="zm_face_pic" jdbcType="VARCHAR" property="zmFacePic" />
+    <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
+    <result column="zhima_no" jdbcType="VARCHAR" property="zhimaNo" />
+    <result column="channel_id" jdbcType="VARCHAR" property="channelId" />
+    <result column="zhima_status" jdbcType="INTEGER" property="zhimaStatus" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, cert_no, mobile, email, province, city, county, address, area, address_type, 
+    open_id, user_id, zm_risk, zm_score, zm_face, zm_face_pic, transaction_id, zhima_no, 
+    channel_id, zhima_status, in_time
+  </sql>
+ 
+ <!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		insert into kx_recycle_customer
+		(id,name,cert_no,mobile,email,province,city,county,address,area,address_type,
+		open_id,user_id,zm_risk,zm_score,zm_face,zm_face_pic,transaction_id,zhima_no,
+		channel_id,zhima_status,in_time)
+		values
+		(#{id},#{name},#{certNo},#{mobile},#{email},#{province},#{city},#{county},#{address},#{area},#{addressType},
+		#{openId},#{userId},#{zmRisk},#{zmScore},#{zmFace},#{zmFacePic},#{transactionId},#{zhimaNo},
+		#{channelId},#{zhimaStatus},now())
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update kx_recycle_customer
+		set
+		channel_id=#{channelId},
+		zhima_status=#{zhimaStatus}
+		where id=#{id}
+	</update>
+	
+	
+	<!-- 根据id查询记录-->
+	<select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_customer where id=#{id} ;
+	</select>
+	
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from kx_recycle_customer where id = #{id}
+	</delete>
+
+
+
+
+	<!-- 查询列表无分页 -->
+	<select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_customer
+		where 1=1
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="openId != null and openId != ''">
+			and open_id=#{openId}
+		</if>
+		<if test="userId != null and userId != ''">
+			and user_id =#{userId}
+		</if>
+		<if test="transactionId != null and transactionId != ''">
+			and transaction_id=#{transactionId}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			and channel_id=#{channelId}
+		</if>
+		<if test="zhimaStatus != null">
+			and zhima_status =#{zhimaStatus}
+		</if>
+		order by in_time desc
+	</select>
+
+	<!-- 查询列表 带分页 -->
+	<select id="queryListForPage" resultMap="BaseResultMap"
+		parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from kx_recycle_customer
+		where 1=1
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="openId != null and openId != ''">
+			and open_id=#{openId}
+		</if>
+		<if test="userId != null and userId != ''">
+			and user_id =#{userId}
+		</if>
+		<if test="transactionId != null and transactionId != ''">
+			and transaction_id=#{transactionId}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			and channel_id=#{channelId}
+		</if>
+		<if test="zhimaStatus != null">
+			and zhima_status =#{zhimaStatus}
+		</if>
+		order by in_time desc
+	</select>
+ 
+</mapper>

@@ -1,0 +1,299 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 7.5rem;
+  height: 100%;
+  background: #e4e3e3;
+  font-family: 'SourceHanSansCN';
+}
+
+.ticket {
+  width: 100%;
+  height: 100%;
+  background: #e4e3e3;
+}
+
+.ticket .ticket-bg {
+  width: 6.96rem;
+  height: 2.9rem;
+  background: #fff;
+  margin-top: .27rem;
+  margin: .27rem .27rem 0;
+  border-radius: .22rem;
+}
+
+.ticket .ticket-bg .bg-pic {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100%;
+  height: 2.28rem;
+  background: url("../img/bg-ticket.png") no-repeat;
+  background-size: cover;
+}
+
+.ticket .ticket-bg .bg-pic .add {
+  margin-top: .15rem;
+  margin-left: .32rem;
+  position: relative;
+}
+
+.ticket .ticket-bg .bg-pic .add :first-child {
+  font-size: 1.45rem;
+  color: #fff;
+}
+
+.ticket .ticket-bg .bg-pic .add .size {
+  font-size: 1.2rem;
+  display: inline-block;
+  padding-top: .3rem;
+}
+
+.ticket .ticket-bg .bg-pic .add :nth-child(2) {
+  font-size: .3rem;
+  color: #fff;
+}
+
+.ticket .ticket-bg .bg-pic .add img {
+  width: .34rem;
+  height: .81rem;
+  position: absolute;
+  top: .3rem;
+  left: 1.85rem;
+}
+
+.ticket .ticket-bg .bg-pic .add .price {
+  position: absolute;
+  left: 2.65rem;
+}
+
+.ticket .ticket-bg .bg-pic .add .price1 {
+  position: absolute;
+  left: 2.6rem;
+}
+
+.ticket .ticket-bg .bg-pic .receive {
+  margin-right: .3rem;
+  text-align: right;
+  line-height: 1;
+}
+
+.ticket .ticket-bg .bg-pic .receive p {
+  font-size: .21rem;
+  color: #fff;
+  margin-top: .23rem;
+  margin-right: .1rem;
+}
+
+.ticket .ticket-bg .bg-pic .receive .rece {
+  width: 1.54rem;
+  height: .62rem;
+  background: -webkit-gradient(linear, right top, left bottom, from(#ffea7e), to(#f8b300));
+  background: linear-gradient(right top, #ffea7e, #f8b300);
+  display: block;
+  border-radius: .5rem;
+  margin-top: .75rem;
+}
+
+.ticket .ticket-bg .bg-pic .receive .rece p {
+  color: red;
+  font-weight: bold;
+  font-size: .3rem;
+  text-align: center;
+  line-height: .62rem;
+  margin-right: -.05rem;
+}
+
+.ticket .ticket-bg .bg-pic .receive .led {
+  display: none;
+  width: 1.42rem;
+  height: .6rem;
+  border: 1px #fff dashed;
+  border-radius: .5rem;
+  margin-top: .75rem;
+}
+
+.ticket .ticket-bg .bg-pic .receive .led p {
+  font-size: .3rem;
+  text-align: center;
+  margin-top: .17rem;
+}
+
+.ticket .ticket-bg .time {
+  font-size: .21rem;
+  color: #636262;
+  margin-bottom: .28rem;
+  margin-left: .36rem;
+  margin-top: .14rem;
+  line-height: 1;
+}
+
+.ticket :last-child {
+  margin-bottom: .66rem;
+}
+
+.ticket .pop {
+  display: none;
+  width: 6rem;
+  height: .8rem;
+  font-size: .36rem;
+  color: #fff;
+  text-align: center;
+  line-height: .8rem;
+  background: #5f5959;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -.5rem;
+  margin-left: -3rem;
+}
+
+.hide{
+	display:none;
+}
+
+/**弹出框**/
+.popo-dialog{
+	position:fixed;
+	top:0;
+	right:0;
+	left:0;
+	bottom:0;
+	background-color:rgba(0,0,0,0.6);
+	display:flex;
+	flex-flow:column nowrap;
+	justify-content:center;
+	align-content:center;
+	align-items:center;
+}
+.popo-dialog.hide{
+	display:none;
+}
+.popo-dialog .dialog-box{
+	position:relative;
+	margin:0 auto;
+	width:90%;
+	background-color:#FFF;
+	border-radius:10px;
+	font-size:16px;
+}
+.popo-dialog .dialog-box .dialog-title{
+	position:relative;
+	height:50px;
+	line-height:50px;
+	text-align:center;
+	font-weight:bold;
+	background-color:#F5F5F5;
+	border-radius:10px 10px 0 0;
+	font-size:1.2em;
+}
+.popo-dialog .dialog-box .dialog-body{
+	position:relative;
+	padding:0.8em;
+}
+.popo-dialog .dialog-box .dialog-body .tipinfo-box{
+	position:relative;
+	font-size:.8em;
+	line-height:140%;
+	padding-bottom:0.4em;
+}
+.popo-dialog .dialog-box .dialog-body .input-item{
+	position:relative;
+	margin-top:.4em;
+}
+.popo-dialog .dialog-box .dialog-body .input-item input{
+	position:relative;
+	width:100%;
+	line-height:2.4em;
+    padding:0 .4em;
+    border: 2px solid #f99b7b;
+    border-radius: .2em;
+    background-color: #f5f6fa;
+    color: #36414c;
+	box-sizing:border-box;
+}
+.popo-dialog .dialog-box .dialog-body .getCodeBtn input.short-input{
+	padding-right:7em;
+}
+.popo-dialog .dialog-box .dialog-body .input-item .input-label{
+	position:absolute;
+	top:1px;
+	right:1px;
+	bottom:2px;
+	width:7em;
+	line-height:2.4em;
+	border-radius: .2em;
+	text-align:center;
+}
+.popo-dialog .dialog-box .dialog-body .input-item .input-label.active-btn{
+	font-size:0.8em;
+	color:#FFF;
+	background-color:#f3172a;
+}
+.popo-dialog .dialog-box .dialog-body .input-item .input-label.info-box{
+	display:none;
+	color:#ffffff;
+	background-color:#ee664d;
+}
+
+.popo-dialog .dialog-box .dialog-body .input-item .do-prize-btn{
+	display:block;
+	position:relative;
+	margin:20px 0px;
+	line-height:2.8em;
+	text-align:center;
+	border-radius:4px;
+	color:#FFF;
+	background:#f3172a;
+	background: -webkit-linear-gradient(left,  #f3172a 0%,#ec7d57 100%); /* Chrome10-25,Safari5.1-6 */
+}
+
+/**发送验证码的状态.sending-code**/
+.popo-dialog .dialog-box.sending-code .dialog-body .input-item .input-label.active-btn{
+	display:none;
+}
+.popo-dialog .dialog-box.sending-code .dialog-body .input-item .input-label.info-box{
+	display:block;
+}
+
+.popo-dialog .dialog-box:before{
+	content:'';
+	position:absolute;
+	top:-38px;
+	right:30px;
+	width:1px;
+	height:38px;
+	background-color:#FFF;
+}
+
+.popo-dialog .dialog-box .close-btn{
+	display:block;
+	position:absolute;
+	top:-70px;
+	right:15px;
+	width:30px;
+	height:30px;
+	line-height:30px;
+	border-radius:50%;
+	text-align:center;
+	color:#FFF;
+	border:#FFF 1px solid;
+} 
+
+/**白色透明层**/
+.title-main-panel:before{
+	content:'';
+	position:absolute;
+	left:1rem;
+	right:1rem;
+	top:4rem;
+	bottom:3rem;
+	border-radius:4px;
+	background-color:rgba(255,255,255,.2);
+	
+}
+/*# sourceMappingURL=ticket.css.map */

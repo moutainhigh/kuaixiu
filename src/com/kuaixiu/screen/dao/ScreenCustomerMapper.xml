@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.screen.dao.ScreenCustomerMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.screen.entity.ScreenCustomer">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="brand" jdbcType="VARCHAR" property="brand" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="imei" jdbcType="VARCHAR" property="imei" />
+    <result column="sale_time" jdbcType="TIMESTAMP" property="saleTime" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_userid" jdbcType="VARCHAR" property="updateUserid" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, brand, model, imei, sale_time, name, mobile, is_del, is_active, in_time, update_time, 
+    update_userid,order_no
+  </sql>
+  
+  <insert id="add" parameterType="Object">
+    insert into kx_screen_customer (id, brand, model, 
+      imei, sale_time, name, 
+      mobile, is_del, is_active, 
+      in_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
+      #{imei,jdbcType=VARCHAR}, #{saleTime,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{isDel,jdbcType=INTEGER}, #{isActive,jdbcType=INTEGER}, 
+      now()
+      )
+  </insert>
+ 
+
+  <update id="update" parameterType="Object">
+    update kx_screen_customer
+    set 
+      brand = #{brand},
+      model = #{model},
+      imei = #{imei},
+      sale_time = #{saleTime},
+      name = #{name},
+      mobile = #{mobile},
+      is_del = #{isDel},
+      is_active = #{isActive},
+      in_time = #{inTime},
+      update_time = #{updateTime},
+      update_userid = #{updateUserid},
+      order_no=#{orderNo}
+  where id=#{id}
+  </update>
+  
+  
+   <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_screen_customer where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_customer where id = #{id} and is_del=0
+    </select>
+    
+    <!-- 根据手机号查询  -->
+    <select id="queryByMobile"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_customer where mobile = #{mobile} and is_del=0
+    </select>
+    
+     <!-- 根据手机号查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_screen_customer where order_no = #{orderNo} and is_del=0
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_screen_customer 
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+         <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="imei != null and imei != ''" >
+            and imei = #{imei}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="brand != null and brand != ''" >
+            and brand = #{brand}
+        </if>
+        <if test="model != null and model != ''" >
+            and model = #{model}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        <if test="isActive != null" >
+            and is_active = #{isActive}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+            select
+        <include refid="Base_Column_List"/>
+        from kx_screen_customer 
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+         <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="imei != null and imei != ''" >
+            and imei = #{imei}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="brand != null and brand != ''" >
+            and brand = #{brand}
+        </if>
+        <if test="model != null and model != ''" >
+            and model = #{model}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        <if test="isActive != null" >
+            and is_active = #{isActive}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isOutOfTime ==1" >
+            and DATEDIFF(now(),in_time) &lt;=5
+        </if>
+        <if test="isOutOfTime ==0" >
+            and DATEDIFF(now(),in_time) &gt;=5
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in 
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by in_time desc
+    </select>
+    
+  
+    <!-- 查询所有有效手机品牌  -->
+    <select id="queryAllBrand"  resultType="java.lang.String" parameterType="Object">
+       select DISTINCT brand from kx_screen_customer where DATEDIFF(now(),in_time) &lt;5
+    </select>
+    
+     <!-- 查询品牌下有效机型  -->
+    <select id="queryAllModel"  resultType="java.lang.String" parameterType="Object">
+       select DISTINCT model from kx_screen_customer where brand=#{brand} and  DATEDIFF(now(),in_time) &lt;5
+    </select>
+  
+ 
+</mapper>

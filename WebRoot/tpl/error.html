@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+    <title>M超人回收-错误提示</title>
+</head>
+<body>
+<div id="wrap" class="errorWrap bg">
+    <p id="msg"></p>
+</div>
+<script src="js/common.js"></script>
+<script>
+    document.getElementById("msg").innerHTML = eCacheUtil.storage.getCache(CacheKey.resultMsg)+"！";
+</script>
+</body>
+</html>

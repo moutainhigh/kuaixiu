@@ -1,0 +1,21 @@
+body {
+  font-family: "微软雅黑";
+}
+body #wrap .top {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  background-color: #f9f9f9;
+}
+body #wrap .top header {
+  height: 1.173333rem;
+  padding: 0 0.4rem;
+  display: flex;
+  justify-conent: center;
+  align-item: center;
+}
+body #wrap .top header .back {
+  display: inline-block;
+}

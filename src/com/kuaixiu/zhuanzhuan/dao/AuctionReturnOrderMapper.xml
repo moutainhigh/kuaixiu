@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.zhuanzhuan.dao.AuctionReturnOrderMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.zhuanzhuan.entity.AuctionReturnOrder">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="auction_order_id" jdbcType="VARCHAR" property="auctionOrderId" />
+    <result column="express_code" jdbcType="VARCHAR" property="expressCode" />
+    <result column="express_company" jdbcType="VARCHAR" property="expressCompany" />
+    <result column="done_time" jdbcType="TIMESTAMP" property="doneTime" />
+    <result column="cnee_mobile" jdbcType="VARCHAR" property="cneeMobile" />
+    <result column="cnee_name" jdbcType="VARCHAR" property="cneeName" />
+    <result column="cnee_address" jdbcType="VARCHAR" property="cneeAddress" />
+    <result column="cnee_remark" jdbcType="VARCHAR" property="cneeRemark" />
+    <result column="express_type" jdbcType="INTEGER" property="expressType" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    id, order_no, auction_order_id, express_code, express_company, done_time, cnee_mobile, 
+    cnee_name, cnee_address, cnee_remark, express_type, in_time, update_time
+  </sql>
+
+  <insert id="add" parameterType="Object">
+    insert into kx_auction_return_order (id, order_no, auction_order_id,
+      cnee_mobile, cnee_name, cnee_address, 
+      cnee_remark, express_type, in_time )
+    values (#{id,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{auctionOrderId,jdbcType=VARCHAR},
+      #{cneeMobile,jdbcType=VARCHAR}, #{cneeName,jdbcType=VARCHAR}, #{cneeAddress,jdbcType=VARCHAR}, 
+      #{cneeRemark,jdbcType=VARCHAR}, #{expressType,jdbcType=INTEGER},now())
+  </insert>
+
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.kuaixiu.zhuanzhuan.entity.AuctionReturnOrder">
+    update kx_auction_return_order
+    <set>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="auctionOrderId != null">
+        auction_order_id = #{auctionOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="expressCode != null">
+        express_code = #{expressCode,jdbcType=VARCHAR},
+      </if>
+      <if test="expressCompany != null">
+        express_company = #{expressCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="doneTime != null">
+        done_time = #{doneTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cneeMobile != null">
+        cnee_mobile = #{cneeMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cneeName != null">
+        cnee_name = #{cneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="cneeAddress != null">
+        cnee_address = #{cneeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cneeRemark != null">
+        cnee_remark = #{cneeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="expressType != null">
+        express_type = #{expressType,jdbcType=INTEGER},
+      </if>
+      <if test="inTime != null">
+        in_time = #{inTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+  <update id="update" parameterType="Object">
+    update kx_auction_return_order
+    set
+      express_code = #{expressCode,jdbcType=VARCHAR},
+      express_company = #{expressCompany,jdbcType=VARCHAR},
+      done_time = #{doneTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_return_order t where t.id = #{id}
+  </select>
+
+
+  <!-- 根据转转订单id查询 -->
+  <select id="queryByAuctionOrderId" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_return_order  where auction_order_id = #{auctionOrderId}
+  </select>
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_return_order
+    where 1=1
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="orderNo != null and orderNo != ''">
+      and order_no=#{orderNo}
+    </if>
+    <if test="auctionOrderId != null and auctionOrderId != ''">
+      and auction_order_id =#{auctionOrderId}
+    </if>
+    <if test="expressCode != null and expressCode != ''">
+      and express_code =#{expressCode}
+    </if>
+    <if test="expressCompany != null and expressCompany != ''">
+      and express_company=#{expressCompany}
+    </if>
+    <if test="cneeMobile != null and cneeMobile != ''">
+      and cnee_name=#{cneeMobile}
+    </if>
+    <if test="expressType != null and expressType != ''">
+      and express_type =#{expressType}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap"
+          parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from kx_auction_return_order
+    where 1=1
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+    <if test="orderNo != null and orderNo != ''">
+      and order_no=#{orderNo}
+    </if>
+    <if test="auctionOrderId != null and auctionOrderId != ''">
+      and auction_order_id =#{auctionOrderId}
+    </if>
+    <if test="expressCode != null and expressCode != ''">
+      and express_code =#{expressCode}
+    </if>
+    <if test="expressCompany != null and expressCompany != ''">
+      and express_company=#{expressCompany}
+    </if>
+    <if test="cneeMobile != null and cneeMobile != ''">
+      and cnee_name=#{cneeMobile}
+    </if>
+    <if test="expressType != null and expressType != ''">
+      and express_type =#{expressType}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+</mapper>

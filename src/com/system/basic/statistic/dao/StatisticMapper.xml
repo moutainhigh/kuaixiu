@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.statistic.dao.StatisticMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.statistic.entity.Statistic" >
+        <result column="id" property="id"/>
+        <result column="target" property="target"/>
+        <result column="type_key" property="typeKey"/>
+        <result column="type_name" property="typeName"/>
+        <result column="options" property="options"/>
+        <result column="int_value" property="intValue"/>
+        <result column="double_value" property="doubleValue"/>
+        <result column="day_time" property="dayTime"/>
+        <result column="hour_time" property="hourTime"/>
+        <result column="para1" property="para1"/>
+        <result column="para2" property="para2"/>
+        <result column="para3" property="para3"/>
+        <result column="para4" property="para4"/>
+        <result column="intime" property="intime"/>
+    </resultMap>
+    
+    <!-- sys_statistic table all fields -->
+    <sql id="Base_Column_List" >
+        id,target,type_key,type_name,options,int_value,double_value,date_format(`day_time`,'%Y-%m-%d %H:%i:%s')day_time,hour_time,para1,para2,para3,para4,date_format(`intime`,'%Y-%m-%d %H:%i:%s')intime
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_statistic
+        (target,type_key,type_name,options,int_value,double_value,day_time,hour_time,para1,para2,para3,para4,intime)
+        values
+        (#{target},#{typeKey},#{typeName},#{options},#{intValue},#{doubleValue},#{dayTime},#{hourTime},#{para1},#{para2},#{para3},#{para4},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_statistic 
+        set 
+            type_key=#{typeKey},
+            type_name=#{typeName},
+            options=#{options},
+            int_value=#{intValue},
+            double_value=#{doubleValue},
+            day_time=#{dayTime},
+            hour_time=#{hourTime},
+            para1=#{para1},
+            para2=#{para2},
+            para3=#{para3},
+            para4=#{para4}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_statistic where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_statistic where id = #{id}
+    </select>
+
+    <!-- 查询统计数据-->
+    <select id="queryStatistic" resultMap="BaseResultMap"  parameterType="Object">
+        select sum(s.int_value) int_value, sum(s.double_value) double_value, s.day_time 
+        from sys_statistic s
+        where 1=1
+        <if test="target != null" >
+            and target = #{target}
+        </if>
+        <if test="typeKey != null and typeKey != ''" >
+            and type_key = #{typeKey}
+        </if>
+        <if test="typeName != null and typeName != ''" >
+            and type_name = #{typeName}
+        </if>
+        <if test="options != null" >
+            and options = #{options}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and day_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and day_time &lt;= #{queryEndTime}
+        </if>
+        <if test="para1 != null and para1 != ''" >
+            and para1 = #{para1}
+        </if>
+        <if test="para2 != null and para2 != ''" >
+            and para2 = #{para2}
+        </if>
+        <if test="para3 != null and para3 != ''" >
+            and para3 = #{para3}
+        </if>
+        <if test="para4 != null and para4 != ''" >
+            and para4 = #{para4}
+        </if>
+        group by day_time order by s.day_time
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_statistic
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="target != null" >
+            and target = #{target}
+        </if>
+        <if test="typeKey != null and typeKey != ''" >
+            and type_key = #{typeKey}
+        </if>
+        <if test="typeName != null and typeName != ''" >
+            and type_name = #{typeName}
+        </if>
+        <if test="options != null" >
+            and options = #{options}
+        </if>
+        <if test="dayTime != null and dayTime != ''" >
+            and day_time = #{dayTime}
+        </if>
+        <if test="hourTime != null and hourTime != ''" >
+            and hour_time = #{hourTime}
+        </if>
+        <if test="para1 != null and para1 != ''" >
+            and para1 = #{para1}
+        </if>
+        <if test="para2 != null and para2 != ''" >
+            and para2 = #{para2}
+        </if>
+        <if test="para3 != null and para3 != ''" >
+            and para3 = #{para3}
+        </if>
+        <if test="para4 != null and para4 != ''" >
+            and para4 = #{para4}
+        </if>
+        <if test="intime != null and intime != ''" >
+            and intime = #{intime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_statistic
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="target != null" >
+            and target = #{target}
+        </if>
+        <if test="typeKey != null and typeKey != ''" >
+            and type_key = #{typeKey}
+        </if>
+        <if test="typeName != null and typeName != ''" >
+            and type_name = #{typeName}
+        </if>
+        <if test="options != null" >
+            and options = #{options}
+        </if>
+        <if test="dayTime != null and dayTime != ''" >
+            and day_time = #{dayTime}
+        </if>
+        <if test="hourTime != null and hourTime != ''" >
+            and hour_time = #{hourTime}
+        </if>
+        <if test="para1 != null and para1 != ''" >
+            and para1 = #{para1}
+        </if>
+        <if test="para2 != null and para2 != ''" >
+            and para2 = #{para2}
+        </if>
+        <if test="para3 != null and para3 != ''" >
+            and para3 = #{para3}
+        </if>
+        <if test="para4 != null and para4 != ''" >
+            and para4 = #{para4}
+        </if>
+        <if test="intime != null and intime != ''" >
+            and intime = #{intime}
+        </if>
+    </select>
+
+	<!-- 查询最后统计日期 -->
+	<select id="queryLastCountDay" resultType="String" parameterType="Object">
+		select MAX(t.day_time) 
+		from sys_statistic t 
+		where t.target = #{target}
+		<if test="typeKey != null" >
+            and type_key = #{typeKey}
+        </if>
+        <if test="typeName != null and typeName != ''" >
+            and type_name = #{typeName}
+        </if>
+        <if test="options != null" >
+            and options = #{options}
+        </if>
+	</select>
+
+	<!-- 统计订单数量 -->
+	<select id="queryOrderCountByDay" resultType="long"  parameterType="Object">
+		select count(1) from kx_order t where date_format(t.`in_time`,'%Y-%m-%d') = #{queryDay} and t.is_del = 0
+		<if test="typeKey != null" >
+            and t.is_mobile = #{typeKey}
+        </if>
+	</select>
+	
+	<!-- 统计连锁商数量 -->
+	<select id="queryProviderCountByDay" resultType="long"  parameterType="Object">
+		select count(1) from kx_provider t where date_format(t.create_time,'%Y-%m-%d') = #{queryDay} and t.is_del = 0
+	</select>
+
+	<!-- 统计客户数量 -->
+	<select id="queryCustomerCountByDay" resultType="long"  parameterType="Object">
+		select count(1) from kx_customer t 
+		where t.is_del = 0
+		and date_format(t.create_time,'%Y-%m-%d') = #{queryDay} 
+		<if test="typeKey != null" >
+            and t.is_mobile = #{typeKey}
+        </if>
+	</select>	
+	
+	<!-- 统计交易额数量 -->
+	<select id="querySumMomeyByDay" resultType="long"  parameterType="Object">
+		select IFNULL(SUM(t.total_fee), 0) 
+		from kx_pay_log t 
+		left join kx_order o on t.order_no = o.order_no
+		where t.pay_status = 3
+		and date_format(t.pay_time,'%Y-%m-%d') = #{queryDay}
+		<if test="typeKey != null and typeKey != ''" >
+            and o.is_mobile = #{typeKey}
+        </if>
+	</select>
+	
+</mapper>   

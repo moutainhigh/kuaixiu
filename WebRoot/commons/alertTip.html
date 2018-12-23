@@ -1,0 +1,135 @@
+
+<!--错误提示-->
+<div class="remind_delivery_bg" style="display: none;">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--确认提示-->
+<div class="popup_bg" style="display: none;"></div>
+<div class="popup_content" style="display: none;">
+     <div class="popup_cont">
+          <div class="popup_title"></div>
+          <div class="popup_font"></div>
+          <div class="popup_but">
+               <a class="but cancel" href="javascript:void(0);">取 消</a>
+               <a class="but confirm" href="javascript:void(0);">确 认</a>
+          </div>
+          <a class="popup_exit" href="javascript:void(0);"></a>
+     </div>
+</div>
+<!--确认提示end-->
+<!--遮盖层-->
+<div id="mask_boxs" style="display: none;width:100%;height:100%;z-index:50px;">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="../resource/login/images/loadings.gif" style="width: 80px;height:80px;position:fixed; top:50%;left:50%; margin-left:-25px;  margin-top:-25px;z-index:999"/>
+    </div>
+</div>
+<!--遮盖层end-->
+
+<!--站长统计-->
+<div style="display: none;">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+
+<script type="text/javascript">
+
+    /**
+     * 确认提示
+     */
+    function confirmTip(title, msg, callback){
+    	if(!msg){
+            return;
+        }
+    	if(!title){
+    		title = "系统提示";
+    	}
+        $(".popup_content .popup_title").text(title);
+        $(".popup_content .popup_font").text(msg);
+        $(".popup_but .cancel").show();
+        $(".popup_bg, .popup_content").show();
+    	//点击确认
+        $(".popup_but .confirm").unbind("click").click(function(){
+            $(".popup_bg, .popup_content").hide();
+            if (callback) {
+                callback();
+            }
+        });
+    }
+    
+    /**
+     * 带确认按钮提示框
+     */
+    function realAlert(title, msg, callback){
+        if(!msg){
+            return;
+        }
+        if(!title){
+            title = "系统提示";
+        }
+        $(".popup_content .popup_title").text(title);
+        $(".popup_content .popup_font").text(msg);
+        //隐藏取消按钮
+        $(".popup_but .cancel").hide();
+        $(".popup_bg, .popup_content").show();
+        //点击确认
+        $(".popup_but .confirm").unbind("click").click(function(){
+            $(".popup_bg, .popup_content").hide();
+            if (callback) {
+                callback();
+            }
+        });
+    }
+    
+    //关闭弹出框
+    $(".popup_but .cancel,.popup_content .popup_exit").click(function(){
+        $(".popup_bg, .popup_content").hide();   
+    });
+    
+    /**
+     * 提示方法
+     */
+    function alertTip(msg, callback){
+    	if(!msg){
+    		return;
+    	}
+        $(".remind_delivery_bg").show();
+        $(".remind_delivery_cont p").text(msg);
+        window.setTimeout(function () {
+            $(".remind_delivery_bg").fadeOut();
+            if (callback) {
+                callback();
+            }
+        }, 1000);
+    }
+    
+    /**
+     * 遮盖方法
+     */
+    function fn_loading(){
+    	$("#mask_boxs").show();
+    }
+    
+    /**
+     * 隐藏遮盖层
+     */
+    function loading_hide(){
+    	$("#mask_boxs").hide();
+    }
+    
+    /**
+     * 登录页
+     */
+    function toLogin(){
+    	window.location.href = "/wechat/order/wechatLogin.do";
+    }
+    
+    /**
+     * 返回上一页
+     */
+    function goBack(){
+        window.history.go(-1);
+    }
+</script>

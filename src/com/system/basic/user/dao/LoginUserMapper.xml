@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.basic.user.dao.LoginUserMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.system.basic.user.entity.LoginUser" >
+        <result column="id" property="id"/>
+        <result column="access_token" property="accessToken"/>
+        <result column="refresh_token" property="refreshToken"/>
+        <result column="indate" property="indate"/>
+        <result column="open_id" property="openId"/>
+        <result column="login_id" property="loginId"/>
+        <result column="login_type" property="loginType"/>
+        <result column="user_type" property="userType"/>  
+        <result column="create_time" property="createTime"/>     
+        <result column="update_time" property="updateTime"/>    
+        <result column="session_id" property="sessionId"/>  
+        <result column="uid" property="uid"/>  
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+        t.id,t.access_token,t.refresh_token,t.indate,t.open_id,t.login_id,
+        t.login_type,t.user_type,
+        date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
+        date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.session_id,t.uid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sys_user_info
+        (id,uid,access_token,indate,open_id,login_id,login_type,user_type,create_time,session_id)
+        values
+        (#{id},#{uid},#{accessToken},#{indate},#{openId},#{loginId},#{loginType},#{userType},now(),#{sessionId})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sys_user_info 
+        set 
+            uid=#{uid},
+            access_token=#{accessToken},
+            indate=#{indate},
+            open_id=#{openId},
+            login_id=#{loginId},
+            login_type=#{loginType},
+            user_type=#{userType},
+            session_id=#{sessionId}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sys_user_info where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_info t where t.id = #{id}
+    </select>
+    
+     <!-- 根据access_token查询  -->
+    <select id="queryByToken"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_info t where t.access_token = #{accessToken}
+    </select>
+    
+     <!-- 根据用户登录名查询  -->
+    <select id="queryByLoginId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_info t where t.login_id = #{loginId}
+    </select>
+    
+     <!-- 根据微信用户openId查询  -->
+    <select id="queryByOpenId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_info t where t.open_id = #{openId}
+    </select>
+    
+     <!-- 根据sessionId查询  -->
+    <select id="queryBysessionId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_user_info t where t.session_id = #{sessionId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_info t where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="uid != null and uid != ''" >
+            and t.uid = #{uid}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and t.open_id = #{openId}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and t.login_id = #{loginId}
+        </if>
+        <if test="loginType != null and loginType != ''" >
+            and t.login_type = #{loginType}
+        </if>
+        <if test="userType != null and userType != ''" >
+            and t.user_type = #{userType}
+        </if>
+        <if test="isDel != null " >
+            and t.is_del = #{isDel}
+        </if>
+        <if test="sessionId != null and sessionId != ''" >
+            and t.session_id = #{sessionId}
+        </if>
+    </select>
+    
+   
+</mapper>   

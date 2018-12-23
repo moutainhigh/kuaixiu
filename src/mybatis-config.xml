@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 解决 如果值(value)为null的话,那么key也不会被加入到map中的问题 -->
+        <setting name="callSettersOnNulls" value="true"/>
+    </settings>
+
+    <typeHandlers>
+        <typeHandler javaType="double"
+            handler="com.common.typehandler.DoubleTypeHandler" />
+        <typeHandler javaType="int"
+            handler="com.common.typehandler.IntegerTypeHandler" />
+    </typeHandlers>
+    
+    <plugins>
+        <plugin interceptor="com.common.paginate.PagePlugin">
+            <property name="dialect" value="mysql" />
+            <property name="pageSqlId" value=".*ForPage.*" />
+        </plugin>
+    </plugins>
+</configuration> 

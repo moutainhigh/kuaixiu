@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title>M超人回收</title>
+</head>
+<body>
+    <div id="wrap" class="testWrap">
+        <div class="pageTitle">
+            <a href="javascript:window.history.back();">
+                <img src="img/icon_arrow.png" alt="">
+            </a>
+            <h3></h3>
+        </div>
+        <div class="main">
+            <div class="processbar">
+                <div class="processbar-cover"></div>
+            </div>
+            <div class="mainCont">
+                <p>如实选择详细信息，预估更准确哦 测试</p>
+                <div class="select-property required">
+
+                </div>
+                <div class="select-property notrequired">
+                    <p>功能情况（多选）<span>*若无以下问题，直接点击‘马上询价’</span></p>
+                    <a href="javascript:;" data-acc="14" data-level="59" default="53">通话不正常</a>
+                    <a href="javascript:;" data-acc="26" data-level="83" default="82">指南针不正常</a>
+                    <a href="javascript:;" data-acc="27" data-level="86" default="85">陀螺仪不正常</a>
+                    <a href="javascript:;" data-acc="33" data-level="109" default="108">指纹锁不正常</a>
+                    <a href="javascript:;" data-acc="32" data-level="104" default="103">麦克风不正常</a>
+                    <a href="javascript:;" data-acc="21" data-level="92" default="91">拍照摄像不正常</a>
+                    <a href="javascript:;" data-acc="28" data-level="89" default="88">闪光灯不正常</a>
+                    <a href="javascript:;" data-acc="36" data-level="119" default="118">无线不正常</a>
+                    <a href="javascript:;" data-acc="31" data-level="101" default="100">蓝牙不正常</a>
+                    <a href="javascript:;" data-acc="30" data-level="98" default="97">GPS定位不正常</a>
+                </div>
+                
+            </div>
+        </div>
+        <div class="footer">
+            <a href="javascript:;" id="submit" class="btn-large disabled">马上估价</a>
+        </div>
+
+        <div class="tipBox">
+            <div class="tipCon">
+                <div class="close"><a><img src="img/cuo.png" alt=""></a></div>
+                <div class="desc">
+                    <img src="" alt="">
+                </div>
+            </div>
+        </div>
+
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
+        <!--错误提示end-->
+        <!--遮盖层-->
+        <div id="mask_boxs">
+            <div id="mcon">
+                <img src="img/loadings.gif"/>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/test.js"></script>
+	
+	<script>  
+		function getUrlParam(key){
+			var url = window.location.search;
+			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+			var result = url.substr(1).match(reg);
+			return result ? decodeURIComponent(result[2]) : null;
+		}
+		
+		function setCacheData(key,keyName){
+			if(getUrlParam(keyName)!==null &&  getUrlParam(keyName) !== undefined && getUrlParam(keyName)!==''){
+			  eCacheUtil.storage.cache(key,getUrlParam(keyName));
+			}
+		}
+		
+		if (getUrlParam("productid")){
+			setCacheData(CacheKey.ProjectId,"productid");
+			setCacheData(CacheKey.OpenId,"openId");
+			setCacheData(CacheKey.ModelName,"modelName");
+			setCacheData(CacheKey.imgHref,"modelImageUrl");
+			setCacheData(CacheKey.LastPrice,"lastPrice");
+			eCacheUtil.storage.cache(CacheKey.isSelect,false);
+		}
+
+    </script>
+
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

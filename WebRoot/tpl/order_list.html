@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/mui.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <title>订单列表</title>
+</head>
+<body>
+<div id="wrap" class="listWrap">
+    <div class="top">
+        <div class="tabBox">
+            <a href="javascript:;" class="active">全部</a>
+            <a href="javascript:;">待发货</a>
+            <a href="javascript:;">待验机</a>
+            <a href="javascript:;">待收款</a>
+            <a href="javascript:;">已完成</a>
+        </div>
+    </div>
+
+    <div id="scroll" class="mui-content mui-scroll-wrapper">
+        <div class="main mui-scroll">
+
+        </div>
+    </div>
+
+    <div id="template" class="order_list" style="display: none;">
+        <div class="contentDiv">
+            <div class="order_title">
+                <p id="orderId"></p>
+                <p id="status" class="colRed"></p>
+            </div>
+
+            <div class="proInfor">
+                <div class="image"></div>
+                <div class="text">
+
+                </div>
+            </div>
+
+            <div class="priceBox">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--遮盖层-->
+<div id="mask_boxs" style="display: none;">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/mui.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/orderlist.js"></script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

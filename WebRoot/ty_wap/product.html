@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="productWrap">
+        <div class="pageTitle">
+            <a href="javascript:window.history.back();"><img src="img/icon_arrow.png" alt=""></a>
+            <div>
+                <input type="search" name="" id="search" placeholder="输入手机型号">
+            </div>
+        </div>
+        <div class="main clearfix">
+            <div class="mainLeft fl">
+                <ul class="swiper-wrapper">
+                    
+                </ul>
+            </div>
+            <div class="mainRight fl">
+                
+                <div class="loadMore">
+                    <a href="javascript:;" class="btn-large">加载更多</a>
+                </div>
+            </div>
+            <div id="template" style="display:none;">
+                <div class="item"></div>
+                
+            </div>
+        </div>
+
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
+        <!--错误提示end-->
+        <!--遮盖层-->
+        <div id="mask_boxs">
+            <div id="mcon">
+                <img src="img/loadings.gif"/>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/common.js"></script>
+	
+    <script>
+		function getUrlParam(key){
+			var url = window.location.search;
+			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+			var result = url.substr(1).match(reg);
+			return result ? decodeURIComponent(result[2]) : null;
+		}
+		
+		function setCacheData(key,keyName){
+			if(getUrlParam(keyName)!==null &&  getUrlParam(keyName) !== undefined && getUrlParam(keyName)!==''){
+			  eCacheUtil.storage.cache(key,getUrlParam(keyName));
+			}
+		}
+		
+		if (getUrlParam("openId")){
+			setCacheData(CacheKey.OpenId,"openId");
+			setCacheData(CacheKey.ModelName,"modelName");
+			setCacheData(CacheKey.imgHref,"modelImageUrl");
+			eCacheUtil.storage.cache(CacheKey.isSelect,false);
+		}
+	
+        var page = 1, //分页码
+            off_on = false,//分页开关
+            totalcount = 0;
+        $(function(){
+            var tip = GetQueryString('tip');
+            var fm = eCacheUtil.storage.getCache(CacheKey.source);
+            if(isEmpty(fm)){
+                eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+            }
+        	if(tip==1){
+        		 eCacheUtil.storage.cache(CacheKey.happyGo,true);
+        	}
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            if(isGo == 'true'){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }
+            var bid = GetQueryString('bid');
+            if(isEmpty(bid)){
+                bid = 1;
+            }
+            searchBrand(bid);
+            eCacheUtil.storage.cache(CacheKey.isSelect,false);
+            //选择品牌
+            $('.mainLeft').on('click','li',function () {
+                if (!$(this).hasClass('active')){
+                    $(this).addClass('active').siblings().removeClass('active');
+                    bid = $(this).attr('data-bid');
+                    $('.mainRight div.item').remove();
+                    searchModel(bid);
+                }
+            });
+
+            $('.mainRight').delegate('.item','click',function(){
+                var mid = $(this).attr('data-mid'),
+                    mname = $(this).find('p').html(),
+                    imgHref = $(this).find('img').attr('src')
+                eCacheUtil.storage.cache(CacheKey.ProjectId,mid);
+                eCacheUtil.storage.cache(CacheKey.ModelName,mname);
+                eCacheUtil.storage.cache(CacheKey.imgHref,imgHref);
+                setHistoryItems(mname,mid,imgHref);
+                //判断是否良品价评估
+                var fm=eCacheUtil.storage.getCache(CacheKey.source);
+				location.href = 'test.html';
+                /*if(fm==10){
+                    location.href = 'resultHappyPrize.html';
+                }else{
+                    location.href = 'test.html';
+                } */
+            });
+
+            $('.loadMore').click(function(){
+                if (off_on){
+                    $('.loadMore a').html('加载中');
+                    page++;
+                    searchModel(bid);  //调用执行上面的加载方法
+                }
+            });
+
+            $('#search').focus(function(){
+                location.href = "search.html";
+            })
+        });
+        
+        //加载品牌
+        function searchBrand(bid) {
+            $.post(linkUrl+"/recycle/getBrandList.do",function(data){
+                if (data.success){
+                    var s = '',dataInfo = data.result.datainfo;
+                    for (var i = 0;i < dataInfo.length;i++){
+                        s += '<li class="swiper-slide" data-bid="'+dataInfo[i].brandid+'">'+dataInfo[i].brandname+'</li>';
+                    }
+                    $('.swiper-wrapper').html(s);
+                    searchModel(bid);
+                    $('.swiper-slide[data-bid="'+bid+'"]').addClass('active');
+                    var mySwiper = new Swiper('.mainLeft',{
+                        freeMode : true,
+                        slidesPerView : 'auto',
+                        slideToClickedSlide:true,
+                        direction: 'vertical'
+                    });
+                    $('.swiper-wrapper').css({
+                        'transform' : 'translate3d(0,-'+$('.swiper-slide.active').height()*$('.swiper-slide.active').index()+'px,0)'
+                    });
+                }else {
+                    loading_hide();
+                    alertTip(data.resultMessage);
+                }
+            });
+        }
+
+        //加载机型
+        function searchModel(bid) {
+            var param = {
+                pageindex:page,
+                pagesize:'12',
+                brandid:bid
+            };
+            //将品牌id储存
+            eCacheUtil.storage.cache(CacheKey.BrandId,bid);
+            $.post(linkUrl+"/recycle/getModelList.do",{params:JSON.stringify(param)},function(data){
+                if (data.success){
+                    var dataInfo = data.result.datainfo;
+                    totalcount = data.result.totalcount;
+                    if (dataInfo.length > 0){
+                        var sublist = dataInfo[0].sublist;
+                        eachFull(sublist);
+                        loading_hide();
+                        if ($('.mainRight .item').length == totalcount){
+                            off_on = false;
+                            $('.loadMore a').html('- 我是有底线的 -');
+                        }else{
+                            off_on = true;
+                            $('.loadMore a').html('加载更多');
+                        }
+                    }
+                }else {
+                    loading_hide();
+                    alertTip(data.resultMessage);
+                }
+            })
+        }
+
+        function eachFull(info) {
+            $.each(info, function (i, n) {
+                var tmp = $("#template").clone();
+                tmp.removeAttr("id");
+
+                tmp.show();
+                $(".item",tmp).attr('data-mid',n.productid).html('<img src="'+n.modellogo+'"><p>'+n.modelname+'</p>');
+                //追加到对应区块
+                $(".loadMore").before(tmp.html());
+            });
+        }
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

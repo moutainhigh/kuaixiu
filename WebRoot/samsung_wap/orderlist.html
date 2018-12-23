@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="orderListWrap">
+        <div class="pageTitle">
+            <a href="javascript:window.history.back();">
+                <img src="img/icon_arrow.png" alt="">
+            </a>
+            <h3>我的订单</h3>
+        </div>
+        <div class="main">
+            <div class="navbar">
+                <a href="javascript:;" class="active">全部</a>
+                <!--
+                <a href="javascript:;"> 待收货</a>
+                <a href="javascript:;">待结款</a>
+                <a href="javascript:;">已完成</a>
+                <a href="javascript:;"> 已取消 </a>-->
+            </div>
+             
+            <div class="cont">
+               
+            </div>
+            <div id="template" class="order_list" style="display:none">
+                <div class="order_title">
+                    <p>订单号：<span class="orderId"></span></p>
+                    <p class="status color-red"></p>
+                </div>
+            
+                <section class="proRelated">
+                    <div class="proInfor">
+                        <div class="image"><img src="img/temp1.jpg" alt=""></div>
+                        <div class="text">
+                            
+                        </div>
+                    </div>
+                    <div class="priceBox">
+                        <p>预估价 <span></span></p>
+                    </div>
+                </section>
+            </div>
+            
+        </div>
+        <!--遮盖层-->
+        <div id="mask_boxs">
+            <div id="mcon">
+                <img src="img/loadings.gif"/>
+            </div>
+        </div>
+        <!--错误提示-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
+        <!--错误提示end-->
+        
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        var pIndex = 1,
+            off_on = false;//分页开关;
+        $(function(){
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            if(isGo == 'true'){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }
+            searchOrderList(pIndex,"");
+            // $('.navbar a').click(function(){
+            //     var index=$(this).index();
+            //     $(this).addClass('active').siblings().removeClass('active');
+            //     $(".cont .order_list").remove();
+            //     if(index==1){
+            //     	//待收货
+            //     	  searchOrderList(pIndex,"101");
+            //     }else if(index==2){
+            //     	//待结款
+            //     	  searchOrderList(pIndex,"203");
+            //     }else if(index==3){
+            //     	//已完成
+            //     	  searchOrderList(pIndex,"204");
+            //     }else if(index==4){
+            //     	//已取消
+            //     	  searchOrderList(pIndex,"-100");
+            //     }else{
+            //     	  searchOrderList(pIndex,"");
+            //     }
+            // });
+        });
+
+        function searchOrderList(pIndex,orderStatus) {
+            var params = {
+                contactphone:eCacheUtil.storage.getCache(CacheKey.loginPhone),
+                pageindex:pIndex,
+                pagesize:"3",
+                processstatus:orderStatus
+            }
+            $.post(linkUrl+'/recycleNew/getOrderList.do',{params:JSON.stringify(params)},function (data) {
+            	if (data.success){
+                    var dataInfo = data.result.datainfo;
+                    if (dataInfo.length == 0){
+                        $('.baseline').remove();
+                        $(".main").append('<p class="baseline blue" style="text-align: center;">——没有更多数据了！——</p>');
+                        loading_hide();
+                        return false;
+                    }else {
+                        eachFull(dataInfo);
+                    }
+                    off_on = true;
+                    loading_hide();
+                }else {
+                    loading_hide();
+                    alertTip(data.resultMessage);
+                }
+            });
+        }
+        function eachFull(info){
+            $.each(info, function (i, n) {
+                var tmp = $("#template").clone();
+                tmp.removeAttr("id");
+                var orderId = n.orderid;
+                $(".order_title,.proRelated",tmp).on('click', function () {
+                    location.href = 'details.html?orderid='+orderId;
+                });
+                tmp.show();
+                $('.orderId',tmp).html(+orderId);
+                $('.status',tmp).html(n.processstatus_name);
+                $('.image img',tmp).attr('src',n.modelpic);
+                var item = '';
+                for (var j = 0;j < n.checkinfo.length;j++){
+                    item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
+                }
+                $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
+        
+                $('.priceBox span',tmp).html("¥"+(n.orderprice).toFixed(2));
+        
+                //追加到对应区块
+                $(".cont").append(tmp);
+            });
+        }
+
+        //滚动加载
+        $('.cont').scroll(function() {
+            //当时滚动条离底部10px时开始加载下一页的内容
+            if (($(this)[0].scrollTop + $(this)[0].offsetHeight + 30) >= $(this)[0].scrollHeight) {
+                //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）   
+                if (off_on) {
+                    off_on = false;
+                    pIndex++;
+                    console.log("第"+pIndex+"页");
+                    searchOrderList(pIndex);  //调用执行上面的加载方法
+                }
+            }
+        });
+        
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

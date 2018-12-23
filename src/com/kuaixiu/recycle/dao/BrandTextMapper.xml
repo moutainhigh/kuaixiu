@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.BrandTextMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.BrandText" >
+        <result column="id" property="id"/>
+        <result column="brand" property="brand"/>
+        <result column="model_no" property="modelNo"/>
+        <result column="model_name" property="modelName"/>
+        <result column="edition_no" property="editionNo"/>
+    </resultMap>
+    
+    <!-- hs_brand_text table all fields -->
+    <sql id="Base_Column_List" >
+        id,brand,model_no,model_name,edition_no
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_brand_text
+        (id,brand,model_no,model_name,edition_no)
+        values
+        (#{id},#{brand},#{modelNo},#{modelName},#{editionNo})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_brand_text 
+        set 
+            id=#{id},
+            brand=#{brand},
+            model_no=#{modelNo},
+            model_name=#{modelName},
+            edition_no=#{editionNo}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_brand_text where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_brand_text where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_brand_text
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="brand != null and brand != ''" >
+            and brand = #{brand}
+        </if>
+        <if test="modelNo != null and modelNo != ''" >
+            and model_no = #{modelNo}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="editionNo != null and editionNo != ''" >
+            and edition_no = #{editionNo}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_brand_text
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="brand != null and brand != ''" >
+            and brand = #{brand}
+        </if>
+        <if test="modelNo != null and modelNo != ''" >
+            and model_no = #{modelNo}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="editionNo != null and editionNo != ''" >
+            and edition_no = #{editionNo}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,63 @@
+/** 分页样式 **/
+
+.paginate_style1{
+	float: right;
+    margin: 0;
+}
+
+.paginate_style1 .pagination{
+	margin: 2px 0;
+    white-space: nowrap;
+}
+
+.paginate_style1 .pagination>li{
+	display: inline;
+}
+
+.paginate_style1 .pagination>li>a, .paginate_style1 .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.paginate_style1 .pagination>li:first-child>a, .paginate_style1 .pagination>li:first-child>span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.paginate_style1 .pagination>li>a:hover, .paginate_style1 .pagination>li>span:hover {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+
+.paginate_style1 .pagination>.disabled>a, 
+.paginate_style1 .pagination>.disabled>a:focus, 
+.paginate_style1 .pagination>.disabled>a:hover, 
+.paginate_style1 .pagination>.disabled>span, 
+.paginate_style1 .pagination>.disabled>span:focus, 
+.paginate_style1 .pagination>.disabled>span:hover {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+
+.paginate_style1 .pagination>.active>a {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}

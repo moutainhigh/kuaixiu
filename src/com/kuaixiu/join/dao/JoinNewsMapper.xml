@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.join.dao.JoinNewsMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.join.entity.JoinNews">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="street" jdbcType="VARCHAR" property="street" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="excel_path" jdbcType="VARCHAR" property="excelPath" />
+    <result column="contract_path" jdbcType="VARCHAR" property="contractPath" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="is_success" jdbcType="INTEGER" property="isSuccess" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_userid" jdbcType="VARCHAR" property="updateUserid" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, mobile, province, city, area, address, excel_path, contract_path, type, 
+    is_del, is_success, in_time, update_time, update_userid
+  </sql>
+   
+  <update id="update" parameterType="Object">
+    update kx_join_news
+    set name = #{name,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      street = #{street,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      excel_path = #{excelPath,jdbcType=VARCHAR},
+      contract_path = #{contractPath,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=INTEGER},
+      is_success = #{isSuccess,jdbcType=INTEGER},
+      update_userid = #{updateUserid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_join_news
+        (id,name,mobile,province,city,area,street,address,type,is_del,is_success,in_time)
+        values
+        (uuid(),#{name},#{mobile},#{province},#{city},#{area},#{street},#{address},#{type},#{isDel},#{isSuccess},now())
+    </insert>
+
+  
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_join_news where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_join_news where id = #{id}
+    </select>
+    
+    <!-- 根据手机号查询  -->
+    <select id="queryByMobile"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_join_news where mobile = #{mobile}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_join_news 
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+         <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="type != null" >
+            and type = #{type}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        <if test="isSuccess != null" >
+            and is_success = #{isSuccess}
+        </if>
+         <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        order by in_time desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+          select
+        <include refid="Base_Column_List"/>
+        from kx_join_news 
+        where is_del = 0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+         <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="type != null" >
+            and type = #{type}
+        </if>
+        <if test="isDel != null" >
+            and is_del = #{isDel}
+        </if>
+        <if test="isSuccess != null" >
+            and is_success = #{isSuccess}
+        </if>
+         <if test="queryStartTime != null and queryStartTime != ''" >
+            and in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and in_time &lt;= #{queryEndTime}
+        </if>
+        order by in_time desc
+    </select>
+    
+   
+  
+  
+</mapper>

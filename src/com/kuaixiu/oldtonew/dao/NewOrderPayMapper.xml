@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.oldtonew.dao.NewOrderPayMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.oldtonew.entity.NewOrderPay" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="is_drawback" property="isDrawback"/>
+        <result column="drawback_price" property="drawbackPrice"/>
+        <result column="drawback_time" property="drawbackTime"/>
+        <result column="is_deposit" property="isDeposit"/>
+        <result column="deposit_type" property="depositType"/>
+        <result column="deposit_price" property="depositPrice"/>
+        <result column="deposit_time" property="depositTime"/>
+        <result column="pay_type" property="payType"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="pay_price" property="payPrice"/>
+        <result column="in_time" property="inTime"/>
+    </resultMap>
+    
+    <!-- kx_model table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.order_no,t.is_drawback,t.drawback_price,t.drawback_time,t.is_deposit,t.deposit_type,
+        t.deposit_price,t.deposit_time,t.pay_type,t.pay_status,t.pay_time,t.pay_price,t.in_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_oldtonew_pay
+        (id,order_no,is_deposit,in_time,is_drawback,drawback_price,drawback_time,pay_type,pay_status,pay_time,pay_price)
+        values
+        (#{id},#{orderNo},#{isDeposit},now(),#{isDrawback},#{drawbackPrice},#{drawbackTime},#{payType},#{payStatus},#{payTime},#{payPrice})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_oldtonew_pay
+        set 
+        is_drawback=#{isDrawback},
+        drawback_price=#{drawbackPrice},
+        drawback_time=#{drawbackTime},
+        is_deposit=#{isDeposit},
+        deposit_type=#{depositType},
+        deposit_price=#{depositPrice},
+        deposit_time=#{depositTime},
+        pay_type=#{payType},
+        pay_status=#{payStatus},
+        pay_time=#{payTime},
+        pay_price=#{payPrice}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_oldtonew_pay where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_oldtonew_pay t 
+        where t.id = #{id}
+    </select>
+
+    <!-- 根据订单号查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_oldtonew_pay t 
+        where t.order_no = #{orderNo}
+    </select>
+   
+
+</mapper>   

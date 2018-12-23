@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>支付余款 - M-超人</title>
+    <link rel="stylesheet" href="css/style.css">  
+    <link rel="stylesheet" href="css/pay.style.css">
+    <script src="js/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="index_topmenubg">
+        <div class="index_topmenu">
+            <a class="logo" href="index.html"><img src="img/logo.jpg" /></a>
+            <div class="index_topright">
+                <div class="inquiry">
+                    <input class="text" readonly="readonly" type="text" value="查询/支付" placeholder="查询/支付" />
+                    <input class="search" type="button" value="" />
+                </div>
+            </div>
+
+            <div class="top_menus">
+                <a class="href" href="index.html">首页</a>
+                <a class="href hrefin" href="fault.html">上门维修</a>
+                <a class="href" href="http://huishou.m-super.cn/" target="_blank">旧机回收</a>
+				<a class="href" href="http://huishou.m-super.cn/" target="_blank">以旧换新</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content_title">
+        <div class="title"><i class="line"></i><span>确认维修故障、支付余款</span></div>
+    </div>
+
+    <div class="tobe_paid" v-if="orderType == 0">
+        <!-- <input type="hidden" id="orderId" v-bind:value="id" /> -->
+
+        <div class="paid_tab">
+            <table class="tab">
+                <thead>
+                <tr>
+                    <th>下单时间</th>
+                    <th>维修机型</th>
+                    <th>维修故障</th>
+                    <th>维修参考价（元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td align="center" width="260">{{inTime}}</td>
+                    <td align="center" width="280">{{modelName}} {{color}}</td>
+                    <td align="center" width="200">
+                        <p v-for="(item,index) in projects" v-if="item.type==0">{{item.projectName}}</p>
+                    </td>
+                    <td align="center"><span>{{referPrice}}</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div><!-- paid_tab end -->
+
+        <div class="paid_content">
+            <div class="order_code">订单号：{{orderNo}}</div>
+            <div class="fault_cont border">
+                <div class="fault_list">
+                    <div class="name">维修工程师检测故障为：</div>
+                    <div class="fault_class">
+                        <p v-for="(item,index) in projects" v-if="item.type==1">
+                            <span class="reason">{{item.projectName }}</span>
+                            <span class="money">¥{{item.price}}</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="fault_cont">
+                <div class="fault_list">
+                    <div class="fault_class">
+                        <p><span class="reason red">维修总价</span><span class="money red">¥ {{totalPrice}}元</span></p>
+                        <div v-if="isUseCoupon == 1">
+                            <p><span class="reason red">优惠码：</span><span class="money red">{{couponCode}}</span></p>
+                            <p><span class="reason red">优惠券抵用金额：</span><span class="money red">-¥ {{couponPrice}}元</span></p>
+                            <p class="pay"><span class="reason">实付金额</span><span class="money red">{{realPrice}}元</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- paid_content end -->
+
+        <div class="paid_but">
+            <a class="but but1" @click="orderCancel" href="javascript:void(0);">取消订单</a>
+            <a class="but but2" @click="payBalance" href="javascript:void(0);">确认支付</a>
+        </div>
+
+        <div class="remarks_cont">
+            <span class="title">注意事项：</span>
+            <div class="remarks">
+                <p>1.参考价为预测报价，实际以工程师上门检测为准；</p>
+                <p>2.损坏零件需被工程师收回，如需自留，另补差价。 </p>
+            </div>
+        </div>
+    </div><!-- tobe_paid end -->
+
+    <div class="tobe_paid" v-else>
+        <div class="paid_tab">
+            <table class="tab">
+                <thead>
+                    <tr>
+                        <th>下单时间</th>
+                        <th>
+                            机型/换话费
+                        </th>
+                        <th>
+                            数量
+                        </th>
+                        <th>参考价（元）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td valign="middle" align="center">{{inTime}}</td>
+                        <td valign="middle" width="360" align="center">
+                            {{agreeModel}}
+                        </td>
+                        <td valign="middle" width="153" align="center">
+                            X1
+                        </td>
+                        <td valign="middle" align="center">
+                            {{totalPrice}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="paid_content">
+            <div class="order_code">订单号：{{orderNo}}</div>
+            <div class="fault_cont">
+                <div class="fault_list">
+                    <div class="fault_class">
+                        <p><span class="reason red">商品总价</span><span class="money red">{{totalPrice}}元</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="paid_but">
+                <a class="but but1" @click="orderCancel" href="javascript:void(0);">取消订单</a>
+                <a class="but but2" @click="payBalance" href="javascript:void(0);">确认支付</a>
+            </div>
+    </div>
+
+    <div class="index_copyright">
+        <div class="index_copycont">
+            <p>Copyright 2016 All Rights Reserved 杭州翼诺科技有限公司 技术支持 浙ICP备16041546号</p>
+            <div class="code">
+                <img src="img/code.png" />
+                <span>扫码关注微信公众号</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="cancelLayer" id="cancelLayer">
+        <div class="order_cancel">
+            <p>能告诉我们原因么？</p>
+            <ul class="fault_list">
+                <li class="" v-for="(reason,index) in reasons" @click="selectFault($event)"><a href="javascript:void(0);">{{reason.reason}}</a></li>
+            </ul>
+            <textarea class="reason" name="" id="reason" placeholder="请写下您取消的原因吧！"></textarea>
+
+            <div class="index_but">
+                <a href="javascript:void(0);" class="btn-cancel" @click="closePage('cancelLayer')">取消</a>
+                <a href="javascript:void (0);" class="btn-confirm" @click="cancelSure">确认取消订单</a>
+            </div>
+
+        </div>
+    </div>
+    
+     <!--扫码二维码 -->
+    <div id="payModal" style="display: none;">
+        <div class="modal weixinqr-modal" style="display: block;">
+            <div class="modal-mask"></div>
+            <div class="modal-box">
+                <div class="modal-left">
+                    <p><span>请使用 </span>
+                        <span class="orange">微信 </span>
+                        <i class="icon icon-qrcode"></i>
+                        <span class="orange"> 扫一扫</span>
+                        <br>扫描二维码支付</p>
+                    <div class="modal-qr">
+                        <img id="qrcodeImg" class="modal-qrcode" src="" alt="您的浏览器版本太低, 请升级您的浏览器">
+                        <div class="modal-info">
+                            <img class="icon-clock" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAYCAMAAAAmopZHAAAAxlBMVEUAAAD/iAD/iQD/iwD/iAD/iAD/iQD/igD/hwD/iAD/hwD/iQD/iAD/igD/jAD/iQD/iwD/iAD/iQD/iAD/iwD/hwD/jgD/iAD/iAD/jgD/hwD/gwD/iAD/iwD/iwD/iAD/igD/iQD/igD/igD/igD/iwD/kQD/hwD/nQD/kAD/iQD/kgD/hwD/iQD/lwD/hwD/gwD/hAD/iQD/jQD/ogD/mwD/rAD/dQD/rQD/iAD/nAD/igD/hgD/iAD/gwD/fgD/gQD/jQCSx2meAAAAPHRSTlMA8d9VGdiZN9TDhXhxb2xaIRwF6LyrqXxgQzAqJBML+evlz8ikoH52aWdkXEo/MvbXzLCqg3h0ZmRNKwwyACdhAAABIklEQVQoz12R53aCQBSEB2liQ1BjN1FjiUbT+1zQ93+p7D1A5OT7sTN3Ge42KOseLlzVClcjNyhoJVLLA2S3bdSZRGaMupRbo6MF6QF2zxIRq2cDnkgQYZmwCb9qJjtuR0jXx0a4wLEa4o5cDhxtFQaUJgYdG4ZtyhZyNNPATN33+XSv2v6aqAyFRyiP6TuUfr7B7amickiMKA3pZ8al/r/iLiubUs9MyBczziX6Nz+lBfzINYo+g9xZMoUjN3lV53OcuYq0MfvLO1d8sIt89jHHFnZ9E6C28EqHna3YB3bUC/WTOS6MYtOBB7VP6SvKvCVVKJNzEuKCzXScuf0pWaOgzvSz8HthpTGOEY9bLvlRWi2gvqIIGfgoM/T0KV1vmNe/YLwjroRqPFIAAAAASUVORK5CYII=">
+                            <span>二维码有效时长为2小时, 请尽快支付</span>
+                        </div>
+                    </div>
+                </div><!-- modal-left end -->
+                <div class="modal-right">
+                    <i class="icon icon-close" @click=closePage('payModal')></i>
+                    <img src="img/weixin-qrcode.jpg" alt="微信扫码">
+                </div>
+            </div><!-- modal-box end -->
+        </div><!-- weixinqr-modal end -->
+    </div>
+    <!--扫码二维码  end -->
+
+</div>
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+
+    <!-- loading -->
+    <div id="mask_boxs" style="position: absolute;top:0;left: 0;width:100%;height:100%;display: none;z-index:50;">
+        <div id="masks"></div>
+        <div id="mcon">
+            <img src="img/loadings.gif" style="width: 80px;height:80px;"/>
+        </div>
+    </div>
+    <!-- loading.end -->
+<!--确认提示-->
+<div class="popup_bg" style="display: none;"></div>
+<div class="popup_content" style="display: none;">
+    <div class="popup_cont">
+        <div class="popup_title"></div>
+        <div class="popup_font"></div>
+        <div class="popup_but">
+            <a class="but cancel" href="javascript:void(0);">取 消</a>
+            <a class="but confirm" href="javascript:void(0);">确 认</a>
+        </div>
+        <a class="popup_exit" href="javascript:void(0);"></a>
+    </div>
+</div>
+<!--确认提示end-->
+
+<!--登录-->
+<div class="login_popupbg loginPopup">
+    <div class="login_popup">
+        <div class="popup_title"><a class="exit_popup" v-on:click="colseLogin" href="javascript:;"><i class="icon"></i></a></div>
+        <div class="login_head">
+            快修账号登录
+        </div>
+        <div class="login_input">
+            <input class="text placeholder" v-model="tel" id="inputtel" maxlength="11" type="text" value="请输入下单手机号" placeholder="请输入下单手机号" />
+        </div>
+        <div class="login_input">
+            <input class="text psw placeholder" v-model="checkCode" type="text" value="请输入短信验证码" placeholder="请输入短信验证码" />
+            <input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" v-on:click="sendMsg($event)" />
+        </div>
+        <div class="login_submit">
+            <input class="submit" type="submit" @click="Login" value="查询/支付" />
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/login.js"></script>
+<script>
+    var access_token = sessionStorage.getItem('access_token');
+    var pay = new Vue({
+        el:'#app',
+        data:{
+            id:'',
+            orderType:'',
+            orderNo:'',
+            inTime:'',
+            modelName:'',
+            color:'',
+            projects:[],
+            referPrice:'0.00',
+            totalPrice:'0.00',
+            isUseCoupon:'0',
+            couponCode:'',
+            couponPrice:'',
+            realPrice:'0.00',
+            reasons:[],
+            selReason:[],
+            //以旧换新
+            agreeModel:''
+        },
+        created:function () {
+        	fn_loading();
+        },
+        mounted:function () {
+            var _self = this,
+                    params={
+                        id:(window.location.search).substring(4)
+                    };
+            $.ajax({
+                type:'POST',
+				url:linkUrl+'/wechat/order/orderDetail.do',
+				dataType:'json',
+				data:{
+					access_token:access_token,
+					params:JSON.stringify(params)
+				},
+				xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success:function (data) {
+                	loading_hide();
+                    if (data.success){
+                    	$('#app').show();
+                        var order = data.result.order;
+                        _self.id = order.id;
+                        _self.orderType = order.orderType;
+                        _self.orderNo = order.orderNo;
+                        _self.inTime = order.inTime;
+                        _self.totalPrice = parseFloat(order.realPrice).toFixed(2);
+
+                        if(_self.orderType == 0){//维修
+                            _self.modelName = order.modelName;
+                            _self.color = order.color;
+                            _self.isUseCoupon = order.isUseCoupon;
+                            for (var i = 0;i < order.details.length;i++){
+                                _self.projects.push({
+                                    type:order.details[i].type,
+                                    projectId:order.details[i].projectId,
+                                    projectName:order.details[i].projectName,
+                                    price:_self.dealNumber(order.details[i].price)
+                                });
+                                if (order.details[i].type == 0){//0用户选 1工程师
+                                    _self.referPrice = (parseFloat(_self.referPrice) + parseFloat(order.details[i].price)).toFixed(2);
+                                }
+                            }
+                            
+                            if (order.isUseCoupon == 1){
+                                _self.couponCode = order.coupon.couponCode;
+                                _self.couponPrice = parseFloat(order.coupon.couponPrice).toFixed(2);
+                                _self.realPrice = (_self.totalPrice - _self.couponPrice).toFixed(2);
+                            }
+                        }else{//1：以旧换新
+                            if (order.selectType == 0){//换手机
+                                _self.agreeModel = order.agreedNews.agreedModel+' '+order.agreedNews.color+' '+order.agreedNews.memory+'G '+order.agreedNews.edition;
+                            }else {
+                                _self.agreeModel = "换话费"
+                            }
+                        }
+                    }else {
+                    	loading_hide();
+                        if (data.hasOwnProperty("exceptionType")){
+                            eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                            eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                            window.location.href = 'error.html';
+                        }else {
+                            dataError(data.resultMessage);
+                            if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                window.location.href = 'index.html';
+                            }
+                        }
+                    }
+                },
+                error:function (jqXHR) {
+                    loading_hide();
+                    dataError('系统异常，请稍后再试！');
+                }
+            })
+        },
+        methods:{
+            dealNumber:function (num) {
+                return num%1 == 0 ? num+".00":(num%1).toFixed(2);
+            },
+            orderCancel:function () {
+                fn_loading();
+                var _self = this;
+                $.ajax({
+                    type:'POST',
+                    url:linkUrl+'/wechat/order/cancelReason.do',
+                    dataType:'json',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success:function (data) {
+                        loading_hide();
+                        if (data.success){
+                            _self.reasons = data.result.data;
+                            $('.cancelLayer').show();
+                        }else {
+                            if (data.hasOwnProperty("exceptionType")){
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                window.location.href = 'error.html';
+                            }else {
+                                dataError(data.resultMessage);
+                                if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                    window.location.href = 'index.html';
+                                }
+                            }
+                        }
+                    },
+                    error:function (jqXHR) {
+                        loading_hide();
+                        dataError('系统异常，请稍后再试！');
+                    }
+                })
+
+            },
+            cancelSure:function () {
+                var _self = this,
+                    params = {
+                        id:this.id,
+                        reason:$('#reason').val(),
+                        selectReason:_self.selReason.join("、")
+                    };
+                $.ajax({
+                    type:'POST',
+                    url:linkUrl+'/wechat/order/orderCancel.do',
+                    dataType:'json',
+                    data:{
+                        params:JSON.stringify(params),
+                        access_token:access_token
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success:function (data) {
+                        if (data.success){
+                            dataError("操作成功");
+                            $('.cancelLayer').hide();
+                            if (_self.orderType == 0){
+                                location.href = 'order_details.html?id='+_self.id;
+                            }else {
+                                location.href = 'newOrder_details.html?id='+_self.id;
+                            }
+                            // location.replace('newOrder_details.html?id='+this.id);
+                        }else {
+                            if (data.hasOwnProperty("exceptionType")){
+                                eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                window.location.href = 'error.html';
+                            }else {
+                                dataError(data.resultMessage);
+                                if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                    window.location.href = 'index.html';
+                                }
+                            }
+                        }
+                    },
+                    error:function (jqXHR) {
+                        dataError('系统异常，请稍后再试！');
+                    }
+                })
+            },
+            closePage:function (obj) {
+                $('#'+obj).hide();
+            },
+            selectFault:function (e) {
+            	var obj = e.currentTarget;
+                if ($(obj).hasClass("fault_in")){
+                    $(obj).removeClass("fault_in");
+                    var index = this.selReason.indexOf($(obj).find("a").html());
+                    this.selReason.splice(index,1);
+                }else {
+                    $(obj).addClass("fault_in");
+                    this.selReason.push($(obj).find("a").html());
+                }
+            },
+            payBalance:function () {
+                fn_loading();
+                //调用微信接口获取openid
+                //发起支付请求，返回生成的维修预支付id
+                //调用微信支付接口
+                var _self = this,
+                    url_ = linkUrl+"/webpc/order/startPayBalance.do",
+                        params = {
+                            id:this.id
+                        };
+                $.ajax({
+                    url: url_,
+                    type: "POST",
+                    data: {
+                        access_token:access_token,
+                        params:JSON.stringify(params)
+                    },
+                    dataType: "json",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.success) {
+                            loading_hide();
+                            //显示二维码
+                            $("#qrcodeImg").attr("src","data:image/png;base64," + data.result.data);
+                            $("#payModal").show();
+
+                            //每隔两秒刷新一次订单状态
+                            if("undefined" != typeof(refreshIntervalProcess)){
+                                clearInterval(refreshIntervalProcess);
+                            }
+                            refreshIntervalProcess = setInterval(_self.queryorderStatus(params), 2 * 1000);
+
+                        } else {
+                            loading_hide();
+                            if(data.pay_status == 3){
+                                realAlert("系统提示","支付成功",function(){
+                                    window.location.reload();
+                                });
+                            }else{
+                                if (data.hasOwnProperty("exceptionType")){
+                                    eCacheUtil.storage.cache(CacheKey.exceptionType,data.exceptionType);
+                                    eCacheUtil.storage.cache(CacheKey.errorExceptionMsg,data.msg);
+                                    window.location.href = 'error.html';
+                                }else {
+                                    dataError(data.resultMessage);
+                                    if (data.resultCode!=null&&data.resultCode.indexOf('200')>=0){
+                                        window.location.href = 'index.html';
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    error : function() {
+                        dataError("系统异常，请稍后再试");
+                        loading_hide();
+                    }
+                });
+            },
+            queryorderStatus:function (params) {
+                $.ajax({
+                    url: linkUrl+"/wechat/order/orderDetail.do",
+                    type: "POST",
+                    data: {
+                        access_token:access_token,
+                        params:JSON.stringify(params)
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success && data.result.order.orderStatus == 50) {
+                            realAlert("系统提示", "支付成功", function(){
+                                window.location.href = "order_details.html?id=" + orderId;
+                            });
+                        }
+                    },
+                    error : function() {
+                    }
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-订单详情</title>
+</head>
+<body>
+<div id="wrap" class="detailsWrap">
+    <div class="main">
+        <div class="status bg marb12">
+            <p>订单状态</p>
+            <div class="waitShip" style="display: none">
+                <p>待您发货</p>
+                <p>请及时寄出物品并填写快递单号哦</p>
+            </div>
+            <div class="waitReceive">
+                <p>待商家收货</p>
+                <p class="express">2017-05-20/周六14:07:25您的快件【438700035403】已从杭州转运中心发出。。。</p>
+            </div>
+        </div>
+
+        <div class="pickInfor bg marb12">
+            <p>超人回收方式-上门取件</p>
+            <p>取件时间：<span class="pickTime"></span>（顺丰快递）</p>
+            <p>联系人：<span class="contact"></span></p>
+            <p>取件地址：<span class="address"></span></p>
+        </div>
+
+        <div class="assessState bg marb12">
+            <p>评估情况</p>
+            <div class="proInfor">
+                <div class="image"></div>
+                <div class="text">
+                </div>
+            </div>
+            <div class="price">
+                <p>预估价</p>
+                <p class="money"></p>
+            </div>
+        </div>
+
+        <div class="income bg marb12">
+            <p>收入明细</p>
+            <div>
+                <p>预付金额<span>芝麻信用·先得款</span></p>
+                <p class="prePrice"></p>
+            </div>
+            <p>说明：质检后结算尾款，最终以商家质检价格为准，多退少补。</p>
+        </div>
+
+        <div class="orderInfor bg marb12">
+            <p>极速卖商家：超人回收</p>
+            <p>收款方式：支付宝</p>
+            <p>订单编号：<span id="orderid"></span></p>
+            <p>交易时间：<span id="time"></span></p>
+            <a href="tel:057188803875">联系客服</a>
+        </div>
+
+        <div class="linkBox bg">
+            <a href="product.html">继续卖宝贝</a>
+            <a onclick="fillNum();">填写运单号</a>
+        </div>
+
+    </div>
+</div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--遮盖层-->
+<div id="mask_boxs">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="img/loadings.gif"/>
+    </div>
+</div>
+<!--遮盖层end-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function () {
+        var param = {
+            orderid:GetQueryString("orderid")
+        };
+        $.post(linkUrl+'/recycle/getOrderDetail.do',{params:JSON.stringify(param)},function (data) {
+            if (data.success){
+                var dataInfo = data.result.datainfo;
+                $('.pickTime').html(dataInfo.take_time);
+                $('.contact').html(dataInfo.name+' '+dataInfo.mobile);
+                $('.address').html(dataInfo.address);
+                $('.image').html('<img src="'+dataInfo.modelpic+'">');
+                $('.proInfor .text').html('<p>'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p>');
+                $('.money').html('¥'+dataInfo.orderprice);
+                $('.prePrice').html('¥'+dataInfo.prepare_price);
+                $('#orderid').html(dataInfo.orderid);
+                var str = dataInfo.createtime,
+                    result = Number((/\((\d+)\)/.exec(str))[1]);
+                $('#time').html(new Date(result).format("yyyy-MM-dd hh:mm:ss"));
+                loading_hide();
+            }else {
+                loading_hide();
+                alertTip(data.resultMessage);
+            }
+        });
+
+        $('.waitReceive').on('click','.express',function () {
+            window.location.href = 'express.html';
+        })
+    });
+    
+    function fillNum() {
+        
+    }
+
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

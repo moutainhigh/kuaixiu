@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <link rel="stylesheet" href="css/success.css?version=1.6">
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.0.js"></script>
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="successWrap">
+        <div class="main">
+            <div class="success">
+                <img src="img/success.png" alt="">
+                <p>订单提交成功</p>
+                <p>最终价格以商家之间价格为准</p>
+                <p>多退少补</p>
+            </div>
+            <div class="tip">
+                <p>顺丰将在<span id="pickTime" class="color-blue">11月11日11:11</span>上门收取快递</p>
+                <p>工作人员将会提前1小时与您联系，请保持手机畅通！</p>
+            </div>
+            <div class="hope">
+                <p>- 达成以下两点，可提高结算速度 -</p>
+                <p>寄出前保留机器电量50%以上</p>
+                <p>请确保已解除机器开机密码</p>
+            </div>
+			
+            <div style="flex:1 1 auto;"></div>
+            <div class="raise hide">
+                <img src="img/order-detail-share.png" alt="">
+            </div>
+            <div class="linkBox">
+                <a href="product.html" class="continue">继续卖宝贝</a>
+                <a href="javascript:;" onclick="seeDetails();" class="seeOrder">查看订单</a>
+            </div>
+        </div>
+    </div>
+	<!--start of 提示框-->
+	<div id="tipinfo-box" class="tipinfo-box hide">
+		<div class="tipinfo-mask-panel"></div>
+		<div class="tipinfo-dialog">
+			<div class="ti-dialog-body">
+				<img id="ti-dialog-content" src="img/success-dialog.png" />
+			    <span id="ti-dialog-close-btn" class="ti-close-btn">X</span>
+			</div>
+		</div>
+	</div>
+	<!--end of 提示框-->
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        $(function(){
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo),
+                mailType = eCacheUtil.storage.getCache(CacheKey.mailType);
+            document.title = 'M超人回收';
+            if(mailType == 2){
+                $('.tip').hide();
+            }else{
+                $('#pickTime').html(eCacheUtil.storage.getCache(CacheKey.pickTime));
+            }
+			
+			//判断是否是小程序
+			var fm=eCacheUtil.storage.getCache( CacheKey.source );
+			var raiseOrderNo =eCacheUtil.storage.getCache(CacheKey.raiseOrderNo);
+			var orderid = eCacheUtil.storage.getCache(CacheKey.orderId);
+			// alert("orderid="+orderid);
+			if(  fm == '7' &&  raiseOrderNo != null){
+				$( '#tipinfo-box' ).removeClass( 'hide' );
+				
+				//注册响应事件
+				$('#ti-dialog-content').click( function(){
+					//TODO： 立即参加
+					wx.miniProgram.reLaunch({url:'/pages/help/index?orderNo='+raiseOrderNo+"&orderid="+orderid});
+				    //wx.miniProgram.postMessage({ data: {orderNo:raiseOrderNo} });
+				});
+				
+				//关闭弹框
+				$('#ti-dialog-close-btn').click( function(){
+					$( '#tipinfo-box' ).addClass( 'hide' );
+				});
+
+            }
+            if( fm == '7' &&  raiseOrderNo != null){
+                $('.raise').removeClass( 'hide' );  
+                
+                $('.raise').click(function(){
+                    wx.miniProgram.reLaunch({url:'/pages/help/index?orderNo='+raiseOrderNo+"&orderid="+orderid});
+               })  
+            }else{
+                $('.raise').removeClass( 'hide' );
+            }
+        })
+
+
+	
+	  //查看订单详情
+	function seeDetails(){
+        location.href = 'details.html?orderid='+eCacheUtil.storage.getCache(CacheKey.orderId);
+    }
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

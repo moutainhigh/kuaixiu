@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.card.dao.BatchImportMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.card.entity.BatchImport">
+    <id column="batch_id" jdbcType="VARCHAR" property="batchId" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="sum" jdbcType="INTEGER" property="sum" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="card_name" jdbcType="INTEGER" property="cardName" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="update_userid" jdbcType="VARCHAR" property="updateUserid" />
+    <result column="is_distribution" jdbcType="INTEGER" property="isDistribution" />
+    <result column="distribution_sum" jdbcType="INTEGER" property="distributionSum" />
+    <result column="lose_efficacy" jdbcType="TIMESTAMP" property="loseEfficacy" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    batch_id, province,sum, type, card_name, in_time, update_time,
+    create_userid, update_userid, is_distribution, distribution_sum, lose_efficacy,is_del
+  </sql>
+
+
+
+  <insert id="add" parameterType="Object">
+    insert into hk_batch_import (batch_id, province, sum,
+    type, card_name, in_time,
+    create_userid, lose_efficacy
+    )
+    values (#{batchId,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{sum,jdbcType=INTEGER},
+    #{type,jdbcType=INTEGER}, #{cardName,jdbcType=INTEGER}, now(),
+    #{createUserid,jdbcType=VARCHAR},#{loseEfficacy,jdbcType=TIMESTAMP}
+    )
+  </insert>
+
+
+  <!-- 根据uuid查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from hk_batch_import where batch_id=#{batchId}
+  </select>
+
+
+
+  <update id="update" parameterType="Object">
+    update hk_batch_import
+    set
+    update_userid = #{updateUserid,jdbcType=VARCHAR},
+    is_distribution = #{isDistribution,jdbcType=INTEGER},
+    distribution_sum = #{distributionSum,jdbcType=INTEGER},
+    lose_efficacy = #{loseEfficacy,jdbcType=TIMESTAMP},
+    is_del=#{isDel,jdbcType=INTEGER}
+    where batch_id = #{batchId,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 查询地市 不重复 -->
+  <select id="queryProvince" resultType="java.lang.String" parameterType="Object">
+    select
+    DISTINCT province
+    from hk_batch_import where is_del=0 ;
+  </select>
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_batch_import
+    where 1=1 and is_del=0
+    <if test="batchId != null and batchId != ''">
+      and batch_id = #{batchId}
+    </if>
+    <if test="type != null">
+      and type = #{type}
+    </if>
+    <if test="isDistribution != null">
+      and is_distribution = #{isDistribution}
+    </if>
+    <if test="cardName != null and cardName != ''">
+      and card_name = #{cardName}
+    </if>
+    <if test="province != null and province != ''">
+      and province = #{province}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hk_batch_import
+    where 1=1 and is_del=0
+    <if test="batchId != null and batchId != ''">
+      and batch_id = #{batchId}
+    </if>
+    <if test="type != null">
+      and type = #{type}
+    </if>
+    <if test="isDistribution != null">
+      and is_distribution = #{isDistribution}
+    </if>
+    <if test="cardName != null and cardName != ''">
+      and card_name = #{cardName}
+    </if>
+    <if test="province != null and province != ''">
+      and province = #{province}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and in_time &lt;= #{queryEndTime}
+    </if>
+    order by in_time desc
+  </select>
+
+</mapper>

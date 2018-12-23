@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.card.dao.SuperToChannelMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.card.entity.SuperToChannel">
+    <id column="iccid" jdbcType="VARCHAR" property="iccid" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="express_name" jdbcType="VARCHAR" property="expressName" />
+    <result column="express_number" jdbcType="VARCHAR" property="expressNumber" />
+    <result column="send_station_id" jdbcType="VARCHAR" property="sendStationId" />
+    <result column="operate_time" jdbcType="VARCHAR" property="operateTime" />
+    <result column="send_city" jdbcType="VARCHAR" property="sendCity" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="return_code" jdbcType="VARCHAR" property="returnCode" />
+    <result column="send_sum" jdbcType="INTEGER" property="sendSum" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    iccid, order_no, express_name, express_number, send_station_id, operate_time, send_city,
+    status, return_code, send_sum, send_time
+  </sql>
+
+  <insert id="add" parameterType="Object">
+    insert into hk_super_to_channel (iccid, order_no, express_name,
+      express_number, send_station_id, operate_time,
+      send_city,send_time)
+    values (#{iccid,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{expressName,jdbcType=VARCHAR}, 
+      #{expressNumber,jdbcType=VARCHAR}, #{sendStationId,jdbcType=VARCHAR}, #{operateTime,jdbcType=VARCHAR},
+      #{sendCity,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP})
+  </insert>
+
+
+  <update id="update" parameterType="Object">
+    update hk_super_to_channel
+    set
+    status = #{status,jdbcType=VARCHAR},
+    return_code = #{returnCode,jdbcType=INTEGER},
+    send_sum = #{sendSum,jdbcType=INTEGER},
+    send_time = #{sendTime,jdbcType=TIMESTAMP}
+    where iccid = #{iccid,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 根据id查询 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from hk_super_to_channel where iccid=#{iccid}
+  </select>
+
+</mapper>

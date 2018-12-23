@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>错误信息</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!--确认提示-->
+<div class="popup_bg" style="display: none;"></div>
+<div class="popup_content" style="display: none;">
+    <div class="popup_cont">
+        <div class="popup_title"></div>
+        <div class="popup_font"></div>
+        <div class="popup_but">
+            <a class="but cancel" href="javascript:void(0);">取 消</a>
+            <a class="but confirm" href="javascript:void(0);">确 认</a>
+        </div>
+        <a class="popup_exit" href="javascript:void(0);"></a>
+    </div>
+</div>
+<!--确认提示end-->
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(document).ready(function() {
+        var exceptionType = eCacheUtil.storage.getCache(CacheKey.exceptionType);
+        var errorExceptionMsg = eCacheUtil.storage.getCache(CacheKey.errorExceptionMsg);
+
+        confirmTip("系统提示", errorExceptionMsg, function(){
+            if (exceptionType == "sessionError"){
+                location.href = 'index.html';
+            }
+        });
+    });
+</script>
+</body>
+</html>

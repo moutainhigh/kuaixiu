@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>M超人-以旧换新活动</title>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.0">
+</head>
+<body>
+<div id="wrap" class="newWrap">
+    <div class="main bg">
+        <div class="activity_title">
+            震惊！换64G的Iphone8 只要3488，还送200元翼支付红包和9个G的大流量!
+        </div>
+        <div class="activity_time">
+            2017-09-21　M超人
+        </div>
+        <div class="activity_img">
+            <img src="img/img1.jpg"/>
+        </div>
+
+        <div class="activity_font">
+            <p>M超人手机服务平台</p>
+            <p>提供回收、换机和快修贴心服务。</p>
+            <p>典型换购方案</p>
+            <p>用户拿苹果6s（平均回收价2400元），换64G苹果8只要<a class="color-red">3488</a>元！</p>
+        </div>
+
+        <div class="buy_list bg">
+            <div class="buy_cont">
+                <div class="buy_model">
+                    <img src="img/iPhone6.jpg" >
+                    <p class="name">iPhone 6S 64G</p>
+                    <p class="money">回收均价：2400元</p>
+                </div>
+                <span class="arrow">去换购</span>
+                <div class="buy_model">
+                    <img src="img/iPhone8.jpg">
+                    <p class="name">iPhone 8  64G</p>
+                    <p class="money">换购参考价：3488元</p>
+                </div>
+            </div>
+
+            <div class="buy_cont">
+                <div class="buy_model">
+                    <img src="img/tel1.jpg">
+                    <p class="name">华为Mate 8</p>
+                    <p class="money">回收均价：1500元</p>
+                    <a href="">
+
+                    </a>
+                </div>
+                <span class="arrow">去换购</span>
+                <div class="buy_model">
+                    <img src="img/tel2.jpg">
+                    <p class="name">华为Mate 9</p>
+                    <p class="money">换购参考价：2399元</p>
+                </div>
+            </div>
+
+            <div class="buy_cont">
+                <div class="buy_model">
+                    <img src="img/tel7.jpg">
+                    <p class="name">华为P9 64G</p>
+                    <p class="money">回收均价：1390元</p>
+                </div>
+                <span class="arrow">去换购</span>
+                <div class="buy_model">
+                    <img src="img/tel8.jpg">
+                    <p class="name">华为P10 64G</p>
+                    <p class="money">换购参考价：2398元</p>
+                </div>
+            </div>
+
+            <div class="buy_cont">
+                <div class="buy_model">
+                    <img src="img/tel3.jpg">
+                    <p class="name">Vivo X7</p>
+                    <p class="money">回收均价：1100元</p>
+                </div>
+                <span class="arrow">去换购</span>
+                <div class="buy_model">
+                    <img src="img/tel4.jpg">
+                    <p class="name">Vivo X9</p>
+                    <p class="money">换购参考价：1698元</p>
+                </div>
+            </div>
+
+            <div class="buy_cont">
+                <div class="buy_model">
+                    <img src="img/tel5.jpg">
+                    <p class="name">Oppo R9</p>
+                    <p class="money">回收均价：1100元</p>
+                </div>
+                <span class="arrow">去换购</span>
+                <div class="buy_model">
+                    <img src="img/tel6.jpg">
+                    <p class="name">Oppo R11</p>
+                    <p class="money">换购参考价：1899元</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="reminder">温馨提示：换机价格以门店实际办理为准哦办理为准哦</div>
+
+        <div class="activity_img">
+            <img src="img/recovery_title.jpg"/>
+        </div>
+
+        <div class="assess_box">
+            <p>想了解旧机估价？</p>
+            <a class="btn-normal btn-normal-confirm" href="https://www.m-super.cn/">在线免费评估</a>
+        </div>
+
+        <div class="activity_img">
+            <img src="img/technological_process.jpg"/>
+        </div>
+
+        <div class="activity_font">
+            <p>线上预约下单的用户，还可以享受<a class="color-red">200元</a>换机补贴哦！<a class="color-red">我们提供上门服务，回收+新机！</a></p>
+        </div>
+
+        <div class="activity_img">
+            <img src="img/img_tab.jpg"/>
+        </div>
+
+        <div class="popup_form">
+            <div class="form_title">以旧换新预约信息</div>
+            <div class="user_info">
+                <div class="inputRow">
+                    <input class="text" id="cusName" type="text" value="" placeholder="请填写姓名">
+                </div>
+
+                <div class="inputRow">
+                    <input class="text" id="inputtel" type="tel" value="" maxlength="11" placeholder="请输入手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+                </div>
+
+                <div class="inputRow">
+                    <input class="text mustText" id="code" type="tel" value="" maxlength="6" placeholder="请输入验证码" onkeyup="this.value=this.value.replace(/\D/g,'')" />
+                    <input class="get_validate" type="button" value="获取验证码" data-verify="获取验证码" onclick="sendMsg(this)" />
+                </div>
+
+                <ul class="inputRow select_addr">
+                    <li>
+                        <select id="s_Province" name="s_Province" onchange="fn_select_address(2, this.value, '', 's_');">
+                            <option value="" disabled selected>--省份--</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select id="s_City" name="s_City" onchange="fn_select_address(3, this.value, '', 's_');">
+                            <option value="" disabled selected>--地级市--</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select id="s_County" name="s_County" onchange="fn_select_address(4, this.value, '', 's_');">
+                            <option value="" disabled selected>--区/县--</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select id="s_Street" name="s_Street">
+                            <option value="" disabled selected>--街/道--</option>
+                        </select>
+                    </li>
+                </ul>
+
+                <div class="inputRow">
+                    <input class="text" id="address" type="text" value="" placeholder="请输入街道/小区/楼号等">
+                </div>
+
+                <div class="inputRow">
+                    <input class="text" type="text" id="oldMobile" value="" placeholder="旧手机品牌（型号），例：华为（Mate 8）">
+                </div>
+
+                <div class="inputRow select_change">
+                    <label class="label">
+                        <input checked="checked" name="way" type="radio" value="1" />
+                        <i class="radio_icon"></i>
+                        <span class="genre">换话费</span>
+                    </label>
+                    <label class="label">
+                        <input name="way" type="radio" value="0" />
+                        <i class="radio_icon"></i>
+                        <span class="genre">换手机</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="remarks_cont">
+                <span class="title">注意事项：</span>
+                <div class="remarks">
+                    <p>1.您先给旧机免费估价，到<a href="https://www.m-super.cn" class="color-blue">www.m-super.cn</a>提交订单，m超人派顺丰来取件。手机验收后，和您确定金额，充话费到您的手机号码;</p>
+                    <p>2.电信老用户，可用旧机款参加预存话费送话费活动，存100元送100元话费，存200送200，存500送500！充的话费一次性到账，送的话费分10个月返还;</p>
+                    <p>3.部分用户已经享受电信补贴的，不能再参加存送优惠，我们会先和您确认是否符合要求，热线<a href="tel:4008110299" class="color-blue">4008110299</a>。</p>
+                </div>
+            </div>
+            <div class="submit_box">
+                <a class="btn-large" id="news">提交信息</a>
+                <a href="https://www.m-super.cn/" class="color-red">免费评估或下单请点击http://www.m-super.cn/</a>
+            </div>
+        </div>
+
+        <div class="activity_font">
+            <p>浙江600多家门店提供现场回收和换机服务，具体优惠，进店咨询！主要门店一览（选择地区）：</p>
+        </div>
+
+        <div class="address_btn_box">
+            <div class="address_btn">
+                <input class="btn-small btn-small-confirm" type="button" name="div1" value="杭州" />
+                <input class="btn-small btn-small-confirm" type="button" name="div2" value="湖州" />
+            </div>
+            <div class="address_btn">
+                <input class="btn-small btn-small-confirm" type="button" name="div3" value="嘉兴" />
+                <input class="btn-small btn-small-confirm" type="button" name="div4" value="宁波" />
+            </div>
+            <div class="address_btn">
+                <input class="btn-small btn-small-confirm" type="button" name="div5" value="温州" />
+                <input class="btn-small btn-small-confirm" type="button" name="div6" value="衢州" />
+            </div>
+            <div class="address_btn">
+                <input class="btn-small btn-small-confirm" type="button" name="div7" value="金华" />
+                <input class="btn-small btn-small-confirm" type="button" name="div8" value="丽水" />
+            </div>
+            <div class="address_btn">
+                <input class="btn-small btn-small-confirm" type="button" name="div9" value="绍兴" />
+                <input class="btn-small btn-small-confirm" type="button" name="div10" value="台州" />
+            </div>
+            <div class="address_btn">
+                <input class="btn-small btn-small-confirm" type="button" name="div11" value="舟山" />
+            </div>
+        </div>
+
+        <div class="popup_formbg">
+            <a class="close_popup closepopup" href="javascript:;">╳</a>
+            <!--杭州-->
+            <div class="nav_tabcont" id="div1">
+                <table>
+                    <tr><th>门店名称</th><th>门店地址</th></tr>
+                    <tr><td>长城店(浙江宝典)</td><td>临平北大街195号</td></tr>
+                    <tr><td>杭州中河中路店(浙江宝典)</td><td>杭州市上城区中河中路151号</td></tr>
+                    <tr><td>余杭三融中泰专营店(浙江宝典)</td><td>中泰街138号</td></tr>
+                    <tr><td>延安店(浙江宝典)</td><td>上城区延安路292号宝典手机连锁卖场</td></tr>
+                    <tr><td>中通-萧山(浙江宝典)</td><td>杭州萧山</td></tr>
+                    <tr><td>苹果三店(浙江宝典)</td><td>临平北大街73--75号</td></tr>
+                    <tr><td>武林广场营业厅(浙江宝典)</td><td>体育场路352号</td></tr>
+                    <tr><td>萧山梅花楼营业厅(浙江宝典)</td><td>萧山回澜路4号</td></tr>
+                    <tr><td>中通-淳安(浙江宝典)</td><td>杭州淳安</td></tr>
+                    <tr><td>乔司二店(浙江宝典)</td><td>乔司保庆街63号</td></tr>
+                    <tr><td>杭州青缇康乐电信营业厅(杭州青缇)</td><td>浙江省杭州市文三西路438号</td></tr>
+                    <tr><td>大井店(浙江宝典)</td><td>乔司大井路葛家车村3组199号余杭农村商业银行对面</td></tr>
+                    <tr><td>新安江中心营业厅(浙江宝典)</td><td>建德新安江街道新安东路59号</td></tr>
+                    <tr><td>杭州青缇转塘店(浙江宝典)</td><td>转塘直街71号</td></tr>
+                    <tr><td>沃商下沙全网通手机卖场(浙江宝典)</td><td>杭州市下沙5号大街139号</td></tr>
+                    <tr><td>江城店(浙江宝典)</td><td>杭州上城区江城路468号</td></tr>
+                    <tr><td>闲林店(浙江宝典)</td><td>余杭区闲林街道闲林中路111号</td></tr>
+                    <tr><td>北三店(浙江宝典)</td><td>临平北大街81号</td></tr>
+                    <tr><td>北二店(浙江宝典)</td><td>临平北大街91号</td></tr>
+                    <tr><td>中通-武林(浙江宝典)</td><td>杭州武林</td></tr>
+                    <tr><td>塘栖广场店(浙江宝典)</td><td>塘栖镇致和堂街56号</td></tr>
+                    <tr><td>党山井岭路全网通卖场(浙江宝典)</td><td>党山井岭路50号</td></tr>
+                    <tr><td>富阳营业厅(浙江宝典)</td><td>杭州市富阳区桂花西路31号-8910</td></tr>
+                    <tr><td>萧山苹果二店(浙江宝典)</td><td>萧山区萧绍路1418号</td></tr>
+                    <tr><td>萧山苹果三店(浙江宝典)</td><td>萧山区萧邵路1292号</td></tr>
+                    <tr><td>解放店(浙江宝典)</td><td>杭州市上城区解放路116号</td></tr>
+                    <tr><td>延安南路店(浙江宝典)</td><td>杭州延安南路28号</td></tr>
+                    <tr><td>塘栖店(浙江宝典)</td><td>余杭区塘栖镇广济路118号</td></tr>
+                    <tr><td>良渚东方店(浙江宝典)</td><td>良渚街道东方路荀山花苑3幢3号</td></tr>
+                    <tr><td>良渚苹果店(浙江宝典)</td><td>良渚街道莫干山路2441号</td></tr>
+                    <tr><td>瓶窑苹果店(浙江宝典)</td><td>瓶窑镇东兴路23号</td></tr>
+                    <tr><td>乔司一店(浙江宝典)</td><td>乔司乔莫东路38号</td></tr>
+                    <tr><td>藕花州店(浙江宝典)</td><td>临平藕花州大街121号-127号</td></tr>
+                    <tr><td>旗舰店(浙江宝典)</td><td>临平北大街59号</td></tr>
+                    <tr><td>步步高店(浙江宝典)</td><td>临平北大街67</td></tr>
+                    <tr><td>中通-滨江(浙江宝典)</td><td>杭州滨江</td></tr>
+                    <tr><td>余杭苹果店(浙江浙讯)</td><td>余杭禹航路853号</td></tr>
+                    <tr><td>杭州三墩旗舰店(浙江浙讯)</td><td>杭州市西湖区三墩镇厚诚路89号</td></tr>
+                    <tr><td>富阳oppo专卖店(浙江浙讯)</td><td>富阳桂花西路23-1号</td></tr>
+                    <tr><td>南大街店(浙江浙讯)</td><td>临平南大街1号-5号</td></tr>
+                    <tr><td>拱墅OPPO专卖店(浙江浙讯)</td><td>杭州市拱墅区上绍路63号</td></tr>
+                    <tr><td>三村全网通手机连锁(浙江浙讯)</td><td>九堡镇三村三区65号</td></tr>
+                    <tr><td>杭州龙湖天街华为店(浙江浙讯)</td><td>杭州市江干区龙湖天街2F006</td></tr>
+                    <tr><td>上城复兴路营业厅(浙江浙讯)</td><td>杭州市上城区复兴南街157-1号电信营业厅</td></tr>
+                    <tr><td>杭州文一进厅(浙江浙讯)</td><td>杭州市西湖区文一路58号</td></tr>
+                    <tr><td>杭州石桥店(浙江浙讯)</td><td>杭州市下城区石桥路257-67号</td></tr>
+                    <tr><td>杭州三墩进厅(浙江浙讯)</td><td>杭州市西湖区三墩镇厚诚路电信营业主厅</td></tr>
+                    <tr><td>杭州三墩苹果店(浙江浙讯)</td><td>杭州市西湖区三墩镇厚仁路370号</td></tr>
+                    <tr><td>杭州三墩vivo店(浙江浙讯)</td><td>杭州市西湖区三墩镇厚诚路91号</td></tr>
+                    <tr><td>富阳苹果店(浙江浙讯)</td><td>富阳桂花西路23-10号</td></tr>
+                    <tr><td>富阳金桥营业厅(浙江浙讯)</td><td>富阳市金桥北路69号电信公司营业厅</td></tr>
+                    <tr><td>慈溪上林坊卖场(浙江浙讯)</td><td>慈溪市南门大街193-197号 浙讯手机连锁</td></tr>
+                    <tr><td>杭州中大银泰城华为店(浙江浙讯)</td><td>杭州市下城区石祥路822号</td></tr>
+                    <tr><td>下城武林路全网通手机连锁店(杭州越众)</td><td>武林路398号</td></tr>
+                    <tr><td>新大地店(杭州越众)</td><td>临平新大地九曲营西路6-8号</td></tr>
+                    <tr><td>西兴营业厅(杭州越众)</td><td>杭州市滨江区固陵路16号</td></tr>
+                    <tr><td>柯桥中心营业厅(杭州越众)</td><td>绍兴市柯桥区山阴路柯桥数码港2楼中国电信柯桥中心营业厅</td></tr>
+                    <tr><td>下城建国路营业厅(杭州越众)</td><td>建国北路326号</td></tr>
+                    <tr><td>半山路VIVO专卖店(杭州越众)</td><td>拱墅区半山路90号VIVO专卖店</td></tr>
+                    <tr><td>绍兴镜湖营业厅(杭州越众)</td><td>绍兴市镜湖区凤林西路287-289号</td></tr>
+                    <tr><td>绍兴城南营业厅(杭州越众)</td><td>绍兴市越城区解放南路1184号</td></tr>
+                    <tr><td>下城武林路营业厅(杭州越众)</td><td>武林路398号</td></tr>
+                    <tr><td>余杭乔司天翼卖场(杭州越众)</td><td>杭州市余杭区乔莫东路27号</td></tr>
+                    <tr><td>余杭高地手机卖场(杭州越众)</td><td>杭州市余杭区临平南苑高地小星桥53号</td></tr>
+                    <tr><td>余杭区东湖南路天翼卖场(杭州越众)</td><td>东湖南路304号</td></tr>
+                    <tr><td>绍兴迪荡营业厅(杭州越众)</td><td>绍兴市越城区胜利东路309号（电信营业厅）</td></tr>
+                    <tr><td>萧山永久路天冀卖场(杭州越众)</td><td>杭州市萧山区永久路638号</td></tr>
+                    <tr><td>柯桥蓝天市心广场天翼卖场(杭州越众)</td><td>绍兴市柯桥区笛扬路1412号全网通手机连锁</td></tr>
+                    <tr><td>下城区莫干山路天翼卖场(杭州越众)</td><td>莫干山224号</td></tr>
+                    <tr><td>余杭区临平藕花洲大街天翼卖场(杭州越众)</td><td>藕花洲大街221-227电信</td></tr>
+                    <tr><td>下城越众江南时代天翼卖场(杭州越众)</td><td>石桥路456号</td></tr>
+                    <tr><td>上城越众河坊街天翼卖场(杭州越众)</td><td>杭州市上城区河坊街25号</td></tr>
+                    <tr><td>下城区香积寺路天翼卖场(杭州越众)</td><td>香积寺路101号</td></tr>
+                    <tr><td>下城越众朝晖天翼卖场(杭州越众)</td><td>下城区新市街147号</td></tr>
+                    <tr><td>下城越众越都大厦天翼卖场(杭州越众)</td><td>杭州市下城区中山北路640号</td></tr>
+                    <tr><td>下城越众德胜天翼卖场(杭州越众)</td><td>杭州市下城区德胜路12号</td></tr>
+                    <tr><td>体育场路全网通卖场(杭州越众)</td><td>体育场路369号</td></tr>
+                    <tr><td>闲林苹果店(杭州越众)</td><td>余杭区闲林镇闲林中路98号1号-2号</td></tr>
+                    <tr><td>杭州青缇新骆家庄华为荣耀天翼卖场古墩路510号(浙江浙讯)</td><td>浙江省杭州市古墩路510号</td></tr>
+                    <tr><td>余杭店(杭州日天)</td><td>余杭禹航路822号</td></tr>
+                    <tr><td>新洲营业厅(杭州日天)</td><td>杭州市滨江区月明路303-305号</td></tr>
+                    <tr><td>杭州东宝路店(杭州日天)</td><td>杭州市上城望江东宝路18－8号</td></tr>
+                    <tr><td>杭州四季青店(杭州日天)</td><td>杭州市上城区清江路116-2号</td></tr>
+                    <tr><td>杭州海潮路店(杭州日天)</td><td>杭州市上城区海潮路84号</td></tr>
+                    <tr><td>杭州富春路店(杭州日天)</td><td>杭州市上城区近江西路1号</td></tr>
+                    <tr><td>杭州华为店(杭州日天)</td><td>杭州市下城区武林路393-1号</td></tr>
+                    <tr><td>笕桥营业厅(浙江省邮)</td><td>机场路238-6</td></tr>
+                    <tr><td>杭州三墩标杆店(浙江省邮)</td><td>杭州市西湖区三墩镇厚仁路311号</td></tr>
+                    <tr><td>中通-江干(浙江省邮)</td><td>杭州下沙</td></tr>
+                    <tr><td>临平迎宾路营业厅(浙江省邮)</td><td>杭州市余杭区临平迎宾路329号</td></tr>
+                    <tr><td>中通-富阳(浙江省邮)</td><td>杭州富阳</td></tr>
+                    <tr><td>中通-桐庐(浙江省邮)</td><td>杭州桐庐</td></tr>
+                    <tr><td>中通-建德(浙江省邮)</td><td>杭州建德</td></tr>
+                    <tr><td>中通-临安(浙江省邮)</td><td>杭州临安</td></tr>
+                    <tr><td>中通-余杭(浙江省邮)</td><td>杭州余杭</td></tr>
+                    <tr><td>笕桥营业厅(杭州天翔)</td><td>机场路66-6号</td></tr>
+                    <tr><td>中都步行街店(杭州天翔)</td><td>临平北大街66-68号</td></tr>
+                    <tr><td>昙花庵营业厅(杭州天翔)</td><td>昙花庵路100-2号</td></tr>
+                    <tr><td>江干店(杭州天翔)</td><td>江干区双菱路69号</td></tr>
+                    <tr><td>三里亭营业厅(杭州天翔)</td><td>三里亭路1号</td></tr>
+                    <tr><td>杭州留下店(杭州天翔)</td><td>杭州市西湖区留下街道57号</td></tr>
+                    <tr><td>武林三星(杭州天翔)</td><td>体育场路352号</td></tr>
+                    <tr><td>萧绍路全网通卖场(杭州天翔)</td><td>萧山市心广场萧绍路1467号</td></tr>
+                    <tr><td>武林全网通卖场(杭州天翔)</td><td>武林路112号</td></tr>
+                    <tr><td>下沙乐视店(杭州天翔)</td><td>下沙5号街139号</td></tr>
+                    <tr><td>秋涛路天翼卖场(杭州天翔)</td><td>秋涛北路88号</td></tr>
+                    <tr><td>下沙5号路天翼卖场(杭州天翔)</td><td>下沙5号大街</td></tr>
+                    <tr><td>丁兰卖场(杭州天翔)</td><td>丁群街480号</td></tr>
+                    <tr><td>桐庐分水全网通卖场(杭州天翔)</td><td>分水广电路282号</td></tr>
+                    <tr><td>分水vivo专营店(杭州天翔)</td><td>分水广电路282号</td></tr>
+                    <tr><td>转塘直街天翼卖场(杭州天翔)</td><td>转塘直街69号</td></tr>
+                    <tr><td>桐庐横村营业厅(杭州天翔)</td><td>锦华路312号</td></tr>
+                    <tr><td>桐庐嘉凯城营业厅(杭州天翔)</td><td>方埠桐千路820号</td></tr>
+                    <tr><td>桐庐分水广电路营业厅(杭州天翔)</td><td>分水广电路282号</td></tr>
+                    <tr><td>米市巷营业厅(杭州天翔)</td><td>湖墅南路372号</td></tr>
+                    <tr><td>滨江浦沿新浦营业厅(杭州天翔)</td><td>浦沿镇新浦路95号</td></tr>
+                    <tr><td>丹枫路营业厅(杭州天翔)</td><td>七甲大酒店旁</td></tr>
+                    <tr><td>桐庐华为店(杭州天翔)</td><td>迎春路43号</td></tr>
+                    <tr><td>文岚营业厅(杭州天翔)</td><td>文岚街138号</td></tr>
+                    <tr><td>学院北路营业厅(杭州天翔)</td><td>莫干山路841弄</td></tr>
+                    <tr><td>皋亭全网通手机连锁(杭州天翔)</td><td>皋亭街6-8</td></tr>
+                    <tr><td>科园路电信营业厅(杭州天翔)</td><td>科园路10号</td></tr>
+                    <tr><td>湖墅南路营业厅(杭州天翔)</td><td>湖墅南路187号</td></tr>
+                    <tr><td>祥符桥营业厅(杭州天翔)</td><td>三墩路23号</td></tr>
+                    <tr><td>上塘营业厅(杭州天翔)</td><td>上塘路865号</td></tr>
+                    <tr><td>中北营业厅(杭州天翔)</td><td>中山北路66号</td></tr>
+                    <tr><td>大学路营业厅(杭州天翔)</td><td>翰林街86号</td></tr>
+                    <tr><td>太平门营业厅(杭州天翔)</td><td>太平门直街325-327</td></tr>
+                    <tr><td>丁桥营业厅(杭州天翔)</td><td>惠兰雅路670号</td></tr>
+                    <tr><td>江城营业厅(杭州天翔)</td><td>江城路96号</td></tr>
+                    <tr><td>凯旋路营业厅(杭州天翔)</td><td>凯旋路73号</td></tr>
+                    <tr><td>天城营业厅(杭州天翔)</td><td>天城路204-1</td></tr>
+                    <tr><td>望月营业厅(杭州天翔)</td><td>紫荆花北路城北商贸园45幢18号</td></tr>
+                    <tr><td>景芳营业厅(杭州天翔)</td><td>凤起东路132号</td></tr>
+                    <tr><td>华家池营业厅(杭州天翔)</td><td>凯旋路329号</td></tr>
+                    <tr><td>西溪花园营业厅(杭州天翔)</td><td>晴川街402号</td></tr>
+                    <tr><td>庆丰新村营业厅(杭州天翔)</td><td>西溪路358号</td></tr>
+                    <tr><td>马塍路营业厅(杭州天翔)</td><td>马塍路10号</td></tr>
+                    <tr><td>西斗门营业厅(杭州天翔)</td><td>西斗门路210号</td></tr>
+                    <tr><td>益乐营业厅(杭州天翔)</td><td>益乐路22号</td></tr>
+                    <tr><td>三墩U盘时代店(杭州天翔)</td><td>萍水西路80号三墩</td></tr>
+                    <tr><td>八字桥店(杭州天翔)</td><td>天目山路142号</td></tr>
+                    <tr><td>杭州体育场路进厅(杭州天翔)</td><td>杭州市西湖区体育场路624号电信营业厅</td></tr>
+                    <tr><td>沃商武林全网通手机卖场(杭州青缇)</td><td>杭州市下城区体育场路352号</td></tr>
+                    <tr><td>昙花庵营业厅(杭州青缇)</td><td>昙花庵路100号</td></tr>
+                    <tr><td>杭州武林电信(杭州青缇)</td><td>杭州体育场路352号</td></tr>
+                    <tr><td>杭州青缇骆家庄天翼卖场(杭州青缇)</td><td>浙江省杭州市骆家庄农贸市场1楼</td></tr>
+                    <tr><td>杭州市古墩路电信营业厅(杭州青缇)</td><td>浙江省杭州市古墩路466号</td></tr>
+                    <tr><td>余杭二店(杭州青缇)</td><td>余杭镇宇航路881号</td></tr>
+                    <tr><td>西环路电信营业厅(杭州青缇)</td><td>滨江区西环路56号</td></tr>
+                    <tr><td>运河华为店(杭州青缇)</td><td>运河街道湖潭路456号</td></tr>
+                    <tr><td>运河苹果店(杭州青缇)</td><td>运河街道湖潭路456号</td></tr>
+                    <tr><td>大浒厅(杭州青缇)</td><td>大浒路113号</td></tr>
+                    <tr><td>余杭三融天都城专营店(杭州青缇)</td><td>天都城天月苑2～3商铺</td></tr>
+                    <tr><td>杭州青缇新骆家庄OPPO天翼卖场(杭州青缇)</td><td>浙江省杭州市古墩路500号</td></tr>
+                    <tr><td>杭州青缇新骆家庄vivo天翼卖场(杭州青缇)</td><td>浙江省杭州市古墩路506号</td></tr>
+                    <tr><td>杭州青缇八丈井电信营业厅(杭州青缇)</td><td>浙江省杭州市拱墅区八丈井东路7号</td></tr>
+                    <tr><td>杭州青缇海外海天翼专营店(杭州青缇)</td><td>浙江省杭州市上塘路388号</td></tr>
+                    <tr><td>杭州青缇翠苑电信营业厅(杭州青缇)</td><td>浙江省杭州市文一西路341号</td></tr>
+                    <tr><td>杭州市莲花街天翼专营店(杭州青缇)</td><td>浙江省杭州市莲花街367号</td></tr>
+                    <tr><td>袁浦营业厅(杭州青缇)</td><td>袁浦街95号</td></tr>
+                    <tr><td>杭州青缇桐庐方埠青缇天翼卖场(杭州青缇)</td><td>桐庐县横村镇方埠街柴场里公交车站旁</td></tr>
+                    <tr><td>杭州青缇洋塘营业厅(杭州青缇)</td><td>桐庐洋塘汽车站边</td></tr>
+                    <tr><td>杭州青缇华为专卖场(杭州青缇)</td><td>杭州市余杭区运河街道湖潭路347-349号</td></tr>
+                    <tr><td>杭州青缇桐庐迎春南路卖场(杭州青缇)</td><td>迎春南路441号一楼靠文化馆一侧</td></tr>
+                    <tr><td>杭州青缇桐庐开元街营业厅(杭州青缇)</td><td>浙江省杭州市桐庐县桐君街道开元街90号电信营业厅</td></tr>
+                    <tr><td>杭州青缇桐庐江南电信营业厅(杭州青缇)</td><td>浙江省杭州市桐庐县桐庐江南迎春二弄电信营业厅</td></tr>
+                    <tr><td>杭州康泽苑乐帕店(杭州青缇)</td><td>杭州市康桥西杨直街36号</td></tr>
+                    <tr><td>杭州青缇苹果专卖场(杭州青缇)</td><td>杭州市余杭区运河街道湖潭路351-353号</td></tr>
+                    <tr><td>杭州青缇新骆家庄华为荣耀天翼卖场古墩路504号(杭州青缇)</td><td>浙江省杭州市古墩路504号</td></tr>
+                    <tr><td>杭州青缇和睦新村营业厅（长征网格）(杭州青缇)</td><td>杭州市登云路200号</td></tr>
+                    <tr><td>杭州北海公寓营业厅(杭州青缇)</td><td>杭州市拱墅区北海公寓11-5号</td></tr>
+                    <tr><td>萧山南岸明珠营业厅(杭州青缇)</td><td>杭州市萧山区建设四路南岸明珠1646号</td></tr>
+                    <tr><td>新大地苹果店(杭州三融)</td><td>临平新大地九曲营西路13号</td></tr>
+                    <tr><td>淳安县沃商千岛湖天翼卖场(杭州三融)</td><td>淳安县千岛湖镇新安大街91-12号</td></tr>
+                    <tr><td>余杭三融闲林中路专营店(杭州三融)</td><td>闲林镇闲富南路新苑公寓1幢73-1#73-2</td></tr>
+                    <tr><td>余杭三融塘栖宏畔手机店(杭州三融)</td><td>莫家桥村委</td></tr>
+                    <tr><td>余杭三融运河博陆天翼卖场(杭州三融)</td><td>运河街道博陆育士路48号</td></tr>
+                    <tr><td>径山营业厅(杭州三融)</td><td>径山锦城街39号</td></tr>
+                    <tr><td>黄湖营业厅(杭州三融)</td><td>黄湖通达路20号</td></tr>
+                    <tr><td>小洋坝营业厅(杭州三融)</td><td>良渚良运街378号</td></tr>
+                    <tr><td>五常营业厅(杭州三融)</td><td>五常联胜路10号</td></tr>
+                    <tr><td>仓前营业厅(杭州三融)</td><td>仓前仓兴街172号</td></tr>
+                    <tr><td>瓶窑营业厅(杭州三融)</td><td>瓶窑东兴路65号</td></tr>
+                    <tr><td>杭州青缇塘萍路电信营业厅(杭州三融)</td><td>浙江省杭州市塘萍路342,344号</td></tr>
+                    <tr><td>全网通江南店(沃商武林)</td><td>杭州市滨江区江晖路1322-1324号</td></tr>
+                    <tr><td>杭州武林华为售后店(沃商武林)</td><td>杭州市下城区武林路393-1号</td></tr>
+                    <tr><td>萧邵店(沃商武林)</td><td>杭州市萧山区萧绍路1274号</td></tr>
+                    <tr><td>淳安沃商新安北路营业厅(沃商武林)</td><td>淳安沃商新安北路35号</td></tr>
+                    <tr><td>沃商淳安新安大街营业厅(沃商武林)</td><td>淳安县千岛湖镇新安大街47号</td></tr>
+                    <tr><td>桐庐沃商迎春街天翼卖场(沃商武林)</td><td>桐庐县桐君街道迎春街43号(3－4)</td></tr>
+                    <tr><td>临安广场路电信营业厅(沃商武林)</td><td>临安广场路5号</td></tr>
+                    <tr><td>苹果二店(杭州鼎信)</td><td>临平中都南大门苹果专卖店</td></tr>
+                    <tr><td>易讯青山营业厅(杭州鼎信)</td><td>青山湖街道天柱街305号</td></tr>
+                    <tr><td>吴山营业厅(杭州鼎信)</td><td>延安路14号</td></tr>
+                    <tr><td>西兴电信客服部(杭州鼎信)</td><td>西兴镇固陵路135号101办公室</td></tr>
+                    <tr><td>崇化全网通手机连锁(杭州鼎信)</td><td>萧金路45号2栋</td></tr>
+                    <tr><td>西兴中国电信营业厅(杭州鼎信)</td><td>西兴镇固陵路135号</td></tr>
+                    <tr><td>汇德隆全网通手机连锁卖场(杭州鼎信)</td><td>市心南路820-830号</td></tr>
+                    <tr><td>苹果体验店(杭州鼎信)</td><td>江南大道288号苹果体验店</td></tr>
+                    <tr><td>余杭苹果体验店(杭州鼎信)</td><td>余杭运河镇湖潭路347号</td></tr>
+                    <tr><td>全网通星耀城店(杭州鼎信)</td><td>滨江区西兴街道江陵路2028号星耀城3幢101-20室</td></tr>
+                    <tr><td>全网通西兴桥头店(杭州鼎信)</td><td>杭州市滨江区固陵路135号北</td></tr>
+                    <tr><td>西环营业厅(杭州鼎信)</td><td>杭州市滨江区西环路56号</td></tr>
+                    <tr><td>中国电信星光营业厅(杭州鼎信)</td><td>杭州市滨江区泰安路99号</td></tr>
+                    <tr><td>中国电信长河营业厅(杭州鼎信)</td><td>滨康路363号</td></tr>
+                    <tr><td>惠兴营业厅(杭州鼎信)</td><td>惠兴路9号</td></tr>
+                    <tr><td>富阳玉长城华为专卖店(杭州宇品)</td><td>富阳春秋北路271号富阳玉长城商业广场1楼E100</td></tr>
+                    <tr><td>杭州龙湖天街美图店(杭州宇品)</td><td>江干区龙湖天街2F006</td></tr>
+                    <tr><td>三墩都市水乡专营店(杭州宇品)</td><td>都市水乡水月苑8幢5号商业用房长阳路339-345</td></tr>
+                    <tr><td>杨家楼牌全网通卖场(杭州宇品)</td><td>西溪路875号</td></tr>
+                    <tr><td>三墩同仁家园金河厅(杭州宇品)</td><td>金河湾16幢103-2/商铺D-129</td></tr>
+                    <tr><td>金街美地全网通手机卖场(杭州宇品)</td><td>金街美地2号楼104号</td></tr>
+                    <tr><td>转塘直街全网通手机卖场(杭州宇品)</td><td>转塘直街71-2号</td></tr>
+                    <tr><td>全网通手机卖场石祥东路店(杭州宇品)</td><td>石祥路102-1号（甘长苑南门）</td></tr>
+                    <tr><td>三墩都市阳光专营店(杭州宇品)</td><td>西湖区三墩镇甲来路80-82号</td></tr>
+                    <tr><td>全网通卖场厚诚店(杭州宇品)</td><td>西湖区三墩镇厚诚路118号</td></tr>
+                    <tr><td>电信艮山营业厅(杭州宇品)</td><td>环城北路72号</td></tr>
+                    <tr><td>电信德胜营业厅(杭州宇品)</td><td>下城区德胜路12号（乐购超市东面）</td></tr>
+                    <tr><td>全网通手机卖场石桥店(杭州宇品)</td><td>石桥路279号经纬创意园</td></tr>
+                    <tr><td>全网通手机卖场回龙店(杭州宇品)</td><td>北景园回龙路219号（东新路南西面）</td></tr>
+                    <tr><td>杭海路天翼专营店(杭州宇品)</td><td>杭海路816号（杭海路与艮山东路交叉路口）</td></tr>
+                    <tr><td>下沙万品店(杭州宇品)</td><td>德胜东路2666号</td></tr>
+                    <tr><td>电信庆春店(杭州宇品)</td><td>庆春路91号</td></tr>
+                    <tr><td>电信彭埠营业厅(杭州宇品)</td><td>彭埠明月桥路10号（农行北面）</td></tr>
+                    <tr><td>萧山河庄天翼卖场(杭州宇品)</td><td>杭州市萧山区河庄永丰路97号</td></tr>
+                    <tr><td>萧山店(杭州畅赢)</td><td>萧山区萧绍路1411-1415号</td></tr>
+                    <tr><td>运河二店(杭州畅赢)</td><td>运河街道湖潭路513-519号</td></tr>
+                    <tr><td>市场部(杭州畅赢)</td><td>泰嘉园K座1103</td></tr>
+                    <tr><td>萧山华为店(杭州畅赢)</td><td>萧山市萧绍路1263-1267</td></tr>
+                    <tr><td>杭州青缇上杭营业厅(杭州畅赢)</td><td>桐庐春江路1266号</td></tr>
+                    <tr><td>颐高华为店(杭州畅赢)</td><td>颐高数码广场</td></tr>
+                    <tr><td>余杭通运街营业厅(杭州畅赢)</td><td>杭州市余杭区通运街223号</td></tr>
+                    <tr><td>萧山戴村营业厅(杭州畅赢)</td><td>戴村镇人民路100-106号</td></tr>
+                    <tr><td>萧山靖江营业厅(杭州畅赢)</td><td>萧山区靖江街道黎明路25-29号</td></tr>
+                    <tr><td>余杭顾家桥2号店(杭州畅赢)</td><td>杭州市余杭区顾家桥田家埭7号</td></tr>
+                    <tr><td>五常顾家桥营业厅(杭州畅赢)</td><td>杭州市余杭区顾家桥河西北路11号</td></tr>
+                    <tr><td>萧山开发区营业厅(杭州畅赢)</td><td>经济开发区建设一路53号</td></tr>
+                    <tr><td>萧山金一村便民网点(杭州畅赢)</td><td>金一路92号</td></tr>
+                    <tr><td>拱墅拱宸桥营业厅(杭州畅赢)</td><td>舟山东路97号</td></tr>
+                    <tr><td>余杭亲亲家园营业厅(杭州畅赢)</td><td>杭州市余杭区金家渡路324号</td></tr>
+                    <tr><td>塘栖广济路天翼卖场(杭州畅赢)</td><td>杭州市余杭区塘栖镇广济路180号</td></tr>
+                    <tr><td>五常横板桥专营店(杭州畅赢)</td><td>杭州市余杭区五常街道联胜路66号</td></tr>
+                    <tr><td>拱墅湖墅路营业厅(杭州畅赢)</td><td>湖墅南路456号</td></tr>
+                    <tr><td>萧山益农天翼卖场(杭州畅赢)</td><td>杭州市萧山区益农镇学工路68号</td></tr>
+                    <tr><td>拱墅新文村营业厅(杭州畅赢)</td><td>新文苑3号</td></tr>
+                    <tr><td>萧山苹果一店(杭州畅赢)</td><td>萧山区萧绍路1417号</td></tr>
+                    <tr><td>下沙营业厅(杭州升跃)</td><td>杭州市下沙区天城东路150-3</td></tr>
+                    <tr><td>华为体验店(杭州升跃)</td><td>江南大道288号华为体验店</td></tr>
+                    <tr><td>白马湖营业厅(杭州升跃)</td><td>杭州市滨江区长江中路446号</td></tr>
+                    <tr><td>长河电信营业厅(杭州升跃)</td><td>杭州市滨江区长江中路4号</td></tr>
+                    <tr><td>西湖营业厅(杭州升跃)</td><td>杭州市西湖教工路132号</td></tr>
+                    <tr><td>长河B营业厅(杭州升跃)</td><td>杭州市滨江区长江中路58号</td></tr>
+                    <tr><td>88号营业厅(杭州升跃)</td><td>杭州市滨江区长江中路88号</td></tr>
+                    <tr><td>校园营业厅(杭州升跃)</td><td>杭州市滨江区立业园1幢2号</td></tr>
+                    <tr><td>江晖营业厅(杭州升跃)</td><td>杭州市滨江区江晖路1316号</td></tr>
+                    <tr><td>江汉营业厅(杭州升跃)</td><td>杭州市滨江区江汉路1680号</td></tr>
+                    <tr><td>杭州青缇八丈井店(杭州升跃)</td><td>拱墅区八丈东路7号</td></tr>
+                    <tr><td>杭州下沙华为专卖店(温州市鹿)</td><td>杭州市江干区下沙开发区5号大街139号</td></tr>
+                    <tr><td>萧山义蓬营业厅(温州市鹿)</td><td>青兴路162号义蓬购物中心</td></tr>
+                    <tr><td>下城武林路VIVO-专卖店(杭州武林)</td><td>武林路398号</td></tr>
+                    <tr><td>杭州青缇登云路天翼专营店(临安易讯)</td><td>浙江省杭州市登云路303号</td></tr>
+                    <tr><td>梅花楼营业厅(杭州沃商)</td><td>萧绍路739号</td></tr>
+                    <tr><td>畅赢庆春路营业厅(中国电信)</td><td>杭州市上城区庆春路91号</td></tr>
+                </table>
+            </div>
+            <!--湖州-->
+            <div class="nav_tabcont" id="div2">
+                <table>
+                    <tr><th>门店名称</th><th>门店地址</th></tr>
+                    <tr><td>湖州德清VIVO店(浙江浙讯)</td><td>湖州市德清县武康镇永安街105号VIVO专卖店</td></tr>
+                    <tr><td>湖州安吉晓墅店(浙江浙讯)</td><td>湖州市安吉县晓墅镇人民路晓墅电信局</td></tr>
+                    <tr><td>湖州万达华为专卖店(浙江浙讯)</td><td>湖州市吴兴区苕溪东路与大升路交叉口东北侧万达广场2楼2039华为店</td></tr>
+                    <tr><td>湖州长兴泗安店(浙江浙讯)</td><td>湖州市长兴县泗安镇凤凰街70号</td></tr>
+                    <tr><td>湖州长兴泗安店(浙江浙讯)</td><td>湖州市长兴县泗安镇凤凰街70号</td></tr>
+                    <tr><td>湖州安吉晓墅店(浙江浙讯)</td><td>湖州市安吉县晓墅镇人民路晓墅电信局</td></tr>
+                    <tr><td>湖州德清VIVO店(浙江浙讯)</td><td>湖州市德清县武康镇永安街105号VIVO专卖店</td></tr>
+                    <tr><td>物美合作卖场(浙江浙讯)</td><td>人民路</td></tr>
+                    <tr><td>湖州安吉大卖场(杭州日天)</td><td>湖州市安吉县安吉邮电路1号</td></tr>
+                    <tr><td>湖州爱山华为体验店(杭州日天)</td><td>湖州市吴兴区爱山广场志成路4号</td></tr>
+                    <tr><td>湖州银泰华为店(杭州日天)</td><td>湖州东吴银泰城B1-7-33号中国电信营业厅</td></tr>
+                    <tr><td>湖州长兴小浦外包厅(杭州日天)</td><td>湖州市长兴县小浦镇电信局</td></tr>
+                    <tr><td>湖州长兴大卖场(杭州日天)</td><td>湖州市长兴县米行弄电信大卖场</td></tr>
+                    <tr><td>湖州万达华为专卖店(杭州日天)</td><td>湖州市吴兴区苕溪东路与大升路交叉口东北侧万达广场2楼2039华为店</td></tr>
+                    <tr><td>湖州长兴小浦外包厅(杭州日天)</td><td>湖州市长兴县小浦镇电信局</td></tr>
+                    <tr><td>湖州长兴大卖场(杭州日天)</td><td>湖州市长兴县米行弄电信大卖场</td></tr>
+                    <tr><td>湖州银泰华为店(杭州日天)</td><td>湖州东吴银泰城B1-7-33号中国电信营业厅</td></tr>
+                    <tr><td>湖州爱山华为体验店(杭州日天)</td><td>湖州市吴兴区爱山广场志成路4号</td></tr>
+                    <tr><td>湖州安吉大卖场(杭州日天)</td><td>湖州市安吉县安吉邮电路1号</td></tr>
+                    <tr><td>湖州红旗路店(杭州日天)</td><td>湖州市红旗路4号</td></tr>
+                    <tr><td>湖州德清苹果店(杭州日天)</td><td>湖州市德清县武康镇永安街105号苹果专卖店</td></tr>
+                    <tr><td>英溪南路电信营业厅(杭州日天)</td><td>湖州市德清县英溪南路370号</td></tr>
+                    <tr><td>湖州南浔中心厅(杭州日天)</td><td>湖州市南浔区南浔镇适园路电信营业厅</td></tr>
+                    <tr><td>湖州德清大卖场(杭州日天)</td><td>湖州市德清县武康镇永安街105号手机大卖场</td></tr>
+                    <tr><td>湖州南浔菱湖店(杭州日天)</td><td>湖州市南浔区菱湖镇建国路8号</td></tr>
+                    <tr><td>湖州南浔双林店(杭州日天)</td><td>湖州市南浔区双林镇塘桥路1号</td></tr>
+                    <tr><td>湖州南浔善琏店(杭州日天)</td><td>湖州市南浔区善琏镇振兴路200号</td></tr>
+                    <tr><td>湖州南浔泰安路店(杭州日天)</td><td>湖州南浔泰安路328号日天手机连锁店</td></tr>
+                    <tr><td>湖州安吉梅溪店(杭州日天)</td><td>湖州市安吉县梅溪电信局</td></tr>
+                    <tr><td>湖州德清城东营业厅(杭州日天)</td><td>湖州市德清武康中兴北路567号北湖邮政所</td></tr>
+                    <tr><td>湖州长兴煤山店(杭州日天)</td><td>湖州市长兴县煤山电信营业厅的</td></tr>
+                    <tr><td>湖州安吉高禹店(杭州日天)</td><td>湖州市安吉县天子湖镇高禹天子铭楼8113号</td></tr>
+                    <tr><td>湖州安吉良朋店(杭州日天)</td><td>湖州市安吉县天子湖镇良朋村良朋电信营业厅</td></tr>
+                    <tr><td>湖州长兴李家巷店(杭州日天)</td><td>湖州市长兴县李家巷镇李家巷电信局</td></tr>
+                    <tr><td>湖州长兴和平外包厅(杭州日天)</td><td>湖州市长兴县和平镇电信局</td></tr>
+                    <tr><td>湖州长兴中心厅(杭州日天)</td><td>湖州市长兴县米行弄电信大卖场</td></tr>
+                    <tr><td>湖州红旗路店(浙江省邮)</td><td>湖州市红旗路4号</td></tr>
+                    <tr><td>练市中翼(湖州好机)</td><td>湖盐中路</td></tr>
+                    <tr><td>练市好机惠(湖州好机)</td><td>湖盐中路</td></tr>
+                    <tr><td>中国电信南浔营业厅(湖州好机)</td><td>适园路</td></tr>
+                    <tr><td>好机惠融合(湖州好机)</td><td>南浔泰安路345号</td></tr>
+                    <tr><td>好机惠全网通(湖州好机)</td><td>南浔泰安路299号</td></tr>
+                    <tr><td>吴兴惠卓北街颐高天翼卖场(湖州好机)</td><td>湖州市府庙商城8号楼颐高数码广场一层A127号</td></tr>
+                    <tr><td>好机惠全网通1(湖州惠卓)</td><td>南浔泰安路299号</td></tr>
+                    <tr><td>惠卓城南电信营业厅(湖州惠卓)</td><td>港南路228号</td></tr>
+                    <tr><td>吴兴区师范学院电信营业厅(湖州惠卓)</td><td>吴兴区师范学院</td></tr>
+                    <tr><td>环渚电信营业厅(湖州惠卓)</td><td>学士路718号电信营业厅</td></tr>
+                    <tr><td>凤凰营业厅(湖州惠卓)</td><td>龙溪北路338号电信营业厅</td></tr>
+                    <tr><td>长兴轻纺城门口中国电信营业厅(湖州惠卓)</td><td>长兴海兴路3-5轻纺城门口中国电信营业厅</td></tr>
+                    <tr><td>市陌营业厅(湖州惠卓)</td><td>新市陌路38号</td></tr>
+                    <tr><td>吉山营业厅(湖州惠卓)</td><td>余家漾路58号</td></tr>
+                    <tr><td>织里北圣堂营业厅(湖州惠卓)</td><td>织里北圣堂路安康路交界处</td></tr>
+                    <tr><td>八里店前村营业厅(湖州胜邦)</td><td>八里店前村草荡漾路2228号</td></tr>
+                    <tr><td>南浔和孚营业厅(湖州胜邦)</td><td>和孚镇星光大街127号</td></tr>
+                    <tr><td>吴兴大道营业厅(湖州胜邦)</td><td>织里镇吴兴大道128号</td></tr>
+                    <tr><td>苕溪路营业厅(湖州胜邦)</td><td>苕溪西路11号</td></tr>
+                    <tr><td>织里华为专卖店(湖州胜邦)</td><td>织里富民路351号</td></tr>
+                    <tr><td>红旗路华为专卖店(湖州胜邦)</td><td>湖州红旗路1号</td></tr>
+                    <tr><td>德清华为店(湖州胜邦)</td><td>德清武康镇永安街116号</td></tr>
+                </table>
+            </div>
+            <!--嘉兴-->
+            <div class="nav_tabcont" id="div3">
+                <table>
+                    <tr><th>门店名称</th><th>门店地址</th></tr>
+                    <tr><td>嘉兴平湖广陈店(杭州日天)</td><td>嘉兴市平湖广陈镇广西路164号</td></tr>
+                    <tr><td>嘉兴海盐华为店(杭州日天)</td><td>嘉兴市海盐县武原镇勤俭北路中茂花苑2幢5-6号华为体验店</td></tr>
+                    <tr><td>嘉兴日天禾兴南路天翼卖场(杭州日天)</td><td>嘉兴纺工路1181号电信营业厅</td></tr>
+                    <tr><td>嘉兴飞翼蚂桥吉马路天翼专营店(杭州日天)</td><td>嘉兴蚂桥镇吉马路89号</td></tr>
+                    <tr><td>嘉兴南湖手机店(杭州日天)</td><td>嘉兴市中环东路与泾水路交叉口中国电信营业厅内（西侧三间）</td></tr>
+                    <tr><td>嘉兴平湖新庙店(杭州日天)</td><td>嘉兴市平湖新仓新庙集镇平廊线世纪联华超市边</td></tr>
+                    <tr><td>嘉兴平湖共建店(杭州日天)</td><td>嘉兴市平湖黄姑共建周圩平圩路14号</td></tr>
+                    <tr><td>嘉兴平湖乍浦店(杭州日天)</td><td>嘉兴市平湖乍浦港区南湾北路26号</td></tr>
+                    <tr><td>嘉兴平湖黄姑店(杭州日天)</td><td>浙江省嘉兴市平湖黄姑虎啸北路西侧</td></tr>
+                    <tr><td>嘉兴平湖全塘店(杭州日天)</td><td>嘉兴市平湖全塘镇全塘中学北侧</td></tr>
+                    <tr><td>嘉兴嘉善丁栅店(杭州日天)</td><td>嘉兴市嘉善县丁栅丝绸路电信营业厅</td></tr>
+                    <tr><td>嘉兴嘉善姚庄店(杭州日天)</td><td>嘉兴市嘉善县姚庄镇洪福路91号电信营业厅</td></tr>
+                    <tr><td>嘉兴平湖中心厅(杭州日天)</td><td>嘉兴市平湖建国北路69号</td></tr>
+                    <tr><td>嘉兴清河店(杭州日天)</td><td>嘉兴市南湖区禾兴北路153</td></tr>
+                    <tr><td>嘉兴嘉善中心厅(杭州日天)</td><td>嘉兴市嘉善县亭桥北路108号电信营业厅</td></tr>
+                    <tr><td>嘉兴嘉善罗星路店(杭州日天)</td><td>嘉兴市嘉善县亭桥南路428号</td></tr>
+                    <tr><td>嘉兴洪兴路忆旭(杭州日天)</td><td>嘉兴市南湖区洪兴路227号</td></tr>
+                    <tr><td>嘉兴秀水学院店(杭州日天)</td><td>嘉兴市南湖区中环西路190号秀水学院</td></tr>
+                    <tr><td>嘉兴中山路店(杭州日天)</td><td>嘉兴市南湖区中山路513号</td></tr>
+                    <tr><td>嘉兴城南路店(杭州日天)</td><td>嘉兴市南湖区城南路478号</td></tr>
+                    <tr><td>嘉兴建陶市场店(杭州日天)</td><td>嘉兴市南湖区建陶市场西大门B5-131</td></tr>
+                    <tr><td>嘉兴纺工路忆旭(杭州日天)</td><td>嘉兴市南湖区南湖街道纺工路1181号电信营业厅</td></tr>
+                    <tr><td>嘉兴平湖新仓店(杭州青缇)</td><td>嘉兴市平湖新仓芦川新街198号</td></tr>
+                    <tr><td>嘉兴王店兴黎明手机店(嘉兴飞翼)</td><td>王店镇马桥集镇吉马路146号</td></tr>
+                    <tr><td>嘉兴飞翼王店蚂桥电信专营店(嘉兴飞翼)</td><td>马桥镇吉马路89号</td></tr>
+                    <tr><td>嘉兴旺黎明手机店(嘉兴飞翼)</td><td>王店镇马桥集镇吉马路78-9号</td></tr>
+                    <tr><td>海盐飞翼世纪心美超市天翼卖场(嘉兴飞翼)</td><td>海盐横港集镇新兴路28号</td></tr>
+                    <tr><td>嘉兴飞翼园区无门店(嘉兴飞翼)</td><td>嘉兴市吴越路361号</td></tr>
+                    <tr><td>嘉兴飞翼万达天翼卖场(嘉兴飞翼)</td><td>嘉兴万达广场春江中心2幢01号</td></tr>
+                    <tr><td>嘉兴飞翼蚂桥吉马路专营店(嘉兴飞翼)</td><td>王店马桥镇吉马路21号</td></tr>
+                    <tr><td>嘉兴飞翼王店吉马路天翼卖场(嘉兴飞翼)</td><td>王店马桥镇吉马路21号</td></tr>
+                    <tr><td>嘉兴王店建设飞翼专营店(嘉兴飞翼)</td><td>嘉兴市建设镇龙源路311号</td></tr>
+                    <tr><td>嘉兴飞翼清河天翼专营店(嘉兴飞翼)</td><td>嘉兴市禾兴北路1588号清河电信大楼</td></tr>
+                    <tr><td>嘉兴洪合营业厅飞翼专柜(嘉兴飞翼)</td><td>秀洲区洪合泰旗路286号</td></tr>
+                    <tr><td>嘉兴飞翼新篁专营店(嘉兴飞翼)</td><td>嘉兴新篁电信营业厅</td></tr>
+                    <tr><td>嘉兴飞翼凤桥专营店(嘉兴飞翼)</td><td>凤桥凤启路29号</td></tr>
+                    <tr><td>嘉兴凤桥美珍合作卖场(嘉兴飞翼)</td><td>嘉兴市凤桥镇西大街97号</td></tr>
+                    <tr><td>嘉兴余新五星路翼捷天翼卖场(嘉兴飞翼)</td><td>嘉兴余新镇余北大街邮政储蓄西边</td></tr>
+                    <tr><td>嘉兴洪合飞翼天翼卖场(嘉兴飞翼)</td><td>洪合镇洪运路351号</td></tr>
+                    <tr><td>嘉兴洪合众翼天翼卖场(嘉兴飞翼)</td><td>嘉兴秀洲区洪合镇洪工路2号</td></tr>
+                    <tr><td>嘉兴王店金桥飞翼天翼卖场(嘉兴飞翼)</td><td>金桥9-113号</td></tr>
+                    <tr><td>嘉兴飞翼蚂桥天翼卖场(嘉兴飞翼)</td><td>吉马路109-111</td></tr>
+                    <tr><td>嘉兴王店飞翼天翼卖场(嘉兴飞翼)</td><td>王店镇百乐路81号</td></tr>
+                    <tr><td>嘉兴凤桥美珍天翼卖场(嘉兴飞翼)</td><td>嘉兴市凤桥镇凤起路与凤飞路交叉口</td></tr>
+                    <tr><td>嘉兴余新余北大街翼捷天翼卖场(嘉兴飞翼)</td><td>南湖区余新镇余北大街19-20</td></tr>
+                    <tr><td>嘉兴洪合祥翼天翼卖场(嘉兴飞翼)</td><td>洪合320国道南侧5-6号</td></tr>
+                    <tr><td>海盐通元众航天翼卖场(嘉兴飞翼)</td><td>浙江省嘉兴市海盐县通元镇镇北路电信营业厅</td></tr>
+                    <tr><td>桐乡昊天龙翔营业厅(桐乡昊天)</td><td>桐乡市龙翔大道241号</td></tr>
+                    <tr><td>桐乡昊天乌镇电信营业厅(桐乡昊天)</td><td>桐乡市乌镇镇子夜路226号</td></tr>
+                    <tr><td>桐乡昊天中心营业厅(桐乡昊天)</td><td>桐乡市振兴中路58号</td></tr>
+                    <tr><td>桐乡昊天开发区营业厅(桐乡昊天)</td><td>桐乡市发展大道288号乌镇互联网产业园8号楼</td></tr>
+                    <tr><td>桐乡昊天乌镇天翼手机卖场(桐乡昊天)</td><td>桐乡市乌镇镇隆源路191号</td></tr>
+                    <tr><td>桐乡昊天龙翔天翼卖场(桐乡昊天)</td><td>桐乡市炉头龙翔街道480号（皂林菜场旁）</td></tr>
+                    <tr><td>桐乡昊天小蜜蜂手机卖场(桐乡昊天)</td><td>桐乡市梧桐街道民兴路26号</td></tr>
+                    <tr><td>桐乡昊天中央大厦天翼卖场(桐乡昊天)</td><td>桐乡市庆丰中路1号中央大厦</td></tr>
+                    <tr><td>桐乡昊天振东天翼卖场(桐乡昊天)</td><td>桐乡市校场东路1470号</td></tr>
+                    <tr><td>桐乡昊天濮院齐宏路天翼卖场(桐乡昊天)</td><td>桐乡市濮院镇齐宏路470-472号</td></tr>
+                    <tr><td>桐乡昊天濮院凯旋路新手机卖场(桐乡昊天)</td><td>桐乡市濮院镇凯旋路103-111号</td></tr>
+                    <tr><td>桐乡昊天乌镇隆源路天翼卖场(桐乡昊天)</td><td>桐乡市乌镇镇隆源路167号</td></tr>
+                    <tr><td>桐乡文华小区天翼卖场(桐乡昊天)</td><td>桐乡市文华小区485号</td></tr>
+                    <tr><td>桐乡昊天龙翔大道天翼卖场(桐乡昊天)</td><td>桐乡市炉头龙翔街道480号（皂林菜场旁）</td></tr>
+                    <tr><td>桐乡昊天濮院凯旋西路天翼卖场(桐乡昊天)</td><td>桐乡市濮院镇凯旋路1498号</td></tr>
+                    <tr><td>禾兴北路营业厅(桐乡昊天)</td><td>禾兴北路</td></tr>
+                    <tr><td>海盐众航凤凰路天翼卖场(众航通讯)</td><td>浙江省嘉兴市海盐县元通街道电信营业厅</td></tr>
+                    <tr><td>海盐众航勤俭路天翼卖场(众航通讯)</td><td>浙江省嘉兴市海盐县武原镇勤俭路272号全网通手机店</td></tr>
+                    <tr><td>海盐众航时代快乐购超市专营店(众航通讯)</td><td>浙江省嘉兴市海盐县百步镇电信局</td></tr>
+                    <tr><td>海盐石泉众航天翼卖场(众航通讯)</td><td>浙江省嘉兴市海盐县石泉盐石路2号电信营业厅</td></tr>
+                    <tr><td>海盐于城众航天翼卖场(众航通讯)</td><td>浙江省嘉兴市海盐县于城镇镇中路城中花园商住楼电信营业厅</td></tr>
+                    <tr><td>嘉兴众航王江泾双桥专营店(众航通讯)</td><td>浙江省嘉兴市秀洲区王江泾双桥振兴路93号电信营业厅</td></tr>
+                    <tr><td>嘉兴塘汇众航中安市场专营店(众航通讯)</td><td>浙江省嘉兴市秀洲区塘汇周安路中安市场21幢1001号</td></tr>
+                    <tr><td>嘉兴市城西众航秀园路天翼卖场(众航通讯)</td><td>浙江省嘉兴市秀洲区城西秀园路458号</td></tr>
+                    <tr><td>嘉兴众航王江泾田乐专营店(众航通讯)</td><td>浙江省嘉兴市秀洲区王江泾田乐肖家湾电信营业厅</td></tr>
+                    <tr><td>嘉兴众航王江泾南汇指定专营店(众航通讯)</td><td>浙江省嘉兴市秀洲区王江泾南汇镇开源路电信营业厅</td></tr>
+                    <tr><td>嘉兴众航王江泾闻川路天翼卖场(众航通讯)</td><td>浙江省嘉兴市秀洲区王江泾闻川路179号天翼卖场</td></tr>
+                    <tr><td>嘉兴众航新塍天翼卖场(众航通讯)</td><td>浙江省嘉兴市秀洲区新塍镇新洛东路321号电信营业厅</td></tr>
+                    <tr><td>嘉兴宏翼新塍天翼卖场(众航通讯)</td><td>浙江省嘉兴市秀洲区新塍镇新洛东路328号天翼手机连锁</td></tr>
+                    <tr><td>嘉兴众航秀中路天翼卖场(众航通讯)</td><td>浙江省嘉兴市秀洲区秀中路132号电信营业厅</td></tr>
+                    <tr><td>嘉兴众航塘汇专营店(众航通讯)</td><td>浙江省嘉兴市秀洲区养正路78号电信营业厅</td></tr>
+                    <tr><td>桐乡昊天10000号服务台(众航通讯)</td><td>桐乡市庆丰中路1号中央大厦</td></tr>
+
+                </table>
+            </div>
+            <!--宁波-->
+            <div class="nav_tabcont" id="div4">
+                <table>
+                    <tr><th>门店名称</th><th>门店地址</th></tr>
+                    <tr><td>横河电信(浙江浙讯)</td><td>横河杨梅大道114号</td></tr>
+                    <tr><td>上林坊旗舰店全网通手机连锁(浙江省邮)</td><td>浒山街道解放中街291号</td></tr>
+                    <tr><td>北仑明州体验店(宁波舜信)</td><td>北仑明州路120号</td></tr>
+                    <tr><td>江北庄桥卖场(宁波舜信)</td><td>宁波庄桥解放路30号</td></tr>
+                    <tr><td>江北宁沁卖场(宁波舜信)</td><td>江北宁沁路342号</td></tr>
+                    <tr><td>鄞州区塘溪全网通2(宁波舜信)</td><td>鄞州区塘溪塘盛路121号</td></tr>
+                    <tr><td>北仑岷山卖场(宁波舜信)</td><td>北仑岷山路386号</td></tr>
+                    <tr><td>北仑4G卖场(宁波舜信)</td><td>北仑新大路99号</td></tr>
+                    <tr><td>江北万恒庄桥天翼卖场(宁波舜信)</td><td>江北庄桥镇庄桥大街23号</td></tr>
+                    <tr><td>海曙翠柏卖场(缙云县杰)</td><td>海曙西湾路106号</td></tr>
+                    <tr><td>鄞州区瞻岐全网通(宁波乐邦)</td><td>鄞州区瞻岐瞻虹路1号</td></tr>
+                    <tr><td>鄞州区咸祥全网通(宁波乐邦)</td><td>鄞州区咸祥中路105号</td></tr>
+                    <tr><td>江北区洪塘乐邦全网通2(宁波乐邦)</td><td>宁波江北洪塘中路237号</td></tr>
+                    <tr><td>江北区洪塘乐邦全网通(宁波乐邦)</td><td>宁波江北洪塘中路233号</td></tr>
+                    <tr><td>迎凤路天翼卖场(宁波乐邦)</td><td>余姚市临山镇迎凤北路138号</td></tr>
+                    <tr><td>海曙区栎社全网通(宁波乐邦)</td><td>海曙区栎社街道27-29</td></tr>
+                    <tr><td>鄞州区塘溪全网通(宁波乐邦)</td><td>鄞州区塘溪塘盛路115号</td></tr>
+                    <tr><td>江北区洪塘乐邦VIVO专卖店(宁波乐邦)</td><td>宁波江北洪塘中路237号-1</td></tr>
+                    <tr><td>中通-宁波(余姚市贝)</td><td>宁波</td></tr>
+                    <tr><td>周巷大通店(慈溪畅听)</td><td>周巷大通中路12号</td></tr>
+                    <tr><td>天元电信(慈溪畅听)</td><td>天元镇北路49号</td></tr>
+                    <tr><td>宗汉电信(慈溪畅听)</td><td>宗汉大道235号</td></tr>
+                    <tr><td>白沙电信(慈溪畅听)</td><td>白沙路街道彭民路95号</td></tr>
+                    <tr><td>小安电信(慈溪畅听)</td><td>小安杭湾路182号</td></tr>
+                    <tr><td>担山电信(慈溪畅听)</td><td>慈溪市开发大道850号</td></tr>
+                    <tr><td>桥头电信(慈溪畅听)</td><td>桥头镇桥三路128号</td></tr>
+                    <tr><td>余姚朗霞中街全网通手机连锁(慈溪畅听)</td><td>余姚朗霞中街2号</td></tr>
+                    <tr><td>开发大道担山全网通手机连锁(慈溪畅听)</td><td>浒山开发大道1045号</td></tr>
+                    <tr><td>逍林樟新南路全网通手机连锁(慈溪畅听)</td><td>逍林樟新南路875号</td></tr>
+                    <tr><td>新浦新胜路全网通手机连锁(慈溪畅听)</td><td>新浦新胜路79号</td></tr>
+                    <tr><td>新浦浦沿村全网通手机连锁(慈溪畅听)</td><td>新浦浦沿村</td></tr>
+                    <tr><td>范市人民路55号全网通手机连锁(慈溪畅听)</td><td>范市人民路55号</td></tr>
+                    <tr><td>范市人民路52号全网通手机连锁(慈溪畅听)</td><td>范市人民路52号</td></tr>
+                    <tr><td>宗汉新华街全网通手机连锁(慈溪畅听)</td><td>宗汉新华街681-683号</td></tr>
+                    <tr><td>新浦318店(慈溪鼎新)</td><td>新浦新新路318号</td></tr>
+                    <tr><td>古林卖场(慈溪鼎新)</td><td>古林镇中心路230号</td></tr>
+                    <tr><td>龙山OPPO店(慈溪鼎新)</td><td>龙山凤鸣路150号</td></tr>
+                    <tr><td>龙山全网通店(慈溪鼎新)</td><td>龙山凤鸣路203号</td></tr>
+                    <tr><td>鼎新胜山店(慈溪鼎新)</td><td>胜山塘路620号</td></tr>
+                    <tr><td>杭州湾世纪城店(慈溪鼎新)</td><td>世纪城56号</td></tr>
+                    <tr><td>掌起华为店(慈溪鼎新)</td><td>掌起镇中路80号</td></tr>
+                    <tr><td>掌起144店(慈溪鼎新)</td><td>掌起镇横街144号</td></tr>
+                    <tr><td>范市华为店(慈溪鼎新)</td><td>范市人民路37号</td></tr>
+                    <tr><td>大润发店(慈溪鼎新)</td><td>观海卫路654号</td></tr>
+                    <tr><td>塘下店(慈溪鼎新)</td><td>古师路108</td></tr>
+                    <tr><td>师宓店(慈溪鼎新)</td><td>师宓公路24号</td></tr>
+                    <tr><td>观海卫慈客隆店(慈溪鼎新)</td><td>观海卫路385号</td></tr>
+                    <tr><td>观海卫联通店(慈溪鼎新)</td><td>观海卫路402号</td></tr>
+                    <tr><td>观海卫路天华店(慈溪鼎新)</td><td>观海卫路398号</td></tr>
+                    <tr><td>观海卫路370店(慈溪鼎新)</td><td>观海卫路370号</td></tr>
+                    <tr><td>宁海主厅(慈溪鼎新)</td><td>宁海中山中路103号  电信营业厅</td></tr>
+                    <tr><td>北仑睿力柴桥天翼卖场(宁波睿力)</td><td>宁波北仑柴桥新桥北路</td></tr>
+                    <tr><td>鄞州区五乡蟠龙路全网通(宁波睿力)</td><td>鄞州区五乡蟠龙路24号</td></tr>
+                    <tr><td>集士港外包(宁波正德)</td><td>集仕港集仕东路158－160号</td></tr>
+                    <tr><td>正德集士港店(宁波正德)</td><td>宁波市鄞州区集仕港集仕东路108号</td></tr>
+                    <tr><td>正德横溪2店(宁波正德)</td><td>宁波市鄞州区横溪镇菜场边56号</td></tr>
+                    <tr><td>正德横溪店(宁波正德)</td><td>宁波市鄞州区横溪镇121号</td></tr>
+                    <tr><td>正德万达店(宁波正德)</td><td>宁波市鄞州区四明中路999号万达广场1号门天翼4G智能体验厅</td></tr>
+                    <tr><td>正德4店(宁波正德)</td><td>宁波市鄞州区人民中路355-357号</td></tr>
+                    <tr><td>正德2店(宁波正德)</td><td>宁波市鄞州区姜山镇人民中路271号</td></tr>
+                    <tr><td>正德1店(宁波正德)</td><td>宁波市鄞州区姜山镇人民中路350号</td></tr>
+                    <tr><td>江北华为体验店(宁波正德)</td><td>宁波江北万达广场一楼华为店</td></tr>
+                    <tr><td>江东万恒银泰城天翼卖场(宁波正德)</td><td>宁波江东区河清南路</td></tr>
+                    <tr><td>宁海万恒黄坛天翼卖场(宁波正德)</td><td>黄坛东路81号</td></tr>
+                    <tr><td>宁海万恒长街天翼卖场(宁波正德)</td><td>宁海长街环河新街1号</td></tr>
+                    <tr><td>江北万恒洪塘中路天翼卖场2(宁波正德)</td><td>江北洪塘中路233号</td></tr>
+                    <tr><td>余姚万恒阳明西路80号天翼卖场(宁波正德)</td><td>阳明东路80号</td></tr>
+                    <tr><td>宁海万恒中山中路26号天翼卖场(宁波正德)</td><td>宁海中山中路26号</td></tr>
+                    <tr><td>宁海万恒中山中路28号天翼卖场(宁波正德)</td><td>宁海中山中路28号</td></tr>
+                    <tr><td>余姚万恒新建路华为店(宁波正德)</td><td>余姚市新建路64号</td></tr>
+                    <tr><td>余姚万恒新建伯天翼卖场(宁波正德)</td><td>余姚市阳明街道阳明西路56号</td></tr>
+                    <tr><td>余姚万恒兰江南雷路天翼卖场(宁波正德)</td><td>余姚市兰江街道南雷路226号</td></tr>
+                    <tr><td>慈溪万恒周巷兴业北路163号天翼卖场(宁波正德)</td><td>慈溪兴业北路163号</td></tr>
+                    <tr><td>慈溪万恒周巷兴业北路62号天翼卖场(宁波正德)</td><td>慈溪兴业北路62号</td></tr>
+                    <tr><td>慈溪万恒周巷兴业北路331号天翼卖场(宁波正德)</td><td>慈溪兴业北路331号</td></tr>
+                    <tr><td>奉化万恒步行街天翼卖场(宁波正德)</td><td>奉化惠政西路55号</td></tr>
+                    <tr><td>奉化万恒南山路天翼卖场(宁波正德)</td><td>奉化市南山路53号</td></tr>
+                    <tr><td>奉化万恒畸山天翼卖场(宁波正德)</td><td>奉化市畸山夏宇路112号</td></tr>
+                    <tr><td>鄞州万恒姜山人民路天翼卖场(宁波正德)</td><td>姜山人民中路321号</td></tr>
+                    <tr><td>鄞州万恒横溪人民路旗舰店(宁波正德)</td><td>横溪人民北路41号</td></tr>
+                    <tr><td>鄞州万恒横溪人民路华为店(宁波正德)</td><td>横溪人民北路7号</td></tr>
+                    <tr><td>鄞州万恒横溪人民路天翼卖场2号(宁波正德)</td><td>横溪人民北路25号</td></tr>
+                    <tr><td>鄞州万恒下应潘火桥小区天翼卖场(宁波正德)</td><td>下应街道宁横路1135号潘火桥小区对面</td></tr>
+                    <tr><td>鄞州万恒五乡超市天一卖场(宁波正德)</td><td>五乡联合万家超市内</td></tr>
+                    <tr><td>鄞州万恒姜山新江厦天翼卖场(宁波正德)</td><td>姜山人民路26号</td></tr>
+                    <tr><td>海曙万恒乐购OP专营店(宁波正德)</td><td>海曙区日新街50号</td></tr>
+                    <tr><td>鄞州万恒五乡蟠龙路1号天翼卖场(宁波正德)</td><td>鄞州区五乡蟠龙路1号</td></tr>
+                    <tr><td>海曙万恒石矸城南公馆天翼卖场(宁波正德)</td><td>石矸镇城南公馆130-2号</td></tr>
+                    <tr><td>海曙万恒石契北路2号天翼卖场(宁波正德)</td><td>石碶北路2号</td></tr>
+                    <tr><td>海曙万恒天一广场天翼卖场(宁波正德)</td><td>宁波市天一广场IVB-01</td></tr>
+                    <tr><td>海曙万恒石矸阳光店天翼卖场(宁波正德)</td><td>石矸雅戈尔大道阳光宾馆隔壁房</td></tr>
+                    <tr><td>海曙万恒石矸雅戈尔大道天翼卖场(宁波正德)</td><td>石矸镇城南公馆130-1号</td></tr>
+                    <tr><td>北仑小港邮政天翼卖场(宁波正德)</td><td>宁波北仑东海路35号</td></tr>
+                    <tr><td>翼起来江北区孔浦天翼卖场(新翼起来)</td><td>宁波市江北区孔浦路46号</td></tr>
+                    <tr><td>翼起来高新区杨木契路天翼卖场(新翼起来)</td><td>宁波市高新区杨木契路255号</td></tr>
+                    <tr><td>翼起来高新区港隆天翼卖场(新翼起来)</td><td>宁波市高新区港隆时代广场5号楼101</td></tr>
+                    <tr><td>翼起来北仑区新大路855号天翼卖场(新翼起来)</td><td>宁波市北仑区新大路855号</td></tr>
+                    <tr><td>翼起来海曙区灵桥天翼卖场(新翼起来)</td><td>宁波市海曙区灵桥市场A12</td></tr>
+                    <tr><td>翼起来江北区双东坊天翼卖场(新翼起来)</td><td>宁波市江北区范江岸路306号</td></tr>
+                    <tr><td>翼起来江北区大庆南路天翼卖场(新翼起来)</td><td>宁波市江北区大庆南路381号</td></tr>
+                    <tr><td>翼起来海曙区咏归专营店(新翼起来)</td><td>宁波市海曙区咏归路73号</td></tr>
+                    <tr><td>翼起来海曙区南都三江天翼卖场(新翼起来)</td><td>宁波市海曙区恒春街222号</td></tr>
+                    <tr><td>翼起来海曙区联丰路天翼卖场(新翼起来)</td><td>宁波市海曙区联丰路129号</td></tr>
+                    <tr><td>翼起来海曙区望童路天翼卖场(新翼起来)</td><td>宁波市海曙区望童路71号</td></tr>
+                    <tr><td>翼起来江东区东柳三江天翼卖场(新翼起来)</td><td>宁波市江东区桑田781号</td></tr>
+                    <tr><td>翼起来江东区福明三江天翼卖场(新翼起来)</td><td>宁波市江东区沧海路640号</td></tr>
+                    <tr><td>翼起来海曙区解放南路专营店(新翼起来)</td><td>宁波市海曙区解放南路171号一楼</td></tr>
+                    <tr><td>翼起来江东区甬港南路天翼卖场(新翼起来)</td><td>宁波市江东区甬港南路88号</td></tr>
+                    <tr><td>江北区庄桥全网通卖场(新翼起来)</td><td>江北区庄桥大街13-5号</td></tr>
+                    <tr><td>江北区庄桥红太阳全网通卖场(允盛通讯)</td><td>江北区庄桥大街9号</td></tr>
+                    <tr><td>江北区慈城全网通卖场(允盛通讯)</td><td>江北区慈城解放路93号</td></tr>
+                    <tr><td>江东区允盛彩虹南路全网通卖场(允盛通讯)</td><td>江东区彩虹南路21号</td></tr>
+                    <tr><td>江北区洪塘银亿全网通卖场(允盛通讯)</td><td>江北区洪塘中路26号全网通</td></tr>
+                    <tr><td>江东区允盛家乐福全网通卖场(允盛通讯)</td><td>江东区中兴路246号</td></tr>
+                    <tr><td>江东区允盛家乐福苹果专卖店(允盛通讯)</td><td>江东区中兴路248号</td></tr>
+                    <tr><td>江东区允盛百丈东路全网通卖场(允盛通讯)</td><td>江东区百丈东路73号</td></tr>
+                    <tr><td>东吴电信营业厅(允盛通讯)</td><td>宁波鄞州区东吴中路</td></tr>
+                    <tr><td>全网通手机连锁礼嘉桥店(浙江联发)</td><td>古林镇礼嘉桥625公交车站旁361度旁手机店</td></tr>
+                    <tr><td>全网通手机连锁云龙店(浙江联发)</td><td>云龙镇云莫路云达路交叉口109公交云龙农贸市场站</td></tr>
+                    <tr><td>钟公庙电信营业厅(浙江联发)</td><td>鄞州区钟公庙路180弄51号</td></tr>
+                    <tr><td>古林电信营业厅(浙江联发)</td><td>宁波鄞州区古林镇环城路2号</td></tr>
+                    <tr><td>全网通手机连锁邱隘旗舰店(浙江联发)</td><td>鄞州区邱隘盛莫路380号新江厦超市旁</td></tr>
+                    <tr><td>邱隘电信营业厅(浙江联发)</td><td>鄞州区邱隘青年路163号电信营业厅</td></tr>
+                    <tr><td>全网通手机连锁古林旗舰店(浙江联发)</td><td>宁波鄞州区古林镇中心路127号</td></tr>
+                    <tr><td>杭州湾开发区店(浙江联发)</td><td>杭州湾开发区商贸街8号</td></tr>
+                </table>
+            </div>
+            <!--温州-->
+            <div class="nav_tabcont" id="div5">
+                <table>
+                    <tr><th width="50%">门店名称</th><th>门店地址</th></tr>
+                    <tr><td>3G-瑞安塘下华为专卖店(温州国鸿)</td><td>瑞安市塘下镇塘川北街67号</td></tr>
+                    <tr><td>驻厅-南站(温州国鸿)</td><td>南站电信大楼二楼营业厅</td></tr>
+                    <tr><td>驻厅-三溪一店(温州国鸿)</td><td>瓯海区瞿溪镇信达街251号</td></tr>
+                    <tr><td>驻厅-永兴(温州国鸿)</td><td>龙湾区永强大道3765号</td></tr>
+                    <tr><td>网格-双屿店(温州国鸿)</td><td>双屿鞋都二期30号地块C1幢8号苹果手机店</td></tr>
+                    <tr><td>3G-虹桥文锦园店(温州国鸿)</td><td>虹桥育虹路文锦苑B102-B103号</td></tr>
+                    <tr><td>3G-新桥一店(温州国鸿)</td><td>金蟾大道308号</td></tr>
+                    <tr><td>驻厅-虹桥(温州国鸿)</td><td>乐清市虹桥镇幸福东路109号王府电信</td></tr>
+                    <tr><td>驻厅-新城(温州国鸿)</td><td>温州市新城大道140号（数码城大厦一楼）</td></tr>
+                    <tr><td>3G-滨海城市广场(温州国鸿)</td><td>滨海六路（旭日小区门口）</td></tr>
+                    <tr><td>3G-新桥国鼎店(温州国鸿)</td><td>瓯海区国鼎路57号</td></tr>
+                    <tr><td>3G-东信二店(温州国鸿)</td><td>鹿城区人民东路197号东信大楼一层</td></tr>
+                    <tr><td>网格-邻里店(温州国鸿)</td><td>温州市经济开发区邻里广场1-7号专柜</td></tr>
+                    <tr><td>驻厅-新桥(温州国鸿)</td><td>瓯海区金蟾大道1号</td></tr>
+                    <tr><td>3G-瑞安塘川店(温州国鸿)</td><td>塘下镇赵宅村塘川北街66号</td></tr>
+                    <tr><td>3G-娄桥综合店(温州国鸿)</td><td>瓯海区豪新路115号</td></tr>
+                    <tr><td>3G-宁康旗舰店(温州国鸿)</td><td>乐清市乐成街道宁康西路3号</td></tr>
+                    <tr><td>3G-永中华为店(温州国鸿)</td><td>龙湾区永中永强东街124号</td></tr>
+                    <tr><td>网格-梧田(温州国鸿)</td><td>瓯海区梧田新街口1号</td></tr>
+                    <tr><td>3G-娄桥VIVO店(温州国鸿)</td><td>瓯海区豪新路111号</td></tr>
+                    <tr><td>3G-宁康二店(温州国鸿)</td><td>乐清市乐成街道宁康西路30号</td></tr>
+                    <tr><td>网格-虹桥五店(温州国鸿)</td><td>乐清市虹桥镇迎春巷9号</td></tr>
+                    <tr><td>驻厅-洞头(温州国鸿)</td><td>洞头县新城大道68号</td></tr>
+                    <tr><td>驻厅-南浦(温州国鸿)</td><td>鹿城区南浦路260号</td></tr>
+                    <tr><td>驻厅-宁康一店(温州国鸿)</td><td>乐清市乐成街道宁康西路30号</td></tr>
+                    <tr><td>长虹奥特莱斯店(温州国鸿)</td><td>浙江省温州市乐清柳市环城东路31-35（长虹公园对面）</td></tr>
+                    <tr><td>3G-谢池店(温州国鸿)</td><td>人民路谢池商厦A栋106-107（正一通讯）门牌号是76号</td></tr>
+                    <tr><td>3G-双屿正岙三期VIVO店(温州国鸿)</td><td>鹿城区双屿鞋都三期正岙锦苑7幢104-2</td></tr>
+                    <tr><td>3G-永中二店(温州国鸿)</td><td>龙湾区永中东路113号</td></tr>
+                    <tr><td>3G-虹港店(温州国鸿)</td><td>乐清市虹桥镇虹港北路226号</td></tr>
+                    <tr><td>网格-蒲州店(温州国鸿)</td><td>龙湾区蒲江北路86号</td></tr>
+                    <tr><td>驻厅-永中一店(温州国鸿)</td><td>龙湾区永中罗东街169号</td></tr>
+                    <tr><td>驻厅-开发区(台州星诺)</td><td>龙湾经济开发区雁荡东路130号</td></tr>
+                    <tr><td>新市街1号(乐清合信)</td><td>浙江省温州市乐清柳市新市街1号</td></tr>
+                    <tr><td>3G-滨海OPPO店(乐清合信)</td><td>滨海园区明珠路788号</td></tr>
+                </table>
+            </div>
+            <!--衢州-->
+            <div class="nav_tabcont" id="div6">
+                <table>
+                    <tr><th width="50%">门店名称</th><th>门店地址</th></tr>
+                    <tr><td>江山玛讯解放路天翼手机卖场(常山同弓)</td><td>江山市解放路83-3号</td></tr>
+                    <tr><td>七品手机店(常山县锋)</td><td>文峰西路87-91号</td></tr>
+                    <tr><td>七品精品手机店(常山县锋)</td><td>文峰西路57-1号</td></tr>
+                    <tr><td>浙江和米龙游东路店(常山县锋)</td><td>龙游县太平东路128号</td></tr>
+                    <tr><td>西区今日天翼卖场(慈溪畅听)</td><td>衢州市 西区白云中大道30号</td></tr>
+                    <tr><td>开化县华埠天翼卖场(杭州玛讯)</td><td>开化县华埠镇彩虹路14、16号</td></tr>
+                    <tr><td>文峰西路营业厅(开化县华)</td><td>文峰西路251号</td></tr>
+                    <tr><td>江山集信大润发天翼手机卖场(衢州集信)</td><td>江山大润发超市内</td></tr>
+                    <tr><td>衢州集信大润发电信专区(衢州集信)</td><td>衢州市三衢路大润发超市内</td></tr>
+                    <tr><td>柯城上街集信全网通卖场(衢州集信)</td><td>衢州市柯城区上街58号</td></tr>
+                    <tr><td>柯城南街15号集信天翼卖场(衢州集信)</td><td>衢州市柯城区南街15号</td></tr>
+                    <tr><td>柯城上街集信天翼卖场(衢州集信)</td><td>衢州市柯城区上街36号</td></tr>
+                    <tr><td>常山同弓科达专营店(衢州集信)</td><td>常山县同弓乡关庄桥集镇</td></tr>
+                    <tr><td>衢江振兴东路今日天翼卖场(衢州今日)</td><td>衢州市衢江区振兴中路182号</td></tr>
+                    <tr><td>衢州南街电信营业厅(衢州今日)</td><td>衢州市柯城区南街21号</td></tr>
+                    <tr><td>衢州沈家今日天翼卖场(衢州今日)</td><td>衢州市衢江区振兴东路38号</td></tr>
+                    <tr><td>西安路营业厅(衢州今日)</td><td>衢州市柯城区衢江北路一号</td></tr>
+                    <tr><td>上街74号(衢州今日)</td><td>衢州市柯城区上街74号</td></tr>
+                    <tr><td>长竿街18号(衢州今日)</td><td>衢州市柯城区长竿街18号</td></tr>
+                    <tr><td>上街26号(衢州今日)</td><td>衢州市柯城区上街26号</td></tr>
+                    <tr><td>斗潭路93号(衢州今日)</td><td>衢州市柯城区斗潭路93号</td></tr>
+                    <tr><td>柯城巨化电信营业厅(衢州今日)</td><td>衢州市巨化生活区1路站台</td></tr>
+
+                </table>
+            </div>
+            <!--金华-->
+            <div class="nav_tabcont" id="div7">
+                <table>
+                    <tr><th width="50%">门店名称</th><th>门店地址</th></tr>
+                    <tr><td>义乌绣湖进厅(浙江浙讯)</td><td>金华义乌城中中路136号（二楼）</td></tr>
+                    <tr><td>义乌南门街华为店(浙江浙讯)</td><td>金华市义乌稠州中路店360-366号</td></tr>
+                    <tr><td>义乌江滨西路一店(浙江浙讯)</td><td>义乌江滨西路411号</td></tr>
+                    <tr><td>义乌旗舰店(浙江浙讯)</td><td>金华市义乌稠州中路360-366号</td></tr>
+                    <tr><td>义乌南门街oppo店(浙江浙讯)</td><td>南门街</td></tr>
+                    <tr><td>金华电信公司后街营业厅(浙江浙讯)</td><td>文化路1号</td></tr>
+                    <tr><td>义乌廿三里店(浙江浙讯)</td><td>金华义乌信联街22号</td></tr>
+                    <tr><td>义乌廿三里华为店(浙江浙讯)</td><td>金华市义乌廿三里开元南街110号</td></tr>
+                    <tr><td>新昌旗舰店(浙江浙讯)</td><td>新昌县南明街道鼓山东路204号</td></tr>
+                    <tr><td>义乌江滨西路二店(浙江浙讯)</td><td>金华市义乌江滨西路431号</td></tr>
+                    <tr><td>义乌稠州中路店(浙江浙讯)</td><td>金华义乌稠州中路382号</td></tr>
+                    <tr><td>新昌大佛路进厅(浙江浙讯)</td><td>新昌县南明街道大佛路59号</td></tr>
+                    <tr><td>新昌华为店(杭州日天)</td><td>新昌县南明街道鼓山东路204号</td></tr>
+                    <tr><td>义乌绣湖卖场(金华电信)</td><td>金华义乌城中中路136号</td></tr>
+                </table>
+            </div>
+            <!--丽水-->
+            <div class="nav_tabcont" id="div8">
+                <table>
+                    <tr><th>门店名称</th><th>门店地址</th></tr>
+                    <tr><td>网格-丽水卖场(温州国鸿)</td><td>丽水市莲都区继光街83号继光街和中山街十字路口</td></tr>
+                    <tr><td>丽水华为专卖店(温州国鸿)</td><td>丽水市莲都区继光街83号继光街和中山街十字路口</td></tr>
+                    <tr><td>缙云县壶镇蓝天通讯经营部(温州国鸿)</td><td>缙云县壶镇镇溪东北路12号</td></tr>
+                    <tr><td>网格-青田营业厅(浙江浙讯)</td><td>青田鹤城中路18号（青田中心外包厅）</td></tr>
+                    <tr><td>丽水市嘉艺通讯网络器材经营部(缙云县壶)</td><td>莲都区凉塘村33号</td></tr>
+                    <tr><td>缙云县杰盛数码通讯经营部(丽水莲都)</td><td>浙江省丽水市缙云县仙都路139号</td></tr>
+                </table>
+            </div>
+            <!--绍兴-->
+            <div class="nav_tabcont" id="div9">
+                <table>
+                    <tr><th width="50%">门店名称</th><th>门店地址</th></tr>
+                    <tr><td>嵊州北直街店(浙江浙讯)</td><td>嵊州市北直街电信营业厅20号</td></tr>
+                    <tr><td>中北-金时代店(浙江浙讯)</td><td>越城区金时代广场内</td></tr>
+                    <tr><td>中北-马上VIVO专卖(浙江浙讯)</td><td>越城区马山镇海南路农业银行对面</td></tr>
+                    <tr><td>上虞万达华为店(杭州青缇)</td><td>上虞称山北路399号万达广场1031店铺</td></tr>
+                    <tr><td>绍兴漓渚电信营业厅(杭州青缇)</td><td>浙江省绍兴市柯桥区漓渚镇花市路电信营业厅19号</td></tr>
+                    <tr><td>绍兴苹果旗舰店-袍江店(杭州青缇)</td><td>浙江省绍兴市越城区袍江汤公路133号</td></tr>
+                    <tr><td>嵊州三江进厅(杭州青缇)</td><td>嵊州三江西街372号电信营业厅</td></tr>
+                    <tr><td>三都荣华天翼卖场(绍兴市中)</td><td>诸暨市凤翔路27号</td></tr>
+                    <tr><td>绍兴中国电信胜利东路营业厅(绍兴市中)</td><td>浙江省绍兴市胜利东路68号</td></tr>
+                    <tr><td>嵊州华为店(绍兴市中)</td><td>嵊州市鹿山广场C区101-102</td></tr>
+                    <tr><td>绍兴柯桥雨辰通信器材有限公司(绍兴市中)</td><td>钱清镇西后街永通花园</td></tr>
+                    <tr><td>绍兴市中北电子技术有限公司(浙江和米)</td><td>越城区辕门新村中区7幢对面</td></tr>
+                    <tr><td>中北-迪扬路店(诸暨市陶)</td><td>柯桥区笛扬路728号</td></tr>
+                    <tr><td>绍兴苹果旗舰店-福全店(绍兴柯桥)</td><td>浙江省绍兴市柯桥区福全镇商城路华为全网通手机店</td></tr>
+                </table>
+            </div>
+            <!--台州-->
+            <div class="nav_tabcont" id="div10">
+                <table>
+                    <tr><th width="50%">门店名称</th><th>门店地址</th></tr>
+                    <tr><td>椒江洪家全网通店(台州星诺)</td><td>台州市椒江区洪家街道鸿州大道467号A</td></tr>
+                    <tr><td>杜桥华为店(台州星诺)</td><td>杜桥镇府前街281号</td></tr>
+                    <tr><td>临海远大店(台州星诺)</td><td>临海巾山中路91号</td></tr>
+                    <tr><td>杜桥4G店(台州星诺)</td><td>杜桥杜川路193-1号</td></tr>
+                    <tr><td>杜桥中域店(台州星诺)</td><td>杜桥镇府前街368号</td></tr>
+                    <tr><td>前所电信营业厅(台州星诺)</td><td>前所前中路</td></tr>
+                    <tr><td>临海景耀店(台州星诺)</td><td>临海巾山中路62-4号</td></tr>
+                    <tr><td>临海旗舰店(台州星诺)</td><td>临海市巾山中路85号A</td></tr>
+                    <tr><td>杜桥VIVO店(台州星诺)</td><td>杜桥镇府前街388号</td></tr>
+                    <tr><td>椒江华创天翼专营店(台州星诺)</td><td>椒江葭中路245号</td></tr>
+                    <tr><td>椒江中山西路店(台州星诺)</td><td>台州市椒江中山西路130号</td></tr>
+                    <tr><td>临海崇和店(台州星诺)</td><td>临海巾山中路91号</td></tr>
+                    <tr><td>临海全网通(浙江浙讯)</td><td>临海巾山中路85号C</td></tr>
+                </table>
+            </div>
+            <!--舟山-->
+            <div class="nav_tabcont" id="div11">
+                <table>
+                    <tr><th width="50%">门店名称</th><th>门店地址</th></tr>
+                    <tr><td>普陀马峙天翼专营店(温州国鸿)</td><td>普陀区沈家门街道小干欧华店面房东25-26号</td></tr>
+                    <tr><td>普陀电信营业厅(浙江蓝拓)</td><td>普陀区沈家门东海东路92号</td></tr>
+                    <tr><td>定海人民北路营业厅(浙江蓝拓)</td><td>定海人民北路2号</td></tr>
+                    <tr><td>定海人民南路营业厅(浙江蓝拓)</td><td>人民南路10号</td></tr>
+                    <tr><td>舟山市定海区金来运手机零售店(浙江蓝拓)</td><td>舟山市定海区楼门街116号</td></tr>
+                    <tr><td>岱山电信营业厅(舟山市普)</td><td>岱山高亭镇长河路88号</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="activity_font">
+            <p>赶紧来关注M-超人公众号吧！</p>
+        </div>
+
+        <div class="footer bg">
+            <div class="footer_img">
+                <img src="img/public_icon.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <!--遮盖层-->
+    <div id="mask_boxs" style="display:none">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+    <!--遮盖层end-->
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<script src="js/address.js"></script>
+<script src="js/new.js"></script>
+<script>
+    //关闭弹出框
+$('.closepopup').click(function(){
+  $(".popup_formbg").hide();
+});
+$(".address_btn input").click(function() {
+    var btn_name = $(this).attr("name"); // $(this)表示获取当前被点击元素的name值
+    $(".popup_formbg").show();
+    $('#'+btn_name).show().siblings('.nav_tabcont').hide();
+});
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

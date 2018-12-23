@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/> 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="../../resource/wap/coupon20170319/css/style.css" /> 
+<script src="../../plugins/jquery/jquery-1.11.3.min.js" type="text/javascript"></script>
+<title>优惠券</title>
+</head>
+<body class="coupon_bg">
+	  <div class="coupon_content">
+	  	   <input type="hidden" id="batchId" value="C013" />
+	  	   <div class="title_icon icon_bg0"></div><!--类名为：icon_bg1就是iphone换电池-->
+	  	   <!--<div class="title_icon icon_bg1"></div>类名为：icon_bg0就是手机换屏-->
+	  	   <div class="information">
+	  	   			<div class="label"><input class="txt tel" id="inputtel" type="text" value="" maxlength="11" placeholder="请输入手机号" /></div>
+	  	   			<div class="label">
+	  	   					 <input class="txt verification" id="checkCode" maxlength="6" type="text" value="" placeholder="请输入验证码" />
+	  	   					 <input class="get_validate" type="button" value="获取验证码" data-verify="发送短信" onclick="sendSms(this)" />
+	  	   			</div>
+	  	   </div>
+	  	   <div class="coupon_but"><input type="button" class="but blue immediately" value="立即领取" onclick="receiveCoupon(this);" /></div>
+	  	   <div class="activity_rules">
+	  	   		<div class="title">活动规则</div>
+	  	   		<div class="rules_cont">
+	  	   			 <p>1、每类优惠码每个手机号仅能领取有效优惠码一张</p>
+	  	   			 <p>2、优惠码可与工程师返红包活动叠加</p>
+	  	   			 <p>3、优惠码仅限在M超人快修公众号、M超人快修专属链接下单使用有效</p>
+	  	   			 <p>4、如有其他疑问请电话联系M超人客服0571-88803875</p>
+	  	   		</div>
+	  	   </div>
+	  </div>
+<!--错误提示-->
+<div class="remind_delivery_bg">
+     <div class="remind_delivery_cont"> 
+          <p>请输入正确的手机号码</p>
+     </div>
+</div>
+<!--错误提示end-->
+
+	
+<script>
+
+//1.点击发短信
+var isMobile=/^(?:13\d|14\d|15\d|17\d|18\d)\d{5}(\d{3}|\*{3})$/;
+function sendSms(obj){
+    var dianhua = $("#inputtel").val();
+    if(!isMobile.test(dianhua)){
+        alertTip("请输入正确的手机号码！", function(){ 
+        	$("#inputtel").focus();
+        });
+        return false;
+    }
+    //验证完成，调用短信发送
+    var url = "/wap/sendSmsCode.do";
+    $.post(url, {mobile: dianhua}, function(result){
+    	if(!result.success){
+    		alertTip(result.msg);
+    		return false;
+    	}else{
+    		alertTip("验证码发送成功，请注意查收！");
+    		//$("#checkCode").val(result.data);
+    	}
+    });
+
+    Countdown(obj,60);
+}
+
+function Countdown(val,caltime){
+    if (caltime == 0) {
+        $(val).removeClass('codebutgr');
+        val.removeAttribute("disabled");
+        val.value="发送验证码";
+        $(val).siblings('b').show();
+        //$("#inputtel").removeAttr("disabled").css('z-index','0');
+        return false;
+    }
+    $(val).siblings('b').hide();
+    val.setAttribute("disabled", "disabled");
+    val.value=caltime +"秒重新获取";
+    caltime--;
+    $(val).addClass('codebutgr');
+    //$("#inputtel").attr("disabled", "disabled").css('z-index','2000');
+    setTimeout(function() {Countdown(val,caltime)},1000);
+}
+
+var isLoading = false;
+//获取优惠码信息
+function receiveCoupon(obj){
+	if(isLoading){
+		return;
+	}
+	isLoading = true;
+	var mobile = $("#inputtel").val();
+    var checkCode = $("#checkCode").val();
+    var batchId = $("#batchId").val();
+	if(mobile == ""){
+		alertTip("请输入手机号码！", function(){ 
+        	$("#inputtel").focus();
+        });
+		isLoading = false;
+        return false;
+	}
+	if(checkCode == ""){
+		alertTip("请输入验证码！", function(){ 
+        	$("#checkCode").focus();
+        });
+		isLoading = false;
+        return false;
+	}
+	
+	fn_loading();
+	/**
+     * 获取优惠码信息
+     */
+    var url_ = "/wap/coupon/receive.do";
+    $.ajax({
+        url: url_,
+        type: "POST",
+        data: {mobile:mobile,checkCode:checkCode,batchId:batchId},
+        dataType: "json",
+        success: function (result) {
+            if (result.success) {
+            	window.location.href = "/wap/coupon/receiveInfo.do";
+            } else {
+            	alertTip(result.msg);
+            	loading_hide();
+            	isLoading = false;
+            }
+        },
+        error : function() {
+        	alertTip("系统异常，请稍后再试");
+        	loading_hide();
+        	isLoading = false;
+        }
+    });
+}
+
+</script>
+<!--错误提示-->
+<div class="remind_delivery_bg" style="display: none;">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+<!--错误提示end-->
+<!--确认提示-->
+<div class="popup_bg" style="display: none;"></div>
+<div class="popup_content" style="display: none;">
+     <div class="popup_cont">
+          <div class="popup_title"></div>
+          <div class="popup_font"></div>
+          <div class="popup_but">
+               <a class="but cancel" href="javascript:void(0);">取 消</a>
+               <a class="but confirm" href="javascript:void(0);">确 认</a>
+          </div>
+          <a class="popup_exit" href="javascript:void(0);"></a>
+     </div>
+</div>
+<!--确认提示end-->
+<!--遮盖层-->
+<div id="mask_boxs" style="display: none;">
+    <div id="masks"></div>
+    <div id="mcon">
+        <img src="../../resource/login/images/loadings.gif" style="width: 80px;height:80px;"/>
+    </div>
+</div>
+<!--遮盖层end-->
+
+<!--站长统计-->
+<div style="display: none;">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+
+<script type="text/javascript">
+
+    /**
+     * 确认提示
+     */
+    function confirmTip(title, msg, callback){
+    	if(!msg){
+            return;
+        }
+    	if(!title){
+    		title = "系统提示";
+    	}
+        $(".popup_content .popup_title").text(title);
+        $(".popup_content .popup_font").text(msg);
+        $(".popup_but .cancel").show();
+        $(".popup_bg, .popup_content").show();
+    	//点击确认
+        $(".popup_but .confirm").unbind("click").click(function(){
+            $(".popup_bg, .popup_content").hide();
+            if (callback) {
+                callback();
+            }
+        });
+    }
+    
+    /**
+     * 带确认按钮提示框
+     */
+    function realAlert(title, msg, callback){
+        if(!msg){
+            return;
+        }
+        if(!title){
+            title = "系统提示";
+        }
+        $(".popup_content .popup_title").text(title);
+        $(".popup_content .popup_font").text(msg);
+        //隐藏取消按钮
+        $(".popup_but .cancel").hide();
+        $(".popup_bg, .popup_content").show();
+        //点击确认
+        $(".popup_but .confirm").unbind("click").click(function(){
+            $(".popup_bg, .popup_content").hide();
+            if (callback) {
+                callback();
+            }
+        });
+    }
+    
+    //关闭弹出框
+    $(".popup_but .cancel,.popup_content .popup_exit").click(function(){
+        $(".popup_bg, .popup_content").hide();   
+    });
+    
+    /**
+     * 提示方法
+     */
+    function alertTip(msg, callback){
+    	if(!msg){
+    		return;
+    	}
+        $(".remind_delivery_bg").show();
+        $(".remind_delivery_cont p").text(msg);
+        window.setTimeout(function () {
+            $(".remind_delivery_bg").fadeOut();
+            if (callback) {
+                callback();
+            }
+        }, 1000);
+    }
+    
+    /**
+     * 遮盖方法
+     */
+    function fn_loading(){
+    	$("#mask_boxs").show();
+    }
+    
+    /**
+     * 隐藏遮盖层
+     */
+    function loading_hide(){
+    	$("#mask_boxs").hide();
+    }
+    
+    /**
+     * 登录页
+     */
+    function toLogin(){
+    	window.location.href = "/wechat/order/wechatLogin.do";
+    }
+    
+    /**
+     * 返回上一页
+     */
+    function goBack(){
+        window.history.go(-1);
+    }
+</script>
+</body>
+</html>

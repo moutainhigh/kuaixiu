@@ -1,0 +1,161 @@
+/* CSS Document */
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,a,abbr,address,big,em,img,q,small,strike,strong,sub,sup,tt,var,i,dl,dt,dd,ol,ul,li,form,fieldset,label,table,caption,tbody,thead,tfoot,tr,th,td,article,aside,canvas,details,figure,figcaption,header,footer,menu,nav,output,section,time,mark,audio,video,input,select,button{margin:0;padding:0;border:0;word-break:break-all;word-wrap:break-word;user-select:none;box-sizing: border-box;}
+/*去除默认样式*/
+ul,ol,li{list-style:none;}
+/*表格边框合并，边框距零*/
+table{border-collapse:collapse;border-spacing:0;}
+/*继承父元素的字体系列样式*/
+input,select,textarea,button{font-family:inherit;}
+/*清除浮动*/
+.fl{float:left;}
+.fr{float:right;}
+.clear{clear:both;height:0;width:0;overflow:hidden;}
+.clearfix{zoom:1;}
+.clearfix:after{content:"";display:table;clear:both;overflow:hidden;}
+/*a链接*/
+a{text-decoration:none;color:#000;}
+a:hover{text-decoration:none;}
+/*去除点击高亮效果*/
+a,button,input,select,img,label{-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-tap-highlight-color:transparent;outline:medium none;}
+input::-moz-focus-inner{border:none;padding:0;}
+select, input{vertical-align:middle;}
+/*去掉苹果的默认UI来渲染按钮*/
+input[type="submit"],input[type="reset"],input[type="button"],button,select{-webkit-appearance:none;}
+
+/*placeholder文本颜色*/
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
+	color: #a1a1a1; .font-dpr(14px);
+}
+input:-moz-placeholder,textarea:-moz-placeholder{
+	color: #a1a1a1; .font-dpr(14px);
+}
+/*去除长按a链接弹框*/
+html,body{-webkit-touch-callout:none;color:#333;}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar{ 
+	width: 2px; height: 2px; background-color: transparent;}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track{
+	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.0); 
+	border-radius: 2px;
+	background-color: transparent;
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{
+	border-radius:2px; 
+	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.1); 
+	background-color: transparent;
+}
+
+@font-face {
+  font-family: 'MyFont';
+  src: url('../fonts/fontawesome-webfont.eot');
+  src:
+  	url('../fonts/fontawesome-webfont.eot') format('embedded-opentype'),
+    url('../fonts/fontawesome-webfont.woff') format('woff'),
+    url('../fonts/fontawesome-webfont.ttf') format('truetype'),
+    url('../fonts/FontAwesome.otf') format('otf');
+  font-weight: normal;
+  font-style: normal;
+  // truetype,opentype,truetype-aat,embedded-opentype,avg
+}
+
+.font-dpr(@font-size){
+  font-size: @font-size;
+
+  [data-dpr="2"] & {
+    font-size: @font-size * 2;
+  }
+
+  [data-dpr="3"] & {
+      font-size: @font-size * 3;
+  }
+}
+@w10:0.15625rem;
+@coleee:#eeeeee;
+@colRed:#ff4444;
+@colBlue:#2395ff;
+.colRed{color:#ff4444;}
+
+/*提示框*/
+.remind_delivery_bg{
+	display: none; width:100%; height:1.09375rem; position:fixed; top:50%; left:0;z-index:300;
+	.remind_delivery_cont{ 
+		width:6.484375rem;
+		margin:0 auto; 
+		background:rgba(0,0,0,0.6); 
+		border-radius:@w10; 
+		padding:@w10*1.5 @w10;
+		p{ 
+			.font-dpr(12px);
+			line-height: 1.5;
+			text-align:center; 
+			color:#FFF;
+		}
+	}
+}
+//确认提示
+.popup_bg{
+	display: none; 
+	width: 100%; 
+	height: 100%; 
+	background: rgba(0,0,0,0.7); 
+	position: fixed; 
+	top: 0; 
+	left: 0; 
+	z-index: 200;
+	.popup_content{
+		.popup_cont{
+			width:9.0625rem; 
+			height: auto; 
+			margin:0 auto; 
+			background: #FFFFFF; 
+			border-radius: @w10; 
+			padding: @w10*2 @w10*4 @w10*4;
+			position: relative;
+			top: -50%;
+			transform: translateY(50%);
+			.popup_title{
+				width: 7.8125rem; 
+				height: 1.015625rem;
+				.font-dpr(14px);
+				line-height: 1.015625rem; 
+				text-align: center; 
+				color: #464646;
+			}
+			.popup_font{
+				.font-dpr(12px);
+				line-height: 32px;
+				color: #606060;
+			}
+			.popup_but{
+				padding-top: 0.78125rem;  overflow: hidden;
+				.but{
+					display: inline-block;
+					width: 3.59375rem; 
+					height: 1.03125rem; 
+					border-radius: @w10; 
+					border: solid 1px #439AFF;
+					.font-dpr(13px);
+					line-height: 1.03125rem;
+					text-align: center;
+					&.cancel{ float: left; color:#439AFF;}
+					&.confirm{
+						float: right; background: #439AFF; color: #FFFFFF;
+					}
+				}
+			}
+		}
+	}
+}
+
+//等待
+#mask_boxs{
+	width:100%;height:100%;position: absolute;top:0;left: 0;z-index:50;background-color: #FFFFFF;
+	#mcon{
+    	img{
+      		width: 1.25rem;height:1.25rem; margin-left:-0.390625rem;  margin-top:-0.390625rem;position:fixed; top:50%;left:50%;z-index:400;
+    	}
+	}
+}

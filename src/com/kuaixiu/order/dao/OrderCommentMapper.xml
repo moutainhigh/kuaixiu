@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.order.dao.OrderCommentMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.OrderComment" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="content" property="content"/>
+        <result column="image" property="image"/>
+        <result column="dispatch_rate" property="dispatchRate"/>
+        <result column="service_rate" property="serviceRate"/>
+        <result column="technical_level" property="technicalLevel"/>
+        <result column="overall_rate" property="overallRate"/>
+        <result column="is_del" property="isDel"/>
+        <result column="in_time" property="inTime"/>
+    </resultMap>
+    
+    <!-- kx_order_comment table all fields -->
+    <sql id="Base_Column_List" >
+        id,order_no,content,image,dispatch_rate,service_rate,technical_level,overall_rate,is_del,date_format(`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_order_comment
+        (id,order_no,content,image,dispatch_rate,service_rate,technical_level,overall_rate,is_del,in_time)
+        values
+        (uuid(),#{orderNo},#{content},#{image},#{dispatchRate},#{serviceRate},#{technicalLevel},#{overallRate},#{isDel},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_order_comment 
+        set 
+            id=#{id},
+            order_no=#{orderNo},
+            content=#{content},
+            image=#{image},
+            dispatch_rate=#{dispatchRate},
+            service_rate=#{serviceRate},
+            technical_level=#{technicalLevel},
+            overall_rate=#{overallRate},
+            is_del=#{isDel},
+            in_time=#{inTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_order_comment where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_order_comment where id = #{id}
+    </select>
+    
+    <!-- 根据orderNo查询  -->
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_order_comment where order_no = #{orderNo}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_order_comment
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="content != null and content != ''" >
+            and content = #{content}
+        </if>
+        <if test="image != null and image != ''" >
+            and image = #{image}
+        </if>
+        <if test="dispatchRate != null and dispatchRate != ''" >
+            and dispatch_rate = #{dispatchRate}
+        </if>
+        <if test="serviceRate != null and serviceRate != ''" >
+            and service_rate = #{serviceRate}
+        </if>
+        <if test="technicalLevel != null and technicalLevel != ''" >
+            and technical_level = #{technicalLevel}
+        </if>
+        <if test="overallRate != null and overallRate != ''" >
+            and overall_rate = #{overallRate}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_order_comment
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="content != null and content != ''" >
+            and content = #{content}
+        </if>
+        <if test="image != null and image != ''" >
+            and image = #{image}
+        </if>
+        <if test="dispatchRate != null and dispatchRate != ''" >
+            and dispatch_rate = #{dispatchRate}
+        </if>
+        <if test="serviceRate != null and serviceRate != ''" >
+            and service_rate = #{serviceRate}
+        </if>
+        <if test="technicalLevel != null and technicalLevel != ''" >
+            and technical_level = #{technicalLevel}
+        </if>
+        <if test="overallRate != null and overallRate != ''" >
+            and overall_rate = #{overallRate}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+    </select>
+
+</mapper>   

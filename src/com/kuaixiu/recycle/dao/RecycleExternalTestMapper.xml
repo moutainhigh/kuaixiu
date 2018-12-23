@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleExternalTestMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleExternalTest">
+        <result column="id" property="id"/>
+        <result column="token" property="token"/>
+        <result column="login_mobile" property="loginMobile"/>
+        <result column="login_time" property="loginTime"/>
+        <result column="is_order" property="isOrder"/>
+        <result column="quoteId" property="quoteId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="model_name" property="modelName"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="product_id" property="productId"/>
+        <result column="detail" property="detail"/>
+        <result column="image_path" property="imagePath"/>
+        <result column="test_price" property="testPrice"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="number" property="number"/>
+        <result column="price" property="price"/>
+    </resultMap>
+
+    <!-- hs_external_test table all fields -->
+    <sql id="Base_Column_List">
+        id,token,login_mobile,login_time,is_order,quoteId,brand_name,model_name,brand_id,product_id,detail,image_path,test_price,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into hs_external_test
+        (id,token,login_mobile,login_time,is_order,quoteId,brand_name,model_name,brand_id,
+        product_id,detail,image_path,test_price,create_time)
+        values
+        (#{id},#{token},#{loginMobile},#{loginTime},#{isOrder},#{quoteId},#{brandName},
+        #{modelName},#{brandId},#{productId},#{detail},#{imagePath},#{testPrice},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update hs_external_test 
+        set 
+            id=#{id},
+            token=#{token},
+            login_mobile=#{loginMobile},
+            login_time=#{loginTime},
+            is_order=#{isOrder},
+            quoteId=#{quoteId},
+            brand_name=#{brandName},
+            model_name=#{modelName},
+            detail=#{detail},
+            image_path=#{imagePath},
+            test_price=#{testPrice},
+            update_time=now()
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_external_test where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_external_test where id = #{id}
+    </select>
+
+    <!-- 查询统计列表  -->
+    <select id="queryListTotalPriceForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        brand_id AS brand_id,
+        brand_name as brand_name,
+        login_mobile AS login_mobile,
+        product_id AS product_id,
+        model_name as model_name,
+        count(login_mobile) AS number,
+        Floor((count(login_mobile) + 4) / 5) * 0.5 AS price,
+        create_time AS create_time,
+        login_time AS login_time
+        from
+        hs_external_test
+        where 1=1
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        GROUP BY
+        brand_id,
+        product_id,
+        login_mobile,
+        YEAR(create_time),
+        MONTH(create_time),
+        DAY(create_time)
+        ORDER BY login_time DESC
+    </select>
+
+
+    <!-- 查询数量 -->
+    <select id="queryCount" resultType="Integer" parameterType="Object">
+        select
+        IFNULL(COUNT(id),0)
+        from hs_external_test
+        where 1=1
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_external_test
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="token != null and token != ''">
+            and token = #{token}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_time=#{loginTime}
+        </if>
+        <if test="quoteId != null and quoteId != ''">
+            and quoteId = #{quoteId}
+        </if>
+        <if test="brandName != null and brandName != ''">
+            and brand_name = #{brandName}
+        </if>
+        <if test="modelName != null and modelName != ''">
+            and model_name = #{modelName}
+        </if>
+        <if test="productId != null and productId != ''">
+            and product_id = #{productId}
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and brand_id = #{brandId}
+        </if>
+        <if test="detail != null and detail != ''">
+            and detail = #{detail}
+        </if>
+        <if test="imagePath != null and imagePath != ''">
+            and image_path=#{imagePath}
+        </if>
+        <if test="testPrice != null and testPrice != ''">
+            and test_price = #{testPrice}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time = #{updateTime}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_external_test
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="token != null and token != ''">
+            and token = #{token}
+        </if>
+        <if test="isOrder != null and isOrder != ''">
+            and is_order=#{isOrder}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="loginTime != null and loginTime != ''">
+            and login_time=#{loginTime}
+        </if>
+        <if test="quoteId != null and quoteId != ''">
+            and quoteId = #{quoteId}
+        </if>
+        <if test="brandName != null and brandName != ''">
+            and brand_name = #{brandName}
+        </if>
+        <if test="modelName != null and modelName != ''">
+            and model_name = #{modelName}
+        </if>
+        <if test="productId != null and productId != ''">
+            and product_id = #{productId}
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and brand_id = #{brandId}
+        </if>
+        <if test="detail != null and detail != ''">
+            and detail = #{detail}
+        </if>
+        <if test="imagePath != null and imagePath != ''">
+            and image_path=#{imagePath}
+        </if>
+        <if test="testPrice != null and testPrice != ''">
+            and test_price = #{testPrice}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time = #{updateTime}
+        </if>
+        <if test="startLoginTime != null and startLoginTime != ''">
+            and login_time &gt;= #{startLoginTime}
+        </if>
+        <if test="endLoginTime != null and endLoginTime != ''">
+            and login_time &lt;= #{endLoginTime}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="startSubmitTime != null and startSubmitTime != ''">
+            and update_time &gt;= #{startSubmitTime}
+        </if>
+        <if test="endSubmitTime != null and endSubmitTime != ''">
+            and update_time &lt;= #{endSubmitTime}
+        </if>
+        ORDER BY login_time DESC
+    </select>
+
+</mapper>   

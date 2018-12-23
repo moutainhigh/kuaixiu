@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS mingzhen1234@qq.com  */
+*{ margin:0; padding:0; font-family:SimHei;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0); box-sizing: border-box;}
+ul li{ list-style:none;}
+img{ border:none; }
+a{ color:inherit; text-decoration:none;}
+html,body{ width:640px; margin:0 auto; font-size: 24px;}
+input{-webkit-appearance: none;}
+
+.coupon_bg{ width: 640px; margin: 0 auto; background: url(../img/coupon_bg.jpg) no-repeat center top; }
+.coupon_content{ position: relative; width: 640px; padding:477px 45px 72px; }
+.coupon_content .title_icon{ width:210px; height: 35px; position: absolute; top: 158px; left: 191px; }
+.coupon_content .icon_bg0{ background: url(../img/screen.png) no-repeat 0 0;}
+.coupon_content .icon_bg1{ background: url(../img/screen1.png) no-repeat 0 0;}
+.coupon_content .receive{ width:550px; height: 90px; background: #FFFFFF; border: solid 3px #2e94d3; border-radius: 6px; color: #2e94d3; text-align: center; line-height: 90px;font-size: 24px; }
+.coupon_content .red{ color: #f0491d;}
+.coupon_content .coupon_money{ width:443px; height: 245px; margin: 24px auto;padding:35px 25px 25px; background: url(../img/screen_money.png) no-repeat;}
+.coupon_content .value_voucher{ height: 115px; overflow: hidden; text-align: center; color: #FFFFFF; }
+.coupon_content .value_voucher .money{ font-size: 114px; line-height:115px;}
+.coupon_content .value_voucher .money:before{ content: "￥"; font-family:Microsoft YaHei; font-size: 47px;position: relative; top:-42px; }
+.coupon_content .value_voucher .font{font-size:46px; position: relative; margin-left:5px; }
+.coupon_content .value_voucher .font:before{ content:"YUAN"; position: absolute; top: -26px; left: 0;font-size: 23px; }
+.coupon_content .code{ height: 30px; line-height: 30px; text-align: center;font-size: 21px;color: #FFFFFF; }
+.coupon_content .time{ line-height: 40px; line-height: 40px; text-align: center; font-size: 21px; color: #bfe7ff; }
+.coupon_content .coupon_but{ padding-top: 5px; }
+.coupon_content .coupon_but .but{ width: 550px; height: 70px; display: block; background: #f0491d; text-align: center; line-height: 70px; border-radius: 10px;font-size: 24px; color: #FFFFFF; border: 0; }
+.coupon_content .coupon_but .orange{ background: #f0491d; }
+.coupon_content .coupon_but .blue{ background: #2e94d3; }
+.coupon_content .coupon_but input:disabled{ opacity: .7;}
+.coupon_content .activity_rules{ border: solid 2px #73b9e5; border-radius: 10px; width:550px; height: 310px; background: rgba(255,255,255,0.6); margin-top: 30px; padding:8px 30px; color: #555d60;font-size: 20px; }
+.coupon_content .activity_rules .title{ height: 56px;line-height: 56px; text-align: center; }
+.coupon_content .activity_rules .rules_cont{line-height: 36px; } 
+
+.coupon_content .information{ width:550px; }
+.coupon_content .information .label{ margin-bottom:18px; overflow: hidden;} 
+.coupon_content .information .label .txt{ height: 70px; padding: 0 20px; border: solid 2px #2e94d3; border-radius: 10px; text-align: left; font-size: 24px; } 
+.coupon_content .information .label .tel{ width: 550px; }
+.coupon_content .information .label .verification{ width:330px; float: left; }
+.coupon_content .information .label .get_validate{ width: 203px; float: right;height: 70px; border-radius: 10px; background: #2e94d3; color: #FFFFFF; border: 0;font-size: 24px; }
+.coupon_content .information .label .get_validate:disabled{ opacity: .7;}
+.coupon_content .information .label input::-webkit-input-placeholder{ color: #2e94d3; }
+
+
+/**/
+.remind_delivery_bg{ width:100%; height:70px; display: none; position:fixed; top:50%; left:0;  z-index:6000;}
+.remind_delivery_cont{ width:415px; margin:0 auto; background:rgba(0,0,0,0.6); border-radius:10px; z-index:6000; padding:15px 10px; }
+.remind_delivery_cont p{ width:inherit; text-align:center; line-height: 35px; color:#FFF; font-size: 24px; }

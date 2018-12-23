@@ -1,0 +1,228 @@
+/* CSS Document */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,acronym,address,cite,code,del,dfn,em,font,img,strong,sub,sup,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,textarea,input,legend,table,caption,tbody,thead,tr,th,td{margin:0;padding:0;border:0;word-break:break-all;word-wrap:break-word;box-sizing: border-box;}
+ol,ul{list-style:none;}
+table{border-collapse:collapse;border-spacing:0;}
+.fl{float:left}
+.fr{float:right}
+.moa{margin:0 auto;}
+.clear{clear:both;height:0;overflow:hidden;}
+.clearfix:after {content: " ";display: block;clear: both;height: 0;}
+.clearfix {zoom: 1;}
+.tc{text-align:center;}
+/*新闻列表溢出显示...*/
+.list_out{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar{ width: 2px; height: 2px; background-color: transparent;}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track{-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.0); border-radius: 2px;background-color: transparent;}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{border-radius:2px; -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.1); background-color: transparent;}
+
+/*去除点击高亮效果*/
+a,button,input,select,img,label{-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-tap-highlight-color:transparent;outline:medium none;}
+input::-moz-focus-inner{border:none;padding:0;}
+select, input{vertical-align:middle;}
+/*去掉苹果的默认UI来渲染按钮*/
+input[type="submit"],input[type="reset"],input[type="button"],button,select{-webkit-appearance:none;}
+/*placeholder文本颜色*/
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder,input:-moz-placeholder,textarea:-moz-placeholder{
+  color: #999999; font-size: 24px;
+}
+/*长英文字母 数字 换行*/
+p{word-break:break-all;word-wrap:break-word;}
+
+.bg{background-color: #ffffff;}
+.color-red{color: #f80202;}
+.color-gray{color: #666666;}
+.color-black{color: #000;}
+.color-blue{color: blue;}
+.color-light-blue{color: #439aff !important;}
+@color-blue:#439aff;
+
+.pageTitle{
+  text-align: center;
+  font-size: .13rem;
+  color: #606060;
+  p{
+    padding: .105rem 0 .07rem;
+  }
+  span{
+    display: block;
+    width: .285rem;
+    height: 2px;
+    margin: 0 auto;
+    line-height: normal;
+    background-color: #606060;
+  }
+}
+.btn-large{
+  display: block;
+  width: 100%;
+  height: .4rem;
+  border-radius: 8px;
+  background-color: @color-blue;
+  text-align: center;
+  font-size: .14rem;
+  line-height: .4rem;
+  color: #ffffff;
+  text-decoration: none;
+  &.disabled{
+    opacity: .6;
+    cursor:default;
+  }
+}
+.btn-normal{
+  display: block;
+  width: 1.4rem;
+  height: .4rem;
+  border: 2px solid @color-blue;
+  border-radius: .08rem;
+  font-size: .13rem;
+  line-height: calc(~".4rem - 4px");
+  text-align: center;
+  text-decoration: none;
+  color: @color-blue;
+  &.btn-normal-confirm{
+    background-color: @color-blue;
+    color: #ffffff;
+  }
+  &.disabled{
+    opacity: .6;
+    cursor:default;
+  }
+}
+.btn-small{
+  display: block;
+  width: 1.11rem;
+  height: .325rem;
+  border: 2px solid @color-blue;
+  border-radius: .075rem;
+  font-size: .12rem;
+  line-height: calc(~".325rem - 4px");
+  text-align: center;
+  text-decoration: none;
+  color: @color-blue;
+  &.btn-small-confirm{
+    background-color: @color-blue;
+    color: #ffffff;
+  }
+  &.disabled{
+    opacity: .6;
+    cursor:default;
+  }
+}
+.btn-mini{
+  display: block;
+  width: .7rem;
+  height: .25rem;
+  border: 2px solid @color-blue;
+  border-radius: .06rem;
+  font-size: .10rem;
+  line-height: calc(~".25rem - 4px");
+  text-align: center;
+  text-decoration: none;
+  color: @color-blue;
+  &.btn-mini-confirm{
+
+  }
+}
+.radio{
+  width:.13rem;
+  height:.13rem;
+  margin-right:.05rem;
+  border: 1px solid #a4a4a4;
+  border-radius:3px;
+  appearance: none;
+  position: relative;
+  &:checked{
+    border-color: #a4a4a4;
+    background-color: #FFFFFF;
+    &:before{
+      position: absolute;
+      bottom: 4px;
+      left: 1px;
+      content: '';
+      width: .05rem;
+      height: 2px;
+      background-color: #464646;
+      transform:rotate(45deg);
+    }
+    &:after{
+      position: absolute;
+      bottom:5px;
+      right: 0;
+      content: '';
+      width: .08rem;
+      height: 2px;
+      background-color: #464646;
+      transform:rotate(-45deg);
+    }
+  }
+}
+
+//遮盖层
+#mask_boxs{
+  position: absolute;
+  top:0;left: 0;z-index:50;
+  width:100%;height:calc(~"100% - .44rem");
+  background: rgba(255,255,255,0.5);
+  #mcon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    img{
+      width: .4rem;
+    }
+  }
+}
+
+/*提示框*/
+.remind_delivery_bg{
+  display: none;
+  width:100%;
+  height:.35rem;
+  position:absolute;
+  top:calc(~"50% - .35rem"); left:0;z-index:51;
+  .remind_delivery_cont{
+    width:2.08rem;
+    margin:0 auto;
+    background:rgba(0,0,0,0.6);
+    border-radius:.05rem;
+    padding:.075rem .05rem;
+    p{
+      text-align:center; line-height: .2rem; color:#fff; font-size: .12rem; }
+  }
+}
+
+//确认提示
+.popup_bg{
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  position: absolute; top: 0; left: 0; z-index: 51;
+  .popup_content{
+    width:2.9rem;
+    margin: 0 auto;
+    padding: .1rem .2rem .2rem;
+    background-color: #FFFFFF;
+    border-radius: .05rem;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    .popup_title{height: .33rem;font-size: .14rem;line-height: .33rem; text-align: center; color: #464646;}
+    .popup_font{ color: #606060; font-size: .12rem; line-height: .16rem;}
+    .popup_but{
+      display: flex;
+      justify-content: space-around;
+      padding-top: .25rem;
+      .btn-normal{
+        width:1.2rem;
+      }
+    }
+  }
+}

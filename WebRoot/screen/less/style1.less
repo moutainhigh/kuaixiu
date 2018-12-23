@@ -1,0 +1,328 @@
+body{
+    background-color: #fff;
+    #wrap{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        font-size: .12rem;
+        header{
+            display:flex;
+            justify-content:space-between;
+            align-items: center;
+            padding: 0 .15rem;
+            height: .39rem;;
+            background: linear-gradient(to right, #94bdfa , #4489c6);
+            font-size:.18rem;
+            color:#fff;
+            a{
+              &.home{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: .49rem;
+                height: .23rem;
+                background: rgba(236,238,241,0.18);
+                border:1px solid #d3e3fb;
+                border-radius: .04rem;
+                font-size: .12rem;
+                color: #FFFFFF;
+                span{
+                  display: block;
+                  line-height: 1;
+                  &.back{
+                    display: inline-block;
+                    content: '';
+                    width: .06rem;
+                    height: .11rem;
+                    background: url("../img/back.png") no-repeat;
+                    background-size: 100% 100%;
+                    margin-right: 3px;
+                  }
+                }
+              }
+              &.person{
+                display: inline-block;
+                width: .24rem;
+                height: .24rem;
+                margin-left: .25rem;
+                img{
+                  display: block;
+                  width: 100%;
+                }
+              }
+            }
+          }
+        &.vipWrap{
+            main{
+                h2{
+                    padding: .18rem 0;
+                    font: normal .15rem/.38rem Arial, Helvetica, sans-serif;
+                    text-align: center;
+                    color: #333333;
+                }
+                //填写用户信息
+                .form{
+                    padding: 0 .25rem;
+                    .labelBox{
+                        position: relative;
+                        margin-bottom: .1rem;
+                        display: flex;
+                        align-items: center;
+                        label{
+                            display: inline-block;
+                            width: .8rem;
+                            font: .13rem Arial, Helvetica, sans-serif;
+                            color: #1a1a1a;
+                        }
+                        input::-webkit-input-placeholder, input:-moz-placeholder,input::-moz-placeholder, input:-ms-input-placeholder{
+                           color: #969799;   
+                        }
+                        >input{
+                            flex: 1 1 auto;
+                            width: calc(~'100% - .8rem');
+                            height: .31rem;
+                            padding : 0 .07rem;
+                            border: 1px solid #b9ccdf;
+                            border-radius: .02rem;
+                            font-size: .12rem;
+                            background: transparent;
+                            color: #1a1a1a;
+                        }
+                        &.vipBox{
+                            input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {   
+                                /* WebKit browsers */   
+                               color: #1a1a1a;   
+                            }   
+                            input:-moz-placeholder, textarea:-moz-placeholder {   
+                                /* Mozilla Firefox 4 to 18 */   
+                                color: #1a1a1a;   
+                            }   
+                            input::-moz-placeholder, textarea::-moz-placeholder {   
+                                /* Mozilla Firefox 19+ */   
+                                color: #1a1a1a;   
+                            }   
+                            input:-ms-input-placeholder, textarea:-ms-input-placeholder {   
+                                /* Internet Explorer 10+ */   
+                                color: #1a1a1a;   
+                            } 
+                        }
+                        input[type=button]{
+                            position: absolute;
+                            top: 0;right: 0;
+                            padding: 0;
+                            width: .65rem;
+                            height: 100%;
+                            background-color: #72a7db;
+                            border:0;
+                            border-radius: 3px;
+                            font-size: .1rem;
+                            font-family: Arial, Helvetica, sans-serif;
+                            text-align: center;
+                            color: #FFFFFF;
+                        }
+                        a{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: absolute;
+                            right: 0;top: 0;
+                            height: 100%;
+                            width: .33rem;
+                            background-color: #d8e1ea;
+                            border-radius: .02rem;
+                            img{
+                                width: .1rem;
+                            }
+                        }
+                        .selectList{
+                            display: none;
+                            position: absolute;
+                            right: 0;top: 100%;
+                            bottom: 0;
+                            z-index: 5;
+                            width: calc(~"100% - .8rem");
+                            max-height: 2.22rem;
+                            min-height: 1.22rem;
+                            background-color: #fff;
+                            border-bottom-left-radius: .04rem;
+                            border-bottom-right-radius: .04rem;
+                            overflow-y: auto;
+                            overflow-x: hidden;
+                            p{
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                padding: 0 .1rem;
+                                width: 100%;
+                                height: .405rem;
+                                border-bottom: 1px solid #edeff0;
+                                font-size: .12rem;
+                                font-family: Arial, Helvetica, sans-serif;
+                                color: #1a1a1a;
+                                &:after{
+                                    display: inline-block;
+                                    content: '';
+                                    width: .13rem;
+                                    height: .1rem;
+                                    background:url('../img/icon_select.png') no-repeat;
+                                    background-size: 100% 100%;
+                                }
+                                &.active{
+                                    background-color: #f5f7fa;
+                                    font-weight: bold;
+                                    &:after{
+                                        background:url('../img/icon_selected.png') no-repeat;
+                                        background-size: 100% 100%;
+                                    } 
+                                }
+                            }
+                            &.active{
+                                display: block;
+                            }
+                        }
+                    }
+                    .agree_clause{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width:100%; font-size: .1rem; color: #8a8a8a;
+                        margin: .25rem 0 .125rem;
+                        a{font-size: .1rem;color: #558dc4;}
+                        &.active{
+                            color: #558dc4;
+                            a{
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                    a.submit{
+                        display: block;
+                        width: 100%;
+                        height: .36rem;
+                        background-color: #568bc0;
+                        border-radius: .18rem;
+                        font-size: .15rem;
+                        color: #FFFFFF;
+                        line-height: .36rem;
+                        text-align: center;
+                        &.disabled{background-color: #72a7db;}
+                    }
+                }
+            }
+            //VIP选择品牌、机型遮罩层
+            .selectLay{
+                display: none;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                &.active{
+                    display: block;
+                }
+            }
+            // vip确认弹窗
+            .confirmLay{
+                position: absolute;
+                left: 0;
+                top: -1000%;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                .confirmCont{
+                    width: 79.69%;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    >a{
+                        align-self: flex-end;
+                        display: inline-block;
+                        margin-right: .13rem;
+                        width: .29rem;
+                        height: .29rem;
+                        text-align: right;
+                        line-height: 1;
+                        position: relative;
+                        img{
+                            width: 100%;
+                        }
+                        &:after{
+                            display: inline-block;
+                            content: '';
+                            position: absolute;
+                            right: .14rem;
+                            top: 100%;
+                            width: 2px;
+                            height: .49rem;
+                            background-color: #bfc8ce;
+                        }
+                    }
+                    .confirmInfo{
+                        margin-top: .49rem;
+                        width: 100%;
+                        background-color: #f7fafc;
+                        border-radius: .1rem;
+                        position: relative;
+                        &:before{
+                            display: inline-block;
+                            content: '';
+                            position: absolute;
+                            left: calc(~'50% - .5525rem');
+                            top: -.36rem;
+                            width: 1.105rem;
+                            height: .87rem;
+                            background: url('../img/icon_order.png') no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        padding: .7rem .18rem 0;
+                        h2{
+                            font: normal .15rem Arial, Helvetica, sans-serif;
+                            color: #1a90ff;
+                            text-align: center;
+                            margin-bottom: .16rem;
+                        }
+                        p{
+                            font-size: .12rem;
+                            font-family: Arial, Helvetica, sans-serif;
+                            color: #1a1a1a;
+                            line-height: .2rem;
+                            #confirmName{
+                                font-size: .14rem;
+                            }
+                            .blue{
+                                color: #1a90ff;
+                            }
+                        }
+                        .confirmBox{
+                            border-top: 1px solid #e1e6eb;
+                            margin: 0 -.18rem;
+                            margin-top: .15rem;
+                            padding: .15rem .18rem;
+                            a{
+                                display: block;
+                                width: 100%;
+                                height: .36rem;
+                                border-radius: .18rem;
+                                background-color: #1a90ff;
+                                font-size: .16rem;
+                                font-weight: bold;
+                                color: #fff;
+                                text-align: center;
+                                line-height: .36rem;
+                            }
+                        }
+                    }
+                }
+                &.active{
+                    top: 0;
+                }
+            }
+        }
+    }
+}

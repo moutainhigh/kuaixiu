@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.model.dao.RepairCostMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.model.entity.RepairCost">
+        <result column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="project_name" property="projectName"/>
+        <result column="project_sort" property="projectSort"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="price" property="price"/>
+        <result column="id_del" property="idDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+
+    <!-- kx_repair_cost table all fields -->
+    <sql id="Base_Column_List">
+        t.id,t.project_id,t.model_id,t.price,t.id_del,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into kx_repair_cost
+        (id,project_id,model_id,price,id_del,create_time,create_userid)
+        values
+        (uuid(),#{projectId},#{modelId},#{price},#{idDel},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update kx_repair_cost 
+        set 
+            project_id=#{projectId},
+            price=#{price},
+            id_del=#{idDel},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_repair_cost where id = #{id}
+    </delete>
+
+    <!-- 根据机型id查询维修价格 -->
+    <delete id="deleteByModelId" parameterType="Object">
+        delete from kx_repair_cost where model_id = #{mid}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_repair_cost t where id = #{id}
+    </select>
+
+    <!-- 根据机型id和类型id查询  -->
+    <select id="queryByMidAndPid" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,p.name project_name, m.name model_name
+        from kx_repair_cost t
+        LEFT JOIN kx_project p on t.project_id = p.id
+        LEFT JOIN kx_model m on t.model_id = m.id
+        where model_id = #{mid} and project_id = #{pid}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,p.name project_name, m.name model_name,p.sort project_sort
+        from kx_repair_cost t
+        LEFT JOIN kx_project p on t.project_id = p.id
+        LEFT JOIN kx_model m on t.model_id = m.id
+        where id_del = 0
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="price != null and price != ''">
+            and price = #{price}
+        </if>
+        ORDER BY p.sort DESC
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_repair_cost t
+        where id_del = 0
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryProjectForPage" resultMap="BaseResultMap" parameterType="Object">
+        select * from
+        (select t.project_id, t.price price
+        ,p.name project_name, m.name model_name,p.sort project_sort
+        from kx_repair_cost t
+        LEFT JOIN kx_project p on t.project_id = p.id
+        LEFT JOIN kx_model m on t.model_id = m.id
+        where id_del = 0
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        and p.sort is Not null order by p.sort ASC limit 0,1000) A
+        union
+        select * from
+        (select t.project_id, t.price price
+        ,p.name project_name, m.name model_name,p.sort project_sort
+        from kx_repair_cost t
+        LEFT JOIN kx_project p on t.project_id = p.id
+        LEFT JOIN kx_model m on t.model_id = m.id
+        where id_del = 0
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        and p.sort is null order by p.sort ASC limit 0,1000
+        ) B
+    </select>
+
+</mapper>   

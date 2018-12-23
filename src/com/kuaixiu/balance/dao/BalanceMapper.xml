@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.balance.dao.BalanceMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.balance.entity.Balance" >
+        <result column="id" property="id"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="batch_name" property="batchName"/>
+        <result column="balance_type" property="balanceType"/>
+        <result column="status" property="status"/>
+        <result column="provider_count" property="providerCount"/>
+        <result column="shop_count" property="shopCount"/>
+        <result column="order_count" property="orderCount"/>
+        <result column="amount_price" property="amountPrice"/>
+        <result column="balance_price" property="balancePrice"/>
+        <result column="profit_price" property="profitPrice"/>
+        <result column="balance_begin_time" property="balanceBeginTime"/>
+        <result column="balance_end_time" property="balanceEndTime"/>
+        <result column="notice_time" property="noticeTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_balance table all fields -->
+    <sql id="Base_Column_List" >
+        id,batch_no,batch_name,balance_type,status,provider_count,shop_count,order_count,amount_price,balance_price,profit_price,balance_begin_time,balance_end_time,date_format(`notice_time`,'%Y-%m-%d %H:%i:%s')notice_time,date_format(`finish_time`,'%Y-%m-%d %H:%i:%s')finish_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_balance
+        (id,batch_no,batch_name,balance_type,status,provider_count,shop_count,order_count,amount_price,balance_price,profit_price,balance_begin_time,balance_end_time,notice_time,finish_time,create_time,create_userid)
+        values
+        (uuid(),#{batchNo},#{batchName},#{balanceType},#{status},#{providerCount},#{shopCount},#{orderCount},#{amountPrice},#{balancePrice},#{profitPrice},#{balanceBeginTime},#{balanceEndTime},#{noticeTime},#{finishTime},#{createTime},#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_balance 
+        set 
+            id=#{id},
+            batch_no=#{batchNo},
+            batch_name=#{batchName},
+            balance_type=#{balanceType},
+            status=#{status},
+            provider_count=#{providerCount},
+            shop_count=#{shopCount},
+            order_count=#{orderCount},
+            amount_price=#{amountPrice},
+            balance_price=#{balancePrice},
+            profit_price=#{profitPrice},
+            balance_begin_time=#{balanceBeginTime},
+            balance_end_time=#{balanceEndTime},
+            notice_time=#{noticeTime},
+            finish_time=#{finishTime},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_balance where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_balance where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_balance
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="batchNo != null and batchNo != ''" >
+            and batch_no = #{batchNo}
+        </if>
+        <if test="batchName != null and batchName != ''" >
+            and batch_name = #{batchName}
+        </if>
+        <if test="balanceType != null and balanceType != ''" >
+            and balance_type = #{balanceType}
+        </if>
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        <if test="providerCount != null and providerCount != ''" >
+            and provider_count = #{providerCount}
+        </if>
+        <if test="shopCount != null and shopCount != ''" >
+            and shop_count = #{shopCount}
+        </if>
+        <if test="orderCount != null and orderCount != ''" >
+            and order_count = #{orderCount}
+        </if>
+        <if test="amountPrice != null and amountPrice != ''" >
+            and amount_price = #{amountPrice}
+        </if>
+        <if test="balancePrice != null and balancePrice != ''" >
+            and balance_price = #{balancePrice}
+        </if>
+        <if test="profitPrice != null and profitPrice != ''" >
+            and profit_price = #{profitPrice}
+        </if>
+        <if test="balanceBeginTime != null and balanceBeginTime != ''" >
+            and balance_begin_time = #{balanceBeginTime}
+        </if>
+        <if test="balanceEndTime != null and balanceEndTime != ''" >
+            and balance_end_time = #{balanceEndTime}
+        </if>
+        <if test="noticeTime != null and noticeTime != ''" >
+            and notice_time = #{noticeTime}
+        </if>
+        <if test="finishTime != null and finishTime != ''" >
+            and finish_time = #{finishTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_balance
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="batchNo != null and batchNo != ''" >
+            and batch_no = #{batchNo}
+        </if>
+        <if test="batchName != null and batchName != ''" >
+            and batch_name = #{batchName}
+        </if>
+        <if test="balanceType != null and balanceType != ''" >
+            and balance_type = #{balanceType}
+        </if>
+        <if test="status != null and status != ''" >
+            and status = #{status}
+        </if>
+        <if test="providerCount != null and providerCount != ''" >
+            and provider_count = #{providerCount}
+        </if>
+        <if test="shopCount != null and shopCount != ''" >
+            and shop_count = #{shopCount}
+        </if>
+        <if test="orderCount != null and orderCount != ''" >
+            and order_count = #{orderCount}
+        </if>
+        <if test="amountPrice != null and amountPrice != ''" >
+            and amount_price = #{amountPrice}
+        </if>
+        <if test="balancePrice != null and balancePrice != ''" >
+            and balance_price = #{balancePrice}
+        </if>
+        <if test="profitPrice != null and profitPrice != ''" >
+            and profit_price = #{profitPrice}
+        </if>
+        <if test="balanceBeginTime != null and balanceBeginTime != ''" >
+            and balance_begin_time = #{balanceBeginTime}
+        </if>
+        <if test="balanceEndTime != null and balanceEndTime != ''" >
+            and balance_end_time = #{balanceEndTime}
+        </if>
+        <if test="noticeTime != null and noticeTime != ''" >
+            and notice_time = #{noticeTime}
+        </if>
+        <if test="finishTime != null and finishTime != ''" >
+            and finish_time = #{finishTime}
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>   

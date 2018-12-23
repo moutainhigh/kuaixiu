@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.increaseOrder.dao.IncreaseRecordMapper">
+  <resultMap id="BaseResultMap" type="com.kuaixiu.increaseOrder.entity.IncreaseRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="recycle_order_no" jdbcType="VARCHAR" property="recycleOrderNo" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="plan" jdbcType="VARCHAR" property="plan" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="headimgurl" jdbcType="VARCHAR" property="imgUrl" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+     id, order_no, recycle_order_no, open_id, plan, in_time,nickname,headimgurl
+   </sql>
+
+
+  <!-- 根据订单号查询  -->
+  <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+    select <include refid="Base_Column_List" />
+    from hs_increase_record where order_no =#{orderNo}
+  </select>
+
+
+
+
+  <!-- 插入记录 -->
+  <insert id="add" parameterType="Object">
+     insert into hs_increase_record (id, order_no, recycle_order_no,
+      open_id, plan, in_time,nickname,headimgurl
+      )
+    values (uuid(), #{orderNo,jdbcType=VARCHAR}, #{recycleOrderNo,jdbcType=VARCHAR},
+      #{openId,jdbcType=VARCHAR}, #{plan,jdbcType=VARCHAR}, now(),#{nickname,jdbcType=VARCHAR},#{imgUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+
+
+  <!-- 根据id，修改记录 -->
+  <update id="update" parameterType="Object">
+   update hs_increase_record
+    set
+      plan = #{plan,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <!-- 查询列表无分页 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hs_increase_record
+    where 1=1
+    <if test="orderNo != null and orderNo != ''">
+      and order_no = #{orderNo}
+    </if>
+    <if test="recycleOrderNo != null and recycleOrderNo != ''">
+      and recycle_order_no = #{recycleOrderNo}
+    </if>
+    <if test="openId != null and openId != ''">
+      and open_id=#{openId}
+    </if>
+    <if test="plan != null and plan != ''">
+      and plan =#{plan}
+    </if>
+    order by in_time desc
+  </select>
+
+
+
+  <!-- 查询列表 带分页 -->
+  <select id="queryListForPage" resultMap="BaseResultMap"
+          parameterType="Object">
+    select
+    <include refid="Base_Column_List" />
+    from hs_increase_record
+    where 1=1
+    <if test="orderNo != null and orderNo != ''">
+      and order_no = #{orderNo}
+    </if>
+    <if test="recycleOrderNo != null and recycleOrderNo != ''">
+      and recycle_order_no = #{recycleOrderNo}
+    </if>
+    <if test="openId != null and openId != ''">
+      and open_id=#{openId}
+    </if>
+    <if test="plan != null and plan != ''">
+      and plan =#{plan}
+    </if>
+    order by in_time desc
+  </select>
+
+</mapper>

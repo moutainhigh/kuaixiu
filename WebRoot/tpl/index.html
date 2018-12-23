@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script src="js/flexible.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/main.css">
+	<title>M超人回收-首页</title>
+</head>
+<body>
+<div id="wrap" class="indexWrap">
+	<div class="top">
+		<header>
+		    <a href="javascript:window.history.back();" class="back"><img src="img/back.png" alt=""></a>
+            <p>M-超人回收</p>
+            <a href="login.html" class="promptSale">我的信用速卖</a>
+		</header>
+        <div class="promise">
+            <p>官方认证</p>
+            <p>顺丰包邮</p>
+            <p>安全便捷</p>
+        </div>
+	</div>
+
+    <div class="main">
+        <div class="banner">
+            <a href="javascript:;">
+                信用回收
+            </a>
+        </div>
+
+        <!--卖什么-->
+        <div class="sellWhat bg marb12">
+            <div class="title">
+                <span>你要卖什么</span>
+            </div>
+            <div class="sellSort clearfix">
+                <a href="javascript:;" data-cid="1">
+                    <p>卖手机</p>
+                    <img src="img/phone.jpg" alt="">
+                </a>
+                <a href="javascript:;" data-cid="2">
+                    <p>卖平板</p>
+                    <img src="img/ipad.jpg" alt="">
+                </a>
+                <a href="javascript:;" data-cid="3">
+                    <p>买电脑</p>
+                    <img src="img/computer.jpg" alt="">
+                </a>
+            </div>
+        </div>
+
+        <!--热门品牌-->
+        <div class="brand bg marb12">
+            <div class="title">
+                <span>热门回收品牌</span>
+            </div>
+            <div class="brandSort">
+                <a href="javascript:;">
+                    <img src="img/apple.png" alt="">
+                    <p>苹果</p>
+                </a>
+                <a href="javascript:;">
+                    <img src="img/honor.png" alt="">
+                    <p>华为</p>
+                </a>
+                <a href="javascript:;">
+                    <img src="img/oppo.png" alt="">
+                    <p>oppo</p>
+                </a>
+                <a href="javascript:;">
+                    <img src="img/vivo.png" alt="">
+                    <p>vivo</p>
+                </a>
+            </div>
+        </div>
+
+        <!--热门回收机型-->
+        <div class="model bg marb12">
+            <div class="title">
+                <span>热门回收机型</span>
+            </div>
+            <div class="modelSort">
+                <a href="javascript:;" data-mid="636105728405345559">
+                    <img src="http://114.215.210.238/resources/Mobile/iPhone7Plus.png" alt="">
+                    <p>iPhone 7 Plus</p>
+                    <p>限时最高价:<span class="colRed">￥2600</span></p>
+                    <button>立即信用回收</button>
+                </a>
+                <a href="javascript:;" data-mid="636272407102742310">
+                    <img src="http://114.215.210.238/resources/Mobile/HW-VKY-AL00.png" alt="">
+                    <p>华为P10 Plus</p>
+                    <p>限时最高价:<span class="colRed">￥2600</span></p>
+                    <button>立即信用回收</button>
+                </a>
+                <a href="javascript:;" data-mid="636177401271291496">
+                    <img src="http://114.215.210.238/resources/Mobile/oppo-r9.png" alt="">
+                    <p>OPPO R9s Plus</p>
+                    <p>限时最高价:<span class="colRed">￥2600</span></p>
+                    <button>立即信用回收</button>
+                </a>
+                <a href="javascript:;" data-mid="20171119123832602">
+                    <img src="http://114.215.210.238/resources/Mobile/vivo-Xplay6.png" alt="">
+                    <p>VIVO X20 Plus</p>
+                    <p>限时最高价:<span class="colRed">￥2600</span></p>
+                    <button>立即信用回收</button>
+                </a>
+            </div>
+            <div class="more">
+                <a href="product.html">更多</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="btnBox bg">
+        <a href="product.html" class="btn-sale">我要信用速卖</a>
+    </div>
+
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $('.sellWhat').on('click','a',function () {
+        location.href = 'product.html#' + $(this).attr('data-cid');
+    });
+    $('button').click(function () {
+        eCacheUtil.storage.cache(CacheKey.ProjectId,$(this).parent('a').attr('data-mid'));
+        eCacheUtil.storage.cache(CacheKey.ModelName,$(this).prevAll().eq(1).html());
+        eCacheUtil.storage.cache(CacheKey.imgHref,$(this).prevAll('img').attr('src'));
+        location.href = 'ceping.html';
+    });
+</script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

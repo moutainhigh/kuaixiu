@@ -1,0 +1,390 @@
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: inline-block;
+  background: #FFFFFF;
+  vertical-align: -4px;
+  *vertical-align: 1px;
+  opacity: 0;
+}
+.checkbox + .check_icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: inline-block;
+  background: #FFFFFF;
+  border: solid 1px #cecece;
+  *border: 0;
+  vertical-align: -4px;
+  *vertical-align: 1px;
+  margin-left: -22px;
+}
+.checkbox:checked + .check_icon {
+  background: #FFFFFF url("../img/icon.png") no-repeat -41px -65px;
+}
+body {
+  width: 640px;
+  height: 100vh;
+  margin: 0 auto;
+  background-color: #fff;
+}
+body #wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+body #wrap header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  height: 78px;
+  background: linear-gradient(to right, #94bdfa, #4489c6);
+  font-size: 36px;
+  color: #fff;
+}
+body #wrap header a.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 98px;
+  height: 46px;
+  background: rgba(236, 238, 241, 0.18);
+  border: 1px solid #d3e3fb;
+  border-radius: 8px;
+  font-size: 26px;
+  color: #FFFFFF;
+}
+body #wrap header a.home:before {
+  display: inline-block;
+  content: '';
+  width: 16px;
+  height: 26px;
+  background: url("../img/back.png") no-repeat;
+  margin-right: 3px;
+  margin-top: 3px;
+}
+body #wrap header a.person {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  margin-left: 50px;
+}
+body #wrap main {
+  height: calc(100% - 78px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  color: #333333;
+  font-size: 20px;
+  line-height: 32px;
+}
+body #wrap main .big-item img {
+  display: block;
+}
+body #wrap main .indexBox {
+  background-color: #f2f8fa;
+  padding: 25px 0;
+}
+body #wrap main .indexBox .indexCont {
+  display: flex;
+  justify-content: space-between;
+  padding: 33px 45px 10px;
+  background-color: #FFFFFF;
+}
+body #wrap main .indexBox .indexCont i {
+  background: url("../img/icon.png") no-repeat;
+  margin-bottom: 10px;
+}
+body #wrap main .indexBox .indexCont a {
+  display: block;
+  text-align: center;
+  font-size: 20px;
+  color: #333333;
+}
+body #wrap main .indexBox .indexCont a i.notePad {
+  width: 24px;
+  height: 32px;
+  background-position: 0 0;
+}
+body #wrap main .indexBox .indexCont a i.ribbon {
+  width: 24px;
+  height: 32px;
+  background-position: 0 -33px;
+}
+body #wrap main .indexBox .indexCont a i.paperPlane {
+  width: 32px;
+  height: 32px;
+  background-position: 0 -66px;
+}
+body #wrap main .indexBox .indexCont a i.radiation {
+  width: 33px;
+  height: 31px;
+  background-position: 0 -99px;
+}
+body #wrap main .proSeries {
+  padding: 0 20px;
+}
+body #wrap main .proSeries .proTitle {
+  padding: 10px 0 17px;
+  text-align: center;
+}
+body #wrap main .proSeries .proTitle p:first-child {
+  font-size: 26px;
+  color: #333333;
+}
+body #wrap main .proSeries .proTitle p:last-child {
+  font-size: 20px;
+  color: #ff0000;
+}
+body #wrap main .proSeries ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 85px;
+  border: 2px solid #5c99d5;
+  border-radius: 4px;
+  padding: 0 5px;
+  margin-bottom: 30px;
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+}
+body #wrap main .proSeries ul li:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 83px;
+  background-color: #5c99d5;
+  border-radius: 2px;
+}
+body #wrap main .proSeries ul li > div {
+  display: flex;
+  align-items: center;
+}
+body #wrap main .proSeries ul li > div > p {
+  width: 95px;
+  text-align: center;
+}
+body #wrap main .proSeries ul li > div > p img {
+  display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+body #wrap main .proSeries ul li > p {
+  color: #ff7e00;
+}
+body #wrap main h2 {
+  font-size: 28px;
+  text-align: center;
+  line-height: 76px;
+}
+body #wrap main ol {
+  padding: 0 20px;
+}
+body #wrap main ol li {
+  margin-bottom: 25px;
+  font-size: 18px !important;
+}
+body #wrap main ol li .pl50 {
+  padding-bottom: 30px;
+}
+body #wrap main ol li img {
+  width: 310px;
+  margin: 0 0 20px 50px;
+}
+body #wrap main ol li img:last-child {
+  margin-bottom: 0;
+}
+body #wrap main .form {
+  padding: 0 55px;
+}
+body #wrap main .form .labelBox {
+  position: relative;
+  margin-bottom: 14px;
+}
+body #wrap main .form .labelBox > input {
+  width: 340px;
+  height: 56px;
+  padding: 0 15px;
+  border: 1px solid #d2d7d9;
+  border-radius: 4px;
+  font-size: 24px;
+}
+body #wrap main .form .labelBox input[type=button] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 160px;
+  height: 100%;
+  background-color: #72a7db;
+  border-radius: 3px;
+  font-size: 20px;
+  color: #FFFFFF;
+}
+body #wrap main .form .agree_clause {
+  width: 100%;
+  height: 24px;
+  font-size: 20px;
+  color: #8a8a8a;
+  text-align: center;
+  margin: 50px 0 25px;
+}
+body #wrap main .form .agree_clause a {
+  font-size: 20px;
+}
+body #wrap main .form a.submit {
+  display: inline-block;
+  width: 100%;
+  height: 60px;
+  background-color: #72a7db;
+  border-radius: 3px;
+  font-size: 26px;
+  color: #FFFFFF;
+  line-height: 60px;
+  text-align: center;
+}
+body #wrap main .form a.submit.disabled {
+  opacity: 0.7;
+}
+body #wrap main section.select {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0 40px;
+  margin-left: -120px;
+  line-height: 50px;
+}
+body #wrap main section.select > div {
+  width: 188px;
+  height: 50px;
+  padding: 0 20px;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  line-height: 48px;
+  position: relative;
+}
+body #wrap main section.select > div ul.series_list {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  border: 1px solid #666666;
+  border-top: 0;
+  background-color: #FFFFFF;
+  color: #666666;
+}
+body #wrap main section.select > div ul.series_list li {
+  padding-left: 20px;
+  border-bottom: 1px dashed #a3a3a3;
+}
+body #wrap main section.select > div a#triangle {
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 9px);
+  z-index: 5;
+  border-top: 18px solid #5c99d5;
+  border-bottom: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  transition: all 0.4s ease-in-out;
+}
+body #wrap main section.select > div a#triangle.active {
+  transform: rotate(180deg);
+}
+body #wrap main section.list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 42px;
+  justify-content: space-between;
+}
+body #wrap main section.list div.contentDiv {
+  width: 256px;
+  padding: 26px 0;
+  border: 3px solid #a7c8e7;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  font-size: 24px;
+  cursor: pointer;
+}
+body #wrap main section.list div.contentDiv p {
+  text-align: center;
+}
+body #wrap main section.list div.contentDiv p.title {
+  padding-bottom: 25px;
+  color: #5c99d5;
+}
+body #wrap main section.list div.contentDiv p.info {
+  padding-bottom: 15px;
+  font-size: 20px;
+  color: #649ed7;
+}
+body #wrap main section.list div.contentDiv p.money {
+  padding-bottom: 15px;
+  color: #ff0000;
+}
+body #wrap main .intro {
+  padding: 0 20px;
+}
+body #wrap #pay {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+body #wrap #pay #payCont {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 640px;
+  margin: 0 auto;
+  padding-bottom: 35px;
+  background-color: #FFFFFF;
+  transition: transform 2000ms;
+}
+body #wrap #pay #payCont .payTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 86px;
+  padding: 0 30px;
+  border-bottom: 1px solid #cccccc;
+  font-size: 28px;
+  color: #333333;
+}
+body #wrap #pay #payCont .payInfo p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 71px;
+  padding: 0 30px;
+  border-bottom: 1px solid #cccccc;
+  font-size: 24px;
+  color: #010101;
+}
+body #wrap #pay #payCont #payBalanceBtn {
+  display: block;
+  width: calc(100% - 60px);
+  height: 76px;
+  margin: 35px auto 0;
+  background-color: #72a7db;
+  border-radius: 10px;
+  font-size: 26px;
+  text-align: center;
+  line-height: 76px;
+  color: #ffffff;
+}
+body #wrap #pay #payCont.active {
+  transform: translate3d(0, -374px, 0);
+}

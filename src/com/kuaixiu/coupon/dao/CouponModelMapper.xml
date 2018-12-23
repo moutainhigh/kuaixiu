@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.coupon.dao.CouponModelMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.coupon.entity.CouponModel" >
+        <result column="id" property="id"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="model_id" property="modelId"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- kx_coupon_model table all fields -->
+    <sql id="Base_Column_List" >
+        t.id,t.coupon_id,t.brand_id,t.model_id,t.sort,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_coupon_model
+        (id,coupon_id,brand_id,model_id,sort,create_time,create_userid)
+        values
+        (uuid(),#{couponId},#{brandId},#{modelId},#{sort},now(),#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_coupon_model 
+        set 
+            coupon_id=#{couponId},
+            brand_id=#{brandId},
+            model_id=#{modelId},
+            sort=#{sort},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_coupon_model where id = #{id}
+    </delete>
+    
+    <!-- 根据ID删除 -->
+    <delete id="delByCouponId" parameterType="Object">
+        delete from kx_coupon_model where coupon_id = #{cid}
+    </delete>
+    
+     <!-- 根据批次删除 -->
+    <delete id="delByCouponBatchId" parameterType="Object">
+         DELETE m FROM kx_coupon_model m LEFT JOIN kx_coupon c ON m.coupon_id=c.id WHERE c.batch_id=#{batchId}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        	,b.name brand_name
+        from kx_coupon_model t 
+        left join kx_brand b on t.brand_id = b.id
+        where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        	<include refid="Base_Column_List"/>
+        	,b.name brand_name
+        from kx_coupon_model t 
+        left join kx_brand b on t.brand_id = b.id
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="couponId != null and couponId != ''" >
+            and t.coupon_id = #{couponId}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and t.model_id = #{modelId}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and t.sort = #{sort}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList2" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_coupon_model t
+        where 1=1
+        <if test="couponId != null and couponId != ''" >
+            and t.coupon_id = #{couponId}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        	<include refid="Base_Column_List"/>
+        	,b.name brand_name
+        from kx_coupon_model t 
+        left join kx_brand b on t.brand_id = b.id
+        where 1=1
+        <if test="id != null and id != ''" >
+            and t.id = #{id}
+        </if>
+        <if test="couponId != null and couponId != ''" >
+            and t.coupon_id = #{couponId}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and t.model_id = #{modelId}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and t.sort = #{sort}
+        </if>
+    </select>
+
+	<!-- 批量添加品牌 -->
+    <insert id="addBatch" parameterType="object">
+        INSERT INTO kx_coupon_model (id,coupon_id,brand_id,model_id,sort,create_time,create_userid) VALUES
+        <foreach collection="brands" item="bid" open="" close="" separator=",">
+        	(uuid(), #{id}, #{bid}, null, 99, now(), #{createUserid})
+        </foreach>
+    </insert>
+    
+    
+   
+    <!-- 根据批次批量添加该批次支持品牌 -->
+    <insert id="addByBatchId" parameterType="object">
+        insert into kx_coupon_model (id,coupon_id,brand_id,sort,create_time,create_userid) 
+        select UUID() as id,id,#{id} as brand_id,99 as sort,NOW() as create_time,#{createUserid} as create_userid from kx_coupon t where batch_id=#{batchId};
+    </insert>
+   
+    
+    
+</mapper>   

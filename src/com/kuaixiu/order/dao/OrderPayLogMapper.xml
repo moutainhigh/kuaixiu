@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.order.dao.OrderPayLogMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.OrderPayLog" >
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="pay_order_no" property="payOrderNo"/>
+        <result column="transaction_id" property="transactionId"/>
+        <result column="buyer_logon_id" property="buyerLogonId"/>
+        <result column="fund_channel" property="fundChannel"/>
+        <result column="eng_code" property="engCode"/>
+        <result column="is_app" property="isApp"/>
+        <result column="pay_method" property="payMethod"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_mobile" property="customerMobile"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="total_fee" property="totalFee"/>
+        <result column="settlement_total_fee" property="settlementTotalFee"/>
+        <result column="cash_fee" property="cashFee"/>
+        <result column="cash_fee_type" property="cashFeeType"/>
+        <result column="prepay_id" property="prepayId"/>
+        <result column="code_url" property="codeUrl"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="time_end" property="timeEnd"/>
+        <result column="pay_type" property="payType"/>
+        <result column="expense_type" property="expenseType"/>
+        <result column="is_drawback" property="isDrawback"/>
+        <result column="drawback_time" property="drawbackTime"/>
+        <result column="account_status" property="accountStatus"/>
+        <result column="account_time" property="accountTime"/>
+        <result column="balance_status" property="balanceStatus"/>
+        <result column="balance_time" property="balanceTime"/>
+        <result column="fee_type" property="feeType"/>
+        <result column="device_info" property="deviceInfo"/>
+        <result column="nonce_str" property="nonceStr"/>
+        <result column="sign" property="sign"/>
+        <result column="body" property="body"/>
+        <result column="detail" property="detail"/>
+        <result column="attach" property="attach"/>
+        <result column="spbill_create_ip" property="spbillCreateIp"/>
+        <result column="time_start" property="timeStart"/>
+        <result column="time_expire" property="timeExpire"/>
+        <result column="goods_tag" property="goodsTag"/>
+        <result column="trade_type" property="tradeType"/>
+        <result column="bank_type" property="bankType"/>
+        <result column="product_id" property="productId"/>
+        <result column="limit_pay" property="limitPay"/>
+        <result column="openid" property="openid"/>
+        <result column="is_subscribe" property="isSubscribe"/>
+        <result column="err_code" property="errCode"/>
+        <result column="err_code_des" property="errCodeDes"/>
+        <result column="coupon_fee" property="couponFee"/>
+        <result column="coupon_count" property="couponCount"/>
+        <result column="coupon_data" property="couponData"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- kx_pay_log table all fields -->
+    <sql id="Base_Column_List" >
+        id,order_no,pay_order_no,eng_code,pay_method,is_app,transaction_id,buyer_logon_id,fund_channel,customer_id,customer_name,customer_mobile
+        ,pay_status,total_fee,settlement_total_fee,cash_fee,cash_fee_type,prepay_id,code_url
+        ,date_format(`pay_time`,'%Y-%m-%d %H:%i:%s')pay_time,time_end
+        ,pay_type,expense_type,is_drawback,drawback_time,account_status,account_time
+        ,balance_status,balance_time,fee_type,device_info,nonce_str,sign,body,detail,attach
+        ,spbill_create_ip,time_start,time_expire,goods_tag,trade_type,bank_type,product_id
+        ,limit_pay,openid,is_subscribe,err_code,err_code_des,coupon_fee,coupon_count
+        ,coupon_data,create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_pay_log
+        (id,order_no,pay_order_no,eng_code,pay_method,is_app,customer_id,customer_name,customer_mobile,pay_status,total_fee
+        ,pay_time,pay_type,expense_type,fee_type,device_info,nonce_str,sign,body,detail,attach
+        ,spbill_create_ip,time_start,time_expire,goods_tag,trade_type,bank_type,product_id,limit_pay,openid,create_time)
+        values
+        (#{id},#{orderNo},#{payOrderNo},#{engCode},#{payMethod},#{isApp},#{customerId},#{customerName},#{customerMobile},#{payStatus},#{totalFee}
+        ,now(),#{payType},#{expenseType},#{feeType},#{deviceInfo},#{nonceStr},#{sign},#{body},#{detail},#{attach}
+        ,#{spbillCreateIp},#{timeStart},#{timeExpire},#{goodsTag},#{tradeType},#{bankType},#{productId},#{limitPay},#{openid},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_pay_log 
+        set 
+            transaction_id=#{transactionId},
+            buyer_logon_id=#{buyerLogonId},
+            fund_channel=#{fundChannel},
+            pay_status=#{payStatus},
+            total_fee=#{totalFee},
+            settlement_total_fee=#{settlementTotalFee},
+            cash_fee=#{cashFee},
+            cash_fee_type=#{cashFeeType},
+            prepay_id=#{prepayId},
+            code_url=#{codeUrl},
+            time_end=#{timeEnd},
+            pay_type=#{payType},
+            is_drawback=#{isDrawback},
+            drawback_time=#{drawbackTime},
+            account_status=#{accountStatus},
+            account_time=#{accountTime},
+            balance_status=#{balanceStatus},
+            balance_time=#{balanceTime},
+            fee_type=#{feeType},
+            device_info=#{deviceInfo},
+            nonce_str=#{nonceStr},
+            sign=#{sign},
+            body=#{body},
+            detail=#{detail},
+            attach=#{attach},
+            spbill_create_ip=#{spbillCreateIp},
+            time_start=#{timeStart},
+            time_expire=#{timeExpire},
+            goods_tag=#{goodsTag},
+            trade_type=#{tradeType},
+            bank_type=#{bankType},
+            product_id=#{productId},
+            limit_pay=#{limitPay},
+            is_subscribe=#{isSubscribe},
+            err_code=#{errCode},
+            err_code_des=#{errCodeDes},
+            coupon_fee=#{couponFee},
+            coupon_count=#{couponCount},
+            coupon_data=#{couponData}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_pay_log where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_pay_log where id = #{id}
+    </select>
+    
+    <!-- 根据支付订单号查询支付单  -->
+    <select id="queryByPayOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_pay_log where pay_order_no = #{payOrderNo}
+    </select>
+    
+    <!-- 根据订单号查询未结束的支付单  -->
+    <select id="queryUnFinishedByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_pay_log 
+        where order_no = #{orderNo}
+            and pay_status in (0,1,2)
+        and is_app is null
+    </select>
+    <!-- 根据订单号查询未结束的支付单  -->
+    <select id="queryAppUnFinishedByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_pay_log
+        where order_no = #{orderNo}
+        and pay_status in (0,1,2)
+        and is_app = 0
+        and pay_method = #{payMethod}
+    </select>
+
+    <!-- 查询所有的已提交支付单  -->
+    <select id="queryPayLogSubmit"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_pay_log
+        where pay_status = 2
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="payMethod != null and payMethod != ''" >
+            and pay_method = #{payMethod}
+        </if>
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_pay_log
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="payOrderNo != null and payOrderNo != ''" >
+            and pay_order_no = #{payOrderNo}
+        </if>
+        <if test="transactionId != null and transactionId != ''" >
+            and transaction_id = #{transactionId}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+            and customer_name = #{customerName}
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and customer_mobile = #{customerMobile}
+        </if>
+        <if test="payStatus != null" >
+            and pay_status = #{payStatus}
+        </if>
+        <if test="totalFee != null and totalFee != ''" >
+            and total_fee = #{totalFee}
+        </if>
+        <if test="settlementTotalFee != null and settlementTotalFee != ''" >
+            and settlement_total_fee = #{settlementTotalFee}
+        </if>
+        <if test="cashFee != null and cashFee != ''" >
+            and cash_fee = #{cashFee}
+        </if>
+        <if test="cashFeeType != null and cashFeeType != ''" >
+            and cash_fee_type = #{cashFeeType}
+        </if>
+        <if test="prepayId != null and prepayId != ''" >
+            and prepay_id = #{prepayId}
+        </if>
+        <if test="codeUrl != null and codeUrl != ''" >
+            and code_url = #{codeUrl}
+        </if>
+        <if test="payTime != null and payTime != ''" >
+            and pay_time = #{payTime}
+        </if>
+        <if test="timeEnd != null and timeEnd != ''" >
+            and time_end = #{timeEnd}
+        </if>
+        <if test="payMethod != null and payMethod != ''" >
+            and pay_method = #{payMethod}
+        </if>
+        <if test="payType != null" >
+            and pay_type = #{payType}
+        </if>
+        <if test="expenseType != null" >
+            and expense_type = #{expenseType}
+        </if>
+        <if test="feeType != null" >
+            and fee_type = #{feeType}
+        </if>
+        <if test="deviceInfo != null and deviceInfo != ''" >
+            and device_info = #{deviceInfo}
+        </if>
+        <if test="nonceStr != null and nonceStr != ''" >
+            and nonce_str = #{nonceStr}
+        </if>
+        <if test="sign != null and sign != ''" >
+            and sign = #{sign}
+        </if>
+        <if test="body != null and body != ''" >
+            and body = #{body}
+        </if>
+        <if test="detail != null and detail != ''" >
+            and detail = #{detail}
+        </if>
+        <if test="attach != null and attach != ''" >
+            and attach = #{attach}
+        </if>
+        <if test="spbillCreateIp != null and spbillCreateIp != ''" >
+            and spbill_create_ip = #{spbillCreateIp}
+        </if>
+        <if test="timeStart != null and timeStart != ''" >
+            and time_start = #{timeStart}
+        </if>
+        <if test="timeExpire != null and timeExpire != ''" >
+            and time_expire = #{timeExpire}
+        </if>
+        <if test="goodsTag != null and goodsTag != ''" >
+            and goods_tag = #{goodsTag}
+        </if>
+        <if test="tradeType != null and tradeType != ''" >
+            and trade_type = #{tradeType}
+        </if>
+        <if test="bankType != null and bankType != ''" >
+            and bank_type = #{bankType}
+        </if>
+        <if test="productId != null and productId != ''" >
+            and product_id = #{productId}
+        </if>
+        <if test="limitPay != null and limitPay != ''" >
+            and limit_pay = #{limitPay}
+        </if>
+        <if test="openid != null and openid != ''" >
+            and openid = #{openid}
+        </if>
+        <if test="isSubscribe != null and isSubscribe != ''" >
+            and is_subscribe = #{isSubscribe}
+        </if>
+        <if test="errCode != null and errCode != ''" >
+            and err_code = #{errCode}
+        </if>
+        <if test="errCodeDes != null and errCodeDes != ''" >
+            and err_code_des = #{errCodeDes}
+        </if>
+        <if test="couponFee != null and couponFee != ''" >
+            and coupon_fee = #{couponFee}
+        </if>
+        <if test="couponCount != null and couponCount != ''" >
+            and coupon_count = #{couponCount}
+        </if>
+        <if test="couponData != null and couponData != ''" >
+            and coupon_data = #{couponData}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_pay_log
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="payOrderNo != null and payOrderNo != ''" >
+            and pay_order_no = #{payOrderNo}
+        </if>
+        <if test="transactionId != null and transactionId != ''" >
+            and transaction_id = #{transactionId}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+            and customer_name = #{customerName}
+        </if>
+        <if test="customerMobile != null and customerMobile != ''" >
+            and customer_mobile = #{customerMobile}
+        </if>
+        <if test="payStatus != null and payStatus != ''" >
+            and pay_status = #{payStatus}
+        </if>
+        <if test="totalFee != null and totalFee != ''" >
+            and total_fee = #{totalFee}
+        </if>
+        <if test="settlementTotalFee != null and settlementTotalFee != ''" >
+            and settlement_total_fee = #{settlementTotalFee}
+        </if>
+        <if test="cashFee != null and cashFee != ''" >
+            and cash_fee = #{cashFee}
+        </if>
+        <if test="cashFeeType != null and cashFeeType != ''" >
+            and cash_fee_type = #{cashFeeType}
+        </if>
+        <if test="prepayId != null and prepayId != ''" >
+            and prepay_id = #{prepayId}
+        </if>
+        <if test="codeUrl != null and codeUrl != ''" >
+            and code_url = #{codeUrl}
+        </if>
+        <if test="payTime != null and payTime != ''" >
+            and pay_time = #{payTime}
+        </if>
+        <if test="timeEnd != null and timeEnd != ''" >
+            and time_end = #{timeEnd}
+        </if>
+        <if test="payType != null" >
+            and pay_type = #{payType}
+        </if>
+        <if test="expenseType != null" >
+            and expense_type = #{expenseType}
+        </if>
+        <if test="feeType != null" >
+            and fee_type = #{feeType}
+        </if>
+        <if test="deviceInfo != null and deviceInfo != ''" >
+            and device_info = #{deviceInfo}
+        </if>
+        <if test="nonceStr != null and nonceStr != ''" >
+            and nonce_str = #{nonceStr}
+        </if>
+        <if test="sign != null and sign != ''" >
+            and sign = #{sign}
+        </if>
+        <if test="body != null and body != ''" >
+            and body = #{body}
+        </if>
+        <if test="detail != null and detail != ''" >
+            and detail = #{detail}
+        </if>
+        <if test="attach != null and attach != ''" >
+            and attach = #{attach}
+        </if>
+        <if test="spbillCreateIp != null and spbillCreateIp != ''" >
+            and spbill_create_ip = #{spbillCreateIp}
+        </if>
+        <if test="timeStart != null and timeStart != ''" >
+            and time_start = #{timeStart}
+        </if>
+        <if test="timeExpire != null and timeExpire != ''" >
+            and time_expire = #{timeExpire}
+        </if>
+        <if test="goodsTag != null and goodsTag != ''" >
+            and goods_tag = #{goodsTag}
+        </if>
+        <if test="tradeType != null and tradeType != ''" >
+            and trade_type = #{tradeType}
+        </if>
+        <if test="bankType != null and bankType != ''" >
+            and bank_type = #{bankType}
+        </if>
+        <if test="productId != null and productId != ''" >
+            and product_id = #{productId}
+        </if>
+        <if test="limitPay != null and limitPay != ''" >
+            and limit_pay = #{limitPay}
+        </if>
+        <if test="openid != null and openid != ''" >
+            and openid = #{openid}
+        </if>
+        <if test="isSubscribe != null and isSubscribe != ''" >
+            and is_subscribe = #{isSubscribe}
+        </if>
+        <if test="errCode != null and errCode != ''" >
+            and err_code = #{errCode}
+        </if>
+        <if test="errCodeDes != null and errCodeDes != ''" >
+            and err_code_des = #{errCodeDes}
+        </if>
+        <if test="couponFee != null and couponFee != ''" >
+            and coupon_fee = #{couponFee}
+        </if>
+        <if test="couponCount != null and couponCount != ''" >
+            and coupon_count = #{couponCount}
+        </if>
+        <if test="couponData != null and couponData != ''" >
+            and coupon_data = #{couponData}
+        </if>
+    </select>
+
+</mapper>   
