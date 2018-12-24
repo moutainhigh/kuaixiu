@@ -1441,7 +1441,7 @@ public class RecycleController extends BaseController {
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
         RecycleSystem r=new RecycleSystem();
         r.setIsDel(0);
-        List<RecycleSystem> list =recycleSystemService.queryListForPage(r);
+        List<RecycleSystem> list =recycleSystemService.queryList(r);
         request.setAttribute("fromSystems", list);
         String returnView = "recycle/listForAdmin";
         return new ModelAndView(returnView);
