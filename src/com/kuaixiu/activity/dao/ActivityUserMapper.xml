@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.activity.dao.ActivityUserMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityUser" >
+        <result column="id" property="id"/>
+        <result column="company_id" property="companyId"/>
+        <result column="activity_type" property="activityType"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_number" property="userNumber"/>
+        <result column="user_model" property="userModel"/>
+        <result column="appointment_item" property="appointmentItem"/>
+    </resultMap>
+    
+    <!-- kx_activity_user table all fields -->
+    <sql id="Base_Column_List" >
+        id,company_id,activity_type,user_name,user_number,user_model,appointment_item
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_activity_user
+        (id,company_id,activity_type,user_name,user_number,user_model,appointment_item)
+        values
+        (#{id},#{companyId},#{activityType},#{userName},#{userNumber},#{userModel},#{appointmentItem})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_activity_user 
+        set 
+            id=#{id},
+            company_id=#{companyId},
+            activity_type=#{activityType},
+            user_name=#{userName},
+            user_number=#{userNumber},
+            user_model=#{userModel},
+            appointment_item=#{appointmentItem}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_activity_user where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_user where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_user
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="companyId != null and companyId != ''" >
+            and company_id = #{companyId}
+        </if>
+        <if test="activityType != null and activityType != ''" >
+            and activity_type = #{activityType}
+        </if>
+        <if test="userName != null and userName != ''" >
+            and user_name = #{userName}
+        </if>
+        <if test="userNumber != null and userNumber != ''" >
+            and user_number = #{userNumber}
+        </if>
+        <if test="userModel != null and userModel != ''" >
+            and user_model = #{userModel}
+        </if>
+        <if test="appointmentItem != null and appointmentItem != ''" >
+            and appointment_item = #{appointmentItem}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_user
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="companyId != null and companyId != ''" >
+            and company_id = #{companyId}
+        </if>
+        <if test="activityType != null and activityType != ''" >
+            and activity_type = #{activityType}
+        </if>
+        <if test="userName != null and userName != ''" >
+            and user_name = #{userName}
+        </if>
+        <if test="userNumber != null and userNumber != ''" >
+            and user_number = #{userNumber}
+        </if>
+        <if test="userModel != null and userModel != ''" >
+            and user_model = #{userModel}
+        </if>
+        <if test="appointmentItem != null and appointmentItem != ''" >
+            and appointment_item = #{appointmentItem}
+        </if>
+    </select>
+
+</mapper>   
