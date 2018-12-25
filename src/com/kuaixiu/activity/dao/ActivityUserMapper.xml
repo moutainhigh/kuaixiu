@@ -12,19 +12,21 @@
         <result column="user_number" property="userNumber"/>
         <result column="user_model" property="userModel"/>
         <result column="appointment_item" property="appointmentItem"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
     
     <!-- kx_activity_user table all fields -->
     <sql id="Base_Column_List" >
-        id,company_id,activity_type,user_name,user_number,user_model,appointment_item
+        id,company_id,activity_type,user_name,user_number,user_model,appointment_item,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_activity_user
-        (id,company_id,activity_type,user_name,user_number,user_model,appointment_item)
+        (id,company_id,activity_type,user_name,user_number,user_model,appointment_item,create_time,update_time)
         values
-        (#{id},#{companyId},#{activityType},#{userName},#{userNumber},#{userModel},#{appointmentItem})
+        (#{id},#{companyId},#{activityType},#{userName},#{userNumber},#{userModel},#{appointmentItem},#{createTime},#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -37,7 +39,9 @@
             user_name=#{userName},
             user_number=#{userNumber},
             user_model=#{userModel},
-            appointment_item=#{appointmentItem}
+            appointment_item=#{appointmentItem},
+            create_time=#{createTime},
+            update_time=#{updateTime}
         where id=#{id}
     </update>
 
@@ -79,6 +83,12 @@
         <if test="appointmentItem != null and appointmentItem != ''" >
             and appointment_item = #{appointmentItem}
         </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
     </select>
     
     <!-- 查询列表 带分页 -->
@@ -107,6 +117,12 @@
         </if>
         <if test="appointmentItem != null and appointmentItem != ''" >
             and appointment_item = #{appointmentItem}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
         </if>
     </select>
 

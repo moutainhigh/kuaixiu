@@ -16,19 +16,22 @@
         <result column="dx_increment_business_id" property="dxIncrementBusinessId"/>
         <result column="dx_increment_business" property="dxIncrementBusiness"/>
         <result column="dx_increment_business_detail" property="dxIncrementBusinessDetail"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
     
     <!-- kx_activity_company table all fields -->
     <sql id="Base_Column_List" >
-        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business,dx_increment_business_detail
+        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business,dx_increment_business_detail,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_activity_company
-        (id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business,dx_increment_business_detail)
+        (id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business,dx_increment_business_detail,create_time,create_user,update_time)
         values
-        (#{id},#{companyId},#{companyName},#{activityIdentification},#{activityImgUrl},#{kxBusinessId},#{kxBusiness},#{kxBusinessDetail},#{dxIncrementBusinessId},#{dxIncrementBusiness},#{dxIncrementBusinessDetail})
+        (#{id},#{companyId},#{companyName},#{activityIdentification},#{activityImgUrl},#{kxBusinessId},#{kxBusiness},#{kxBusinessDetail},#{dxIncrementBusinessId},#{dxIncrementBusiness},#{dxIncrementBusinessDetail},now(),#{createUser},#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -45,7 +48,10 @@
             kx_business_detail=#{kxBusinessDetail},
             dx_increment_business_id=#{dxIncrementBusinessId},
             dx_increment_business=#{dxIncrementBusiness},
-            dx_increment_business_detail=#{dxIncrementBusinessDetail}
+            dx_increment_business_detail=#{dxIncrementBusinessDetail},
+            create_time=#{createTime},
+            create_user=#{createUser},
+            update_time=#{updateTime}
         where id=#{id}
     </update>
 
@@ -99,6 +105,15 @@
         <if test="dxIncrementBusinessDetail != null and dxIncrementBusinessDetail != ''" >
             and dx_increment_business_detail = #{dxIncrementBusinessDetail}
         </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUser != null and createUser != ''" >
+            and create_user = #{createUser}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
     </select>
     
     <!-- 查询列表 带分页 -->
@@ -139,6 +154,15 @@
         </if>
         <if test="dxIncrementBusinessDetail != null and dxIncrementBusinessDetail != ''" >
             and dx_increment_business_detail = #{dxIncrementBusinessDetail}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUser != null and createUser != ''" >
+            and create_user = #{createUser}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
         </if>
     </select>
 
