@@ -165,7 +165,7 @@ public class ModelController extends BaseController {
         String repairCosts = request.getParameter("addRepairCostValue");
         String logoPath="";
         try {
-        	logoPath=getPath(request,"file");             //图片路径
+        	logoPath=getPath(request,"file",null);             //图片路径
         	System.out.println("图片路径："+logoPath);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -248,7 +248,7 @@ public class ModelController extends BaseController {
         String repairCosts = request.getParameter("upRepairCostValue");
         String logoPath="";
         try {
-        	logoPath=getPath(request,"file");             //图片路径
+        	logoPath=getPath(request,"file",null);             //图片路径
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}    
