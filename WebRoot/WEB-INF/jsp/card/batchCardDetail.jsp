@@ -61,6 +61,9 @@
                         <c:if test="${batch.cardName==5}">
                             <h4>号卡名称：199元不限流量卡</h4>
                         </c:if>
+                        <c:if test="${batch.cardName==6}">
+                            <h4>号卡名称：29元不限流量卡</h4>
+                        </c:if>
                     </div><!-- /.col -->
 
                     <div class="col-md-6 col-sm-6 col-xs-12">
