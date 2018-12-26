@@ -71,6 +71,9 @@
                         <c:if test="${card.cardName==5}">
                             <h4>号卡名称：199元不限流量卡</h4>
                         </c:if>
+                        <c:if test="${card.cardName==6}">
+                            <h4>号卡名称：29元不限流量卡</h4>
+                        </c:if>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
