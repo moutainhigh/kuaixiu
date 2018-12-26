@@ -210,6 +210,9 @@
                     case 5:
                         state = "199元不限流量卡";
                         break;
+                    case 6:
+                        state = "29元不限流量卡";
+                        break;
                     default:
                         state = "";
                 }
