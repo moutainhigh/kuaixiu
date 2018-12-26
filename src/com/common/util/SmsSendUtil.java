@@ -102,6 +102,7 @@ public class SmsSendUtil {
         StringBuffer content = new StringBuffer();
         content.append("您已下单成功，我们的工程师会尽快联系您的，请注意接听电话；");
         content.append("您也可以在http://t.cn/E2y7OEC或关注M超人公众号关注订单的动态。");
+        content.append("客服热线：4008110299");
         return sendSmsThread(mobile, content.toString());
     }
     
@@ -114,6 +115,7 @@ public class SmsSendUtil {
         content.append("您已下单成功，请及时寄出手机并选择邮寄到付，");
         content.append("我们会在收件后第一时间联系您，请保持联系电话的通畅；");
         content.append("您也可以在http://t.cn/E2y7OEC中查看订单的最新状态。");
+        content.append("客服热线：4008110299");
         return sendSmsThread(mobile, content.toString());
     }
     
