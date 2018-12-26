@@ -11,6 +11,8 @@ import com.common.base.dao.BaseDao;
  */
 public interface ActivityCompanyMapper<T> extends BaseDao<T> {
 
+    //根据活动标识查询
+    T queryByIdentification(String activityIdentification);
 }
 
 

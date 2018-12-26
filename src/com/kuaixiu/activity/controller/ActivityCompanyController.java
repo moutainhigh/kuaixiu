@@ -59,6 +59,7 @@ public class ActivityCompanyController extends BaseController {
         ResultData result=new ResultData();
         try {
             SessionUser user=getCurrentUser(request);
+            String activityIdentification = request.getParameter("activityIdentification");
             String companyName = request.getParameter("companyName");
             String kxBusiness = request.getParameter("kxBusiness");
             String kxBusinessDetail = request.getParameter("kxBusinessDetail");
@@ -79,7 +80,7 @@ public class ActivityCompanyController extends BaseController {
             ActivityCompany company=new ActivityCompany();
             company.setCompanyId(UUID.randomUUID().toString().replace("-","").substring(0,16));
             company.setCompanyName(companyName);
-            company.setActivityIdentification(UUID.randomUUID().toString().replace("",""));
+            company.setActivityIdentification(activityIdentification);
             company.setActivityImgUrl(imageUrl);
             company.setKxBusinessId(UUID.randomUUID().toString().replace("-","").substring(0,16));
             company.setDxIncrementBusinessId(UUID.randomUUID().toString().replace("-","").substring(0,16));
@@ -101,7 +102,7 @@ public class ActivityCompanyController extends BaseController {
 
 
     /**
-     * 保存公司活动信息
+     * 根据活动标识查询活动信息
      * @param request
      * @param response
      * @return
@@ -114,7 +115,16 @@ public class ActivityCompanyController extends BaseController {
         ResultData result=new ResultData();
         try {
             SessionUser user=getCurrentUser(request);
+            String activityIdentification=request.getParameter("activityIdentification");
+            if(StringUtils.isBlank(activityIdentification)){
+                return getResult(result,null,false,"2","参数不能为空");
+            }
 
+            ActivityCompany activityCompany=activityCompanyService.getDao().queryByIdentification(activityIdentification);
+
+            result.setResult(activityCompany);
+            result.setResultMessage("成功");
+            result.setSuccess(true);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -66,6 +66,12 @@
         from kx_activity_company where id = #{id}
     </select>
 
+    <!-- 根据活动标识查询  -->
+    <select id="queryByIdentification"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_company where activity_identification = #{activityIdentification}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
