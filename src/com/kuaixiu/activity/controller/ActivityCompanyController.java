@@ -1,9 +1,12 @@
 package com.kuaixiu.activity.controller;
 
 import com.common.base.controller.BaseController;
+import com.common.paginate.Page;
+import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.service.ActivityCompanyService;
+import com.kuaixiu.coupon.entity.Coupon;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
@@ -15,12 +18,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * ActivityCompany Controller
  *
- * @CreateDate: 2018-12-25 上午10:13:01
+ * @CreateDate: 2018-12-27 上午11:24:16
  * @version: V 1.0
  */
 @Controller
@@ -39,14 +44,76 @@ public class ActivityCompanyController extends BaseController {
      */
     @RequestMapping(value = "/activityCompany/list")
     public ModelAndView list(HttpServletRequest request,
-                              HttpServletResponse response) throws Exception {
-        
-        String returnView ="activityCompany/list";
+                             HttpServletResponse response) throws Exception {
+
+        String returnView = "activity/activityCompany";
+        return new ModelAndView(returnView);
+    }
+
+    /**
+     * 根据活动标识查询活动信息
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/activityCompany/getActivityForPage")
+    @ResponseBody
+    public void getActivityForPage(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            String activityIdentification = request.getParameter("activityIdentification");
+            String companyName = request.getParameter("companyName");
+            String queryStartTime = request.getParameter("queryStartTime");
+            String queryEndTime = request.getParameter("queryEndTime");
+            String startTime = request.getParameter("startTime");
+            String endTime = request.getParameter("endTime");
+            String isEnd = request.getParameter("isEnd");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            ActivityCompany activityCompany = new ActivityCompany();
+            activityCompany.setCompanyName(companyName);
+            activityCompany.setActivityIdentification(activityIdentification);
+            activityCompany.setQueryStartTime(queryStartTime);
+            activityCompany.setQueryEndTime(queryEndTime);
+            if (StringUtils.isNotBlank(startTime)) {
+                activityCompany.setStartTime(startTime);
+            }
+            if (StringUtils.isNotBlank(endTime)) {
+                activityCompany.setEndTime(endTime);
+            }
+            activityCompany.setPage(page);
+            List<ActivityCompany> activityCompanies = activityCompanyService.getDao().queryListForPage(activityCompany);
+            page.setData(activityCompanies);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
+
+    /**
+     * 列表查询
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/activityCompany/create")
+    public ModelAndView add(HttpServletRequest request,
+                            HttpServletResponse response) throws Exception {
+
+        String returnView = "activity/createActivity";
         return new ModelAndView(returnView);
     }
 
     /**
      * 保存公司活动信息
+     *
      * @param request
      * @param response
      * @return
@@ -56,53 +123,86 @@ public class ActivityCompanyController extends BaseController {
     @ResponseBody
     public ResultData addActivity(HttpServletRequest request,
                                   HttpServletResponse response) throws Exception {
-        ResultData result=new ResultData();
+        ResultData result = new ResultData();
         try {
-            SessionUser user=getCurrentUser(request);
+            SessionUser user = getCurrentUser(request);
             String activityIdentification = request.getParameter("activityIdentification");
             String companyName = request.getParameter("companyName");
+            String kxBusinessTitle = request.getParameter("kxBusinessTitle");
             String kxBusiness = request.getParameter("kxBusiness");
             String kxBusinessDetail = request.getParameter("kxBusinessDetail");
+            String dxIncrementBusinessTitle = request.getParameter("dxIncrementBusinessTitle");
             String dxIncrementBusiness = request.getParameter("dxIncrementBusiness");
             String dxIncrementBusinessDetail = request.getParameter("dxIncrementBusinessDetail");
+            String dxBusinessPerson = request.getParameter("dxBusinessPerson");
+            String dxBusinessPersonNumber = request.getParameter("dxBusinessPersonNumber");
+            String startTime = request.getParameter("startTime");
+            String endTime = request.getParameter("endTime");
 
-            if(StringUtils.isBlank(companyName)||StringUtils.isBlank(kxBusiness)||StringUtils.isBlank(kxBusinessDetail)
-                    ||StringUtils.isBlank(dxIncrementBusiness)||StringUtils.isBlank(dxIncrementBusinessDetail)){
-                return getResult(result,null,false,"2","参数不能为空");
+            if (StringUtils.isBlank(companyName) || StringUtils.isBlank(kxBusiness) || StringUtils.isBlank(kxBusinessDetail)
+                    || StringUtils.isBlank(dxIncrementBusiness) || StringUtils.isBlank(dxIncrementBusinessDetail)
+                    || StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime) || StringUtils.isBlank(kxBusinessTitle)
+                    || StringUtils.isBlank(dxIncrementBusinessTitle) || StringUtils.isBlank(dxBusinessPerson)
+                    || StringUtils.isBlank(dxBusinessPersonNumber)) {
+                return getResult(result, null, false, "2", "参数不能为空");
             }
 
             //获取图片，保存图片到webapp同级inages/activityCompany目录
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
-            String logoPath=getPath(request,"file",savePath);             //图片路径
+            String logoPath = getPath(request, "file", savePath);             //图片路径
             String imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
-            System.out.println("图片路径："+savePath);
+            System.out.println("图片路径：" + savePath);
 
-            ActivityCompany company=new ActivityCompany();
-            company.setCompanyId(UUID.randomUUID().toString().replace("-","").substring(0,16));
+            ActivityCompany company = new ActivityCompany();
+            company.setId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
+            company.setCompanyId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setCompanyName(companyName);
             company.setActivityIdentification(activityIdentification);
             company.setActivityImgUrl(imageUrl);
-            company.setKxBusinessId(UUID.randomUUID().toString().replace("-","").substring(0,16));
-            company.setDxIncrementBusinessId(UUID.randomUUID().toString().replace("-","").substring(0,16));
+            company.setKxBusinessId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
+            company.setDxIncrementBusinessId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setKxBusiness(kxBusiness);
             company.setKxBusinessDetail(kxBusinessDetail);
             company.setDxIncrementBusiness(dxIncrementBusiness);
             company.setDxIncrementBusinessDetail(dxIncrementBusinessDetail);
             company.setCreateUser(user.getUserId());
-
+            company.setKxBusinessTitle(kxBusinessTitle);
+            company.setDxIncrementBusinessTitle(dxIncrementBusinessTitle);
+            company.setDxBusinessPerson(dxBusinessPerson);
+            company.setDxBusinessPersonNumber(dxBusinessPersonNumber);
+            company.setActivityIdentification(createNewHd());
+            company.setStartTime(startTime);
+            company.setEndTime(endTime);
             activityCompanyService.add(company);
 
             result.setSuccess(true);
             result.setResultMessage("保存成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
     }
-
+    /**
+     * 生成新优惠编码
+     *
+     * @return
+     */
+    public String createNewHd() {
+        String regex = ".*[a-zA-Z]+.*";
+        // 获取新编码
+        String code = NOUtil.getRandomString(6);
+        // 检查编码是否存在 且必须包含英文字母
+        ActivityCompany c = activityCompanyService.getDao().queryByIdentification(code);
+        if (c == null && code.matches(regex)) {
+            return code;
+        } else {
+            return createNewHd();
+        }
+    }
 
     /**
      * 根据活动标识查询活动信息
+     *
      * @param request
      * @param response
      * @return
@@ -110,26 +210,20 @@ public class ActivityCompanyController extends BaseController {
      */
     @RequestMapping(value = "/activityCompany/getActivity")
     @ResponseBody
-    public ResultData getActivity(HttpServletRequest request,
-                              HttpServletResponse response) throws Exception {
-        ResultData result=new ResultData();
+    public ModelAndView getActivity(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
         try {
-            SessionUser user=getCurrentUser(request);
-            String activityIdentification=request.getParameter("activityIdentification");
-            if(StringUtils.isBlank(activityIdentification)){
-                return getResult(result,null,false,"2","参数不能为空");
-            }
+            SessionUser user = getCurrentUser(request);
+            String activityIdentification = request.getParameter("activityIdentification");
 
-            ActivityCompany activityCompany=activityCompanyService.getDao().queryByIdentification(activityIdentification);
+            ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);
 
-            result.setResult(activityCompany);
-            result.setResultMessage("成功");
-            result.setSuccess(true);
-        }catch (Exception e){
+            request.setAttribute("activity", activityCompany);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return new ModelAndView("activity/editActivity");
     }
-
 
 }

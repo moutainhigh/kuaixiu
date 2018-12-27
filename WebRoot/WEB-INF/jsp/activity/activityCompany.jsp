@@ -2,7 +2,7 @@
 <%@ include file="/commons/taglibs.jsp" %>
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg">公司活动管理</strong> /
+        <strong class="am-text-primary am-text-lg">活动管理</strong> /
         <small>列表查询</small>
     </div>
 </div>
@@ -13,81 +13,46 @@
     <form id="searchForm" class="am-form am-form-horizontal">
         <table id="searchTable">
             <tr>
-                <td class="search_th search_th_frist"><label class="control-label">&nbsp&nbsp&nbsp手 机 号 ：</label></td>
-                <td class="search_td"><input type="text" name="loginMobile" class="form-control"></td>
+                <td class="search_th search_th_frist"><label class="control-label">企 业 名 称：</label></td>
+                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
 
-                <td class="search_th"><label class="control-label">登 录 时 间 ：</label></td>
+                <td class="search_th"><label class="control-label">预 约 时 间 ：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
-                        <input type="text" id="startLoginTime" name="startLoginTime"
+                        <input type="text" id="startLoginTime" name="startTime"
                                class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="endLoginTime" name="endLoginTime"
+                        <input type="text" id="endLoginTime" name="endTime"
                                class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="search_th"><label class="control-label">检 测 时 间 ：</label></td>
+                <td class="search_th"><label class="control-label">创 建 时 间 ：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
-                        <input type="text" id="startTestTime" name="startTestTime"
+                        <input type="text" id="startTestTime" name="queryStartTime"
                                class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="endTestTime" name="endTestTime"
+                        <input type="text" id="endTestTime" name="queryEndTime"
                                class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>
-
-                <td class="search_th"><label class="control-label">成 单 时 间 ：</label></td>
+                <td class="search_th"><label class="control-label"> 预 约 状 态：</label></td>
                 <td class="search_td">
-                    <div class="am-datepicker-date">
-                        <input type="text" id="startSubmitTime" name="startSubmitTime"
-                               class="form-control am-datepicker-start" data-am-datepicker readonly>
-                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="endSubmitTime" name="endSubmitTime"
-                               class="form-control am-datepicker-end" data-am-datepicker readonly>
-                    </div>
+                    <select id="query_categoryId" name="isEnd" class="form-control">
+                        <option value="">--选择状态--</option>
+                        <option value="0">预约中</option>
+                        <option value="1">未开始</option>
+                        <option value="2">已结束</option>
+                    </select>
                 </td>
             </tr>
             <tr>
-                <td class="search_th"><label class="control-label"> 类目：</label></td>
-                <td class="search_td">
-                    <select id="query_categoryId" name="categoryId" onchange="CategoryChange(this.value);"
-                            class="form-control">
-                        <option value="">--选择类目--</option>
-                        <option value="0">手机</option>
-                        <option value="1">平板</option>
-                    </select>
-                </td>
+                <td class="search_th search_th_frist"><label class="control-label">渠道标识：</label></td>
+                <td class="search_td"><input type="text" name="activityIdentification" class="form-control"></td>
 
             </tr>
-            <tr>
-                <td class="search_th"><label class="control-label"> 手机品牌：</label></td>
-                <td class="search_td">
-                    <select id="query_brand" name="brandId" onchange="brandChange(this.value);" class="form-control">
-                        <option value="">--选择品牌--</option>
-                    </select>
-                </td>
-                <td class="search_th"><label class="control-label">维 修 机 型 ：</label></td>
-                <td class="search_td">
-                    <select id="query_model" name="modelId" class="form-control">
-                        <option value="">--选择机型--</option>
-                    </select>
-                </td>
-
-            </tr>
-            <tr>
-                <td class="search_th"><label class="control-label">是否成单 ：</label></td>
-                <td>
-                    <select name="isOrder" class="am-form-field">
-                        <option value="">请选择&nbsp;&nbsp;&nbsp;&nbsp;</option>
-                        <option value="0">未成单</option>
-                        <option value="1">已成单</option>
-                    </select>
-                </td>
-            </tr>
-
         </table>
 
         <div class="form-group">
@@ -111,12 +76,13 @@
                 <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth60 center">手机号</th>
-                <th class="fontWeight_normal tdwidth90 center">登录时间</th>
-                <th class="fontWeight_normal tdwidth60 center">品牌</th>
-                <th class="fontWeight_normal tdwidth60 center">机型</th>
-                <th class="fontWeight_normal tdwidth60 center">检测时间</th>
-                <th class="fontWeight_normal tdwidth60 center">成单时间</th>
+                <th class="fontWeight_normal tdwidth60 center">创建时间</th>
+                <th class="fontWeight_normal tdwidth90 center">预约时间</th>
+                <th class="fontWeight_normal tdwidth60 center">快修业务说明</th>
+                <th class="fontWeight_normal tdwidth60 center">电信增值业务说明</th>
+                <th class="fontWeight_normal tdwidth60 center">电信业务负责人</th>
+                <th class="fontWeight_normal tdwidth60 center">渠道标识</th>
+                <th class="fontWeight_normal tdwidth60 center">预约状态</th>
                 <th class="fontWeight_normal tdwidth60 center">操作</th>
             </tr>
             </thead>
@@ -139,26 +105,26 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/recycle/getListForPage.do",
+        "url": "${ctx}/activityCompany/getActivityForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
             $.each(array, function () {
                 d[this.name] = this.value;
             });
-            CategoryChange(null);
         }
     };
 
     //设置数据列
     dto.setColumns([
         {"data": "id", "class": "center"},
-        {"data": "loginMobile", "class": ""},
-        {"data": "loginTime", "class": ""},
-        {"data": "brandName", "class": ""},
-        {"data": "modelName", "class": ""},
         {"data": "createTime", "class": ""},
-        {"data": "updateTime", "class": ""},
+        {"data": "startTime", "class": ""},
+        {"data": "kxBusiness", "class": ""},
+        {"data": "dxIncrementBusiness", "class": ""},
+        {"data": "dxBusinessPerson", "class": ""},
+        {"data": "activityIdentification", "class": ""},
+        {"data": "isEnd", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
@@ -180,6 +146,28 @@
                 }
             }
         },
+        {//复选框
+            targets: 2,
+            render: function (data, type, row, meta) {
+                if(row.startTime!=null && row.endTime!=null){
+                    return row.startTime+"至"+row.endTime;
+                }else{
+                    return "";
+                }
+            }
+        },
+        {//复选框
+            targets: -2,
+            render: function (data, type, row, meta) {
+                if(row.isEnd==0){
+                    return "预约中";
+                }else if(row.isEnd==1){
+                    return "未开始";
+                }else{
+                    return "已结束";
+                }
+            }
+        },
         {
             targets: -1,
             render: function (data, type, row, meta) {
@@ -187,11 +175,11 @@
                 var context = {
                     func: [
                         {
-                            "name": "查看",
-                            "fn": "editBtnClick(\'" + row.id + "\')",
+                            "name": "编辑",
+                            "fn": "editBtnClick(\'" + row.activityIdentification + "\')",
                             "icon": "am-icon-search",
                             "class": "am-text-secondary"
-                        },
+                        }
                     ]
                 };
                 var html = template_btn(context);
@@ -222,15 +210,11 @@
         });
     }
 
-    function createCoupon() {
-        func_reload_page("${ctx}/recycle/createCoupon.do");
-    }
-
     /**
      *  查看
      */
-    function editBtnClick(id) {
-        func_reload_page("${ctx}/recycle/testDetail.do?id=" + id);
+    function editBtnClick(identification) {
+        func_reload_page("${ctx}/activityCompany/getActivity.do?activityIdentification=" + identification);
     }
 
 
@@ -274,46 +258,4 @@
         minView: "month"//设置只显示到月份
     });
 
-
-    function CategoryChange(id) {
-        $("#query_brand option[value!='']").remove();
-//        if (id) {
-            var url = AppConfig.ctx + "/recycle/getTestbrandList.do";
-            $.get(url, {categoryId: id}, function (result) {
-                if (!result.success) {
-                    return false;
-                }
-                var json = result.data;
-                var select_html = '';
-                if (json.length > 0) {
-                    for (a in json) {
-                        select_html += '<option value="' + json[a]['brandid'] + '">' + json[a]['brandname'] + '</option>';
-                    }
-                }
-                $("#query_brand").append(select_html);
-            });
-//        }
-    }
-
-
-    function brandChange(id) {
-        $("#query_model option[value!='']").remove();
-        var categoryId = $("#query_categoryId").val();
-        if (id) {
-            var url = AppConfig.ctx + "/recycle/getTestModelList.do";
-            $.get(url, {brandId: id, categoryId: categoryId}, function (result) {
-                if (!result.success) {
-                    return false;
-                }
-                var json = result.data;
-                var select_html = '';
-                if (json.length > 0) {
-                    for (a in json) {
-                        select_html += '<option value="' + json[a]['productid'] + '">' + json[a]['modelname'] + '</option>';
-                    }
-                }
-                $("#query_model").append(select_html);
-            });
-        }
-    }
 </script>
