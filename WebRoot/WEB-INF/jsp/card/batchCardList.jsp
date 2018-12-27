@@ -60,6 +60,7 @@
                         <option value="3">49元不限流量卡</option>
                         <option value="4">99元不限流量卡</option>
                         <option value="5">199元不限流量卡</option>
+                        <option value="6">29元不限流量卡</option>
                     </select>
                 </td>
 
@@ -209,6 +210,9 @@
                         break;
                     case 5:
                         state = "199元不限流量卡";
+                        break;
+                    case 6:
+                        state = "29元不限流量卡";
                         break;
                     default:
                         state = "";

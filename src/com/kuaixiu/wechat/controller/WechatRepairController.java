@@ -207,6 +207,12 @@ public class WechatRepairController extends BaseController {
             if (StringUtils.isBlank(modelId)) {
                 throw new SystemException(ApiResultConstant.resultCode_str_1001, ApiResultConstant.resultCode_1001);
             }
+            if(StringUtils.isBlank(pageIndex)){
+                pageIndex="1";
+            }
+            if(StringUtils.isBlank(pageSize)){
+                pageSize="1000";
+            }
             Page page = new Page();
             Integer Index = Math.abs(Integer.valueOf(pageIndex));
             Integer Size = Math.abs(Integer.valueOf(pageSize));

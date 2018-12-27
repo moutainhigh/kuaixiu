@@ -141,4 +141,32 @@
         ) B
     </select>
 
+    <!-- 查询列表无分页 -->
+    <select id="queryProjectList" resultMap="BaseResultMap" parameterType="Object">
+        select * from
+        (select t.project_id, t.price price
+        ,p.name project_name, m.name model_name,p.sort project_sort
+        from kx_repair_cost t
+        LEFT JOIN kx_project p on t.project_id = p.id
+        LEFT JOIN kx_model m on t.model_id = m.id
+        where id_del = 0
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        and p.sort is Not null order by p.sort ASC limit 0,1000) A
+        union
+        select * from
+        (select t.project_id, t.price price
+        ,p.name project_name, m.name model_name,p.sort project_sort
+        from kx_repair_cost t
+        LEFT JOIN kx_project p on t.project_id = p.id
+        LEFT JOIN kx_model m on t.model_id = m.id
+        where id_del = 0
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        and p.sort is null order by p.sort ASC limit 0,1000
+        ) B
+    </select>
+
 </mapper>   

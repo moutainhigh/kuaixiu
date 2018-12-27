@@ -34,6 +34,8 @@ public interface RepairCostMapper<T> extends BaseDao<T> {
 
     List<T> queryProjectForPage(T t);
 
+    List<T> queryProjectList(T t);
+
 }
 
 
