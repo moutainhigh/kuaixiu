@@ -1019,6 +1019,22 @@ body #wrap.otherWrap .main .select_fault {
   margin-bottom: .1rem;
   border-bottom: 1px solid #eeeeee;
 }
+body #wrap.otherWrap .main .loadMore {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-preferred-size: 2.55rem;
+      flex-basis: 2.55rem;
+  padding-bottom: .2rem;
+}
+body #wrap.otherWrap .main .loadMore a {
+  height: .3rem;
+  background-color: #d6d6d6;
+  border-radius: .045rem;
+  font-size: .12rem;
+  line-height: .3rem;
+  color: #ffffff;
+}
+
 body #wrap.otherWrap .main .select_color .color_list {
   display: -webkit-box;
   display: -ms-flexbox;
