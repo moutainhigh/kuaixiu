@@ -978,17 +978,20 @@ body #wrap.loginWrap .logAgainbg .logAgain p#already {
 body #wrap.selectWrap .main {
   padding: 0 .15rem .44rem;
 }
+
 body #wrap.selectWrap .main .selList {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;    /**增加这一行**/
+  justify-content: space-between;
   -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
   padding: 0 0 .1rem;
 }
+
 body #wrap.selectWrap .main .selList a {
   display: block;
   min-width: 47%;
@@ -1015,21 +1018,6 @@ body #wrap.otherWrap .main .select_fault {
   padding: 0 .15rem .225rem;
   margin-bottom: .1rem;
   border-bottom: 1px solid #eeeeee;
-}
-body #wrap.otherWrap .main .loadMore {
-  -ms-flex-negative: 0;
-      flex-shrink: 0;
-  -ms-flex-preferred-size: 2.55rem;
-      flex-basis: 2.55rem;
-  padding-bottom: .2rem;
-}
-body #wrap.otherWrap .main .loadMore a {
-  height: .3rem;
-  background-color: #d6d6d6;
-  border-radius: .045rem;
-  font-size: .12rem;
-  line-height: .3rem;
-  color: #ffffff;
 }
 body #wrap.otherWrap .main .select_color .color_list {
   display: -webkit-box;
