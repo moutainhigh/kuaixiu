@@ -226,4 +226,34 @@ public class ActivityCompanyController extends BaseController {
         return new ModelAndView("activity/editActivity");
     }
 
+
+    /**
+     * 根据活动标识查询活动信息
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/activityCompany/findActivity")
+    @ResponseBody
+    public ResultData findActivity(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String activityIdentification = request.getParameter("activityIdentification");
+            if(StringUtils.isBlank(activityIdentification)){
+                return getResult(result, null, false, "2", "参数不能为空");
+            }
+            ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);
+
+            result.setSuccess(true);
+            result.setResultMessage("成功");
+            result.setResult(activityCompany);
+            result.setResultCode("0");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
