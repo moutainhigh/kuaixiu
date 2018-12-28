@@ -128,7 +128,7 @@
             return false;
         } else {
             if (((obj.files[0].size).toFixed(2)) >= (300 * 1024)) {
-                AlertText.tips("d_alert", "提示", "请上传小于0K的图片");
+                AlertText.tips("d_alert", "提示", "请上传小于300K的图片");
                 return false;
             } else {
                 var file = document.getElementById("file");
