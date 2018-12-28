@@ -15,6 +15,7 @@
 <div class="am-g">
 
     <form id="insertForm" method="post" class="form-horizontal"  enctype="multipart/form-data">
+        <input type="text" hidden="hidden" id="activityIdentification" value="${activity.activityIdentification}" name="activityIdentification" class="form-control">
         <div class="form-group">
             <label  class="col-sm-2 control-label"><span style="color:red">*</span>企业名称</label>
             <div class="col-sm-9">
@@ -111,135 +112,30 @@
     };
 
     //点击保存按钮,提交form表单，触发校验
-    $("#addSaveBtn").click(function () {
-        //格式化分类属性信息为JSON串
-        $("#addSubmitBtn").click();
-    });
-
-    //表单验证
-    $(document).ready(function () {
-        insertValidatorForm();
-    });
-    //初始化表单
-    function insertValidatorForm() {
-        $("#insertForm")
-            .bootstrapValidator({
-                message: "不能为空",
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    file: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    startTime: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    endTime: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    kxBusinessTitle: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    kxBusiness: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    kxBusinessDetail: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    dxIncrementBusinessTitle: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    dxIncrementBusiness: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    dxIncrementBusinessDetail: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    dxBusinessPerson: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                    dxBusinessPersonNumber: {
-                        validators: {
-                            notEmpty: {
-                                message: "不能为空"
-                            }
-                        }
-                    },
-                }// end fields
-            }).on("success.form.bv", function (e) {
-            // 阻止表单提交
-            e.preventDefault();
-            // 验证颜色是否添加
-            //console.log("ddd");
-            //加载等待
-            AlertText.tips("d_loading");
-            //校验成功后的操作
-            var btn = $("#addSaveBtn");
-            //让按钮不能点击
-            btn.button("loading");
-            //遮盖层
-            var options = {
-                url: "${ctx}/activityCompany/add.do",
-                dataType: "JSON",
-                success: function (data) {
-                    if (data.success) {
-                        alert("成功");
-                    } else {
-                        //保存失败
-                        alert(data.msg);
-                        addFormReset();
-                    }
-                },
-                error: function () {
-                    alert("系统异常，请稍后再试");
+    $("#addSaveBtn").click(function(){
+        var formdata = new FormData($("#insertForm")[0]);
+        $.ajax({
+            url: "${ctx}/activityCompany/update.do",
+            type: "POST",
+            data:formdata,
+            dataType: "json",
+            processData: false,  // 告诉jQuery不要去处理发送的数据
+            contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+            success: function (result) {
+                if(result.success){
+                    alert("修改成功");
                     addFormReset();
+                }else{
+                    alert("失败");
                 }
-            }; // end options
-        }); // end on("success.form.bv"
-    }
+
+            },
+            error:function () {
+                alert("异常");
+            }
+
+        })
+    })
     /**
      * 重置表单
      */
@@ -251,6 +147,19 @@
         //隐藏等待
         AlertText.hide();
     }
+    $("#startTime").datetimepicker({
+        format: "yyyy-mm-dd",
+        language: "zh-CN",
+        autoclose: true,//选中关闭
+        minView: "month"//设置只显示到月份
+    });
+
+    $("#endTime").datetimepicker({
+        format: "yyyy-mm-dd",
+        language: "zh-CN",
+        autoclose: true,//选中关闭
+        minView: "month"//设置只显示到月份
+    });
 
 
 

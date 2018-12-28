@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,7 +74,7 @@ public class ActivityCompanyController extends BaseController {
             String endTime = request.getParameter("endTime");
             String isEnd = request.getParameter("isEnd");
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             ActivityCompany activityCompany = new ActivityCompany();
             activityCompany.setCompanyName(companyName);
@@ -87,8 +89,43 @@ public class ActivityCompanyController extends BaseController {
             }
             activityCompany.setPage(page);
             List<ActivityCompany> activityCompanies = activityCompanyService.getDao().queryListForPage(activityCompany);
-            page.setData(activityCompanies);
 
+            Long newTime = new Date().getTime();
+            Iterator<ActivityCompany> it = activityCompanies.iterator();
+            while (it.hasNext()) {
+                ActivityCompany x = it.next();
+                if (StringUtils.isNotBlank(isEnd)) {
+                    if ("0".equals(isEnd)) {
+                        if (sdf.parse(x.getStartTime()).getTime() >= newTime
+                                || newTime >= sdf.parse(x.getEndTime()).getTime()) {
+                            it.remove();
+                            continue;
+                        }
+                    }
+                    if ("1".equals(isEnd)) {
+                        if (sdf.parse(x.getStartTime()).getTime() <= newTime) {
+                            it.remove();
+                            continue;
+                        }
+                    }
+                    if ("2".equals(isEnd)) {
+                        if (sdf.parse(x.getEndTime()).getTime() >= newTime) {
+                            it.remove();
+                            continue;
+                        }
+                    }
+                }
+                if (sdf.parse(x.getStartTime()).getTime() <= newTime
+                        && newTime <= sdf.parse(x.getEndTime()).getTime()) {
+                    x.setIsEnd(0);
+                } else if (sdf.parse(x.getStartTime()).getTime() >= newTime) {
+                    x.setIsEnd(1);
+                } else if (newTime >= sdf.parse(x.getEndTime()).getTime()) {
+                    x.setIsEnd(2);
+                }
+            }
+
+            page.setData(activityCompanies);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,8 +179,7 @@ public class ActivityCompanyController extends BaseController {
             if (StringUtils.isBlank(companyName) || StringUtils.isBlank(kxBusiness) || StringUtils.isBlank(kxBusinessDetail)
                     || StringUtils.isBlank(dxIncrementBusiness) || StringUtils.isBlank(dxIncrementBusinessDetail)
                     || StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime) || StringUtils.isBlank(kxBusinessTitle)
-                    || StringUtils.isBlank(dxIncrementBusinessTitle) || StringUtils.isBlank(dxBusinessPerson)
-                    || StringUtils.isBlank(dxBusinessPersonNumber)) {
+                    || StringUtils.isBlank(dxIncrementBusinessTitle)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
 
@@ -157,7 +193,6 @@ public class ActivityCompanyController extends BaseController {
             company.setId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setCompanyId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setCompanyName(companyName);
-            company.setActivityIdentification(activityIdentification);
             company.setActivityImgUrl(imageUrl);
             company.setKxBusinessId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setDxIncrementBusinessId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
@@ -182,6 +217,72 @@ public class ActivityCompanyController extends BaseController {
         }
         return result;
     }
+
+    /**
+     * 保存公司活动信息
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/activityCompany/update")
+    @ResponseBody
+    public ResultData updateActivity(HttpServletRequest request,
+                                     HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            SessionUser user = getCurrentUser(request);
+            String activityIdentification = request.getParameter("activityIdentification");
+            String companyName = request.getParameter("companyName");
+            String kxBusinessTitle = request.getParameter("kxBusinessTitle");
+            String kxBusiness = request.getParameter("kxBusiness");
+            String kxBusinessDetail = request.getParameter("kxBusinessDetail");
+            String dxIncrementBusinessTitle = request.getParameter("dxIncrementBusinessTitle");
+            String dxIncrementBusiness = request.getParameter("dxIncrementBusiness");
+            String dxIncrementBusinessDetail = request.getParameter("dxIncrementBusinessDetail");
+            String dxBusinessPerson = request.getParameter("dxBusinessPerson");
+            String dxBusinessPersonNumber = request.getParameter("dxBusinessPersonNumber");
+            String startTime = request.getParameter("startTime");
+            String endTime = request.getParameter("endTime");
+
+            if (StringUtils.isBlank(companyName) || StringUtils.isBlank(kxBusiness) || StringUtils.isBlank(kxBusinessDetail)
+                    || StringUtils.isBlank(dxIncrementBusiness) || StringUtils.isBlank(dxIncrementBusinessDetail)
+                    || StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime) || StringUtils.isBlank(kxBusinessTitle)
+                    || StringUtils.isBlank(dxIncrementBusinessTitle)) {
+                return getResult(result, null, false, "2", "参数不能为空");
+            }
+
+            //获取图片，保存图片到webapp同级inages/activityCompany目录
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
+            String logoPath = getPath(request, "file", savePath);             //图片路径
+            String imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            System.out.println("图片路径：" + savePath);
+
+            ActivityCompany company = activityCompanyService.getDao().queryByIdentification(activityIdentification);
+            company.setCompanyName(companyName);
+            company.setActivityIdentification(activityIdentification);
+            company.setActivityImgUrl(imageUrl);
+            company.setKxBusiness(kxBusiness);
+            company.setKxBusinessDetail(kxBusinessDetail);
+            company.setDxIncrementBusiness(dxIncrementBusiness);
+            company.setDxIncrementBusinessDetail(dxIncrementBusinessDetail);
+            company.setKxBusinessTitle(kxBusinessTitle);
+            company.setDxIncrementBusinessTitle(dxIncrementBusinessTitle);
+            company.setDxBusinessPerson(dxBusinessPerson);
+            company.setDxBusinessPersonNumber(dxBusinessPersonNumber);
+            company.setStartTime(startTime);
+            company.setEndTime(endTime);
+            activityCompanyService.getDao().updateByIdentification(company);
+
+            result.setSuccess(true);
+            result.setResultMessage("保存成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /**
      * 生成新优惠编码
      *
@@ -238,11 +339,11 @@ public class ActivityCompanyController extends BaseController {
     @RequestMapping(value = "/activityCompany/findActivity")
     @ResponseBody
     public ResultData findActivity(HttpServletRequest request,
-                                    HttpServletResponse response) throws Exception {
+                                   HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             String activityIdentification = request.getParameter("activityIdentification");
-            if(StringUtils.isBlank(activityIdentification)){
+            if (StringUtils.isBlank(activityIdentification)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
             ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);

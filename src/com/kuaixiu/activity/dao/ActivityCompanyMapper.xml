@@ -29,7 +29,7 @@
     
     <!-- kx_activity_company table all fields -->
     <sql id="Base_Column_List" >
-        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,date_format(`start_time`,'%Y-%m-%d %H:%i:%s')start_time,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
@@ -65,6 +65,32 @@
             create_user=#{createUser},
             update_time=#{updateTime}
         where id=#{id}
+    </update>
+
+    <!-- 根据id，修改记录-->
+    <update id="updateByIdentification" parameterType="Object" >
+        update kx_activity_company
+        set
+        id=#{id},
+        company_id=#{companyId},
+        company_name=#{companyName},
+        activity_img_url=#{activityImgUrl},
+        kx_business_id=#{kxBusinessId},
+        kx_business_title=#{kxBusinessTitle},
+        kx_business=#{kxBusiness},
+        kx_business_detail=#{kxBusinessDetail},
+        dx_increment_business_id=#{dxIncrementBusinessId},
+        dx_increment_business_title=#{dxIncrementBusinessTitle},
+        dx_increment_business=#{dxIncrementBusiness},
+        dx_increment_business_detail=#{dxIncrementBusinessDetail},
+        dx_business_person_number=#{dxBusinessPersonNumber},
+        dx_business_person=#{dxBusinessPerson},
+        start_time=#{startTime},
+        end_time=#{endTime},
+        create_time=#{createTime},
+        create_user=#{createUser},
+        update_time=#{updateTime}
+        where activity_identification=#{activityIdentification}
     </update>
 
     <!-- 删除记录 -->

@@ -121,8 +121,13 @@
             dataType: "json",
             processData: false,  // 告诉jQuery不要去处理发送的数据
             contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
-            success: function (res) {
-                alert("aa");
+            success: function (result) {
+                if(result.success){
+                    alert("保存成功");
+                    addFormReset();
+                }else{
+                    alert("失败");
+                }
             },
             error:function () {
                 alert("异常");

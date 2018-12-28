@@ -1,6 +1,7 @@
 package com.kuaixiu.activity.dao;
 
 import com.common.base.dao.BaseDao;
+import com.kuaixiu.activity.entity.ActivityCompany;
 
 /**
  * ActivityCompany Mapper
@@ -13,6 +14,7 @@ public interface ActivityCompanyMapper<T> extends BaseDao<T> {
     //根据活动标识查询
     T queryByIdentification(String activityIdentification);
 
+    int updateByIdentification(T t);
 }
 
 

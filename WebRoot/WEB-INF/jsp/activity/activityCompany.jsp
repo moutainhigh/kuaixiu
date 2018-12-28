@@ -77,6 +77,7 @@
                                                                type="checkbox"/>序号
                 </th>
                 <th class="fontWeight_normal tdwidth60 center">创建时间</th>
+                <th class="fontWeight_normal tdwidth60 center">企业名称</th>
                 <th class="fontWeight_normal tdwidth90 center">预约时间</th>
                 <th class="fontWeight_normal tdwidth60 center">快修业务说明</th>
                 <th class="fontWeight_normal tdwidth60 center">电信增值业务说明</th>
@@ -119,6 +120,7 @@
     dto.setColumns([
         {"data": "id", "class": "center"},
         {"data": "createTime", "class": ""},
+        {"data": "companyName", "class": ""},
         {"data": "startTime", "class": ""},
         {"data": "kxBusiness", "class": ""},
         {"data": "dxIncrementBusiness", "class": ""},
@@ -147,23 +149,29 @@
             }
         },
         {//复选框
-            targets: 2,
+            targets: 3,
             render: function (data, type, row, meta) {
-                if(row.startTime!=null && row.endTime!=null){
-                    return row.startTime+"至"+row.endTime;
-                }else{
+                if (row.startTime != null && row.endTime != null) {
+                    return row.startTime + "至" + row.endTime;
+                } else {
                     return "";
                 }
             }
         },
         {//复选框
+            targets: -4,
+            render: function (data, type, row, meta) {
+                return row.dxBusinessPerson + "/<br/>" + row.dxBusinessPersonNumber;
+            }
+        },
+        {//复选框
             targets: -2,
             render: function (data, type, row, meta) {
-                if(row.isEnd==0){
+                if (row.isEnd == 0) {
                     return "预约中";
-                }else if(row.isEnd==1){
+                } else if (row.isEnd == 1) {
                     return "未开始";
-                }else{
+                } else {
                     return "已结束";
                 }
             }
@@ -198,7 +206,6 @@
         $("#pageStatus").val(1);
         myTable.ajax.reload(null, false);
     }
-
 
 
     /**
