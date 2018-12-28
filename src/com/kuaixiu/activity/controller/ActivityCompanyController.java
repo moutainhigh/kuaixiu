@@ -359,7 +359,7 @@ public class ActivityCompanyController extends BaseController {
                                    HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
-            String activityIdentification = request.getParameter("identification");
+            String activityIdentification = request.getParameter("iden");
             if (StringUtils.isBlank(activityIdentification)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
