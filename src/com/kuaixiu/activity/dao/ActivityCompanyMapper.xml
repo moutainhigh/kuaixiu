@@ -25,19 +25,20 @@
         <result column="create_time" property="createTime"/>
         <result column="create_user" property="createUser"/>
         <result column="update_time" property="updateTime"/>
+        <result column="activity_time" property="activityTime"/>
     </resultMap>
     
     <!-- kx_activity_company table all fields -->
     <sql id="Base_Column_List" >
-        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,activity_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_activity_company
-        (id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,create_time,create_user,update_time)
+        (id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,create_time,create_user,update_time,activity_time)
         values
-        (#{id},#{companyId},#{companyName},#{activityIdentification},#{activityImgUrl},#{kxBusinessId},#{kxBusinessTitle},#{kxBusiness},#{kxBusinessDetail},#{dxIncrementBusinessId},#{dxIncrementBusinessTitle},#{dxIncrementBusiness},#{dxIncrementBusinessDetail},#{dxBusinessPersonNumber},#{dxBusinessPerson},#{startTime},#{endTime},now(),#{createUser},#{updateTime})
+        (#{id},#{companyId},#{companyName},#{activityIdentification},#{activityImgUrl},#{kxBusinessId},#{kxBusinessTitle},#{kxBusiness},#{kxBusinessDetail},#{dxIncrementBusinessId},#{dxIncrementBusinessTitle},#{dxIncrementBusiness},#{dxIncrementBusinessDetail},#{dxBusinessPersonNumber},#{dxBusinessPerson},#{startTime},#{endTime},now(),#{createUser},#{updateTime},#{activityTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -63,7 +64,8 @@
             end_time=#{endTime},
             create_time=#{createTime},
             create_user=#{createUser},
-            update_time=#{updateTime}
+            update_time=#{updateTime},
+            activity_time=#{activityTime}
         where id=#{id}
     </update>
 
@@ -89,7 +91,8 @@
         end_time=#{endTime},
         create_time=#{createTime},
         create_user=#{createUser},
-        update_time=#{updateTime}
+        update_time=#{updateTime},
+        activity_time=#{activityTime}
         where activity_identification=#{activityIdentification}
     </update>
 
@@ -175,6 +178,10 @@
         <if test="updateTime != null and updateTime != ''" >
             and update_time = #{updateTime}
         </if>
+        <if test="activityTime != null and activityTime != ''" >
+            and activity_time=#{activityTime}
+        </if>
+
     </select>
     
     <!-- 查询列表 带分页 -->
@@ -248,6 +255,9 @@
         </if>
         <if test="updateTime != null and updateTime != ''" >
             and update_time = #{updateTime}
+        </if>
+        <if test="activityTime != null and activityTime != ''" >
+            and activity_time=#{activityTime}
         </if>
     </select>
 

@@ -176,6 +176,7 @@ public class ActivityCompanyController extends BaseController {
             String dxBusinessPersonNumber = request.getParameter("dxBusinessPersonNumber");
             String startTime = request.getParameter("startTime");
             String endTime = request.getParameter("endTime");
+            String activityTime = request.getParameter("activityTime");
 
             if (StringUtils.isBlank(companyName) || StringUtils.isBlank(kxBusiness) || StringUtils.isBlank(kxBusinessDetail)
                     || StringUtils.isBlank(dxIncrementBusiness) || StringUtils.isBlank(dxIncrementBusinessDetail)
@@ -191,6 +192,7 @@ public class ActivityCompanyController extends BaseController {
             System.out.println("图片路径：" + savePath);
 
             ActivityCompany company = new ActivityCompany();
+            company.setActivityTime(activityTime);
             company.setId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setCompanyId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             company.setCompanyName(companyName);
@@ -247,6 +249,7 @@ public class ActivityCompanyController extends BaseController {
             String startTime = request.getParameter("startTime");
             String endTime = request.getParameter("endTime");
             String fileURL = request.getParameter("fileURL");
+            String activityTime = request.getParameter("activityTime");
 
             if (StringUtils.isBlank(companyName) || StringUtils.isBlank(kxBusiness) || StringUtils.isBlank(kxBusinessDetail)
                     || StringUtils.isBlank(dxIncrementBusiness) || StringUtils.isBlank(dxIncrementBusinessDetail)
@@ -274,6 +277,7 @@ public class ActivityCompanyController extends BaseController {
 
             ActivityCompany company = activityCompanyService.getDao().queryByIdentification(activityIdentification);
             company.setCompanyName(companyName);
+            company.setActivityTime(activityTime);
             company.setActivityIdentification(activityIdentification);
             company.setActivityImgUrl(imageUrl);
             company.setKxBusiness(kxBusiness);
@@ -355,12 +359,21 @@ public class ActivityCompanyController extends BaseController {
                                    HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
-            String activityIdentification = request.getParameter("activityIdentification");
+            String activityIdentification = request.getParameter("identification");
             if (StringUtils.isBlank(activityIdentification)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
             ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);
-
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Long newTime = new Date().getTime();
+            if (sdf.parse(activityCompany.getStartTime()).getTime() <= newTime
+                    && newTime <= sdf.parse(activityCompany.getEndTime()).getTime()) {
+                activityCompany.setIsEnd(0);
+            } else if (sdf.parse(activityCompany.getStartTime()).getTime() >= newTime) {
+                activityCompany.setIsEnd(1);
+            } else if (newTime >= sdf.parse(activityCompany.getEndTime()).getTime()) {
+                activityCompany.setIsEnd(2);
+            }
             result.setSuccess(true);
             result.setResultMessage("成功");
             result.setResult(activityCompany);
