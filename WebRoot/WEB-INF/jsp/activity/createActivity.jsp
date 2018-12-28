@@ -160,10 +160,10 @@
             contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
             success: function (result) {
                 if (result.success) {
-                    alert("保存成功");
-                    addFormReset();
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                    $("#insertForm").data("bootstrapValidator").resetForm();
                 } else {
-                    alert("失败");
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
                 }
             },
             error: function () {
@@ -172,17 +172,6 @@
 
         })
     })
-    /**
-     * 重置表单
-     */
-    function addFormReset() {
-        //重置表单验证
-        $("#insertForm").data("bootstrapValidator").resetForm();
-        //让按钮重新能点击
-        $("#addSaveBtn").button("reset");
-        //隐藏等待
-        AlertText.hide();
-    }
     $("#startTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",

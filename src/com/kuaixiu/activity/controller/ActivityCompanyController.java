@@ -257,19 +257,19 @@ public class ActivityCompanyController extends BaseController {
                     || StringUtils.isBlank(dxIncrementBusinessTitle)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
-            String imageUrl ="";
+            String imageUrl = "";
             //获取图片，保存图片到webapp同级inages/activityCompany目录
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
             //转化request
-            MultipartHttpServletRequest rm=(MultipartHttpServletRequest) request;
-            MultipartFile mfile=rm.getFile("file");                             //获得前端页面传来的文件
-            byte[] bfile=mfile.getBytes();//获得文件的字节数组
-            if(bfile.length==0){
-                if(StringUtils.isBlank(fileURL)){
+            MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
+            MultipartFile mfile = rm.getFile("file");                             //获得前端页面传来的文件
+            byte[] bfile = mfile.getBytes();//获得文件的字节数组
+            if (bfile.length == 0) {
+                if (StringUtils.isBlank(fileURL)) {
                     return getResult(result, null, false, "2", "图片不能为空");
                 }
-                imageUrl=fileURL;
-            }else {
+                imageUrl = fileURL;
+            } else {
                 String logoPath = getPath(request, "file", savePath);             //图片路径
                 imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             }
@@ -366,14 +366,22 @@ public class ActivityCompanyController extends BaseController {
             ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Long newTime = new Date().getTime();
-            if (sdf.parse(activityCompany.getStartTime()).getTime() <= newTime
-                    && newTime <= sdf.parse(activityCompany.getEndTime()).getTime()) {
-                activityCompany.setIsEnd(0);
-            } else if (sdf.parse(activityCompany.getStartTime()).getTime() >= newTime) {
-                activityCompany.setIsEnd(1);
-            } else if (newTime >= sdf.parse(activityCompany.getEndTime()).getTime()) {
-                activityCompany.setIsEnd(2);
+            if (activityCompany == null) {
+                if (sdf.parse(activityCompany.getStartTime()).getTime() <= newTime
+                        && newTime <= sdf.parse(activityCompany.getEndTime()).getTime()) {
+                    activityCompany.setIsEnd(0);
+                } else if (sdf.parse(activityCompany.getStartTime()).getTime() >= newTime) {
+                    activityCompany.setIsEnd(1);
+                } else if (newTime >= sdf.parse(activityCompany.getEndTime()).getTime()) {
+                    activityCompany.setIsEnd(2);
+                }
+                if (StringUtils.isBlank(activityCompany.getActivityImgUrl())) {
+                    String imageUrl = getProjectUrl(request) + "/images/activityCompany/default.png";
+                    activityCompany.setActivityImgUrl(imageUrl);
+                }
             }
+
+
             result.setSuccess(true);
             result.setResultMessage("成功");
             result.setResult(activityCompany);

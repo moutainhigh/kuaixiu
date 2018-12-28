@@ -166,6 +166,7 @@
             success: function (result) {
                 if (result.success) {
                     AlertText.tips("d_alert", "提示", result.resultMessage);
+                    $("#insertForm").data("bootstrapValidator").resetForm();
                 } else {
                     AlertText.tips("d_alert", "提示", result.resultMessage);
                 }
