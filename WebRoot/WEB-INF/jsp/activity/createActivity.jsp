@@ -14,9 +14,9 @@
 
 <div class="am-g">
 
-    <form id="insertForm" method="post" class="form-horizontal"  enctype="multipart/form-data">
+    <form id="insertForm" method="post" class="form-horizontal" enctype="multipart/form-data">
         <div class="form-group">
-            <label  class="col-sm-2 control-label"><span style="color:red">*</span>企业名称</label>
+            <label class="col-sm-2 control-label"><span style="color:red">*</span>企业名称</label>
             <div class="col-sm-9">
                 <input type="text" id="companyName" name="companyName" class="form-control">
             </div>
@@ -24,14 +24,15 @@
 
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>上传图片</label>
-            <input class="col-sm-9" type="file" name="file" id="file" accept="image/*" onchange="imgChange(this);"/> <!--文件上传选择按钮-->
+            <input class="col-sm-9" type="file" name="file" id="file" accept="image/*" onchange="imgChange(this);"/>
+            <!--文件上传选择按钮-->
             <div id="preview" class="col-sm-9">
                 <img id="imghead" src="" width="260" height="180"/> <!--图片显示位置-->
             </div>
         </div>
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label"><span style="color:red">*</span>预约时间</label>
+            <label class="col-sm-2 control-label"><span style="color:red">*</span>预约时间</label>
             <div class="am-datepicker-date col-sm-9">
                 <input type="text" id="startTime" name="startTime"
                        class="form-control am-datepicker-start" data-am-datepicker readonly>
@@ -42,13 +43,13 @@
         </div>
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label"><span style="color:red">*</span>快修业务标题</label>
+            <label class="col-sm-2 control-label"><span style="color:red">*</span>快修业务标题</label>
             <div class="col-sm-9">
                 <input type="text" id="kxBusinessTitle" name="kxBusinessTitle" class="form-control" placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
-            <label  class="col-sm-2 control-label"><span style="color:red">*</span>快修业务说明</label>
+            <label class="col-sm-2 control-label"><span style="color:red">*</span>快修业务说明</label>
             <div class="col-sm-9">
                 <textarea name="kxBusiness" id="kxBusiness" cols="30" rows="10"></textarea>
             </div>
@@ -56,37 +57,42 @@
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>快修活动页地址</label>
             <div class="col-sm-9">
-                <input type="text" id="kxBusinessDetail" name="kxBusinessDetail" class="form-control" placeholder="快修业务">
+                <input type="text" id="kxBusinessDetail" name="kxBusinessDetail" class="form-control"
+                       placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
-            <label  class="col-sm-2 control-label"><span style="color:red">*</span>电信业务标题</label>
+            <label class="col-sm-2 control-label"><span style="color:red">*</span>电信业务标题</label>
             <div class="col-sm-9">
-                <input type="text" name="dxIncrementBusinessTitle" id="dxIncrementBusinessTitle" class="form-control" placeholder="电信业务">
+                <input type="text" name="dxIncrementBusinessTitle" id="dxIncrementBusinessTitle" class="form-control"
+                       placeholder="电信业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信业务说明</label>
             <div class="col-sm-9">
-                <textarea name=" dxIncrementBusiness" id="dxIncrementBusiness"  cols="30" rows="10"></textarea>
+                <textarea name=" dxIncrementBusiness" id="dxIncrementBusiness" cols="30" rows="10"></textarea>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信活动页地址</label>
             <div class="col-sm-9">
-                <input type="text" id="dxIncrementBusinessDetail"  name="dxIncrementBusinessDetail" class="form-control" placeholder="快修业务">
+                <input type="text" id="dxIncrementBusinessDetail" name="dxIncrementBusinessDetail" class="form-control"
+                       placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信活动负责人</label>
             <div class="col-sm-9">
-                <input type="text" id="dxBusinessPerson"  name="dxBusinessPerson" class="form-control" placeholder="快修业务">
+                <input type="text" id="dxBusinessPerson" name="dxBusinessPerson" class="form-control"
+                       placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信活动负责人电话</label>
             <div class="col-sm-9">
-                <input type="text" id="dxBusinessPersonNumber" name="dxBusinessPersonNumber" class="form-control" placeholder="快修业务">
+                <input type="text" id="dxBusinessPersonNumber" name="dxBusinessPersonNumber" class="form-control"
+                       placeholder="快修业务">
             </div>
         </div>
 
@@ -104,6 +110,18 @@
 <script type="text/javascript">
     // 选择图片显示
     function imgChange(obj) {
+        var file1 = obj.value;
+        if (!/.(gif|jpg|jpeg|png|GIF|JPG|bmp)$/.test(file1)) {
+            alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
+            return false;
+        } else {
+            //alert((ele.files[0].size).toFixed(2));
+            //返回Byte(B),保留小数点后两位
+            if (((obj.files[0].size).toFixed(2)) >= (300 * 1024)) {
+                alert("请上传小于300K的图片");
+                return false;
+            }
+        }
 //获取点击的文本框
         var file = document.getElementById("file");
         var imgUrl = window.URL.createObjectURL(file.files[0]);
@@ -112,24 +130,24 @@
     };
 
     //点击保存按钮,提交form表单，触发校验
-    $("#addSaveBtn").click(function(){
+    $("#addSaveBtn").click(function () {
         var formdata = new FormData($("#insertForm")[0]);
         $.ajax({
             url: "${ctx}/activityCompany/add.do",
             type: "POST",
-            data:formdata,
+            data: formdata,
             dataType: "json",
             processData: false,  // 告诉jQuery不要去处理发送的数据
             contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
             success: function (result) {
-                if(result.success){
+                if (result.success) {
                     alert("保存成功");
                     addFormReset();
-                }else{
+                } else {
                     alert("失败");
                 }
             },
-            error:function () {
+            error: function () {
                 alert("异常");
             }
 
