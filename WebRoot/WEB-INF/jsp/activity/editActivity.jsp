@@ -15,7 +15,8 @@
 <div class="am-g">
 
     <form id="insertForm" method="post" class="form-horizontal"  enctype="multipart/form-data">
-        <input type="text" hidden="hidden" id="activityIdentification" value="${activity.activityIdentification}" name="activityIdentification" class="form-control">
+        <input type="hidden" id="activityIdentification" value="${activity.activityIdentification}" name="activityIdentification" class="form-control">
+        <input type="hidden" value="${activity.activityImgUrl}" name="fileURL" id="fileUrl"/>
         <div class="form-group">
             <label  class="col-sm-2 control-label"><span style="color:red">*</span>企业名称</label>
             <div class="col-sm-9">
@@ -124,7 +125,6 @@
             success: function (result) {
                 if(result.success){
                     alert("修改成功");
-                    addFormReset();
                 }else{
                     alert("失败");
                 }
@@ -136,17 +136,17 @@
 
         })
     })
-    /**
-     * 重置表单
-     */
-    function addFormReset() {
-        //重置表单验证
-        $("#insertForm").data("bootstrapValidator").resetForm();
-        //让按钮重新能点击
-        $("#addSaveBtn").button("reset");
-        //隐藏等待
-        AlertText.hide();
-    }
+//    /**
+//     * 重置表单
+//     */
+//    function addFormReset() {
+//        //重置表单验证
+//        $("#insertForm").data("bootstrapValidator").resetForm();
+//        //让按钮重新能点击
+//        $("#addSaveBtn").button("reset");
+//        //隐藏等待
+//        AlertText.hide();
+//    }
     $("#startTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",

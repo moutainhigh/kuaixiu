@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -163,7 +165,6 @@ public class ActivityCompanyController extends BaseController {
         ResultData result = new ResultData();
         try {
             SessionUser user = getCurrentUser(request);
-            String activityIdentification = request.getParameter("activityIdentification");
             String companyName = request.getParameter("companyName");
             String kxBusinessTitle = request.getParameter("kxBusinessTitle");
             String kxBusiness = request.getParameter("kxBusiness");
@@ -245,6 +246,7 @@ public class ActivityCompanyController extends BaseController {
             String dxBusinessPersonNumber = request.getParameter("dxBusinessPersonNumber");
             String startTime = request.getParameter("startTime");
             String endTime = request.getParameter("endTime");
+            String fileURL = request.getParameter("fileURL");
 
             if (StringUtils.isBlank(companyName) || StringUtils.isBlank(kxBusiness) || StringUtils.isBlank(kxBusinessDetail)
                     || StringUtils.isBlank(dxIncrementBusiness) || StringUtils.isBlank(dxIncrementBusinessDetail)
@@ -252,11 +254,22 @@ public class ActivityCompanyController extends BaseController {
                     || StringUtils.isBlank(dxIncrementBusinessTitle)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
-
+            String imageUrl ="";
             //获取图片，保存图片到webapp同级inages/activityCompany目录
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
-            String logoPath = getPath(request, "file", savePath);             //图片路径
-            String imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            //转化request
+            MultipartHttpServletRequest rm=(MultipartHttpServletRequest) request;
+            MultipartFile mfile=rm.getFile("file");                             //获得前端页面传来的文件
+            byte[] bfile=mfile.getBytes();//获得文件的字节数组
+            if(bfile.length==0){
+                if(StringUtils.isBlank(fileURL)){
+                    return getResult(result, null, false, "2", "图片不能为空");
+                }
+                imageUrl=fileURL;
+            }else {
+                String logoPath = getPath(request, "file", savePath);             //图片路径
+                imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            }
             System.out.println("图片路径：" + savePath);
 
             ActivityCompany company = activityCompanyService.getDao().queryByIdentification(activityIdentification);
