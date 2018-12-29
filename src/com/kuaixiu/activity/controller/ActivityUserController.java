@@ -3,6 +3,7 @@ package com.kuaixiu.activity.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
+import com.common.paginate.Page;
 import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.activity.entity.ActivityCompany;
@@ -22,10 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * ActivityUser Controller
@@ -56,6 +54,30 @@ public class ActivityUserController extends BaseController {
         String returnView = "activityUser/list";
         return new ModelAndView(returnView);
     }
+
+    /**
+     * 根据活动标识查询活动信息
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/activityCompany/getActivityForPage")
+    @ResponseBody
+    public void getActivityForPage(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            String activityIdentification = request.getParameter("activityIdentification");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
+
 
     /**
      * 根据活动标识登录
@@ -106,9 +128,9 @@ public class ActivityUserController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/activityCompany/getProject")
+    @RequestMapping(value = "/activityCompany/getKxProject")
     @ResponseBody
-    public ResultData getProject(HttpServletRequest request,
+    public ResultData getKxProject(HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
