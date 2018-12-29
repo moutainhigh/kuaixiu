@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.card.dao.CardTypeMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.card.entity.CardType" >
+        <result column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="card_no" property="cardNo"/>
+        <result column="card_name" property="cardName"/>
+    </resultMap>
+    
+    <!-- hk_type table all fields -->
+    <sql id="Base_Column_List" >
+        id,type,card_no,card_name
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hk_type
+        (id,type,card_no,card_name)
+        values
+        (#{id},#{type},#{cardNo},#{cardName})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hk_type 
+        set 
+            id=#{id},
+            type=#{type},
+            card_no=#{cardNo},
+            card_name=#{cardName}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hk_type where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hk_type where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hk_type
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="cardNo != null and cardNo != ''" >
+            and card_no = #{cardNo}
+        </if>
+        <if test="cardName != null and cardName != ''" >
+            and card_name = #{cardName}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hk_type
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="cardNo != null and cardNo != ''" >
+            and card_no = #{cardNo}
+        </if>
+        <if test="cardName != null and cardName != ''" >
+            and card_name = #{cardName}
+        </if>
+    </select>
+
+</mapper>   
