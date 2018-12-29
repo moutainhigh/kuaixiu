@@ -10,6 +10,8 @@ import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.aes.YouDaoUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.google.common.collect.Maps;
+import com.kuaixiu.activity.entity.ActivityUser;
+import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.kuaixiu.wechat.service.WechatUserService;
@@ -63,6 +65,8 @@ public class RecycleWechatController extends BaseController {
     private SingleLoginService singleLoginService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private ActivityUserService activityUserService;
 
     /**
      * 通过微信临时code获取openid和session_key
@@ -87,8 +91,10 @@ public class RecycleWechatController extends BaseController {
             //翼回收
             if(StringUtils.isBlank(fromType)||"".equals(fromType)||Integer.valueOf(fromType)==0||Integer.valueOf(fromType)==1){
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
-            }else {
+            }else if(Integer.valueOf(fromType)==2){
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_POSTMAN_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_POSTMAN_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
+            }else if(Integer.valueOf(fromType)==3){
+                //待定
             }
             String httpGet = HttpClientUtil.httpGet(url);
             JSONObject parse = (JSONObject) JSONObject.parse(httpGet);
@@ -99,17 +105,29 @@ public class RecycleWechatController extends BaseController {
             String openId = parse.getString("openid");
             String unionid = parse.getString("unionid");
             String sessionKey = parse.getString("session_key");
-            //保存该用户
-            RecycleWechat wechat = new RecycleWechat();
-            wechat.setId(UUID.randomUUID().toString().replace("-", ""));
-            wechat.setOpenId(openId);
-            if (StringUtils.isNotBlank(unionid)) {
-                wechat.setUnionId(unionid);
+            if(Integer.valueOf(fromType)==3){
+                ActivityUser user=new ActivityUser();
+                //保存该用户
+                user.setId(UUID.randomUUID().toString().replace("-", ""));
+                user.setOpenId(openId);
+                if (StringUtils.isNotBlank(unionid)) {
+                    user.setUnionId(unionid);
+                }
+                user.setSessionKey(sessionKey);
+                activityUserService.getDao().add(user);
+            }else {
+                //保存该用户
+                RecycleWechat wechat = new RecycleWechat();
+                wechat.setId(UUID.randomUUID().toString().replace("-", ""));
+                wechat.setOpenId(openId);
+                if (StringUtils.isNotBlank(unionid)) {
+                    wechat.setUnionId(unionid);
+                }
+                wechat.setSessionKey(sessionKey);
+                recycleWechatService.addByOpenId(wechat);
+                //储存当前用户tokenId  后期下单确定用户
+                request.getSession().setAttribute("wechat_openId", openId);
             }
-            wechat.setSessionKey(sessionKey);
-            recycleWechatService.addByOpenId(wechat);
-            //储存当前用户tokenId  后期下单确定用户
-            request.getSession().setAttribute("wechat_openId", openId);
             jsonResult.put("openId", openId);
             result.setResult(jsonResult);
             result.setResultCode("0");

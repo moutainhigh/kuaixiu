@@ -1,5 +1,6 @@
 package com.kuaixiu.activity.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
@@ -330,9 +331,7 @@ public class ActivityCompanyController extends BaseController {
     @ResponseBody
     public ModelAndView getActivity(HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
-        ResultData result = new ResultData();
         try {
-            SessionUser user = getCurrentUser(request);
             String activityIdentification = request.getParameter("activityIdentification");
 
             ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);
@@ -359,7 +358,8 @@ public class ActivityCompanyController extends BaseController {
                                    HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
-            String activityIdentification = request.getParameter("iden");
+            JSONObject params = getPrarms(request);
+            String activityIdentification = params.getString("iden");
             if (StringUtils.isBlank(activityIdentification)) {
                 return getResult(result, null, false, "2", "参数不能为空");
             }

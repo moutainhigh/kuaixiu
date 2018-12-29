@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.activity.dao.ActivityUserMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityUser" >
+        <result column="id" property="id"/>
+        <result column="activity_ident" property="activityIdent"/>
+        <result column="openId" property="openId"/>
+        <result column="person" property="person"/>
+        <result column="number" property="number"/>
+        <result column="model" property="model"/>
+        <result column="project" property="project"/>
+        <result column="fault" property="fault"/>
+        <result column="login_number" property="loginNumber"/>
+        <result column="create_time" property="createTime"/>
+        <result column="session_key" property="sessionKey"/>unionId
+        <result column="unionId" property="unionId"/>
+    </resultMap>
+    
+    <!-- kx_activity_kx_user table all fields -->
+    <sql id="Base_Column_List" >
+        id,activity_ident,openId,person,number,model,project,fault,login_number,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,session_key,unionId
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_activity_kx_user
+        (id,activity_ident,openId,person,number,model,project,fault,login_number,create_time,session_key,unionId)
+        values
+        (#{id},#{activityIdent},#{openId},#{person},#{number},#{model},#{project},#{fault},#{loginNumber},#{createTime},#{sessionKey},#{unionId})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_activity_kx_user 
+        set 
+            id=#{id},
+            activity_ident=#{activityIdent},
+            openId=#{openId},
+            person=#{person},
+            number=#{number},
+            model=#{model},
+            project=#{project},
+            fault=#{fault},
+            login_number=#{loginNumber},
+            create_time=#{createTime},
+            unionId=#{unionId}
+        where id=#{id}
+    </update>
+
+    <!-- 根据openId修改记录-->
+    <update id="updateByOpenId" parameterType="Object" >
+        update kx_activity_kx_user
+        set
+        id=#{id},
+        activity_ident=#{activityIdent},
+        openId=#{openId},
+        person=#{person},
+        number=#{number},
+        model=#{model},
+        project=#{project},
+        fault=#{fault},
+        login_number=#{loginNumber},
+        create_time=#{createTime},
+        unionId=#{unionId}
+        where openId=#{openId}
+    </update>
+
+    <!-- 根据openId修改记录-->
+    <update id="updateByIden" parameterType="Object" >
+        update kx_activity_kx_user
+        set
+        id=#{id},
+        activity_ident=#{activityIdent},
+        openId=#{openId},
+        person=#{person},
+        number=#{number},
+        model=#{model},
+        project=#{project},
+        fault=#{fault},
+        login_number=#{loginNumber},
+        create_time=#{createTime},
+        unionId=#{unionId}
+        where activity_ident=#{activityIdent}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_activity_kx_user where id = #{id}
+    </delete>
+
+    <!-- 根据标识查询  -->
+    <select id="queryByIdent"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_kx_user where activity_ident=#{activityIdent}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_kx_user where id = #{id}
+    </select>
+
+    <!-- 根据openId查询  -->
+    <select id="queryByOpenId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_kx_user where openId=#{openId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_kx_user
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityIdent != null and activityIdent != ''" >
+            and activity_ident = #{activityIdent}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and openId = #{openId}
+        </if>
+        <if test="person != null and person != ''" >
+            and person = #{person}
+        </if>
+        <if test="number != null and number != ''" >
+            and number = #{number}
+        </if>
+        <if test="model != null and model != ''" >
+            and model = #{model}
+        </if>
+        <if test="project != null and project != ''" >
+            and project = #{project}
+        </if>
+        <if test="fault != null and fault != ''" >
+            and fault = #{fault}
+        </if>
+        <if test="loginNumber != null and loginNumber != ''" >
+            and login_number = #{loginNumber}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>unionId=#{unionId}
+        <if test="unionId != null and unionId != ''" >
+            and unionId=#{unionId}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_kx_user
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityIdent != null and activityIdent != ''" >
+            and activity_ident = #{activityIdent}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and openId = #{openId}
+        </if>
+        <if test="person != null and person != ''" >
+            and person = #{person}
+        </if>
+        <if test="number != null and number != ''" >
+            and number = #{number}
+        </if>
+        <if test="model != null and model != ''" >
+            and model = #{model}
+        </if>
+        <if test="project != null and project != ''" >
+            and project = #{project}
+        </if>
+        <if test="fault != null and fault != ''" >
+            and fault = #{fault}
+        </if>
+        <if test="loginNumber != null and loginNumber != ''" >
+            and login_number = #{loginNumber}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="unionId != null and unionId != ''" >
+            and unionId=#{unionId}
+        </if>
+    </select>
+
+</mapper>   

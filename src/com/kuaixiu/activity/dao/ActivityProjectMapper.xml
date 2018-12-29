@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.activity.dao.ActivityProjectMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityProject" >
+        <result column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="project_no" property="projectNo"/>
+        <result column="project_name" property="projectName"/>
+    </resultMap>
+    
+    <!-- kx_activity_project table all fields -->
+    <sql id="Base_Column_List" >
+        id,type,project_no,project_name
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_activity_project
+        (id,type,project_no,project_name)
+        values
+        (#{id},#{type},#{projectNo},#{projectName})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_activity_project 
+        set 
+            id=#{id},
+            type=#{type},
+            project_no=#{projectNo},
+            project_name=#{projectName}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_activity_project where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_project where id = #{id}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryByProjectNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_project where project_no=#{projectNo} and type=#{type}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_project
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="projectNo != null and projectNo != ''" >
+            and project_no = #{projectNo}
+        </if>
+        <if test="projectName != null and projectName != ''" >
+            and project_name = #{projectName}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_project
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="projectNo != null and projectNo != ''" >
+            and project_no = #{projectNo}
+        </if>
+        <if test="projectName != null and projectName != ''" >
+            and project_name = #{projectName}
+        </if>
+    </select>
+
+</mapper>   
