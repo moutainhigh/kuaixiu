@@ -6,13 +6,10 @@ import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.entity.ActivityProject;
 import com.kuaixiu.activity.entity.ActivityUser;
 import com.kuaixiu.activity.service.ActivityProjectService;
 import com.kuaixiu.activity.service.ActivityUserService;
-import com.kuaixiu.recycle.entity.RecycleWechat;
-import com.kuaixiu.recycle.service.RecycleWechatService;
 import com.system.api.entity.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,7 +48,7 @@ public class ActivityUserController extends BaseController {
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
 
-        String returnView = "activityUser/list";
+        String returnView = "activity/activityUserList";
         return new ModelAndView(returnView);
     }
 
@@ -63,15 +60,58 @@ public class ActivityUserController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/activityCompany/getActivityForPage")
+    @RequestMapping(value = "/activityCompany/getActivityUserForPage")
     @ResponseBody
-    public void getActivityForPage(HttpServletRequest request,
-                                   HttpServletResponse response) throws Exception {
+    public void getActivityUserForPage(HttpServletRequest request,
+                                       HttpServletResponse response) throws Exception {
         Page page = getPageByRequest(request);
         try {
-            String activityIdentification = request.getParameter("activityIdentification");
+            String companyName = request.getParameter("companyName");
+            String queryStartTime = request.getParameter("queryStartTime");
+            String queryEndTime = request.getParameter("queryEndTime");
+            String businessType = request.getParameter("businessType");//业务类型 1：快修  2电信
+            String person = request.getParameter("person");
+            String estimateResult = request.getParameter("estimateResult");//预约结果  1：有效  2：已结束
+            List<Object> objects = new ArrayList<>();
+            if (StringUtils.isBlank(businessType) || "1".equals(businessType)) {
+                ActivityUser user = new ActivityUser();
+                user.setCompanyName(companyName);
+                user.setPerson(person);
+                user.setQueryStartTime(queryStartTime);
+                user.setQueryEndTime(queryEndTime);
+                user.setPage(page);
+                List<Map<String, Object>> users=new ArrayList<Map<String,Object>>();
+                users = activityUserService.getDao().queryEstimateForPage(user);
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+                for(Map<String,Object> map:users){
+                    for(String s:map.keySet()){
+                        Long createTime = sdf.parse(map.get("updateTime").toString()).getTime();
+                        Long endTime = sdf.parse(map.get("endTime").toString()).getTime();
+                        if (createTime > endTime) {
+                            if("1".equals(estimateResult)){
+                                continue;
+                            }
+                            map.put("estimateResult", 1);
+                        }else{
+                            if("2".equals(estimateResult)){
+                                continue;
+                            }
+
+                            map.put("estimateResult", 2);
+                        }
+                        map.put("businessType", 1);
+                        objects.add(map);
+                    }
+
+                }
+            }
+            if (StringUtils.isBlank(businessType) || "2".equals(businessType)) {
+                //电信业务
+            }
+
+            page.setData(objects);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,7 +137,7 @@ public class ActivityUserController extends BaseController {
             String openId = params.getString("openId");
             String iv = params.getString("iv");
             String encryptedData = params.getString("encryptedData");
-            String activityIdentification =  params.getString("iden");
+            String activityIdentification = params.getString("iden");
 
             if (StringUtils.isBlank(openId) || StringUtils.isBlank(iv) || StringUtils.isBlank(encryptedData)
                     || StringUtils.isBlank(activityIdentification)) {
@@ -131,17 +171,17 @@ public class ActivityUserController extends BaseController {
     @RequestMapping(value = "/activityCompany/getKxProject")
     @ResponseBody
     public ResultData getKxProject(HttpServletRequest request,
-                                    HttpServletResponse response) throws Exception {
+                                   HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             JSONObject params = getPrarms(request);
             String type = params.getString("type");
-            if (StringUtils.isBlank(type)||"0".equals(type)) {
+            if (StringUtils.isBlank(type) || "0".equals(type)) {
                 throw new SystemException("请求参数不完整");
             }
-            ActivityProject project=new ActivityProject();
+            ActivityProject project = new ActivityProject();
             project.setType(Integer.valueOf(type));
-            List<ActivityProject> projects= activityProjectService.queryList(project);
+            List<ActivityProject> projects = activityProjectService.queryList(project);
 
             result.setResult(projects);
             result.setResultCode("0");
@@ -163,7 +203,7 @@ public class ActivityUserController extends BaseController {
     @RequestMapping(value = "/activityCompany/kxSave")
     @ResponseBody
     public ResultData kxSave(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception {
+                             HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
         try {
@@ -175,29 +215,32 @@ public class ActivityUserController extends BaseController {
             String project = params.getString("project");//1,5,9,6,3,4,
             String fault = params.getString("fault");//故障现象
 
-            if(StringUtils.isNotBlank(project)){
-                StringBuilder sb=new StringBuilder();
+            if (StringUtils.isNotBlank(project)) {
+                StringBuilder sb = new StringBuilder();
                 List<String> list = new ArrayList<String>();
-                ActivityProject project1=new ActivityProject();
+                ActivityProject project1 = new ActivityProject();
                 project1.setType(1);
                 list = Arrays.asList(project.split(","));
-                for(int i=0;i<list.size();i++){
-                    String pro=list.get(i);
+                for (int i = 0; i < list.size(); i++) {
+                    String pro = list.get(i);
                     project1.setProjectNo(pro);
-                    ActivityProject project2=activityProjectService.getDao().queryByProjectNo(project1);
+                    ActivityProject project2 = activityProjectService.getDao().queryByProjectNo(project1);
                     sb.append(project2.getProjectName());
-                    if(i!=list.size()-1){
+                    if (i != list.size() - 1) {
                         sb.append(",");
                     }
                 }
-                project=sb.toString();
+                project = sb.toString();
             }
-            ActivityUser user=activityUserService.getDao().queryByIdent(activityIdent);
+            ActivityUser user = activityUserService.getDao().queryByIdent(activityIdent);
             user.setPerson(person);
             user.setNumber(number);
             user.setModel(model);
             user.setProject(project);
             user.setFault(fault);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date newTime = new Date();
+            user.setUpdateTime(sdf.format(newTime));
             activityUserService.getDao().updateByIden(user);
 
             result.setResultCode("0");

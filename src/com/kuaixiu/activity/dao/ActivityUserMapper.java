@@ -3,6 +3,9 @@ package com.kuaixiu.activity.dao;
 import com.common.base.dao.BaseDao;
 import com.kuaixiu.activity.entity.ActivityUser;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * ActivityUser Mapper
  *
@@ -20,6 +23,8 @@ public interface ActivityUserMapper<T> extends BaseDao<T> {
     T queryByIdent(String ident);
     //根据标识修改
     int updateByIden(T t);
+    //查询快修预约列表 带分页
+    List<Map<String,Object>> queryEstimateForPage(T t);
 }
 
 

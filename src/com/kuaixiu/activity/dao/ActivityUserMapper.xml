@@ -66,7 +66,6 @@
         login_number=#{loginNumber},
         create_time=#{createTime},
         unionId=#{unionId},
-        update_time=now()
         where openId=#{openId}
     </update>
 
@@ -84,7 +83,8 @@
         fault=#{fault},
         login_number=#{loginNumber},
         create_time=#{createTime},
-        unionId=#{unionId}
+        unionId=#{unionId},
+        update_time=#{updateTime}
         where activity_ident=#{activityIdent}
     </update>
 
@@ -193,6 +193,30 @@
         </if>
         <if test="unionId != null and unionId != ''">
             and unionId=#{unionId}
+        </if>
+    </select>
+
+    <!-- 查询预约列表 带分页 -->
+    <select id="queryEstimateForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        u.update_time updateTime,c.company_name companyName,
+        u.person person,u.number number,u.login_number loginNumber,
+        u.model model,u.project project,u.fault fault,
+        c.start_time startTime,c.end_time endTime,u.project project
+        from kx_activity_kx_user u LEFT JOIN kx_activity_company c ON u.activity_ident=c.activity_identification
+        where 1=1
+        and u.update_time is NOT NULL
+        <if test="companyName != null and companyName != ''">
+            and c.company_name CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and u.update_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and u.update_time &lt;= #{queryEndTime}
+        </if>
+        <if test="person != null and person != ''">
+            and u.person = #{person}
         </if>
     </select>
 
