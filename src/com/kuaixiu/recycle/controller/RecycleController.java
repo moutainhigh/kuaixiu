@@ -1869,9 +1869,9 @@ public class RecycleController extends BaseController {
             }
             //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
             String imageUrl = map.get("modelLogo");
-            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + "webapps" + System.getProperty("file.separator") + "ROOT" + System.getProperty("file.separator") + "resource" + System.getProperty("file.separator") + "brandLogo";
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") +SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
             log.info("图片保存路径:" + savePath);
-            String modelUrl = getProjectUrl(request) + "/resource/brandLogo/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+            String modelUrl = getProjectUrl(request) + "/images/recycleModel/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
             //先判断文件是否存在  不存在则下载
             File f = new File(savePath + System.getProperty("file.separator") + (imageUrl.substring(imageUrl.lastIndexOf("/") + 1)));
             if (!f.exists()) {
