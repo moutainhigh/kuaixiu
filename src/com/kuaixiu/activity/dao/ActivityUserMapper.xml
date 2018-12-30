@@ -197,7 +197,7 @@
     </select>
 
     <!-- 查询预约列表 带分页 -->
-    <select id="queryEstimateForPage" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryEstimateForPage" resultType="Map" parameterType="Object">
         select
         u.update_time updateTime,c.company_name companyName,
         u.person person,u.number number,u.login_number loginNumber,

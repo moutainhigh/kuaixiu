@@ -163,9 +163,9 @@
         {//复选框
             targets: -1,
             render: function (data, type, row, meta) {
-                if (row.isEnd == 1) {
+                if (row.estimateResult == 1) {
                     return "有效";
-                } else if (row.isEnd == 2) {
+                } else if (row.estimateResult == 2) {
                     return "已结束";
                 }
             }

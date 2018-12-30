@@ -80,32 +80,30 @@ public class ActivityUserController extends BaseController {
                 user.setQueryStartTime(queryStartTime);
                 user.setQueryEndTime(queryEndTime);
                 user.setPage(page);
-                List<Map<String, Object>> users=new ArrayList<Map<String,Object>>();
+                List<Map<String, Object>> users = new ArrayList<Map<String, Object>>();
                 users = activityUserService.getDao().queryEstimateForPage(user);
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-                for(Map<String,Object> map:users){
-                    for(String s:map.keySet()){
-                        Long createTime = sdf.parse(map.get("updateTime").toString()).getTime();
-                        Long endTime = sdf.parse(map.get("endTime").toString()).getTime();
-                        if (createTime > endTime) {
-                            if("1".equals(estimateResult)){
-                                continue;
-                            }
-                            map.put("estimateResult", 1);
-                        }else{
-                            if("2".equals(estimateResult)){
-                                continue;
-                            }
-
-                            map.put("estimateResult", 2);
+                for (Map<String, Object> map : users) {
+                    Long createTime = sdf.parse(map.get("updateTime").toString()).getTime();
+                    Long endTime = sdf.parse(map.get("endTime").toString()).getTime();
+                    if (createTime > endTime) {
+                        if ("1".equals(estimateResult)) {
+                            continue;
                         }
-                        map.put("businessType", 1);
-                        objects.add(map);
-                    }
+                        map.put("estimateResult", 1);
+                    } else {
+                        if ("2".equals(estimateResult)) {
+                            continue;
+                        }
 
+                        map.put("estimateResult", 2);
+                    }
+                    map.put("businessType", 1);
+                    objects.add(map);
                 }
+
             }
             if (StringUtils.isBlank(businessType) || "2".equals(businessType)) {
                 //电信业务
