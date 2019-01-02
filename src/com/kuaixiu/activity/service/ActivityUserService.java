@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * ActivityUser Service
- * @CreateDate: 2018-12-28 下午04:18:04
+ * @CreateDate: 2019-01-02 上午09:44:06
  * @version: V 1.0
  */
 @Service("activityUserService")

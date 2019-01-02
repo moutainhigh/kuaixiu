@@ -1,7 +1,6 @@
 package com.kuaixiu.activity.dao;
 
 import com.common.base.dao.BaseDao;
-import com.kuaixiu.activity.entity.ActivityUser;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,7 @@ import java.util.Map;
  * ActivityUser Mapper
  *
  * @param <T>
- * @CreateDate: 2018-12-28 下午04:18:04
+ * @CreateDate: 2019-01-02 上午09:44:06
  * @version: V 1.0
  */
 public interface ActivityUserMapper<T> extends BaseDao<T> {
@@ -25,6 +24,7 @@ public interface ActivityUserMapper<T> extends BaseDao<T> {
     int updateByIden(T t);
     //查询快修预约列表 带分页
     List<Map<String,Object>> queryEstimateForPage(T t);
+
 }
 
 

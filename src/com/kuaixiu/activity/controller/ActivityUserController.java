@@ -14,7 +14,6 @@ import com.kuaixiu.activity.entity.ActivityUser;
 import com.kuaixiu.activity.service.ActivityProjectService;
 import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.controller.RecycleController;
-import com.kuaixiu.recycle.entity.RecycleCheckItems;
 import com.kuaixiu.recycle.service.RecycleCheckItemsService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
@@ -45,8 +44,6 @@ public class ActivityUserController extends BaseController {
     private ActivityUserService activityUserService;
     @Autowired
     private ActivityProjectService activityProjectService;
-    @Autowired
-    private RecycleCheckItemsService recycleCheckItemsService;
     /**
      * 基础访问接口地址
      */
@@ -314,7 +311,6 @@ public class ActivityUserController extends BaseController {
             if (product.isEmpty()) {
                 throw new SystemException("对应机型不存在");
             }
-            int goodPirce = 0;
             //判断返回的机型是否有多个
             if (product.size() > 1) {
                 //如果有多个机型 则通过机型名称匹配唯一
@@ -323,31 +319,17 @@ public class ActivityUserController extends BaseController {
                     JSONArray sublist = object.getJSONArray("sublist");
                     if (((JSONObject) sublist.get(0)).getString("modelname").equals(map.get("modelName"))) {
                         productId = object.getString("productid");
-                        goodPirce = (int) (object.getInteger("productprice") * 0.9);
                     }
                 }
             } else {
                 JSONObject o = (JSONObject) product.get(0);
                 JSONArray sublist = o.getJSONArray("sublist");
                 productId = ((JSONObject) sublist.get(0)).getString("productid");
-                goodPirce = (int) (((JSONObject) sublist.get(0)).getInteger("productprice") * 0.9);
             }
             if (StringUtils.isBlank(productId)) {
                 throw new SystemException("对应机型id不存在");
             }
 
-            //获取该机型的良品价
-            //Map<String, Object> maps = getGoodPirce(map.get("brandId"), productId, categoryid);
-            //int goodPirce = (int) maps.get("maxPrice");
-            //获取该用户该机型上次的评估价
-            Integer lastPrice = null;
-            RecycleCheckItems checkItems = new RecycleCheckItems();
-            checkItems.setWechatId(openId);
-            checkItems.setWechatModel(modelName);
-            List<RecycleCheckItems> checkList = recycleCheckItemsService.queryList(checkItems);
-            if (!checkList.isEmpty() && checkList.get(0).getLastPrice() != null) {
-                lastPrice = checkList.get(0).getLastPrice().intValue();
-            }
             //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
             String imageUrl = map.get("modelLogo");
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
@@ -366,24 +348,19 @@ public class ActivityUserController extends BaseController {
             jsonResult.put("modelName", map.get("modelName"));
             jsonResult.put("productId", productId);
             jsonResult.put("modelId", map.get("modelId"));
-            jsonResult.put("goodPrice", goodPirce);
-            jsonResult.put("lastPrice", lastPrice);
             jsonResult.put("modelLogo", modelUrl);
             result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
-
 
             //修改
-            RecycleCheckItems cr = checkList.get(0);
-            cr.setBrandId(map.get("brandId"));
-            cr.setModelId(map.get("modelId"));
-            cr.setRecycleModel(map.get("modelName"));
-            cr.setWechatModel(modelName);
-            cr.setBrand(brand);
-            cr.setProductId(productId);
-            recycleCheckItemsService.saveUpdate(cr);
-
+            ActivityUser user = new ActivityUser();
+            user.setOpenId(openId);
+            user.setBrandId(map.get("brandId"));
+            user.setModelId(map.get("modelId"));
+            user.setRecycleModel(map.get("modelName"));
+            user.setWechatModel(modelName);
+            user.setBrand(brand);
+            user.setProductId(productId);
+            activityUserService.getDao().updateByOpenId(user);
 
             result.setResultCode("0");
             result.setSuccess(true);
