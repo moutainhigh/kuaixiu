@@ -26,7 +26,7 @@
 
             </tr>
             <tr>
-                <td class="search_th"><label class="control-label">提 交 时 间 ：</label></td>
+                <td class="search_th search_th_frist"><label class="control-label">提 交 时 间 ：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
                         <input type="text" id="startLoginTime" name="queryStartTime"
