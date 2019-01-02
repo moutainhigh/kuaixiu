@@ -145,7 +145,7 @@
             }
         },
         {//复选框
-            targets: 4,
+            targets: 3,
             render: function (data, type, row, meta) {
                 return row.person + "/<br/>" + row.number;
             }

@@ -264,7 +264,7 @@
         where 1=1
         and u.update_time is NOT NULL
         <if test="companyName != null and companyName != ''">
-            and c.company_name CONCAT('%', #{companyName}, '%')
+            and c.company_name LIKE CONCAT('%', #{companyName}, '%')
         </if>
         <if test="queryStartTime != null and queryStartTime != ''" >
             and u.update_time &gt;= #{queryStartTime}
@@ -273,7 +273,7 @@
             and u.update_time &lt;= #{queryEndTime}
         </if>
         <if test="person != null and person != ''">
-            and u.person = #{person}
+            and u.person LIKE CONCAT('%', #{person}, '%')
         </if>
     </select>
 

@@ -109,13 +109,13 @@ public class ActivityUserController extends BaseController {
                         if ("1".equals(estimateResult)) {
                             continue;
                         }
-                        map.put("estimateResult", 1);
+                        map.put("estimateResult", 2);
                     } else {
                         if ("2".equals(estimateResult)) {
                             continue;
                         }
 
-                        map.put("estimateResult", 2);
+                        map.put("estimateResult", 1);
                     }
                     map.put("businessType", 1);
                     objects.add(map);
