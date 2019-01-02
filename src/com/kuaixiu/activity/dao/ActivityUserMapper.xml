@@ -21,6 +21,7 @@
         <result column="productId" property="productId"/>
         <result column="brand" property="brand"/>
         <result column="wechat_model" property="wechatModel"/>
+        <result column="save_time" property="saveTime"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="session_key" property="sessionKey"/>
@@ -28,7 +29,7 @@
     
     <!-- kx_activity_kx_user table all fields -->
     <sql id="Base_Column_List" >
-        id,activity_ident,unionId,openId,person,number,model,project,fault,login_number,model_id,brand_id,recycle_model,productId,brand,wechat_model,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,update_time,session_key
+        id,activity_ident,unionId,openId,person,number,model,project,fault,login_number,model_id,brand_id,recycle_model,productId,brand,wechat_model,save_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')update_time,session_key
     </sql>
 
     <!-- 插入记录 -->
@@ -59,6 +60,7 @@
             productId=#{productId},
             brand=#{brand},
             wechat_model=#{wechatModel},
+            save_time=#{saveTime},
             create_time=#{createTime},
             update_time=#{updateTime},
             session_key=#{sessionKey}
@@ -220,7 +222,8 @@
         fault=#{fault},
         login_number=#{loginNumber},
         create_time=#{createTime},
-        unionId=#{unionId},
+        save_time=#{saveTime},
+        unionId=#{unionId}
         where openId=#{openId}
     </update>
     <!-- 根据openId查询  -->
@@ -250,13 +253,14 @@
         login_number=#{loginNumber},
         create_time=#{createTime},
         unionId=#{unionId},
+        save_time=#{saveTime},
         update_time=now()
         where activity_ident=#{activityIdent}
     </update>
     <!-- 查询预约列表 带分页 -->
     <select id="queryEstimateForPage" resultType="Map" parameterType="Object">
         select
-        u.update_time updateTime,c.company_name companyName,
+        u.save_time saveTime,c.company_name companyName,
         u.person person,u.number number,u.login_number loginNumber,
         u.model model,u.project project,u.fault fault,
         c.start_time startTime,c.end_time endTime,u.project project
@@ -275,6 +279,7 @@
         <if test="person != null and person != ''">
             and u.person LIKE CONCAT('%', #{person}, '%')
         </if>
+        ORDER BY saveTime DESC
     </select>
 
 </mapper>   

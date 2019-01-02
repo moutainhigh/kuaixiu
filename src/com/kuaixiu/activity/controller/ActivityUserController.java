@@ -103,7 +103,7 @@ public class ActivityUserController extends BaseController {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Map<String, Object> map : users) {
-                    Long createTime = sdf.parse(map.get("updateTime").toString()).getTime();
+                    Long createTime = sdf.parse(map.get("saveTime").toString()).getTime();
                     Long endTime = sdf.parse(map.get("endTime").toString()).getTime();
                     if (createTime > endTime) {
                         if ("1".equals(estimateResult)) {
@@ -224,7 +224,7 @@ public class ActivityUserController extends BaseController {
             String activityIdent = params.getString("iden");
             String person = params.getString("person");
             String number = params.getString("number");
-            String model = params.getString("model");
+//            String model = params.getString("model");
             String project = params.getString("project");//1,5,9,6,3,4,
             String fault = params.getString("fault");//故障现象
 
@@ -248,12 +248,12 @@ public class ActivityUserController extends BaseController {
             ActivityUser user = activityUserService.getDao().queryByIdent(activityIdent);
             user.setPerson(person);
             user.setNumber(number);
-            user.setModel(model);
+//            user.setModel(model);
             user.setProject(project);
             user.setFault(fault);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date newTime = new Date();
-            user.setUpdateTime(sdf.format(newTime));
+            user.setSaveTime(sdf.format(newTime));
             activityUserService.getDao().updateByIden(user);
 
             result.setResultCode("0");
@@ -352,15 +352,14 @@ public class ActivityUserController extends BaseController {
             result.setResult(jsonResult);
 
             //修改
-            ActivityUser user = new ActivityUser();
-            user.setOpenId(openId);
+            ActivityUser user = activityUserService.getDao().queryByOpenId(openId);
             user.setBrandId(map.get("brandId"));
             user.setModelId(map.get("modelId"));
             user.setRecycleModel(map.get("modelName"));
             user.setWechatModel(modelName);
             user.setBrand(brand);
             user.setProductId(productId);
-            activityUserService.getDao().updateByOpenId(user);
+            activityUserService.getDao().update(user);
 
             result.setResultCode("0");
             result.setSuccess(true);

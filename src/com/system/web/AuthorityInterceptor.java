@@ -70,7 +70,8 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
 			    }
 			    else {
 			    	//判断是否是因为session丢失
-			        throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
+                    return true;
+			        //throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
 			    }
 			} 
 			else {

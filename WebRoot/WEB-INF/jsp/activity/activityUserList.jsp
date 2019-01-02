@@ -115,7 +115,7 @@
     //设置数据列
     dto.setColumns([
         {"data": "id", "class": "center"},
-        {"data": "updateTime", "class": ""},
+        {"data": "saveTime", "class": ""},
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
         {"data": "loginNumber", "class": ""},

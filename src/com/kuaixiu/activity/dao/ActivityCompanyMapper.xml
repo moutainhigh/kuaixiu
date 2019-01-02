@@ -259,6 +259,7 @@
         <if test="activityTime != null and activityTime != ''" >
             and activity_time=#{activityTime}
         </if>
+        ORDER BY create_time DESC
     </select>
 
 </mapper>   

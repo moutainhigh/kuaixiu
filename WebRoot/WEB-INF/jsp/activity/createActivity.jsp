@@ -161,6 +161,9 @@
             success: function (result) {
                 if (result.success) {
                     AlertText.tips("d_alert", "提示", result.resultMessage);
+                    $("#insertForm")[0].reset();
+                    var img = document.getElementById('imghead');
+                    img.setAttribute('src', '');
                 } else {
                     AlertText.tips("d_alert", "提示", result.resultMessage);
                 }
