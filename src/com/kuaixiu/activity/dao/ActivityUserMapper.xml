@@ -62,7 +62,7 @@
             wechat_model=#{wechatModel},
             save_time=#{saveTime},
             create_time=#{createTime},
-            update_time=#{updateTime},
+            update_time=now(),
             session_key=#{sessionKey}
         where id=#{id}
     </update>
@@ -262,11 +262,11 @@
         select
         u.save_time saveTime,c.company_name companyName,
         u.person person,u.number number,u.login_number loginNumber,
-        u.model model,u.project project,u.fault fault,
+        u.recycle_model recycleModel,u.project project,u.fault fault,
         c.start_time startTime,c.end_time endTime,u.project project
         from kx_activity_kx_user u LEFT JOIN kx_activity_company c ON u.activity_ident=c.activity_identification
         where 1=1
-        and u.update_time is NOT NULL
+        and u.save_time is NOT NULL
         <if test="companyName != null and companyName != ''">
             and c.company_name LIKE CONCAT('%', #{companyName}, '%')
         </if>

@@ -119,7 +119,7 @@
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
         {"data": "loginNumber", "class": ""},
-        {"data": "model", "class": ""},
+        {"data": "recycleModel", "class": ""},
         {"data": "businessType", "class": ""},
         {"data": "project", "class": ""},
         {"data": "fault", "class": ""},

@@ -251,7 +251,7 @@ public class ActivityUserController extends BaseController {
 //            user.setModel(model);
             user.setProject(project);
             user.setFault(fault);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date newTime = new Date();
             user.setSaveTime(sdf.format(newTime));
             activityUserService.getDao().updateByIden(user);

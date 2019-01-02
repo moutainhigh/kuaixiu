@@ -30,7 +30,9 @@
                 <img id="imghead" src="" width="260" height="180"/> <!--图片显示位置-->
             </div>
         </div>
-
+        <div class="form-group">
+            <label class="col-sm-5 control-label">（图片尺寸为600*300大小控制200k以下）</label><!--图片显示位置-->
+        </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>预约时间</label>
             <div class="am-datepicker-date col-sm-9">
@@ -45,7 +47,8 @@
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>快修业务标题</label>
             <div class="col-sm-9">
-                <input type="text" style="width:400px;" id="kxBusinessTitle" name="kxBusinessTitle" class="form-control" placeholder="快修业务">
+                <input type="text" style="width:400px;" id="kxBusinessTitle" name="kxBusinessTitle" class="form-control"
+                       placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
@@ -57,41 +60,47 @@
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>快修活动页地址</label>
             <div class="col-sm-9">
-                <input type="text" id="kxBusinessDetail" style="width:400px;" name="kxBusinessDetail" class="form-control"
+                <input type="text" id="kxBusinessDetail" style="width:400px;" name="kxBusinessDetail"
+                       class="form-control"
                        placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信业务标题</label>
             <div class="col-sm-9">
-                <input type="text" style="width:400px;" name="dxIncrementBusinessTitle" id="dxIncrementBusinessTitle" class="form-control"
+                <input type="text" style="width:400px;" name="dxIncrementBusinessTitle" id="dxIncrementBusinessTitle"
+                       class="form-control"
                        placeholder="电信业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信业务说明</label>
             <div class="col-sm-9">
-                <textarea style="width:400px;" name=" dxIncrementBusiness" id="dxIncrementBusiness" cols="30" rows="10"></textarea>
+                <textarea style="width:400px;" name=" dxIncrementBusiness" id="dxIncrementBusiness" cols="30"
+                          rows="10"></textarea>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>电信活动页地址</label>
             <div class="col-sm-9">
-                <input style="width:400px;" type="text" id="dxIncrementBusinessDetail" name="dxIncrementBusinessDetail" class="form-control"
+                <input style="width:400px;" type="text" id="dxIncrementBusinessDetail" name="dxIncrementBusinessDetail"
+                       class="form-control"
                        placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">电信活动负责人</label>
             <div class="col-sm-9">
-                <input style="width:400px;" type="text" id="dxBusinessPerson" name="dxBusinessPerson" class="form-control"
+                <input style="width:400px;" type="text" id="dxBusinessPerson" name="dxBusinessPerson"
+                       class="form-control"
                        placeholder="快修业务">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">电信活动负责人电话</label>
             <div class="col-sm-9">
-                <input style="width:400px;" type="text" id="dxBusinessPersonNumber" name="dxBusinessPersonNumber" class="form-control"
+                <input style="width:400px;" type="text" id="dxBusinessPersonNumber" name="dxBusinessPersonNumber"
+                       class="form-control"
                        placeholder="快修业务">
             </div>
         </div>
@@ -119,27 +128,27 @@
     function imgChange(obj) {
         var fileUrl = obj.value;
         if (!/.(gif|jpg|jpeg|png|GIF|JPG|bmp)$/.test(fileUrl)) {
-            AlertText.tips("d_alert", "提示","图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
+            AlertText.tips("d_alert", "提示", "图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
             return false;
         } else {
-            if (((obj.files[0].size).toFixed(2)) >= (300 * 1024)) {
-                AlertText.tips("d_alert", "提示", "请上传小于300K的图片");
+            if (((obj.files[0].size).toFixed(2)) >= (200 * 1024)) {
+                AlertText.tips("d_alert", "提示", "请上传小于200K的图片");
                 return false;
             } else {
                 var file = document.getElementById("file");
                 var imgUrl = window.URL.createObjectURL(file.files[0]);
                 var image = new Image();
-                image.src=imgUrl;
+                image.src = imgUrl;
                 image.onload = function () {
                     //加载图片获取图片真实宽度和高度
                     var width = image.width;
                     var height = image.height;
-                    if (width < 720 && height < 1280) {
+                    if (width < 300 && height < 600) {
                         var img = document.getElementById('imghead');
                         img.setAttribute('src', imgUrl); // 修改img标签src属性值
                     } else {
-                        var msg="文件尺寸应小于：720*1280！,当前图片"+height+"*"+width;
-                        AlertText.tips("d_alert", "提示",msg);
+                        var msg = "文件尺寸应小于：300*600！,当前图片" + height + "*" + width;
+                        AlertText.tips("d_alert", "提示", msg);
                         file.value = "";
                         return false;
                     }
