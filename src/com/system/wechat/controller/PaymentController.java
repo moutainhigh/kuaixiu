@@ -472,13 +472,15 @@ public class PaymentController extends GenericController {
                         }
                         return "success";
                     } else {
+                        log.info("支付失败");
                         return "fail";
                     }
                 } else {
+                    log.info("支付结果不一致");
                     return "fail";
                 }
             } else {
-                log.info("==================支付宝官方建议校验的值（out_trade_no、total_amount、sellerId、app_id）,不一致！返回fail");
+                log.info("支付金额不一致");
                 return "fail";
             }
         } else { //验签不通过
