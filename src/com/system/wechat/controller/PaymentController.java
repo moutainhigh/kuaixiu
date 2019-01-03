@@ -399,22 +399,22 @@ public class PaymentController extends GenericController {
         if (signVerified) {
             //验签通过
             //获取需要保存的数据
+//            String outBizNo = conversionParams.get("out_biz_no");//商户业务号(商户业务ID，主要是退款通知中返回退款申请的流水号)
+//            String gmtCreate = conversionParams.get("gmt_create");//交易创建时间:yyyy-MM-dd HH:mm:ss
+//            String gmtPayment = conversionParams.get("gmt_payment");//交易付款时间
+//            String gmtRefund = conversionParams.get("gmt_refund");//交易退款时间
+//            String gmtClose = conversionParams.get("gmt_close");//交易结束时间
+//            String sellerId = conversionParams.get("seller_id");//卖家支付宝用户号
+//            String sellerEmail = conversionParams.get("seller_email");//卖家支付宝账号
+//            String receiptAmount = conversionParams.get("receipt_amount");//实收金额:商家在交易中实际收到的款项，单位为元
+//            String invoiceAmount = conversionParams.get("invoice_amount");//开票金额:用户在交易中支付的可开发票的金额
+//            String buyerPayAmount = conversionParams.get("buyer_pay_amount");//付款金额:用户在交易中支付的金额
             String appId = conversionParams.get("app_id");//支付宝分配给开发者的应用Id
             String notifyTime = conversionParams.get("notify_time");//通知时间:yyyy-MM-dd HH:mm:ss
-            String gmtCreate = conversionParams.get("gmt_create");//交易创建时间:yyyy-MM-dd HH:mm:ss
-            String gmtPayment = conversionParams.get("gmt_payment");//交易付款时间
-            String gmtRefund = conversionParams.get("gmt_refund");//交易退款时间
-            String gmtClose = conversionParams.get("gmt_close");//交易结束时间
             String tradeNo = conversionParams.get("trade_no");//支付宝的交易号
             String outTradeNo = conversionParams.get("out_trade_no");//获取商户之前传给支付宝的订单号（商户系统的唯一订单号）
-            String outBizNo = conversionParams.get("out_biz_no");//商户业务号(商户业务ID，主要是退款通知中返回退款申请的流水号)
             String buyerLogonId = conversionParams.get("buyer_logon_id");//买家支付宝账号
-            String sellerId = conversionParams.get("seller_id");//卖家支付宝用户号
-            String sellerEmail = conversionParams.get("seller_email");//卖家支付宝账号
             String totalAmount = conversionParams.get("total_amount");//订单金额:本次交易支付的订单金额，单位为人民币（元）
-            String receiptAmount = conversionParams.get("receipt_amount");//实收金额:商家在交易中实际收到的款项，单位为元
-            String invoiceAmount = conversionParams.get("invoice_amount");//开票金额:用户在交易中支付的可开发票的金额
-            String buyerPayAmount = conversionParams.get("buyer_pay_amount");//付款金额:用户在交易中支付的金额
             String tradeStatus = conversionParams.get("trade_status");// 获取交易状态
             String fundBillList=conversionParams.get("fund_bill_list");//交易渠道
 
@@ -431,6 +431,7 @@ public class PaymentController extends GenericController {
                 if (CollectionUtils.isEmpty(orderPrices)) {
                     // 支付余款 = 订单实际费用 (已考虑用户是否使用优惠券)
                     o.setRealPrice(o.getRealPriceSubCoupon());
+                    log.info("订单金额"+o.getRealPrice()+"支付宝金额"+totalAmount);
                 }
             }
             if (totalAmount.equals(o.getRealPrice().toString()) && SystemConstant.ALIPAY_APP_ID.equals(appId)) {
@@ -470,15 +471,18 @@ public class PaymentController extends GenericController {
                                 orderPayService.closeWechatOrder(orderPayLog);
                             }
                         }
+                        log.info("==================支付宝异步返回支付结果结束");
                         return "success";
                     } else {
+                        log.info("支付失败");
                         return "fail";
                     }
                 } else {
+                    log.info("支付结果不一致");
                     return "fail";
                 }
             } else {
-                log.info("==================支付宝官方建议校验的值（out_trade_no、total_amount、sellerId、app_id）,不一致！返回fail");
+                log.info("支付金额不一致");
                 return "fail";
             }
         } else { //验签不通过

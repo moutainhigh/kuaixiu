@@ -48,8 +48,9 @@
                 <td class="search_td">
                     <select name="query_cardType" class="form-control">
                         <option value="">--选择类别--</option>
-                        <option value="0">小白卡</option>
-                        <option value="1">即买即通卡</option>
+                        <c:forEach items="${type}" var="item" varStatus="i">
+                            <option value="${item.cardNo}">${item.cardName}</option>
+                        </c:forEach>
                     </select>
                 </td>
 
@@ -58,13 +59,9 @@
                 <td class="search_td">
                     <select name="query_cardName" class="form-control">
                         <option value="">--选择名称--</option>
-                        <option value="0">白金卡</option>
-                        <option value="1">抖音卡</option>
-                        <option value="2">鱼卡</option>
-                        <option value="3">49元不限流量卡</option>
-                        <option value="4">99元不限流量卡</option>
-                        <option value="5">199元不限流量卡</option>
-                        <option value="6">29元不限流量卡</option>
+                        <c:forEach items="${name}" var="item" varStatus="i">
+                            <option value="${item.cardNo}">${item.cardName}</option>
+                        </c:forEach>
                     </select>
                 </td>
                 <td></td>

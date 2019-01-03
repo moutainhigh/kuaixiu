@@ -70,6 +70,8 @@ public class CardController extends BaseController{
     private AuctionOrderService auctionOrderService;
     @Autowired
     private Job4Order job4Order;
+    @Autowired
+    private CardTypeService cardTypeService;
     /**
      * 单个号卡列表页面
      * @param request
@@ -82,6 +84,10 @@ public class CardController extends BaseController{
                                                HttpServletResponse response) throws Exception {
         //地市数据
         List<String> list = batchImportService.queryProvince();
+        List<CardType> cardTypes1=getCardType(2);
+        List<CardType> cardTypes2=getCardType(1);
+        request.setAttribute("type",cardTypes1);
+        request.setAttribute("name",cardTypes2);
         request.setAttribute("list",list);
         String returnView ="card/cardList";
         return new ModelAndView(returnView);
@@ -211,6 +217,10 @@ public class CardController extends BaseController{
                                                HttpServletResponse response) throws Exception {
         //地市数据
         List<String> list = batchImportService.queryProvince();
+        List<CardType> cardTypes1=getCardType(2);
+        List<CardType> cardTypes2=getCardType(1);
+        request.setAttribute("type",cardTypes1);
+        request.setAttribute("name",cardTypes2);
         request.setAttribute("list",list);
         String returnView ="card/batchCardList";
         return new ModelAndView(returnView);
@@ -589,6 +599,10 @@ public class CardController extends BaseController{
      */
     @RequestMapping(value="/telecom/batch/push")
     public ModelAndView batchPush(HttpServletRequest request,HttpServletResponse response){
+        List<CardType> cardTypes1=getCardType(2);
+        List<CardType> cardTypes2=getCardType(1);
+        request.setAttribute("type",cardTypes1);
+        request.setAttribute("name",cardTypes2);
         return new ModelAndView("card/batchPushList");
     }
 
@@ -702,6 +716,18 @@ public class CardController extends BaseController{
         renderJson(response, resultMap);
     }
 
+
+    /**
+     * 查询号卡类型 0类别 1名称
+     * @param type
+     * @return
+     */
+    public List<CardType> getCardType(Integer type){
+        CardType cardType=new CardType();
+        cardType.setType(type);
+        List<CardType> cardTypes=cardTypeService.queryList(cardType);
+        return cardTypes;
+    }
 
 
     public static void main(String[] args) {

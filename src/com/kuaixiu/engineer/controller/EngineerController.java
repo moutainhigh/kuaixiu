@@ -304,10 +304,8 @@ public class EngineerController extends BaseController {
         String providerCode = request.getParameter("addProviderCode");
         String[] shopCodes = request.getParameterValues("addShopCode");
 
-        if (shopCodes == null || shopCodes.length > 0 || shopCodes[0].trim().equals("")) {
-            resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
-            resultMap.put(RESULTMAP_KEY_MSG, "至少选择一个门店");
-            renderJson(response, resultMap);
+        if (shopCodes == null || shopCodes.length == 0 || shopCodes[0].trim().equals("")) {
+            throw new SystemException("至少选择一个门店");
         }
 
         StringBuffer sb = new StringBuffer();
