@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
+import com.common.util.HttpClientUtil;
 import com.common.util.NOUtil;
-import com.common.util.QRCodeUtil;
 import com.common.util.UrlUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.service.ActivityCompanyService;
-import com.kuaixiu.coupon.entity.Coupon;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
@@ -20,10 +19,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +37,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -402,22 +404,23 @@ public class ActivityCompanyController extends BaseController {
         }
         return result;
     }
-
+    private static final Logger log = Logger.getLogger(ActivityCompanyController.class);
     /*
          * 获取二维码
     　　　* 这里的 post 方法 为 json post【重点】
          */
     @RequestMapping(value = "/activityCompany/getCode")
+    @ResponseBody
     public ResultData getCodeM(HttpServletRequest request) throws Exception {
 
         ResultData result=new ResultData();
-        String imei ="867186032552993";
+        String imei ="1";
         String page="page/msg_waist/msg_waist";
         String token = getToken();   // 得到token
 
         Map<String, Object> params = new HashMap<>();
         params.put("scene", imei);  //参数
-        params.put("page", "page/msg_waist/msg_waist"); //位置
+        params.put("page", "pages/index/index"); //位置
         params.put("width", 430);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -428,7 +431,6 @@ public class ActivityCompanyController extends BaseController {
         StringEntity entity;
         entity = new StringEntity(body);
         entity.setContentType("image/png");
-
         httpPost.setEntity(entity);
         HttpResponse response;
 
@@ -438,6 +440,7 @@ public class ActivityCompanyController extends BaseController {
         String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
         saveToImgByInputStream(inputStream,savePath,name);  //保存图片
         result.setResult(savePath+"/"+name);
+        result.setResultMessage("成功");
         return result;
     }
 
@@ -453,9 +456,9 @@ public class ActivityCompanyController extends BaseController {
             map.put("appid", SystemConstant.WECHAT_APPLET_APPID);//改成自己的appid
             map.put("secret", SystemConstant.WECHAT_APPLET_SECRET);
 
-            String rt = UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
-
-            System.out.println("what is:"+rt);
+            //String rt = UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
+            String rt= UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
+            System.out.println(rt);
             JSONObject json = JSONObject.parseObject(rt);
 
             if (json.getString("access_token") != null || json.getString("access_token") != "") {
@@ -464,7 +467,7 @@ public class ActivityCompanyController extends BaseController {
                 return null;
             }
         } catch (Exception e) {
-
+            log.error("# 获取 token 出错... e:" + e);
             e.printStackTrace();
             return null;
         }
@@ -485,14 +488,14 @@ public class ActivityCompanyController extends BaseController {
         if(instreams != null){
             try {
                 File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
-                FileOutputStream fos=new FileOutputStream(file);
+                FileOutputStream out=new FileOutputStream(imgPath+"\\"+imgName);
                 byte[] b = new byte[1024];
-                int nRead = 0;
+                int nRead=0;
                 while ((nRead = instreams.read(b)) != -1) {
-                    fos.write(b, 0, nRead);
+                    out.write(b, 0, nRead);
                 }
-                fos.flush();
-                fos.close();
+                out.flush();
+                out.close();
             } catch (Exception e) {
                 stateInt = 0;
                 e.printStackTrace();
