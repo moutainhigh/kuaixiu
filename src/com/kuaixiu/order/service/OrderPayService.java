@@ -1784,13 +1784,14 @@ public class OrderPayService {
                 payLog.setPayStatus(OrderConstant.ORDER_PAY_STATUS_FAIL);
                 payLogService.update(payLog);
             }
-        } else if ("ACQ.TRADE_NOT_EXIST".equals(result.getSubCode())) {
-            // 订单不存在
-            payLog.setPayStatus(OrderConstant.ORDER_PAY_STATUS_COMPLETE);
-            payLogService.update(payLog);
-        } else {
-            throw new SystemException("系统异常请稍后再试！");
         }
+//        else if ("ACQ.TRADE_NOT_EXIST".equals(result.getSubCode())) {
+//            // 订单不存在
+//            payLog.setPayStatus(OrderConstant.ORDER_PAY_STATUS_COMPLETE);
+//            payLogService.update(payLog);
+//        } else {
+//            throw new SystemException("系统异常请稍后再试！");
+//        }
     }
 
     public void orderPayLog(OrderPayLog payLog) {
