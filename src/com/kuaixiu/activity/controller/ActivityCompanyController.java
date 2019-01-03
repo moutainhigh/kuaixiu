@@ -1,9 +1,12 @@
 package com.kuaixiu.activity.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
+import com.common.util.QRCodeUtil;
+import com.common.util.UrlUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.service.ActivityCompanyService;
@@ -11,21 +14,29 @@ import com.kuaixiu.coupon.entity.Coupon;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ActivityCompany Controller
@@ -223,7 +234,7 @@ public class ActivityCompanyController extends BaseController {
     }
 
     /**
-     * 保存公司活动信息
+     * 修改公司活动信息
      *
      * @param request
      * @param response
@@ -391,4 +402,104 @@ public class ActivityCompanyController extends BaseController {
         }
         return result;
     }
+
+    /*
+         * 获取二维码
+    　　　* 这里的 post 方法 为 json post【重点】
+         */
+    @RequestMapping(value = "/activityCompany/getCode")
+    public ResultData getCodeM(HttpServletRequest request) throws Exception {
+
+        ResultData result=new ResultData();
+        String imei ="867186032552993";
+        String page="page/msg_waist/msg_waist";
+        String token = getToken();   // 得到token
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("scene", imei);  //参数
+        params.put("page", "page/msg_waist/msg_waist"); //位置
+        params.put("width", 430);
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+token);  // 接口
+        httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+        String body = JSON.toJSONString(params);           //必须是json模式的 post
+        StringEntity entity;
+        entity = new StringEntity(body);
+        entity.setContentType("image/png");
+
+        httpPost.setEntity(entity);
+        HttpResponse response;
+
+        response = httpClient.execute(httpPost);
+        InputStream inputStream = response.getEntity().getContent();
+        String name = imei+".png";
+        String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
+        saveToImgByInputStream(inputStream,savePath,name);  //保存图片
+        result.setResult(savePath+"/"+name);
+        return result;
+    }
+
+    /*
+     * 获取 token
+　　　* 普通的 get 可获 token
+     */
+    public  static String getToken() {
+        try {
+
+            Map<String, String> map = new LinkedHashMap<String, String>();
+            map.put("grant_type", "client_credential");
+            map.put("appid", SystemConstant.WECHAT_APPLET_APPID);//改成自己的appid
+            map.put("secret", SystemConstant.WECHAT_APPLET_SECRET);
+
+            String rt = UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
+
+            System.out.println("what is:"+rt);
+            JSONObject json = JSONObject.parseObject(rt);
+
+            if (json.getString("access_token") != null || json.getString("access_token") != "") {
+                return json.getString("access_token");
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    /**
+     * 将二进制转换成文件保存
+     * @param instreams 二进制流
+     * @param imgPath 图片的保存路径
+     * @param imgName 图片的名称
+     * @return
+     *      1：保存正常
+     *      0：保存失败
+     */
+    public static int saveToImgByInputStream(InputStream instreams,String imgPath,String imgName){
+        int stateInt = 1;
+        if(instreams != null){
+            try {
+                File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
+                FileOutputStream fos=new FileOutputStream(file);
+                byte[] b = new byte[1024];
+                int nRead = 0;
+                while ((nRead = instreams.read(b)) != -1) {
+                    fos.write(b, 0, nRead);
+                }
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                stateInt = 0;
+                e.printStackTrace();
+            } finally {
+            }
+        }
+        return stateInt;
+    }
+
 }

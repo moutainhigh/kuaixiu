@@ -16,12 +16,11 @@ public class TimeJunit extends JunitTest {
 
     @Autowired
     private OrderPayService orderPayService;
-@Autowired
-private OrderPayLogService payLogService;
 
     @Test
     public void aaa() throws Exception {
-        OrderPayLog payLog=payLogService.queryByPayOrderNo("PN-20181215150524089");
+        OrderPayLog payLog=new OrderPayLog();
+        payLog.setPayOrderNo("PN-20190103133549183");
         orderPayService.aliPayOrder(payLog);//支付宝
     }
 

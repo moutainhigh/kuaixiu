@@ -53,6 +53,10 @@
                 <td class="search_td"><input type="text" name="activityIdentification" class="form-control"></td>
 
             </tr>
+            <div hidden="hidden">
+                <%--/images/activityCompany/default.png 任务记录.txt--%>
+                <a id="savePng" type="hidden" href="/images/activityCompany/default.png" download="文件名.png">点击下载</a>
+            </div>
         </table>
 
         <div class="form-group">
@@ -65,6 +69,7 @@
                 </div>
             </div>
         </div>
+
     </form>
 </div>
 
@@ -93,6 +98,7 @@
         </table>
     </div>
 </div>
+
 
 <!-- 新增弹窗 end -->
 <div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
@@ -187,6 +193,12 @@
                             "fn": "editBtnClick(\'" + row.activityIdentification + "\')",
                             "icon": "am-icon-search",
                             "class": "am-text-secondary"
+                        },
+                        {
+                            "name": "保存二维码",
+                            "fn": "saveBtnClick(\'" + row.activityIdentification + "\')",
+                            "class": "am-text-secondary"
+
                         }
                     ]
                 };
@@ -207,6 +219,11 @@
         myTable.ajax.reload(null, false);
     }
 
+    function saveBtnClick() {
+        $('#savePng').attr('href','/images/activityCompany/任务记录.txt');
+        $('#savePng').attr('download','任务记录.txt');
+        document.getElementById("savePng").click();
+    }
 
     /**
      * 全选按钮
