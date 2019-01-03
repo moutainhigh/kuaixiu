@@ -431,6 +431,7 @@ public class PaymentController extends GenericController {
                 if (CollectionUtils.isEmpty(orderPrices)) {
                     // 支付余款 = 订单实际费用 (已考虑用户是否使用优惠券)
                     o.setRealPrice(o.getRealPriceSubCoupon());
+                    log.info("订单金额"+o.getRealPrice()+"支付宝金额"+totalAmount);
                 }
             }
             if (totalAmount.equals(o.getRealPrice().toString()) && SystemConstant.ALIPAY_APP_ID.equals(appId)) {
@@ -470,6 +471,7 @@ public class PaymentController extends GenericController {
                                 orderPayService.closeWechatOrder(orderPayLog);
                             }
                         }
+                        log.info("==================支付宝异步返回支付结果结束");
                         return "success";
                     } else {
                         log.info("支付失败");
