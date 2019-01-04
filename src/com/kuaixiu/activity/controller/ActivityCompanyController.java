@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
+import com.common.util.FileUtil;
 import com.common.util.HttpClientUtil;
 import com.common.util.NOUtil;
 import com.common.util.UrlUtil;
@@ -404,7 +405,9 @@ public class ActivityCompanyController extends BaseController {
         }
         return result;
     }
+
     private static final Logger log = Logger.getLogger(ActivityCompanyController.class);
+
     /*
          * 获取二维码
     　　　* 这里的 post 方法 为 json post【重点】
@@ -412,10 +415,19 @@ public class ActivityCompanyController extends BaseController {
     @RequestMapping(value = "/activityCompany/getCode")
     @ResponseBody
     public ResultData getCodeM(HttpServletRequest request) throws Exception {
-
-        ResultData result=new ResultData();
-        String imei ="1";
-        String page="page/msg_waist/msg_waist";
+        ResultData result = new ResultData();
+        JSONObject object = new JSONObject();
+        String imei = request.getParameter("id");
+        String name = imei + ".png";
+        String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
+        File f = new File(savePath + System.getProperty("file.separator") + name);
+        if (f.exists()) {
+            object.put("path", savePath + System.getProperty("file.separator") + name);
+            object.put("name", name);
+            getResult(result,object,true,"0","成功");
+            return result;
+        }
+        //String page="page/msg_waist/msg_waist";
         String token = getToken();   // 得到token
 
         Map<String, Object> params = new HashMap<>();
@@ -425,7 +437,7 @@ public class ActivityCompanyController extends BaseController {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
-        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+token);  // 接口
+        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + token);  // 接口
         httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
         String body = JSON.toJSONString(params);           //必须是json模式的 post
         StringEntity entity;
@@ -436,11 +448,15 @@ public class ActivityCompanyController extends BaseController {
 
         response = httpClient.execute(httpPost);
         InputStream inputStream = response.getEntity().getContent();
-        String name = imei+".png";
-        String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
-        saveToImgByInputStream(inputStream,savePath,name);  //保存图片
-        result.setResult(savePath+"/"+name);
-        result.setResultMessage("成功");
+
+        Integer stateInt=saveToImgByInputStream(inputStream, savePath, name);  //保存图片
+        if(stateInt==1) {
+            object.put("path", savePath + System.getProperty("file.separator") + name);
+            object.put("name", name);
+            getResult(result,object,true,"0","成功");
+        }else{
+            getResult(result,object,false,"2","失败");
+        }
         return result;
     }
 
@@ -448,7 +464,7 @@ public class ActivityCompanyController extends BaseController {
      * 获取 token
 　　　* 普通的 get 可获 token
      */
-    public  static String getToken() {
+    public static String getToken() {
         try {
 
             Map<String, String> map = new LinkedHashMap<String, String>();
@@ -457,7 +473,7 @@ public class ActivityCompanyController extends BaseController {
             map.put("secret", SystemConstant.WECHAT_APPLET_SECRET);
 
             //String rt = UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
-            String rt= UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
+            String rt = UrlUtil.sendPost("https://api.weixin.qq.com/cgi-bin/token", map);
             System.out.println(rt);
             JSONObject json = JSONObject.parseObject(rt);
 
@@ -476,21 +492,21 @@ public class ActivityCompanyController extends BaseController {
 
     /**
      * 将二进制转换成文件保存
+     *
      * @param instreams 二进制流
-     * @param imgPath 图片的保存路径
-     * @param imgName 图片的名称
-     * @return
-     *      1：保存正常
-     *      0：保存失败
+     * @param imgPath   图片的保存路径
+     * @param imgName   图片的名称
+     * @return 1：保存正常
+     * 0：保存失败
      */
-    public static int saveToImgByInputStream(InputStream instreams,String imgPath,String imgName){
+    public static int saveToImgByInputStream(InputStream instreams, String imgPath, String imgName) {
         int stateInt = 1;
-        if(instreams != null){
+        if (instreams != null) {
             try {
-                File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
-                FileOutputStream out=new FileOutputStream(imgPath+"\\"+imgName);
+                File file = new File(imgPath, imgName);//可以是任何图片格式.jpg,.png等
+                FileOutputStream out = new FileOutputStream(imgPath + "\\" + imgName);
                 byte[] b = new byte[1024];
-                int nRead=0;
+                int nRead = 0;
                 while ((nRead = instreams.read(b)) != -1) {
                     out.write(b, 0, nRead);
                 }

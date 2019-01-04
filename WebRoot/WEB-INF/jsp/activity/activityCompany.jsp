@@ -53,9 +53,9 @@
                 <td class="search_td"><input type="text" name="activityIdentification" class="form-control"></td>
 
             </tr>
-            <div hidden="hidden">
+            <div>
                 <%--/images/activityCompany/default.png 任务记录.txt--%>
-                <a id="savePng" type="hidden" href="/images/activityCompany/default.png" download="文件名.png">点击下载</a>
+                <a id="savePng"  href="/images/activityCompany/default.png" download="文件名.png">点击下载</a>
             </div>
         </table>
 
@@ -196,7 +196,7 @@
                         },
                         {
                             "name": "保存二维码",
-                            "fn": "saveBtnClick(\'" + row.activityIdentification + "\')",
+                            "fn": "saveBtnClick(\'" + row.id + "\')",
                             "class": "am-text-secondary"
 
                         }
@@ -219,10 +219,26 @@
         myTable.ajax.reload(null, false);
     }
 
-    function saveBtnClick() {
-        $('#savePng').attr('href','/images/activityCompany/任务记录.txt');
-        $('#savePng').attr('download','任务记录.txt');
-        document.getElementById("savePng").click();
+    function saveBtnClick(id) {
+        $.ajax({
+            url: "${ctx}/activityCompany/getCode.do",
+            type: "POST",
+            data: {id:id},
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    $('#savePng').attr('href',result.result.path);
+                    $('#savePng').attr('download',result.result.name);
+                    document.getElementById("savePng").click();
+                } else {
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                }
+            },
+            error: function () {
+                alert("异常");
+            }
+
+        })
     }
 
     /**
