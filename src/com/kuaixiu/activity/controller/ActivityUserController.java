@@ -92,8 +92,8 @@ public class ActivityUserController extends BaseController {
             List<Object> objects = new ArrayList<>();
             if (StringUtils.isBlank(businessType) || "1".equals(businessType)) {
                 ActivityUser user = new ActivityUser();
-                user.setCompanyName(companyName.replace(" ",""));
-                user.setPerson(person.replace(" ",""));
+                user.setCompanyName(companyName.replace(" ", ""));
+                user.setPerson(person.replace(" ", ""));
                 user.setQueryStartTime(queryStartTime);
                 user.setQueryEndTime(queryEndTime);
                 user.setPage(page);
@@ -164,6 +164,7 @@ public class ActivityUserController extends BaseController {
             a.setActivityIdent(activityIdentification);
             activityUserService.getDao().updateByOpenId(a);
 
+            result.setResult(a);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (Exception e) {
@@ -222,29 +223,35 @@ public class ActivityUserController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String activityIdent = params.getString("iden");
-            String person = params.getString("person");
+            String person = params.getString("userName");
             String number = params.getString("number");
 //            String model = params.getString("model");
             String project = params.getString("project");//1,5,9,6,3,4,
             String fault = params.getString("fault");//故障现象
-
-            if (StringUtils.isNotBlank(project)) {
-                StringBuilder sb = new StringBuilder();
-                List<String> list = new ArrayList<String>();
-                ActivityProject project1 = new ActivityProject();
-                project1.setType(1);
-                list = Arrays.asList(project.split(","));
-                for (int i = 0; i < list.size(); i++) {
-                    String pro = list.get(i);
-                    project1.setProjectNo(pro);
-                    ActivityProject project2 = activityProjectService.getDao().queryByProjectNo(project1);
-                    sb.append(project2.getProjectName());
-                    if (i != list.size() - 1) {
-                        sb.append(",");
-                    }
-                }
-                project = sb.toString();
+            String brand = params.getString("brandName");
+            String modelName = params.getString("modelName");
+            String productId = params.getString("productId");
+            if (StringUtil.isBlank(activityIdent) || StringUtil.isBlank(person) || StringUtil.isBlank(number)
+                    || StringUtil.isBlank(project) || StringUtil.isBlank(brand) || StringUtil.isBlank(modelName)
+                    || StringUtil.isBlank(productId)) {
+                throw new SystemException("参数不完整");
             }
+            StringBuilder sb = new StringBuilder();
+            List<String> list = new ArrayList<String>();
+            ActivityProject project1 = new ActivityProject();
+            project1.setType(1);
+            list = Arrays.asList(project.split(","));
+            for (int i = 0; i < list.size(); i++) {
+                String pro = list.get(i);
+                project1.setProjectNo(pro);
+                ActivityProject project2 = activityProjectService.getDao().queryByProjectNo(project1);
+                sb.append(project2.getProjectName());
+                if (i != list.size() - 1) {
+                    sb.append(",");
+                }
+            }
+            project = sb.toString();
+
             ActivityUser user = activityUserService.getDao().queryByIdent(activityIdent);
             user.setPerson(person);
             user.setNumber(number);
@@ -254,6 +261,10 @@ public class ActivityUserController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date newTime = new Date();
             user.setSaveTime(sdf.format(newTime));
+            user.setRecycleModel(modelName);
+            user.setBrand(brand);
+            user.setProductId(productId);
+            activityUserService.getDao().update(user);
             activityUserService.getDao().updateByIden(user);
 
             result.setResultCode("0");
@@ -350,16 +361,6 @@ public class ActivityUserController extends BaseController {
             jsonResult.put("modelId", map.get("modelId"));
             jsonResult.put("modelLogo", modelUrl);
             result.setResult(jsonResult);
-
-            //修改
-            ActivityUser user = activityUserService.getDao().queryByOpenId(openId);
-            user.setBrandId(map.get("brandId"));
-            user.setModelId(map.get("modelId"));
-            user.setRecycleModel(map.get("modelName"));
-            user.setWechatModel(modelName);
-            user.setBrand(brand);
-            user.setProductId(productId);
-            activityUserService.getDao().update(user);
 
             result.setResultCode("0");
             result.setSuccess(true);
