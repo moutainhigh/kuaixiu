@@ -1221,7 +1221,7 @@ public class OrderService extends BaseService<Order> {
 //            }
             engineerService.checkDispatchState(oldEngineerId);
         } else {
-            throw new SystemException("附近没有维修工程师！");
+            log.info("附近没有维修工程师！");
         }
     }
 

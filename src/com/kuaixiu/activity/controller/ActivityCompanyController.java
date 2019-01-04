@@ -94,7 +94,7 @@ public class ActivityCompanyController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             ActivityCompany activityCompany = new ActivityCompany();
-            activityCompany.setCompanyName(companyName);
+            activityCompany.setCompanyName(companyName.replace(" ",""));
             activityCompany.setActivityIdentification(activityIdentification);
             activityCompany.setQueryStartTime(queryStartTime);
             activityCompany.setQueryEndTime(queryEndTime);
@@ -417,14 +417,14 @@ public class ActivityCompanyController extends BaseController {
     public ResultData getCodeM(HttpServletRequest request) throws Exception {
         ResultData result = new ResultData();
         JSONObject object = new JSONObject();
-        String imei = request.getParameter("id");
+        String imei = request.getParameter("Identification");
         String name = imei + ".png";
         String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
         File f = new File(savePath + System.getProperty("file.separator") + name);
         if (f.exists()) {
-            object.put("path", SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
-            object.put("name", name);
-            getResult(result,object,true,"0","成功");
+            log.info("图片已存在");
+            object.put("path", getProjectUrl(request) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
+            getResult(result, object, true, "0", "成功");
             return result;
         }
         //String page="page/msg_waist/msg_waist";
@@ -449,13 +449,12 @@ public class ActivityCompanyController extends BaseController {
         response = httpClient.execute(httpPost);
         InputStream inputStream = response.getEntity().getContent();
 
-        Integer stateInt=saveToImgByInputStream(inputStream, savePath, name);  //保存图片
-        if(stateInt==1) {
-            object.put("path", SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
-            object.put("name", name);
-            getResult(result,object,true,"0","成功");
-        }else{
-            getResult(result,object,false,"2","失败");
+        Integer stateInt = saveToImgByInputStream(inputStream, savePath, name);  //保存图片
+        if (stateInt == 1) {
+            object.put("path", getProjectUrl(request) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
+            getResult(result, object, true, "0", "成功");
+        } else {
+            getResult(result, object, false, "2", "失败");
         }
         return result;
     }
@@ -504,10 +503,11 @@ public class ActivityCompanyController extends BaseController {
         if (instreams != null) {
             try {
                 File file = new File(imgPath, imgName);//可以是任何图片格式.jpg,.png等
-                FileOutputStream out = new FileOutputStream(imgPath + "\\" + imgName);
+                FileOutputStream out = new FileOutputStream(imgPath + System.getProperty("file.separator") + imgName);
                 byte[] b = new byte[1024];
                 int nRead = 0;
                 while ((nRead = instreams.read(b)) != -1) {
+                    log.info("二维码开始下载" + b);
                     out.write(b, 0, nRead);
                 }
                 out.flush();

@@ -53,7 +53,7 @@
                 <td class="search_td"><input type="text" name="activityIdentification" class="form-control"></td>
 
             </tr>
-            <div>
+            <div hidden="hidden">
                 <%--/images/activityCompany/default.png 任务记录.txt--%>
                 <a id="savePng"  href="/images/activityCompany/default.png" download="文件名.png">点击下载</a>
             </div>
@@ -196,7 +196,7 @@
                         },
                         {
                             "name": "保存二维码",
-                            "fn": "saveBtnClick(\'" + row.id + "\')",
+                            "fn": "saveBtnClick(\'" + row.activityIdentification + "\',\'"+row.companyName+"\')",
                             "class": "am-text-secondary"
 
                         }
@@ -219,16 +219,16 @@
         myTable.ajax.reload(null, false);
     }
 
-    function saveBtnClick(id) {
+    function saveBtnClick(Identification,companyName) {
         $.ajax({
             url: "${ctx}/activityCompany/getCode.do",
             type: "POST",
-            data: {id:id},
+            data: {Identification:Identification},
             dataType: "json",
             success: function (result) {
                 if (result.success) {
                     $('#savePng').attr('href',result.result.path);
-                    $('#savePng').attr('download',result.result.name);
+                    $('#savePng').attr('download',companyName);
                     document.getElementById("savePng").click();
                 } else {
                     AlertText.tips("d_alert", "提示", result.result.resultMessage);

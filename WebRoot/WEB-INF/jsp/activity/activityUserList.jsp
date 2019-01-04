@@ -46,7 +46,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="search_th search_th_frist"><label class="control-label">联系人：</label></td>
+                <td class="search_th search_th_frist"><label class="control-label">联系人姓名：</label></td>
                 <td class="search_td"><input type="text" name="person" class="form-control"></td>
             </tr>
         </table>

@@ -92,8 +92,8 @@ public class ActivityUserController extends BaseController {
             List<Object> objects = new ArrayList<>();
             if (StringUtils.isBlank(businessType) || "1".equals(businessType)) {
                 ActivityUser user = new ActivityUser();
-                user.setCompanyName(companyName);
-                user.setPerson(person);
+                user.setCompanyName(companyName.replace(" ",""));
+                user.setPerson(person.replace(" ",""));
                 user.setQueryStartTime(queryStartTime);
                 user.setQueryEndTime(queryEndTime);
                 user.setPage(page);

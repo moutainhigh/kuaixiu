@@ -197,10 +197,10 @@
             and company_id = #{companyId}
         </if>
         <if test="companyName != null and companyName != ''" >
-            and company_name = #{companyName}
+            and company_name LIKE CONCAT('%', #{companyName}, '%')
         </if>
         <if test="activityIdentification != null and activityIdentification != ''" >
-            and activity_identification = #{activityIdentification}
+            and activity_identification LIKE CONCAT('%', #{activityIdentification}, '%')
         </if>
         <if test="activityImgUrl != null and activityImgUrl != ''" >
             and activity_img_url = #{activityImgUrl}
