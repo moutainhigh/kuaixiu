@@ -106,18 +106,12 @@
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">活动时间</label>
-            <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" id="activityTime" name="activityTime"--%>
-                       <%--class="form-control am-datepicker-end" data-am-datepicker readonly>--%>
-            <%--</div>--%>
-            <div class="am-input-group input-group col-sm-9" id='datetimepicker'>
-                <input value="2016-06-02 14:45:00" class="am-form-field" name="activityTime">
-                <!--注意添加  datepickerbutton class-->
-                <span class="am-input-group-label datepickerbutton">
-                    <i class="icon-th am-icon-calendar"></i>
-                </span>
+            <div class="col-sm-9">
+                <input type="text" style="width:400px;" id="activityTime" name="activityTime"
+                       class="form-control am-datepicker-end" data-am-datepicker readonly>
             </div>
         </div>
+
 
         <div class="form-group">
             <div class="col-sm-9 col-sm-offset-2">
@@ -153,7 +147,7 @@
                     if (width < 300 && height < 600) {
                         var img = document.getElementById('imghead');
                         img.setAttribute('src', imgUrl); // 修改img标签src属性值
-                        $("#preview").hide();
+                        $("#preview").show();
                     } else {
                         var msg = "文件尺寸应小于：300*600！,当前图片" + height + "*" + width;
                         AlertText.tips("d_alert", "提示", msg);
@@ -204,8 +198,12 @@
         autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
-    $(function() {
-        $('#datetimepicker').datetimepicker();
+    $("#activityTime").datetimepicker({
+        format: "yyyy-mm-dd",
+        language: "zh-CN",
+        pickerPosition: 'top-right',
+        autoclose: true,//选中关闭
+        minView: "month"//设置只显示到月份
     });
 
 </script>
