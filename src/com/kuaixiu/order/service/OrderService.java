@@ -303,7 +303,7 @@ public class OrderService extends BaseService<Order> {
         if (StringUtils.isBlank(o.getEngineerId())) {
             //检查附近的维修门店是否支持客户品牌
             if (!shopService.checkShopModelByLonAndLat(o)) {
-                throw new SystemException("亲，附近维修门店赞不支持该品牌。请换个地址再试一下。");
+                throw new SystemException("亲，附近维修门店暂不支持该品牌。请换个地址再试一下。");
             }
         }
 

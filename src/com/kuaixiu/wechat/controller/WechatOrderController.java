@@ -188,7 +188,8 @@ public class WechatOrderController extends BaseController {
                                 + "&redirect_uri=" + url + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
                         return "redirect:" + url;
                     }
-                    WxMpOAuth2AccessToken token = this.wxMpService.oauth2getAccessToken(code);      //通过code获取用户的openId
+                    //WxMpOAuth2AccessToken token = this.wxMpService.oauth2getAccessToken(code);      //通过code获取用户的openId
+                    WxMpOAuth2AccessToken token = getAccessToken(request,code);      //通过code获取用户的openId
                     LoginUser loginUser = loginUserService.findLoginUserByOpenId(token.getOpenId()); //查找该openId下的用户
                     Boolean tip = loginUserService.findLoginUserInDate(loginUser);//判断该用户accessToken是否在有效期内
                     request.getSession().setAttribute(SystemConstant.SESSION_OPENID, token.getOpenId());//存下openId
