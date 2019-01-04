@@ -422,7 +422,7 @@ public class ActivityCompanyController extends BaseController {
         String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
         File f = new File(savePath + System.getProperty("file.separator") + name);
         if (f.exists()) {
-            object.put("path", savePath + System.getProperty("file.separator") + name);
+            object.put("path", SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
             object.put("name", name);
             getResult(result,object,true,"0","成功");
             return result;
@@ -451,7 +451,7 @@ public class ActivityCompanyController extends BaseController {
 
         Integer stateInt=saveToImgByInputStream(inputStream, savePath, name);  //保存图片
         if(stateInt==1) {
-            object.put("path", savePath + System.getProperty("file.separator") + name);
+            object.put("path", SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
             object.put("name", name);
             getResult(result,object,true,"0","成功");
         }else{

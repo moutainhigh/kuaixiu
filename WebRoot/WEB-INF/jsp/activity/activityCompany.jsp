@@ -231,7 +231,7 @@
                     $('#savePng').attr('download',result.result.name);
                     document.getElementById("savePng").click();
                 } else {
-                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                    AlertText.tips("d_alert", "提示", result.result.resultMessage);
                 }
             },
             error: function () {
