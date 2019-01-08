@@ -1348,10 +1348,10 @@ public class RecycleWechatController extends BaseController {
             String code = params.getString("code");
             if (!tip) {
                 if (StringUtils.isBlank(mobile) || StringUtils.isBlank(code)) {
-                    throw new SystemException("手机号或验证码为空");
+                    return getResult(result,null,false,"2","手机号或验证码为空");
                 }
                 if (!checkRandomCode(request, mobile, code)) { // 验证手机号和验证码
-                    throw new SystemException("手机号或验证码输入错误");
+                    return getResult(result,null,false,"2","手机号或验证码输入错误");
                 }
             }
             PrizeRecord r = new PrizeRecord();
@@ -1362,7 +1362,7 @@ public class RecycleWechatController extends BaseController {
             r.setIsGet(1);   //1表示中奖的记录  一个手机号只会有一条中奖记录
             List<PrizeRecord> list = prizeRecordService.queryList(r);
             if (list.isEmpty()) {
-                throw new SystemException("您当前没有中奖记录");
+                return getResult(result,null,false,"2","您当前没有中奖记录");
             }
             for (PrizeRecord t : list) {
                 //活动的奖品信息  一个用户只会有一次中奖记录
@@ -1429,8 +1429,7 @@ public class RecycleWechatController extends BaseController {
             }
             List<PrizeRecord> list = prizeRecordService.queryList(r);
             if (list.isEmpty()) {
-                result.setSuccess(false);
-                throw new SystemException("您当前没有中奖记录");
+                return getResult(result,null,false,"2","您当前没有中奖记录");
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             for (PrizeRecord t : list) {
