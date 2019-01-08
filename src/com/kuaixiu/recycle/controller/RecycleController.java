@@ -64,6 +64,8 @@ public class RecycleController extends BaseController {
     private RecycleCouponService recycleCouponService;
     @Autowired
     private PushsfExceptionService pushsfExceptionService;
+    @Autowired
+    private SearchModelService searchModelService;
     /**
      * 基础访问接口地址
      */
@@ -146,6 +148,7 @@ public class RecycleController extends BaseController {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
         String url = baseUrl + "getmodellist";
+        String seachId="";
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
@@ -158,6 +161,13 @@ public class RecycleController extends BaseController {
             request.getSession().setAttribute("selectBrandId", brandId);
             //将搜索关键字空格去除
             if (StringUtils.isNotBlank(keyword)) {
+                //存储搜索关键字
+                SearchModel searchModel=new SearchModel();
+                seachId=UUID.randomUUID().toString().replace("-","").substring(0,16);
+                searchModel.setId(seachId);
+                searchModel.setKeyWord(keyword);
+                searchModelService.getDao().add(searchModel);
+                //去掉关键字空格
                 keyword = keyword.replaceAll(" ", "");
             }
             JSONObject requestNews = new JSONObject();
@@ -197,6 +207,10 @@ public class RecycleController extends BaseController {
                 }
 
             } else {
+                SearchModel searchModel=searchModelService.queryById(seachId);
+                searchModel.setIsTrue("1");
+                searchModel.setMessage("该机型未找到");
+                searchModelService.getDao().update(searchModel);
                 throw new SystemException("该机型未找到");
             }
 
@@ -207,6 +221,10 @@ public class RecycleController extends BaseController {
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
+            SearchModel searchModel=searchModelService.queryById(seachId);
+            searchModel.setIsTrue("1");
+            searchModel.setMessage(e.getMessage());
+            searchModelService.getDao().update(searchModel);
             e.printStackTrace();
             sessionUserService.getException(result);
         }

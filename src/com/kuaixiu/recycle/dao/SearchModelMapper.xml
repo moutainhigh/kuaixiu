@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.SearchModelMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.SearchModel" >
+        <result column="id" property="id"/>
+        <result column="key_word" property="keyWord"/>
+        <result column="is_true" property="isTrue"/>
+        <result column="message" property="message"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- hs_search_model table all fields -->
+    <sql id="Base_Column_List" >
+        id,key_word,is_true,message,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_search_model
+        (id,key_word,is_true,message,create_time)
+        values
+        (#{id},#{keyWord},#{isTrue},#{message},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_search_model 
+        set 
+            id=#{id},
+            key_word=#{keyWord},
+            is_true=#{isTrue},
+            message=#{message},
+            create_time=#{createTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_search_model where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_search_model where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_search_model
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="keyWord != null and keyWord != ''" >
+            and key_word = #{keyWord}
+        </if>
+        <if test="isTrue != null and isTrue != ''" >
+            and is_true = #{isTrue}
+        </if>
+        <if test="message != null and message != ''" >
+            and message = #{message}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_search_model
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="keyWord != null and keyWord != ''" >
+            and key_word = #{keyWord}
+        </if>
+        <if test="isTrue != null and isTrue != ''" >
+            and is_true = #{isTrue}
+        </if>
+        <if test="message != null and message != ''" >
+            and message = #{message}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+
+</mapper>   
