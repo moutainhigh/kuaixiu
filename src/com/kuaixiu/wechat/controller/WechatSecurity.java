@@ -177,9 +177,9 @@ public class WechatSecurity {
                 }
             } else if (SystemConstant.REQ_MESSAGE_TYPE_TEXT.equals(msgtype)) {
                 String content = map.get("Content");
-                Pattern pattern=Pattern.compile("\\s*|\t|\r|\n");
-                Matcher m=pattern.matcher(content);
-                content=m.replaceAll("");
+                Pattern pattern = Pattern.compile("\\s*|\t|\r|\n");
+                Matcher m = pattern.matcher(content);
+                content = m.replaceAll("");
                 if ("1".equals(content)) {
                     // 发送通用维修优惠券.活动已取消
                     //String commonCode = wechatUserService.createCoupon(SystemConstant.WECHAT_COMMON_BATCHID, SystemConstant.WECHAT_COMMON_PRICE);
@@ -252,6 +252,10 @@ public class WechatSecurity {
         String httpGet = HttpClientUtil.httpGet(sb.toString());
         if (StringUtils.isNotBlank(httpGet)) {
             result = JSONObject.parseObject(httpGet);
+            if (40001 == result.getInteger("errcode") || 42001 == result.getInteger("errcode")) {
+                GlobalConstants.interfaceUrlProperties.remove("access_token");
+                result = getWechatUserInfo(openid);
+            }
         } else {
             logger.info("微信用户信息返回异常");
         }

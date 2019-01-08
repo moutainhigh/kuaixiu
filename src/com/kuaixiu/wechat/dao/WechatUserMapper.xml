@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kuaixiu.wechat.dao.WechatUserMapper">
-  <resultMap id="BaseResultMap" type="com.kuaixiu.wechat.entity.WechatUser">
-    <id column="open_id" jdbcType="VARCHAR" property="openId" />
-    <result column="is_subscribe" jdbcType="INTEGER" property="isSubscribe" />
-    <result column="common_coupon_code" jdbcType="VARCHAR" property="commonCouponCode" />
-    <result column="screen_coupon_code" jdbcType="VARCHAR" property="screenCouponCode" />
-    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="sex" jdbcType="INTEGER" property="sex" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="headimgurl" jdbcType="VARCHAR" property="headimgurl" /> 
-  </resultMap>
-  
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.kuaixiu.wechat.entity.WechatUser">
+        <id column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="is_subscribe" jdbcType="INTEGER" property="isSubscribe"/>
+        <result column="common_coupon_code" jdbcType="VARCHAR" property="commonCouponCode"/>
+        <result column="screen_coupon_code" jdbcType="VARCHAR" property="screenCouponCode"/>
+        <result column="in_time" jdbcType="TIMESTAMP" property="inTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="headimgurl" jdbcType="VARCHAR" property="headimgurl"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     open_id, is_subscribe, in_time, update_time,sex,nickname,headimgurl
     ,common_coupon_code,screen_coupon_code
   </sql>
-  
-  
-  <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
         insert into kx_wechat_user
-        (open_id,in_time,common_coupon_code,screen_coupon_code,sex,nickname,headimgurl)
+            (open_id,in_time,common_coupon_code,screen_coupon_code,sex,nickname,headimgurl,update_time)
         values
-        (#{openId},now(),#{commonCouponCode},#{screenCouponCode},#{sex},#{nickname},#{headimgurl})
+            (#{openId},now(),#{commonCouponCode},#{screenCouponCode},#{sex},#{nickname},#{headimgurl},#{updateTime})
+        ON DUPLICATE KEY UPDATE open_id=#{openId}
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update kx_wechat_user
         <set>
             is_subscribe=#{isSubscribe},
             sex=#{sex},
             nickname=#{nickname},
             headimgurl=#{headimgurl},
-            <if test="commonCouponCode != null" >
+            <if test="commonCouponCode != null and commonCouponCode != ''">
                 common_coupon_code = #{commonCouponCode},
             </if>
-            <if test="screenCouponCode != null" >
+            <if test="screenCouponCode != null and screenCouponCode != ''">
                 screen_coupon_code = #{screenCouponCode},
             </if>
             update_time=now()
@@ -50,62 +51,62 @@
     <delete id="delete" parameterType="Object">
         delete from kx_wechat_user where open_id = #{open_Id}
     </delete>
-    
+
     <!-- 根据open_id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from kx_wechat_user where open_id =#{openId}
     </select>
 
-     
-       <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
-      select
-        <include refid="Base_Column_List"/>
-        from kx_wechat_user
-        where 1=1
-        <if test="isSubscribe != null" >
-            and is_subscribe = #{isSubscribe}
-        </if>
-        <if test="sex != null" >
-            and sex = #{sex}
-        </if>
-        <if test="nickname != null" >
-            and nickname = #{nickname}
-        </if>
-         <if test="commonCouponCode != null" >
-            and common_coupon_code = #{commonCouponCode}
-        </if>
-         <if test="screenCouponCode != null" >
-            and screen_coupon_code = #{screenCouponCode}
-        </if>
-        order by in_time
-    </select>
-    
-    <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from kx_wechat_user
         where 1=1
-       <if test="isSubscribe != null" >
+        <if test="isSubscribe != null">
             and is_subscribe = #{isSubscribe}
         </if>
-        <if test="sex != null" >
+        <if test="sex != null">
             and sex = #{sex}
         </if>
-        <if test="nickname != null" >
+        <if test="nickname != null">
             and nickname = #{nickname}
         </if>
-          <if test="commonCouponCode != null" >
+        <if test="commonCouponCode != null">
             and common_coupon_code = #{commonCouponCode}
         </if>
-         <if test="screenCouponCode != null" >
+        <if test="screenCouponCode != null">
             and screen_coupon_code = #{screenCouponCode}
         </if>
-		order by in_time
+        order by in_time
     </select>
-	
-  
-  
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_wechat_user
+        where 1=1
+        <if test="isSubscribe != null">
+            and is_subscribe = #{isSubscribe}
+        </if>
+        <if test="sex != null">
+            and sex = #{sex}
+        </if>
+        <if test="nickname != null">
+            and nickname = #{nickname}
+        </if>
+        <if test="commonCouponCode != null">
+            and common_coupon_code = #{commonCouponCode}
+        </if>
+        <if test="screenCouponCode != null">
+            and screen_coupon_code = #{screenCouponCode}
+        </if>
+        order by in_time
+    </select>
+
+
 </mapper>
