@@ -148,7 +148,7 @@ public class RecycleController extends BaseController {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
         String url = baseUrl + "getmodellist";
-        String seachId="";
+        String seachId = "";
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
@@ -162,10 +162,11 @@ public class RecycleController extends BaseController {
             //将搜索关键字空格去除
             if (StringUtils.isNotBlank(keyword)) {
                 //存储搜索关键字
-                SearchModel searchModel=new SearchModel();
-                seachId=UUID.randomUUID().toString().replace("-","").substring(0,16);
+                SearchModel searchModel = new SearchModel();
+                seachId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
                 searchModel.setId(seachId);
                 searchModel.setKeyWord(keyword);
+                searchModel.setIsTrue("0");
                 searchModelService.getDao().add(searchModel);
                 //去掉关键字空格
                 keyword = keyword.replaceAll(" ", "");
@@ -207,21 +208,23 @@ public class RecycleController extends BaseController {
                 }
 
             } else {
-                SearchModel searchModel=searchModelService.queryById(seachId);
+                SearchModel searchModel = searchModelService.queryById(seachId);
                 searchModel.setIsTrue("1");
                 searchModel.setMessage("该机型未找到");
                 searchModelService.getDao().update(searchModel);
-                throw new SystemException("该机型未找到");
+                getResult(result, null, false, "3", "该机型未找到");
+                log.info("该机型未找到");
             }
 
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
-
+            if (StringUtils.isBlank(result.getResultCode())) {
+                result.setResult(jsonResult);
+                result.setResultCode("0");
+                result.setSuccess(true);
+            }
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
-            SearchModel searchModel=searchModelService.queryById(seachId);
+            SearchModel searchModel = searchModelService.queryById(seachId);
             searchModel.setIsTrue("1");
             searchModel.setMessage(e.getMessage());
             searchModelService.getDao().update(searchModel);
@@ -757,9 +760,9 @@ public class RecycleController extends BaseController {
                 order.setMailType(1);        //快递类型   1超人系统推送
             }
             if (!source.equals("null") && StringUtils.isNotBlank(source)) {
-                String sourceType=source;
-                if(source.contains("?")){
-                    sourceType=org.apache.commons.lang3.StringUtils.substringBefore(source,"?");
+                String sourceType = source;
+                if (source.contains("?")) {
+                    sourceType = org.apache.commons.lang3.StringUtils.substringBefore(source, "?");
                 }
                 order.setSourceType(Integer.parseInt(sourceType));
             } else {
@@ -1457,9 +1460,9 @@ public class RecycleController extends BaseController {
      */
     @RequestMapping(value = "/recycle/list")
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        RecycleSystem r=new RecycleSystem();
+        RecycleSystem r = new RecycleSystem();
         r.setIsDel(0);
-        List<RecycleSystem> list =recycleSystemService.queryList(r);
+        List<RecycleSystem> list = recycleSystemService.queryList(r);
         request.setAttribute("fromSystems", list);
         String returnView = "recycle/listForAdmin";
         return new ModelAndView(returnView);
@@ -1484,7 +1487,7 @@ public class RecycleController extends BaseController {
         String fromSystem = request.getParameter("fromSystem");
         RecycleOrder r = new RecycleOrder();
         r.setOrderNo(orderNo);
-        if(StringUtils.isNotBlank(fromSystem)) {
+        if (StringUtils.isNotBlank(fromSystem)) {
             r.setSourceType(Integer.valueOf(fromSystem));
         }
         if (StringUtil.isNotBlank(status)) {
@@ -1851,7 +1854,7 @@ public class RecycleController extends BaseController {
             if (product.isEmpty()) {
                 throw new SystemException("对应机型不存在");
             }
-            int goodPirce=0;
+            int goodPirce = 0;
             //判断返回的机型是否有多个
             if (product.size() > 1) {
                 //如果有多个机型 则通过机型名称匹配唯一
@@ -1887,7 +1890,7 @@ public class RecycleController extends BaseController {
             }
             //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
             String imageUrl = map.get("modelLogo");
-            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") +SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
             log.info("图片保存路径:" + savePath);
             String modelUrl = getProjectUrl(request) + "/images/recycleModel/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
             //先判断文件是否存在  不存在则下载
