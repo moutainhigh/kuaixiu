@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.order.dao.ReworkOrderMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.ReworkOrder" >
+        <result column="id" property="id"/>
+        <result column="order_rework_no" property="orderReworkNo"/>
+        <result column="parent_order" property="parentOrder"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="shop_code" property="shopCode"/>
+        <result column="shop_name" property="shopName"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="color" property="color"/>
+        <result column="repair_type" property="repairType"/>
+        <result column="order_price" property="orderPrice"/>
+        <result column="real_price" property="realPrice"/>
+        <result column="is_drawback" property="isDrawback"/>
+        <result column="drawback_price" property="drawbackPrice"/>
+        <result column="drawback_time" property="drawbackTime"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="cancel_type" property="cancelType"/>
+        <result column="cancel_status" property="cancelStatus"/>
+        <result column="from_system" property="fromSystem"/>
+        <result column="pay_type" property="payType"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="pay_price" property="payPrice"/>
+        <result column="agreed_time" property="agreedTime"/>
+        <result column="is_dispatch" property="isDispatch"/>
+        <result column="dispatch_time" property="dispatchTime"/>
+        <result column="engineer_id" property="engineerId"/>
+        <result column="engineer_number" property="engineerNumber"/>
+        <result column="engineer_name" property="engineerName"/>
+        <result column="engineer_mobile" property="engineerMobile"/>
+        <result column="start_check_time" property="startCheckTime"/>
+        <result column="end_check_time" property="endCheckTime"/>
+        <result column="start_repair_time" property="startRepairTime"/>
+        <result column="end_repair_time" property="endRepairTime"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="street" property="street"/>
+        <result column="areas" property="areas"/>
+        <result column="address" property="address"/>
+        <result column="postscript" property="postscript"/>
+        <result column="note" property="note"/>
+        <result column="is_mobile" property="isMobile"/>
+        <result column="sort" property="sort"/>
+        <result column="is_comment" property="isComment"/>
+        <result column="balance_status" property="balanceStatus"/>
+        <result column="balance_time" property="balanceTime"/>
+        <result column="balance_no" property="balanceNo"/>
+        <result column="is_lock" property="isLock"/>
+        <result column="is_del" property="isDel"/>
+        <result column="in_time" property="inTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+        <result column="end_time" property="endTime"/>
+        <result column="clerk_id" property="clerkId"/>
+        <result column="is_show" property="isShow"/>
+        <result column="cancel_reason" property="cancelReason"/>
+        <result column="send_agreed_news" property="sendAgreedNews"/>
+        <result column="affirm_userid" property="affirmUserid"/>
+        <result column="eng_note" property="engNote"/>
+        <result column="rework_reasons" property="reworkReasons"/>
+        <result column="reasons_detail" property="reasonsDetail"/>
+    </resultMap>
+    
+    <!-- kx_rework_order table all fields -->
+    <sql id="Base_Column_List" >
+        id,order_rework_no,parent_order,customer_id,customer_name,provider_code,provider_name,shop_code,shop_name,brand_id,brand_name,model_id,model_name,color,repair_type,order_price,real_price,is_drawback,drawback_price,date_format(`drawback_time`,'%Y-%m-%d %H:%i:%s')drawback_time,order_status,cancel_type,cancel_status,from_system,pay_type,pay_status,date_format(`pay_time`,'%Y-%m-%d %H:%i:%s')pay_time,pay_price,agreed_time,is_dispatch,date_format(`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time,engineer_id,engineer_number,engineer_name,engineer_mobile,date_format(`start_check_time`,'%Y-%m-%d %H:%i:%s')start_check_time,date_format(`end_check_time`,'%Y-%m-%d %H:%i:%s')end_check_time,date_format(`start_repair_time`,'%Y-%m-%d %H:%i:%s')start_repair_time,date_format(`end_repair_time`,'%Y-%m-%d %H:%i:%s')end_repair_time,mobile,email,longitude,latitude,province,city,county,street,areas,address,postscript,note,is_mobile,sort,is_comment,balance_status,date_format(`balance_time`,'%Y-%m-%d %H:%i:%s')balance_time,balance_no,is_lock,is_del,date_format(`in_time`,'%Y-%m-%d %H:%i:%s')in_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,clerk_id,is_show,cancel_reason,send_agreed_news,affirm_userid,eng_note,rework_reasons,reasons_detail
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_rework_order
+        (id,order_rework_no,parent_order,customer_id,customer_name,provider_code,provider_name,shop_code,shop_name,brand_id,brand_name,model_id,model_name,color,repair_type,order_price,real_price,is_drawback,drawback_price,drawback_time,order_status,cancel_type,cancel_status,from_system,pay_type,pay_status,pay_time,pay_price,agreed_time,is_dispatch,dispatch_time,engineer_id,engineer_number,engineer_name,engineer_mobile,start_check_time,end_check_time,start_repair_time,end_repair_time,mobile,email,longitude,latitude,province,city,county,street,areas,address,postscript,note,is_mobile,sort,is_comment,balance_status,balance_time,balance_no,is_lock,is_del,in_time,update_time,update_userid,end_time,clerk_id,is_show,cancel_reason,send_agreed_news,affirm_userid,eng_note,rework_reasons,reasons_detail)
+        values
+        (#{id},#{orderReworkNo},#{parentOrder},#{customerId},#{customerName},#{providerCode},#{providerName},#{shopCode},#{shopName},#{brandId},#{brandName},#{modelId},#{modelName},#{color},#{repairType},#{orderPrice},#{realPrice},#{isDrawback},#{drawbackPrice},#{drawbackTime},#{orderStatus},#{cancelType},#{cancelStatus},#{fromSystem},#{payType},#{payStatus},#{payTime},#{payPrice},#{agreedTime},#{isDispatch},#{dispatchTime},#{engineerId},#{engineerNumber},#{engineerName},#{engineerMobile},#{startCheckTime},#{endCheckTime},#{startRepairTime},#{endRepairTime},#{mobile},#{email},#{longitude},#{latitude},#{province},#{city},#{county},#{street},#{areas},#{address},#{postscript},#{note},#{isMobile},#{sort},#{isComment},#{balanceStatus},#{balanceTime},#{balanceNo},#{isLock},#{isDel},#{inTime},#{updateTime},#{updateUserid},#{endTime},#{clerkId},#{isShow},#{cancelReason},#{sendAgreedNews},#{affirmUserid},#{engNote},#{reworkReasons},#{reasonsDetail})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_rework_order 
+        set 
+            id=#{id},
+            order_rework_no=#{orderReworkNo},
+            parent_order=#{parentOrder},
+            customer_id=#{customerId},
+            customer_name=#{customerName},
+            provider_code=#{providerCode},
+            provider_name=#{providerName},
+            shop_code=#{shopCode},
+            shop_name=#{shopName},
+            brand_id=#{brandId},
+            brand_name=#{brandName},
+            model_id=#{modelId},
+            model_name=#{modelName},
+            color=#{color},
+            repair_type=#{repairType},
+            order_price=#{orderPrice},
+            real_price=#{realPrice},
+            is_drawback=#{isDrawback},
+            drawback_price=#{drawbackPrice},
+            drawback_time=#{drawbackTime},
+            order_status=#{orderStatus},
+            cancel_type=#{cancelType},
+            cancel_status=#{cancelStatus},
+            from_system=#{fromSystem},
+            pay_type=#{payType},
+            pay_status=#{payStatus},
+            pay_time=#{payTime},
+            pay_price=#{payPrice},
+            agreed_time=#{agreedTime},
+            is_dispatch=#{isDispatch},
+            dispatch_time=#{dispatchTime},
+            engineer_id=#{engineerId},
+            engineer_number=#{engineerNumber},
+            engineer_name=#{engineerName},
+            engineer_mobile=#{engineerMobile},
+            start_check_time=#{startCheckTime},
+            end_check_time=#{endCheckTime},
+            start_repair_time=#{startRepairTime},
+            end_repair_time=#{endRepairTime},
+            mobile=#{mobile},
+            email=#{email},
+            longitude=#{longitude},
+            latitude=#{latitude},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            street=#{street},
+            areas=#{areas},
+            address=#{address},
+            postscript=#{postscript},
+            note=#{note},
+            is_mobile=#{isMobile},
+            sort=#{sort},
+            is_comment=#{isComment},
+            balance_status=#{balanceStatus},
+            balance_time=#{balanceTime},
+            balance_no=#{balanceNo},
+            is_lock=#{isLock},
+            is_del=#{isDel},
+            in_time=#{inTime},
+            update_time=#{updateTime},
+            update_userid=#{updateUserid},
+            end_time=#{endTime},
+            clerk_id=#{clerkId},
+            is_show=#{isShow},
+            cancel_reason=#{cancelReason},
+            send_agreed_news=#{sendAgreedNews},
+            affirm_userid=#{affirmUserid},
+            eng_note=#{engNote},
+            rework_reasons=#{reworkReasons},
+            reasons_detail=#{reasonsDetail}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_rework_order where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_rework_order where id = #{id}
+    </select>
+
+    <!-- 根据父订单号查询进行中返修单  -->
+    <select id="queryByParentOrder"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_rework_order where parent_order = #{parentOrder}
+        and order_status &lt; 50
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_rework_order
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderReworkNo != null and orderReworkNo != ''" >
+            and order_rework_no = #{orderReworkNo}
+        </if>
+        <if test="parentOrder != null and parentOrder != ''" >
+            and parent_order = #{parentOrder}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+            and customer_name = #{customerName}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''" >
+            and provider_name = #{providerName}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="shopName != null and shopName != ''" >
+            and shop_name = #{shopName}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="brandName != null and brandName != ''" >
+            and brand_name = #{brandName}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and model_id = #{modelId}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="color != null and color != ''" >
+            and color = #{color}
+        </if>
+        <if test="repairType != null and repairType != ''" >
+            and repair_type = #{repairType}
+        </if>
+        <if test="orderPrice != null and orderPrice != ''" >
+            and order_price = #{orderPrice}
+        </if>
+        <if test="realPrice != null and realPrice != ''" >
+            and real_price = #{realPrice}
+        </if>
+        <if test="isDrawback != null and isDrawback != ''" >
+            and is_drawback = #{isDrawback}
+        </if>
+        <if test="drawbackPrice != null and drawbackPrice != ''" >
+            and drawback_price = #{drawbackPrice}
+        </if>
+        <if test="drawbackTime != null and drawbackTime != ''" >
+            and drawback_time = #{drawbackTime}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and order_status = #{orderStatus}
+        </if>
+        <if test="cancelType != null and cancelType != ''" >
+            and cancel_type = #{cancelType}
+        </if>
+        <if test="cancelStatus != null and cancelStatus != ''" >
+            and cancel_status = #{cancelStatus}
+        </if>
+        <if test="fromSystem != null and fromSystem != ''" >
+            and from_system = #{fromSystem}
+        </if>
+        <if test="payType != null and payType != ''" >
+            and pay_type = #{payType}
+        </if>
+        <if test="payStatus != null and payStatus != ''" >
+            and pay_status = #{payStatus}
+        </if>
+        <if test="payTime != null and payTime != ''" >
+            and pay_time = #{payTime}
+        </if>
+        <if test="payPrice != null and payPrice != ''" >
+            and pay_price = #{payPrice}
+        </if>
+        <if test="agreedTime != null and agreedTime != ''" >
+            and agreed_time = #{agreedTime}
+        </if>
+        <if test="isDispatch != null and isDispatch != ''" >
+            and is_dispatch = #{isDispatch}
+        </if>
+        <if test="dispatchTime != null and dispatchTime != ''" >
+            and dispatch_time = #{dispatchTime}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and engineer_id = #{engineerId}
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''" >
+            and engineer_number = #{engineerNumber}
+        </if>
+        <if test="engineerName != null and engineerName != ''" >
+            and engineer_name = #{engineerName}
+        </if>
+        <if test="engineerMobile != null and engineerMobile != ''" >
+            and engineer_mobile = #{engineerMobile}
+        </if>
+        <if test="startCheckTime != null and startCheckTime != ''" >
+            and start_check_time = #{startCheckTime}
+        </if>
+        <if test="endCheckTime != null and endCheckTime != ''" >
+            and end_check_time = #{endCheckTime}
+        </if>
+        <if test="startRepairTime != null and startRepairTime != ''" >
+            and start_repair_time = #{startRepairTime}
+        </if>
+        <if test="endRepairTime != null and endRepairTime != ''" >
+            and end_repair_time = #{endRepairTime}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="postscript != null and postscript != ''" >
+            and postscript = #{postscript}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="isMobile != null and isMobile != ''" >
+            and is_mobile = #{isMobile}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="isComment != null and isComment != ''" >
+            and is_comment = #{isComment}
+        </if>
+        <if test="balanceStatus != null and balanceStatus != ''" >
+            and balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceTime != null and balanceTime != ''" >
+            and balance_time = #{balanceTime}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and balance_no = #{balanceNo}
+        </if>
+        <if test="isLock != null and isLock != ''" >
+            and is_lock = #{isLock}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="clerkId != null and clerkId != ''" >
+            and clerk_id = #{clerkId}
+        </if>
+        <if test="isShow != null and isShow != ''" >
+            and is_show = #{isShow}
+        </if>
+        <if test="cancelReason != null and cancelReason != ''" >
+            and cancel_reason = #{cancelReason}
+        </if>
+        <if test="sendAgreedNews != null and sendAgreedNews != ''" >
+            and send_agreed_news = #{sendAgreedNews}
+        </if>
+        <if test="affirmUserid != null and affirmUserid != ''" >
+            and affirm_userid = #{affirmUserid}
+        </if>
+        <if test="engNote != null and engNote != ''" >
+            and eng_note = #{engNote}
+        </if>
+        <if test="reworkReasons != null and reworkReasons != ''" >
+            and rework_reasons = #{reworkReasons}
+        </if>
+        <if test="reasonsDetail != null and reasonsDetail != ''" >
+            and reasons_detail = #{reasonsDetail}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_rework_order
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="orderReworkNo != null and orderReworkNo != ''" >
+            and order_rework_no = #{orderReworkNo}
+        </if>
+        <if test="parentOrder != null and parentOrder != ''" >
+            and parent_order = #{parentOrder}
+        </if>
+        <if test="customerId != null and customerId != ''" >
+            and customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+            and customer_name = #{customerName}
+        </if>
+        <if test="providerCode != null and providerCode != ''" >
+            and provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''" >
+            and provider_name = #{providerName}
+        </if>
+        <if test="shopCode != null and shopCode != ''" >
+            and shop_code = #{shopCode}
+        </if>
+        <if test="shopName != null and shopName != ''" >
+            and shop_name = #{shopName}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="brandName != null and brandName != ''" >
+            and brand_name = #{brandName}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and model_id = #{modelId}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="color != null and color != ''" >
+            and color = #{color}
+        </if>
+        <if test="repairType != null and repairType != ''" >
+            and repair_type = #{repairType}
+        </if>
+        <if test="orderPrice != null and orderPrice != ''" >
+            and order_price = #{orderPrice}
+        </if>
+        <if test="realPrice != null and realPrice != ''" >
+            and real_price = #{realPrice}
+        </if>
+        <if test="isDrawback != null and isDrawback != ''" >
+            and is_drawback = #{isDrawback}
+        </if>
+        <if test="drawbackPrice != null and drawbackPrice != ''" >
+            and drawback_price = #{drawbackPrice}
+        </if>
+        <if test="drawbackTime != null and drawbackTime != ''" >
+            and drawback_time = #{drawbackTime}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''" >
+            and order_status = #{orderStatus}
+        </if>
+        <if test="cancelType != null and cancelType != ''" >
+            and cancel_type = #{cancelType}
+        </if>
+        <if test="cancelStatus != null and cancelStatus != ''" >
+            and cancel_status = #{cancelStatus}
+        </if>
+        <if test="fromSystem != null and fromSystem != ''" >
+            and from_system = #{fromSystem}
+        </if>
+        <if test="payType != null and payType != ''" >
+            and pay_type = #{payType}
+        </if>
+        <if test="payStatus != null and payStatus != ''" >
+            and pay_status = #{payStatus}
+        </if>
+        <if test="payTime != null and payTime != ''" >
+            and pay_time = #{payTime}
+        </if>
+        <if test="payPrice != null and payPrice != ''" >
+            and pay_price = #{payPrice}
+        </if>
+        <if test="agreedTime != null and agreedTime != ''" >
+            and agreed_time = #{agreedTime}
+        </if>
+        <if test="isDispatch != null and isDispatch != ''" >
+            and is_dispatch = #{isDispatch}
+        </if>
+        <if test="dispatchTime != null and dispatchTime != ''" >
+            and dispatch_time = #{dispatchTime}
+        </if>
+        <if test="engineerId != null and engineerId != ''" >
+            and engineer_id = #{engineerId}
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''" >
+            and engineer_number = #{engineerNumber}
+        </if>
+        <if test="engineerName != null and engineerName != ''" >
+            and engineer_name = #{engineerName}
+        </if>
+        <if test="engineerMobile != null and engineerMobile != ''" >
+            and engineer_mobile = #{engineerMobile}
+        </if>
+        <if test="startCheckTime != null and startCheckTime != ''" >
+            and start_check_time = #{startCheckTime}
+        </if>
+        <if test="endCheckTime != null and endCheckTime != ''" >
+            and end_check_time = #{endCheckTime}
+        </if>
+        <if test="startRepairTime != null and startRepairTime != ''" >
+            and start_repair_time = #{startRepairTime}
+        </if>
+        <if test="endRepairTime != null and endRepairTime != ''" >
+            and end_repair_time = #{endRepairTime}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="email != null and email != ''" >
+            and email = #{email}
+        </if>
+        <if test="longitude != null and longitude != ''" >
+            and longitude = #{longitude}
+        </if>
+        <if test="latitude != null and latitude != ''" >
+            and latitude = #{latitude}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="areas != null and areas != ''" >
+            and areas = #{areas}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="postscript != null and postscript != ''" >
+            and postscript = #{postscript}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="isMobile != null and isMobile != ''" >
+            and is_mobile = #{isMobile}
+        </if>
+        <if test="sort != null and sort != ''" >
+            and sort = #{sort}
+        </if>
+        <if test="isComment != null and isComment != ''" >
+            and is_comment = #{isComment}
+        </if>
+        <if test="balanceStatus != null and balanceStatus != ''" >
+            and balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceTime != null and balanceTime != ''" >
+            and balance_time = #{balanceTime}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''" >
+            and balance_no = #{balanceNo}
+        </if>
+        <if test="isLock != null and isLock != ''" >
+            and is_lock = #{isLock}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="inTime != null and inTime != ''" >
+            and in_time = #{inTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="clerkId != null and clerkId != ''" >
+            and clerk_id = #{clerkId}
+        </if>
+        <if test="isShow != null and isShow != ''" >
+            and is_show = #{isShow}
+        </if>
+        <if test="cancelReason != null and cancelReason != ''" >
+            and cancel_reason = #{cancelReason}
+        </if>
+        <if test="sendAgreedNews != null and sendAgreedNews != ''" >
+            and send_agreed_news = #{sendAgreedNews}
+        </if>
+        <if test="affirmUserid != null and affirmUserid != ''" >
+            and affirm_userid = #{affirmUserid}
+        </if>
+        <if test="engNote != null and engNote != ''" >
+            and eng_note = #{engNote}
+        </if>
+        <if test="reworkReasons != null and reworkReasons != ''" >
+            and rework_reasons = #{reworkReasons}
+        </if>
+        <if test="reasonsDetail != null and reasonsDetail != ''" >
+            and reasons_detail = #{reasonsDetail}
+        </if>
+    </select>
+
+</mapper>   

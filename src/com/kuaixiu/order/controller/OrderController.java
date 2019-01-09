@@ -704,7 +704,6 @@ public class OrderController extends BaseController {
         o.setModelId(modelId);
         o.setColor(color);
         o.setIsMobile(1);
-        o.setRepairType(Integer.parseInt(repairType));
         o.setPostscript(note);
         o.setCouponCode(couponCode);
         o.setOrderStatus(OrderConstant.ORDER_STATUS_DEPOSITED);

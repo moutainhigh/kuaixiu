@@ -457,6 +457,8 @@ public class SystemConstant {
         return i;
     }
 
+    public static final String REWORK_ENGINEER_NUMBER=SystemUtil.getSysCfgProperty("rework_order_engineer_number");
+
     public static final String ALIPAY_APP_ID=SystemUtil.getSysCfgProperty("alipay_app_id");
     public static final String ALIPAY_APP_URL=SystemUtil.getSysCfgProperty("alipay_url");
     public static final String ALIPAY_APP_PAIVATE_KEY=SystemUtil.getSysCfgProperty("alipay_private_key");
