@@ -1,8 +1,10 @@
 package com.system.web;
 
 
+import com.common.base.controller.BaseController;
 import com.common.exception.SessionInvalidateException;
 import com.common.exception.SystemException;
+import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.LoginUser;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.entity.SysMenu;
@@ -31,110 +33,115 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
     private SessionUserService sessionUserService;
     @Autowired
     private LoginUserService loginUserService;
+    @Autowired
+    private BaseController baseController;
+
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception, IOException {
         String sessionId = request.getSession().getId(); //获取sessionID
-    //    log.info("IP : " + BaseController.getIpAddress(request)+"   sessionId  "+sessionId);
+        ResultData result = new ResultData();
+        //    log.info("IP : " + BaseController.getIpAddress(request)+"   sessionId  "+sessionId);
         //获取请求地址
         String uri = request.getRequestURI();
         //获取应用名称
         String ctx = request.getContextPath();
 
-        String url = request.getScheme()+"://"+request.getServerName() + request.getRequestURI();
-        log.info("地址："+url);
+        String url = request.getScheme() + "://" + request.getServerName() + request.getRequestURI();
+        log.info("地址：" + url);
         //去掉项目名称
         uri = uri.replaceFirst(ctx, "");
-        if(uri.indexOf(";") > 0){
-        	uri = uri.substring(0,uri.indexOf(";"));
+        if (uri.indexOf(";") > 0) {
+            uri = uri.substring(0, uri.indexOf(";"));
         }
         //获取登录用户
         SessionUser sessionUser = (SessionUser) (request.getSession().getAttribute(SystemConstant.SESSION_USER_KEY));
 
-        
+
         //对于手机端的用户登录 还需判定用户是否处于唯一登录环境 
-        if(sessionUser!=null&&uri.startsWith("/wechat/order/wechatLogin")){
-        	verifyLogin(sessionUser,sessionId,request);
+        if (sessionUser != null && uri.startsWith("/wechat/order/wechatLogin")) {
+            verifyLogin(sessionUser, sessionId, request);
         }
         //访问无权限页面，直接放行
         if (checkUriMatch(uri, anonymousUrls)) {
-           // log.info("符合无session通过条件");
+            // log.info("符合无session通过条件");
             return true;
         }
 
-       
-			if (sessionUser == null) {
-			    //验证cookie用户是否存在
-			    if (sessionUserService.checkCookieUser(request)) {
-			        return true;
-			    }
-			    else {
-			    	//判断是否是因为session丢失
-			        throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
-			    }
-			} 
-			else {
-				//如果是客户操作限制手机端唯一登录
-				if(uri.startsWith("/admin/checkLogin")){
-				verifyLogin(sessionUser,sessionId,request);
-				}
-			    //验证用户权限
-			    if (checkUriFromList(uri, sessionUser.getUserAuthoritys())) {
-			    	return true;
-			    }
-			    if(sessionUser.getType()==8){
-			    	//特殊用户登录后台
-			    	return true;
-			    }
-			  
-			}
-			throw new SystemException("对不起，您没有访问权限！");
+
+        if (sessionUser == null) {
+            //验证cookie用户是否存在
+            if (sessionUserService.checkCookieUser(request)) {
+                return true;
+            } else {
+                //判断是否是因为session丢失
+                //throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
+                result.setResultMessage("您离开系统时间过长，请重新登录");
+                baseController.renderJson(response, result);
+                return false;
+            }
+        } else {
+            //如果是客户操作限制手机端唯一登录
+            if (uri.startsWith("/admin/checkLogin")) {
+                verifyLogin(sessionUser, sessionId, request);
+            }
+            //验证用户权限
+            if (checkUriFromList(uri, sessionUser.getUserAuthoritys())) {
+                return true;
+            }
+            if (sessionUser.getType() == 8) {
+                //特殊用户登录后台
+                return true;
+            }
+
+        }
+        result.setResultMessage("对不起，您没有访问权限！");
+        baseController.renderJson(response, result);
+        return false;
     }
 
     @Override
     public void postHandle(HttpServletRequest request,
                            HttpServletResponse response, Object handler, ModelAndView mav)
             throws Exception {
-      //  log.info("front action postHandle....");
+        //  log.info("front action postHandle....");
     }
 
     /**
-     * 
+     *
      */
     public void afterCompletion(HttpServletRequest request,
                                 HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-       
+
     }
-    
-    
+
+
     /**
      * 验证用户手机端是否唯一登录
      */
-    public void verifyLogin(SessionUser sessionUser,String sessionId,HttpServletRequest request){
-    	String ua = request.getHeader("user-agent").toLowerCase();
-    	List<LoginUser> list=loginUserService.findLoginUserBysessionId(sessionId);
-    	if(sessionUser!=null&&list.size()==0&&checkAgentIsMobile(ua)){
-    		request.getSession().invalidate();
-          	throw new SessionInvalidateException("您的账号已在其他地方登录，请重新登录");	
-    	}
-        if(sessionUser!=null&&list.size()>0&&checkAgentIsMobile(ua)){//来自手机端的登录
-        	 boolean tip=false;    
-             	for(LoginUser u:list){
-        	    	if(u.getUid().equals(sessionUser.getUserId())){
-        	            tip=true;   		
-        	    	}
-        	    }
-             	if(!tip){
-             		request.getSession().invalidate();
-                  	throw new SessionInvalidateException("您的账号已在其他地方登录，请重新登录");	
-             	}
+    public void verifyLogin(SessionUser sessionUser, String sessionId, HttpServletRequest request) {
+        String ua = request.getHeader("user-agent").toLowerCase();
+        List<LoginUser> list = loginUserService.findLoginUserBysessionId(sessionId);
+        if (sessionUser != null && list.size() == 0 && checkAgentIsMobile(ua)) {
+            request.getSession().invalidate();
+            throw new SessionInvalidateException("您的账号已在其他地方登录，请重新登录");
+        }
+        if (sessionUser != null && list.size() > 0 && checkAgentIsMobile(ua)) {//来自手机端的登录
+            boolean tip = false;
+            for (LoginUser u : list) {
+                if (u.getUid().equals(sessionUser.getUserId())) {
+                    tip = true;
+                }
+            }
+            if (!tip) {
+                request.getSession().invalidate();
+                throw new SessionInvalidateException("您的账号已在其他地方登录，请重新登录");
+            }
         }
     }
-    
-    
-    
-    
+
+
     /**
      * 检测当前拦截的uri 是否在权限范围内
      *
@@ -185,25 +192,26 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
     public void setAnonymousUrls(String[] anonymousUrls) {
         this.anonymousUrls = anonymousUrls;
     }
-    
-  //手机识别
-    private final static String[] agent = {"android", "iphone", "ipod","ipad", "windows phone", "mqqbrowser"};
-    private static boolean checkAgentIsMobile(String ua){
-		boolean flag = false;
-		if (!ua.contains("windows nt") 
-				|| (ua.contains("windows nt") 
-					&& ua.contains("compatible; msie 9.0;"))) {
-			// 排除 苹果桌面系统
-			if (!ua.contains("windows nt") && !ua.contains("macintosh")) {
-				for (String item : agent) {
-					if (ua.contains(item)) {
-						flag = true;
-						break;
-					}
-				}
-			}
-		}
-		return flag;
+
+    //手机识别
+    private final static String[] agent = {"android", "iphone", "ipod", "ipad", "windows phone", "mqqbrowser"};
+
+    private static boolean checkAgentIsMobile(String ua) {
+        boolean flag = false;
+        if (!ua.contains("windows nt")
+                || (ua.contains("windows nt")
+                && ua.contains("compatible; msie 9.0;"))) {
+            // 排除 苹果桌面系统
+            if (!ua.contains("windows nt") && !ua.contains("macintosh")) {
+                for (String item : agent) {
+                    if (ua.contains(item)) {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return flag;
     }
 
 }
