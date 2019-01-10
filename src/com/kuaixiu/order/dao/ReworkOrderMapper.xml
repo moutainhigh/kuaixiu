@@ -132,6 +132,35 @@
         o.engineer_number beforeEngNumber o.engineer_name beforeEngName
         r.engineer_number engNumber r.engineer_name EngName r.order_status orderStatus
         from kx_rework_order r LEFT JOIN order o ON r.parent_order=o.order_no
+        where 1=1
+        <if test="projectId == 1 and projectId != ''">
+            and o.order_no in
+            (select d.order_no from kx_order_detail d
+            where 1=1
+            AND d.project_id = projectId
+            )
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''">
+            and r.engineer_number like CONCAT('%', #{brandName}, '%')
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and o.brand_id = #{brandId}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="modelId != null and modelId != ''">
+            and o.model_id = #{modelId}
+        </if>
+        <if test="orderReworkNo != null and orderReworkNo != ''">
+            and r.order_rework_no like CONCAT('%', #{orderReworkNo}, '%')
+        </if>
+        <if test="parentOrder != null and parentOrder != ''">
+            and r.parent_order like CONCAT('%', #{parentOrder}, '%')
+        </if>
     </select>
 
     <!-- 查询列表无分页 -->

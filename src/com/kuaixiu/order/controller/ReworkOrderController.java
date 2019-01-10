@@ -3,10 +3,16 @@ package com.kuaixiu.order.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.brand.entity.Brand;
+import com.kuaixiu.brand.service.BrandService;
+import com.kuaixiu.model.entity.Model;
+import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.ReworkOrder;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.order.service.ReworkOrderService;
+import com.kuaixiu.project.entity.Project;
+import com.kuaixiu.project.service.ProjectService;
 import com.system.api.entity.ResultData;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -19,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ReworkOrder Controller
@@ -33,6 +40,12 @@ public class ReworkOrderController extends BaseController {
     private ReworkOrderService reworkOrderService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private BrandService brandService;
+    @Autowired
+    private ModelService modelService;
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * 列表查询
@@ -45,6 +58,13 @@ public class ReworkOrderController extends BaseController {
     @RequestMapping(value = "/reworkOrder/list")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
+        List<Brand> brands=brandService.queryList(null);
+        List<Model> models=modelService.queryList(null);
+        List<Project> projects=projectService.queryList(null);
+        request.setAttribute("brands",brands);
+        request.setAttribute("models",models);
+        request.setAttribute("projects",projects);
+
         String returnView = "reworkOrder/list";
         return new ModelAndView(returnView);
     }
@@ -61,13 +81,29 @@ public class ReworkOrderController extends BaseController {
                              HttpServletResponse response) throws Exception {
         ResultData result=new ResultData();
         try {
-            String moblie=request.getParameter("moblie");
-            if(StringUtils.isNotBlank(moblie)){
+            String projectId=request.getParameter("projectId");
+            String engineerNumber=request.getParameter("engineerNumber");
+            String brandId=request.getParameter("brandId");
+            String queryStartTime=request.getParameter("queryStartTime");
+            String queryEndTime=request.getParameter("queryEndTime");
+            String modelId=request.getParameter("modelId");
+            String orderReworkNo=request.getParameter("orderReworkNo");
+            String parentOrder=request.getParameter("parentOrder");
 
-            }
             ReworkOrder reworkOrder=new ReworkOrder();
-            reworkOrderService.getDao().queryReworkListForPage(reworkOrder);
+            reworkOrder.setEngineerMobile(engineerNumber);
+            reworkOrder.setBrandId(brandId);
+            reworkOrder.setProjectId(projectId);
+            reworkOrder.setQueryStartTime(queryStartTime);
+            reworkOrder.setQueryEndTime(queryEndTime);
+            reworkOrder.setModelId(modelId);
+            reworkOrder.setParentOrder(parentOrder);
+            reworkOrder.setOrderReworkNo(orderReworkNo);
 
+            List<Map<String,String>> reworkOrders=reworkOrderService.getDao().queryReworkListForPage(reworkOrder);
+
+            result.setResult(reworkOrders);
+            result.setSuccess(true);
 
         } catch (Exception e) {
             e.printStackTrace();

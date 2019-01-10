@@ -3,6 +3,7 @@ package com.kuaixiu.order.dao;
 import com.common.base.dao.BaseDao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * ReworkOrder Mapper
@@ -16,7 +17,7 @@ public interface ReworkOrderMapper<T> extends BaseDao<T> {
     //根据父订单号查询未完成返修单
     List<T> queryByParentOrder(String fatherOrderNo);
     //查询返修订单分页
-    List<T> queryReworkListForPage(T t);
+    List<Map<String,String>> queryReworkListForPage(T t);
 }
 
 
