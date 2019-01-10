@@ -2,6 +2,7 @@ package com.kuaixiu.order.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
+import com.common.paginate.Page;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.service.BrandService;
@@ -56,18 +57,20 @@ public class ReworkOrderController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/reworkOrder/list")
+    @ResponseBody
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-        List<Brand> brands=brandService.queryList(null);
-        List<Model> models=modelService.queryList(null);
-        List<Project> projects=projectService.queryList(null);
-        request.setAttribute("brands",brands);
-        request.setAttribute("models",models);
-        request.setAttribute("projects",projects);
+        List<Brand> brands = brandService.queryList(null);
+        List<Model> models = modelService.queryList(null);
+        List<Project> projects = projectService.queryList(null);
+        request.setAttribute("brands", brands);
+        request.setAttribute("models", models);
+        request.setAttribute("projects", projects);
 
-        String returnView = "reworkOrder/list";
+        String returnView = "order/listForRework";
         return new ModelAndView(returnView);
     }
+
     /**
      * 返修刷新列表
      *
@@ -77,20 +80,22 @@ public class ReworkOrderController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/reworkOrder/listForPage")
+    @ResponseBody
     public void listForPage(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
-        ResultData result=new ResultData();
+                            HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        Page page = getPageByRequest(request);
         try {
-            String projectId=request.getParameter("projectId");
-            String engineerNumber=request.getParameter("engineerNumber");
-            String brandId=request.getParameter("brandId");
-            String queryStartTime=request.getParameter("queryStartTime");
-            String queryEndTime=request.getParameter("queryEndTime");
-            String modelId=request.getParameter("modelId");
-            String orderReworkNo=request.getParameter("orderReworkNo");
-            String parentOrder=request.getParameter("parentOrder");
+            String projectId = request.getParameter("projectId");
+            String engineerNumber = request.getParameter("engineerNumber");
+            String brandId = request.getParameter("brandId");
+            String queryStartTime = request.getParameter("queryStartTime");
+            String queryEndTime = request.getParameter("queryEndTime");
+            String modelId = request.getParameter("modelId");
+            String orderReworkNo = request.getParameter("orderReworkNo");
+            String parentOrder = request.getParameter("parentOrder");
 
-            ReworkOrder reworkOrder=new ReworkOrder();
+            ReworkOrder reworkOrder = new ReworkOrder();
             reworkOrder.setEngineerMobile(engineerNumber);
             reworkOrder.setBrandId(brandId);
             reworkOrder.setProjectId(projectId);
@@ -99,17 +104,23 @@ public class ReworkOrderController extends BaseController {
             reworkOrder.setModelId(modelId);
             reworkOrder.setParentOrder(parentOrder);
             reworkOrder.setOrderReworkNo(orderReworkNo);
+            reworkOrder.setPage(page);
+            List<Map<String, String>> reworkOrders = reworkOrderService.getDao().queryReworkListForPage(reworkOrder);
+            for (Map<String, String> map : reworkOrders) {
+                Map<String, String> map1 = reworkOrderService.getProject(map.get("parentNo"));
+                map.put("projectNames", map1.get("projectNames"));
+                //订单状态筛选列表
+                Map<Integer, Object> m = orderService.getSelectOrderStatus();
+                map.put("orderStatusName",m.get(map.get("orderStatus")).toString());
+            }
 
-            List<Map<String,String>> reworkOrders=reworkOrderService.getDao().queryReworkListForPage(reworkOrder);
-
-            result.setResult(reworkOrders);
-            result.setSuccess(true);
+            page.setData(reworkOrders);
 
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());
         }
-        this.renderJson(response,result);
+        this.renderJson(response, page);
     }
 
     /**
@@ -122,22 +133,22 @@ public class ReworkOrderController extends BaseController {
      */
     @RequestMapping(value = "/reworkOrder/reworkOrderDetail")
     public ModelAndView reworkOrderDetail(HttpServletRequest request,
-                            HttpServletResponse response) throws Exception {
-        ResultData result=new ResultData();
+                                          HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
         try {
             String reworkOrderNo = request.getParameter("reworkOrderNo");
 
-            ReworkOrder reworkOrder=reworkOrderService.getDao().queryByReworkNo(reworkOrderNo);
-            Order order=orderService.queryByOrderNo(reworkOrder.getParentOrder());
+            ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(reworkOrderNo);
+            Order order = orderService.queryByOrderNo(reworkOrder.getParentOrder());
 
-            request.setAttribute("reworkOrder",reworkOrder);
-            request.setAttribute("order",order);
+            request.setAttribute("reworkOrder", reworkOrder);
+            request.setAttribute("order", order);
 
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());
         }
-        String returnView = "reworkOrder/reworkOrderDetail";
+        String returnView = "order/reworkOrderDetail";
         return new ModelAndView(returnView);
     }
 

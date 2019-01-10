@@ -72,7 +72,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         Long time = order.getEndTime().getTime() - reworkOrder.getInTime().getTime();
         reworkOrder.setSurplusDay(time / (1000 * 3600 * 24));
         reworkOrder.setTotalDay(Long.valueOf(180));
-        reworkOrder.setOrderPrice(new BigDecimal(getProject(order).get("orderPrice")));
+        reworkOrder.setOrderPrice(new BigDecimal(getProject(order.getOrderNo()).get("orderPrice")));
         reworkOrder.setRealPrice(new BigDecimal(0));
         //下单完成给用户发送成功短信
         SmsSendUtil.sendSmsToCustomerforRework(order.getMobile());
@@ -110,10 +110,10 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
     }
 
     //获取项目信息，所有项目名称，项目总金额
-    public Map<String,String> getProject(Order order){
+    public Map<String,String> getProject(String orderNo){
         Map<String,String> map=new HashMap<String ,String>();
         //查询订单明细
-        List<OrderDetail> details = detailService.queryByOrderNo(order.getOrderNo());
+        List<OrderDetail> details = detailService.queryByOrderNo(orderNo);
         List<String> projectNames = new ArrayList<>();
         Boolean isTrue = false;//判断是否有工程师确认的维修项目
         for (OrderDetail detail : details) {
