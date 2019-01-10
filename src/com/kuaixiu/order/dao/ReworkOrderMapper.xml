@@ -115,7 +115,14 @@
         from kx_rework_order where id = #{id}
     </select>
 
-    <!-- 根据id查询  -->
+    <!-- 根据返修订单号查询  -->
+    <select id="queryByReworkNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_rework_order where order_rework_no = #{orderReworkNo}
+    </select>
+
+    <!-- //根据父订单号查询未完成返修单  -->
     <select id="queryByParentOrder" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
