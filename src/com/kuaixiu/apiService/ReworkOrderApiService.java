@@ -9,7 +9,6 @@ import com.kuaixiu.order.entity.ReworkOrder;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.order.service.ReworkOrderService;
 import com.system.api.ApiServiceInf;
-import com.system.api.entity.ResultData;
 import com.system.constant.ApiResultConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -38,10 +37,9 @@ public class ReworkOrderApiService implements ApiServiceInf {
 
     @Override
     public Object process(Map<String, String> params) {
-        ResultData result = new ResultData();
         try {
-            //获取工程师工号
-            String number = MapUtils.getString(params, "pmClientId");
+//            //获取工程师工号
+//            String number = MapUtils.getString(params, "pmClientId");
             //解析请求参数
             String paramJson = MapUtils.getString(params, "params");
             JSONObject pmJson = JSONObject.parseObject(paramJson);
@@ -57,7 +55,6 @@ public class ReworkOrderApiService implements ApiServiceInf {
             String orderNo = pmJson.getString("orderNo");
             String reworkReason = pmJson.getString("reworkReason");
             String reasonDetail = pmJson.getString("reasonDetail");
-            Engineer eng = engService.queryByEngineerNumber(number);
             Order order = orderService.queryByOrderNo(orderNo);
             if (order == null) {
                 throw new ApiServiceException(ApiResultConstant.resultCode_1003, ApiResultConstant.resultCode_str_1003);
@@ -72,7 +69,7 @@ public class ReworkOrderApiService implements ApiServiceInf {
             //创建保存返修订单
             reworkOrderService.save(order, reworkOrder);
             //给工程师派单
-            reworkOrderService.dispatch(order, reworkOrder, true);
+            reworkOrderService.dispatch(order, reworkOrder);
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());

@@ -3,7 +3,6 @@ package com.kuaixiu.order.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.ReworkOrder;
 import com.kuaixiu.order.service.OrderService;
@@ -24,7 +23,7 @@ import java.util.List;
 /**
  * ReworkOrder Controller
  *
- * @CreateDate: 2019-01-09 上午11:10:46
+ * @CreateDate: 2019-01-10 上午09:45:45
  * @version: V 1.0
  */
 @Controller
@@ -34,8 +33,6 @@ public class ReworkOrderController extends BaseController {
     private ReworkOrderService reworkOrderService;
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private EngineerService engineerService;
 
     /**
      * 列表查询
@@ -72,30 +69,31 @@ public class ReworkOrderController extends BaseController {
             String reworkReason = params.getString("reworkReason");
             String reasonDetail = params.getString("reasonDetail");
 
-            if(StringUtils.isNotBlank(reworkReason)||StringUtils.isNotBlank(orderNo)){
-                return getResult(result,null,false,"2","参数不完整");
+            if (StringUtils.isBlank(reworkReason) || StringUtils.isBlank(orderNo)) {
+                return getResult(result, null, false, "2", "参数不完整");
             }
-            Order order=orderService.queryByOrderNo(orderNo);
-            if(order==null){
-                return getResult(result,null,false,"3","该订单不存在");
+            Order order = orderService.queryByOrderNo(orderNo);
+            if (order == null) {
+                return getResult(result, null, false, "3", "该订单不存在");
             }
-            List<ReworkOrder> reworkOrders=reworkOrderService.getDao().queryByParentOrder(order.getOrderNo());
-            if(!CollectionUtils.isEmpty(reworkOrders)){
-                return getResult(result,null,false,"4","该订单正在售后中");
+            List<ReworkOrder> reworkOrders = reworkOrderService.getDao().queryByParentOrder(order.getOrderNo());
+            if (!CollectionUtils.isEmpty(reworkOrders)) {
+                return getResult(result, null, false, "4", "该订单正在售后中");
             }
-            ReworkOrder reworkOrder=new ReworkOrder();
+            ReworkOrder reworkOrder = new ReworkOrder();
             reworkOrder.setReworkReasons(Integer.valueOf(reworkReason));
             reworkOrder.setReasonsDetail(reasonDetail);
             //创建保存返修订单
-            reworkOrderService.save(order,reworkOrder);
+            reworkOrderService.save(order, reworkOrder);
             //给工程师派单
-            reworkOrderService.dispatch(order,reworkOrder,false);
+            reworkOrderService.dispatch(order, reworkOrder);
 
-            getResult(result,null,true,"0","成功");
+            getResult(result, null, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());
         }
         return result;
     }
+
 }

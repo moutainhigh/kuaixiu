@@ -15,7 +15,6 @@ import com.common.exception.SystemException;
 import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.coupon.entity.CouponModel;
 import com.kuaixiu.coupon.entity.CouponProject;
-import com.kuaixiu.customerService.entity.CustService;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.oldtonew.entity.NewOrder;
 import com.kuaixiu.oldtonew.entity.OldToNewUser;
@@ -216,7 +215,7 @@ public class SmsSendUtil {
      * @param o
      * @CreateDate: 2016-9-15 下午11:35:01
      */
-    public static boolean sendSmsToEngineerForRework(Engineer eng, Shop s, ReworkOrder o){
+    public static boolean sendSmsToEngineerForRework(Engineer eng, Shop s, ReworkOrder o,Order order){
         try{
             StringBuffer contentShop = new StringBuffer();
             contentShop.append("派单提醒，售后订单").append(o.getOrderReworkNo());
@@ -234,9 +233,9 @@ public class SmsSendUtil {
         }catch(Exception e){}
         StringBuffer content = new StringBuffer();
         content.append("工单提醒，售后订单").append(o.getOrderReworkNo());
-        content.append("已派单，请及时上门维修，联系电话：").append(o.getMobile());
-        content.append("，联系人：").append(o.getCustomerName());
-        content.append("，维修地址：").append(o.getFullAddress());
+        content.append("已派单，请及时上门维修，联系电话：").append(order.getMobile());
+        content.append("，联系人：").append(order.getCustomerName());
+        content.append("，维修地址：").append(order.getFullAddress());
         return sendSmsThread(eng.getMobile(), content.toString());
     }
     
