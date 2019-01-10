@@ -12,6 +12,8 @@
         <result column="provider_name" property="providerName"/>
         <result column="shop_code" property="shopCode"/>
         <result column="shop_name" property="shopName"/>
+        <result column="surplus_day" property="surplusDay"/>
+        <result column="total_day" property="totalDay"/>
         <result column="order_price" property="orderPrice"/>
         <result column="real_price" property="realPrice"/>
         <result column="order_status" property="orderStatus"/>
@@ -45,15 +47,15 @@
 
     <!-- kx_rework_order table all fields -->
     <sql id="Base_Column_List">
-        id,order_rework_no,parent_order,provider_code,provider_name,shop_code,shop_name,order_price,real_price,order_status,cancel_type,cancel_status,from_system,agreed_time,is_dispatch,date_format(`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time,engineer_id,engineer_number,engineer_name,engineer_mobile,date_format(`start_check_time`,'%Y-%m-%d %H:%i:%s')start_check_time,date_format(`end_check_time`,'%Y-%m-%d %H:%i:%s')end_check_time,date_format(`start_repair_time`,'%Y-%m-%d %H:%i:%s')start_repair_time,date_format(`end_repair_time`,'%Y-%m-%d %H:%i:%s')end_repair_time,sort,is_comment,is_lock,is_del,date_format(`in_time`,'%Y-%m-%d %H:%i:%s')in_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,cancel_reason,eng_note,rework_reasons,reasons_detail
+        id,order_rework_no,parent_order,provider_code,provider_name,shop_code,shop_name,surplus_day,total_day,order_price,real_price,order_status,cancel_type,cancel_status,from_system,agreed_time,is_dispatch,date_format(`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time,engineer_id,engineer_number,engineer_name,engineer_mobile,date_format(`start_check_time`,'%Y-%m-%d %H:%i:%s')start_check_time,date_format(`end_check_time`,'%Y-%m-%d %H:%i:%s')end_check_time,date_format(`start_repair_time`,'%Y-%m-%d %H:%i:%s')start_repair_time,date_format(`end_repair_time`,'%Y-%m-%d %H:%i:%s')end_repair_time,sort,is_comment,is_lock,is_del,date_format(`in_time`,'%Y-%m-%d %H:%i:%s')in_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,cancel_reason,eng_note,rework_reasons,reasons_detail
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object">
         insert into kx_rework_order
-        (id,order_rework_no,parent_order,provider_code,provider_name,shop_code,shop_name,order_price,real_price,order_status,cancel_type,cancel_status,from_system,agreed_time,is_dispatch,dispatch_time,engineer_id,engineer_number,engineer_name,engineer_mobile,start_check_time,end_check_time,start_repair_time,end_repair_time,sort,is_comment,is_lock,is_del,in_time,update_time,update_userid,end_time,cancel_reason,eng_note,rework_reasons,reasons_detail)
+        (id,order_rework_no,parent_order,provider_code,provider_name,shop_code,shop_name,surplus_day,total_day,order_price,real_price,order_status,cancel_type,cancel_status,from_system,agreed_time,is_dispatch,dispatch_time,engineer_id,engineer_number,engineer_name,engineer_mobile,start_check_time,end_check_time,start_repair_time,end_repair_time,sort,is_comment,is_lock,is_del,in_time,update_time,update_userid,end_time,cancel_reason,eng_note,rework_reasons,reasons_detail)
         values
-        (#{id},#{orderReworkNo},#{parentOrder},#{providerCode},#{providerName},#{shopCode},#{shopName},#{orderPrice},#{realPrice},#{orderStatus},#{cancelType},#{cancelStatus},#{fromSystem},#{agreedTime},#{isDispatch},#{dispatchTime},#{engineerId},#{engineerNumber},#{engineerName},#{engineerMobile},#{startCheckTime},#{endCheckTime},#{startRepairTime},#{endRepairTime},#{sort},#{isComment},#{isLock},#{isDel},now(),#{updateTime},#{updateUserid},#{endTime},#{cancelReason},#{engNote},#{reworkReasons},#{reasonsDetail})
+        (#{id},#{orderReworkNo},#{parentOrder},#{providerCode},#{providerName},#{shopCode},#{shopName},#{surplusDay},#{totalDay},#{orderPrice},#{realPrice},#{orderStatus},#{cancelType},#{cancelStatus},#{fromSystem},#{agreedTime},#{isDispatch},#{dispatchTime},#{engineerId},#{engineerNumber},#{engineerName},#{engineerMobile},#{startCheckTime},#{endCheckTime},#{startRepairTime},#{endRepairTime},#{sort},#{isComment},#{isLock},#{isDel},#{inTime},#{updateTime},#{updateUserid},#{endTime},#{cancelReason},#{engNote},#{reworkReasons},#{reasonsDetail})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -67,6 +69,8 @@
             provider_name=#{providerName},
             shop_code=#{shopCode},
             shop_name=#{shopName},
+            surplus_day=#{surplusDay},
+            total_day=#{totalDay},
             order_price=#{orderPrice},
             real_price=#{realPrice},
             order_status=#{orderStatus},
@@ -117,6 +121,17 @@
         <include refid="Base_Column_List"/>
         from kx_rework_order where parent_order=#{parentOrder}
         and order_status &lt; 50
+    </select>
+
+    <!-- 根据查询  -->
+    <select id="queryReworkListForPage" resultType="Map" parameterType="Object">
+        select
+        r.in_time inTime,r.order_rework_no reworkNo,r.parent_order parentNo,
+        o.customer_name Name,o.mobile mobile,o.brand_name brandName,o.model_name modelName
+        o.color color,r.surplus_day surplusDay,r.total_day totalDay,
+        o.engineer_number beforeEngNumber o.engineer_name beforeEngName
+        r.engineer_number engNumber r.engineer_name EngName r.order_status orderStatus
+        from kx_rework_order r LEFT JOIN order o ON r.parent_order=o.order_no
     </select>
 
     <!-- 查询列表无分页 -->

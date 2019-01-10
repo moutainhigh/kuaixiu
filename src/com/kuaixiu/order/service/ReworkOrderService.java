@@ -10,18 +10,20 @@ import com.kuaixiu.engineer.service.NewEngineerService;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.dao.ReworkOrderMapper;
 import com.kuaixiu.order.entity.Order;
+import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.entity.ReworkOrder;
 
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.system.constant.SystemConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * ReworkOrder Service
@@ -41,6 +43,8 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
     private ShopService shopService;
     @Autowired
     private NewEngineerService newEngineerService;
+    @Autowired
+    private OrderDetailService detailService;
 
     public ReworkOrderMapper<ReworkOrder> getDao() {
         return mapper;
@@ -50,6 +54,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
 
     //创建保存返修订单
     public void save(Order order, ReworkOrder reworkOrder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         reworkOrder.setOrderReworkNo(NOUtil.getNo(""));
         reworkOrder.setParentOrder(order.getOrderNo());
@@ -63,12 +68,18 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         reworkOrder.setCancelStatus(0);
         reworkOrder.setSendAgreedNews(0);
         reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_DEPOSITED);
-        reworkOrder.setOrderPrice(new BigDecimal(0));
+        reworkOrder.setInTime(new Date());
+        Long time = order.getEndTime().getTime() - reworkOrder.getInTime().getTime();
+        reworkOrder.setSurplusDay(time / (1000 * 3600 * 24));
+        reworkOrder.setTotalDay(Long.valueOf(180));
+        reworkOrder.setOrderPrice(new BigDecimal(getProject(order).get("orderPrice")));
         reworkOrder.setRealPrice(new BigDecimal(0));
         //下单完成给用户发送成功短信
         SmsSendUtil.sendSmsToCustomerforRework(order.getMobile());
         getDao().add(reworkOrder);
     }
+
+
 
     //售后订单派单给工程师
     public void dispatch(Order order, ReworkOrder reworkOrder) {
@@ -98,5 +109,35 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         SmsSendUtil.sendSmsToEngineerForRework(engineer, shop, reworkOrder, order);
     }
 
-
+    //获取项目信息，所有项目名称，项目总金额
+    public Map<String,String> getProject(Order order){
+        Map<String,String> map=new HashMap<String ,String>();
+        //查询订单明细
+        List<OrderDetail> details = detailService.queryByOrderNo(order.getOrderNo());
+        List<String> projectNames = new ArrayList<>();
+        Boolean isTrue = false;//判断是否有工程师确认的维修项目
+        for (OrderDetail detail : details) {
+            if (detail.getType() == 1) {
+                isTrue = true;
+                break;
+            }
+        }
+        BigDecimal price=new BigDecimal("0");
+        for (OrderDetail detail : details) {
+            if (isTrue) {
+                if (detail.getType() == 1) {//工程师确认的维修项目
+                    projectNames.add(detail.getProjectName());
+                    price.add(detail.getRealPrice());
+                }
+            } else {
+                if (detail.getType() == 0) {//客户确认的维修项目
+                    projectNames.add(detail.getProjectName());
+                    price.add(detail.getRealPrice());
+                }
+            }
+        }
+        map.put("projectNames",StringUtils.join(projectNames, ","));
+        map.put("orderPrice",String.valueOf(price));
+        return map;
+    }
 }

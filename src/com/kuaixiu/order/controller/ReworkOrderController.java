@@ -45,11 +45,36 @@ public class ReworkOrderController extends BaseController {
     @RequestMapping(value = "/reworkOrder/list")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-
         String returnView = "reworkOrder/list";
         return new ModelAndView(returnView);
     }
+    /**
+     * 返修刷新列表
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/reworkOrder/listForPage")
+    public void listForPage(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        ResultData result=new ResultData();
+        try {
+            String moblie=request.getParameter("moblie");
+            if(StringUtils.isNotBlank(moblie)){
 
+            }
+            ReworkOrder reworkOrder=new ReworkOrder();
+            reworkOrderService.getDao().queryReworkListForPage(reworkOrder);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
+        }
+        this.renderJson(response,result);
+    }
 
     /**
      * H5订单售后生成订单
