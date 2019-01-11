@@ -319,7 +319,7 @@
 					couponCode:$('#ticket-text').val(),
 					
                 }
-				$.post(linkUrl+'/recycle/wechatCreateOrder.do',{params:JSON.stringify(params)},
+				$.post(linkUrl+'/recycleNew/wechatCreateOrder.do',{params:JSON.stringify(params)},
 				      function(data){
                         if (data.success){
                             eCacheUtil.storage.cache(CacheKey.orderId,data.result.datainfo.orderid);
@@ -349,7 +349,7 @@
 		  var params = {
                 orderNo:orderNo
             }
-			$.post(linkUrl+'/recycle/createIncreaseOrder.do',{params:JSON.stringify(params)},function (data) {
+			$.post(linkUrl+'/recycleNew/createIncreaseOrder.do',{params:JSON.stringify(params)},function (data) {
             	if ( data.success){
 					eCacheUtil.storage.cache(CacheKey.raiseOrderNo,data.result.increaseOrderNo);
 					location.href = 'success.html';

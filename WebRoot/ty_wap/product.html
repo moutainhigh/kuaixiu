@@ -117,12 +117,13 @@
                 setHistoryItems(mname,mid,imgHref);
                 //判断是否良品价评估
                 var fm=eCacheUtil.storage.getCache(CacheKey.source);
-				location.href = 'test.html';
                 /*if(fm==10){
                     location.href = 'resultHappyPrize.html';
                 }else{
                     location.href = 'test.html';
-                } */
+                }*/
+				
+				location.href = 'test.html';
             });
 
             $('.loadMore').click(function(){
@@ -140,7 +141,7 @@
         
         //加载品牌
         function searchBrand(bid) {
-            $.post(linkUrl+"/recycle/getBrandList.do",function(data){
+            $.post(linkUrl+"/recycleNew/getBrandList.do",function(data){
                 if (data.success){
                     var s = '',dataInfo = data.result.datainfo;
                     for (var i = 0;i < dataInfo.length;i++){
@@ -174,7 +175,7 @@
             };
             //将品牌id储存
             eCacheUtil.storage.cache(CacheKey.BrandId,bid);
-            $.post(linkUrl+"/recycle/getModelList.do",{params:JSON.stringify(param)},function(data){
+            $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
                 if (data.success){
                     var dataInfo = data.result.datainfo;
                     totalcount = data.result.totalcount;
