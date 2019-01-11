@@ -148,7 +148,7 @@ public class ReworkOrderController extends BaseController {
             e.printStackTrace();
             log.info(e.getMessage());
         }
-        String returnView = "order/reworkOrderDetail";
+        String returnView = "order/reworkDetail";
         return new ModelAndView(returnView);
     }
 
