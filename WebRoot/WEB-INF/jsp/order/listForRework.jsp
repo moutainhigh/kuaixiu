@@ -13,115 +13,57 @@
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
             <tr>
-                <td class="search_th "><label class="control-label">订 单 号 ：</label></td>
-                <td class="search_td"><input type="text" name="query_orderNo" class="form-control"></td>
                 <td class="search_th"><label class="control-label">客户手机号：</label></td>
-                <td class="search_td"><input type="text" name="query_customerMobile" class="form-control"></td>
-                <td class="search_th"><label class="control-label">下 单 时 间 ：</label></td>
+                <td class="search_td"><input type="text" name="engineerNumber" class="form-control"></td>
+                <td class="search_th "><label class="control-label">手 机 品 牌：</label></td>
                 <td class="search_td">
-                    <div class="am-datepicker-date">
-                        <input type="text" id="query_startTime" name="query_startTime"
-                               class="form-control am-datepicker-start" data-am-datepicker readonly>
-                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endTime" name="query_endTime"
-                               class="form-control am-datepicker-end" data-am-datepicker readonly>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="search_th "><label class="control-label">手机品牌：</label></td>
-                <td class="search_td">
-                    <select name="query_brand" onchange="brandChange(this.value);" class="form-control">
-                        <option value="">--选择品牌--</option>
+                    <select name="brandId" onchange="brandChange(this.value);" class="form-control">
+                        <option value="">--请选择--</option>
                         <c:forEach items="${brands }" var="item" varStatus="i">
                             <option value="${item.id }">${item.name }</option>
                         </c:forEach>
                     </select>
                 </td>
+            </tr>
+
+            <tr>
+                <td class="search_th"><label class="control-label">创 建 时 间 ：</label></td>
+                <td class="search_td">
+                    <div class="am-datepicker-date">
+                        <input type="text" id="query_startTime" name="queryStartTime"
+                               class="form-control am-datepicker-start" data-am-datepicker readonly>
+                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
+                        <input type="text" id="query_endTime" name="queryEndTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
+                    </div>
+                </td>
                 <td class="search_th"><label class="control-label">维 修 机 型 ：</label></td>
                 <td class="search_td">
-                    <select id="query_model" name="query_model" class="form-control">
-                        <option value="">--选择机型--</option>
-                    </select>
-                </td>
-                <td class="search_th"><label class="control-label">订 单 状 态 ：</label></td>
-                <td class="search_td">
-                    <select name="query_orderState" class="form-control">
-                        <option value="">--订单状态--</option>
-                        <c:forEach items="${selectOrderStatus}" var="item" varStatus="i">
-                            <option value="${item.key }">${item.value}</option>
+                    <select id="query_model" name="modelId" class="form-control">
+                        <option value="">--请选择--</option>
+                        <c:forEach items="${models }" var="item" varStatus="i">
+                            <option value="${item.id }">${item.name }</option>
                         </c:forEach>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td class="search_th "><label class="control-label">结算状态：</label></td>
-                <td class="search_td">
-                    <select name="query_balanceStatus" onchange="brandChange(this.value);" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="0">未结算</option>
-                        <option value="2">已结算</option>
-                    </select>
-                </td>
+                <td class="search_th"><label class="control-label">返修订单号：</label></td>
+                <td class="search_td"><input type="text" name="orderReworkNo" class="form-control" ></td>
 
-                <td class="search_th"><label class="control-label">维 修 方 式：</label></td>
+                <td class="search_th"><label class="control-label">故障类型 ：</label></td>
                 <td class="search_td">
-                    <select name="query_repairType" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="0">上门维修</option>
-                        <option value="1">到店维修</option>
-                        <option value="2">返店维修</option>
-                        <option value="3">寄修</option>
-                        <option value="4">点对点</option>
-                    </select>
-                </td>
-                <td class="search_th"><label class="control-label">工程师工号：</label></td>
-                <td class="search_td"><input type="text" name="query_engNumber" class="form-control" ></td>
-            </tr>
-            <tr>
-                <td class="search_th "><label class="control-label">工程师姓名：</label></td>
-                <td class="search_td"><input type="text" name="query_engName" class="form-control" ></td>
-                <td class="search_th"><label class="control-label">完 成 时 间 ：</label></td>
-                <td class="search_td">
-                    <div class="am-datepicker-date">
-                        <input type="text" id="query_startRepairTime" name="query_startRepairTime"
-                               class="form-control am-datepicker-start" data-am-datepicker readonly>
-                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endRepairTime" name="query_endRepairTime"
-                               class="form-control am-datepicker-end" data-am-datepicker readonly>
-                    </div>
-                </td>
-                <td class="search_th"><label class="control-label">来 源 系 统 ：</label></td>
-                <td class="search_td">
-                    <select name="fromSystem" class="form-control-inline">
-                        <option value="">--来源系统--</option>
-                        <c:forEach items="${fromSystems}" var="item" varStatus="i">
+                    <select name="projectId" class="form-control-inline">
+                        <option value="">--请选择--</option>
+                        <c:forEach items="${projects}" var="item" varStatus="i">
                             <option value="${item.id }">${item.name}</option>
                         </c:forEach>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td class="search_th "><label class="control-label">下单地址：</label></td>
-                <td class="form-group" colspan="3">
-                    <select id="queryProvince" name="queryProvince"
-                            onchange="fn_select_address(2, this.value, '', 'query');" class="form-control-inline">
-                        <option value="">--请选择--</option>
-                        <c:forEach items="${provinceL }" var="item" varStatus="i">
-                            <option value="${item.areaId }">${item.area }</option>
-                        </c:forEach>
-                    </select>
-
-                    <select id="queryCity" name="queryCity" onchange="fn_select_address(3, this.value, '', 'query');"
-                            class="form-control-inline" style="display: none;">
-                        <option value="">--请选择--</option>
-                    </select>
-
-                    <select id="queryCounty" name="queryCounty" class="form-control-inline" style="display: none;">
-                        <option value="">--请选择--</option>
-                    </select>
-                </td>
+                <td class="search_th "><label class="control-label">母订单号：</label></td>
+                <td class="search_td"><input type="text" name="parentOrder" class="form-control" ></td>
             </tr>
 
         </table>
