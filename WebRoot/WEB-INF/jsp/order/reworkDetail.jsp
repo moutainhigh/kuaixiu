@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">订单管理</a></strong> /
-        <small>订单详情</small>
+        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">返修订单管理</a></strong> /
+        <small>返修订单详情</small>
         <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_to_back();">返回</a></strong>
     </div>
 </div>
@@ -61,7 +61,18 @@
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>维修方式：${order.repairType }</h4>
+                        <c:if test="${order.repairType==3}">
+                            <h4>维修方式：寄修</h4>
+                        </c:if>
+                        <c:if test="${order.repairType==0}">
+                            <h4>维修方式：上门维修</h4>
+                        </c:if>
+                        <c:if test="${order.repairType==1}">
+                            <h4>维修方式：到店维修</h4>
+                        </c:if>
+                        <c:if test="${order.repairType==4}">
+                            <h4>维修方式：点对点</h4>
+                        </c:if>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
@@ -93,11 +104,11 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>打卡时间：${rework.number }</h4>
+                        <h4>打卡时间：</h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>打卡地址：${rework.idcard }</h4>
+                        <h4>打卡地址：</h4>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -127,34 +138,34 @@
                         <h4>维修工程师订单信息：</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th><input type="checkbox" id="checkAll" disabled autocomplete="off"/></th>
-                                <th>故障类型</th>
-                                <th>故障部件</th>
-                                <th>故障现象</th>
-                                <th>剩余/总质保天数</th>
-                                <th>价格（元）</th>
-                            </tr>
-                            </thead>
+                <%--<div class="row">--%>
+                    <%--<div class="col-md-12 col-sm-12 col-xs-12">--%>
+                        <%--<table class="table table-bordered">--%>
+                            <%--<thead>--%>
+                            <%--<tr>--%>
+                                <%--<th><input type="checkbox" id="checkAll" disabled autocomplete="off"/></th>--%>
+                                <%--<th>故障类型</th>--%>
+                                <%--<th>故障部件</th>--%>
+                                <%--<th>故障现象</th>--%>
+                                <%--<th>剩余/总质保天数</th>--%>
+                                <%--<th>价格（元）</th>--%>
+                            <%--</tr>--%>
+                            <%--</thead>--%>
 
-                            <c:forEach items="${rework}" var="c" varStatus="stc">
-                                <tr>
-                                    <td>${stc.index+1}</td>
-                                    <td>${c.nickname}</td>
-                                    <td>${c.email}</td>
-                                    <td>${c.status}</td>
-                                    <td>${c.create_time}</td>
-                                    <td>${c.last_login_time}</td>
+                            <%--<c:forEach items="${rework}" var="c" varStatus="stc">--%>
+                                <%--<tr>--%>
+                                    <%--<td>${stc.index+1}</td>--%>
+                                    <%--<td>${c.nickname}</td>--%>
+                                    <%--<td>${c.email}</td>--%>
+                                    <%--<td>${c.status}</td>--%>
+                                    <%--<td>${c.create_time}</td>--%>
+                                    <%--<td>${c.last_login_time}</td>--%>
 
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
+                                <%--</tr>--%>
+                            <%--</c:forEach>--%>
+                        <%--</table>--%>
+                    <%--</div><!-- /.col -->--%>
+                <%--</div><!-- /.row -->--%>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>订单总价：${rework.orderReworkNo }</h4>
