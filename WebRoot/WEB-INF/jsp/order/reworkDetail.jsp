@@ -49,11 +49,11 @@
             <td class="td-info">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>订单号：${reworkOrder.orderReworkNo }</h4>
+                        <h4>订单号：${rework.orderReworkNo }</h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>下单时间：${reworkOrder.inTime }</h4>
+                        <h4>下单时间：${rework.inTime }</h4>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -65,7 +65,7 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>维修单位：${reworkOrder.providerName }</h4>
+                        <h4>维修单位：${rework.providerName }</h4>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -73,7 +73,7 @@
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>订单来源：${reworkOrder.fromSystem }</h4>
+                        <h4>订单来源：${rework.fromSystem }</h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
@@ -83,27 +83,27 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>预约时间：${reworkOrder.agreedTime }</h4>
+                        <h4>预约时间：${rework.agreedTime }</h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>完成时间：${reworkOrder.endTime }</h4>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>打卡时间：${reworkOrder.number }</h4>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>打卡地址：${reworkOrder.idcard }</h4>
+                        <h4>完成时间：${rework.endTime }</h4>
                     </div>
                     <!-- /.col -->
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>母订单号：${reworkOrder.parentOrder }</h4>
+                        <h4>打卡时间：${rework.number }</h4>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>打卡地址：${rework.idcard }</h4>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>母订单号：${rework.parentOrder }</h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
@@ -113,13 +113,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>维修人员：${reworkOrder.engineerName }</h4>
+                        <h4>维修人员：${rework.engineerName }</h4>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>取消订单原因：${reworkOrder.cancelReason }</h4>
+                        <h4>取消订单原因：${rework.cancelReason }</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -141,7 +141,7 @@
                             </tr>
                             </thead>
 
-                            <c:forEach items="${us}" var="c" varStatus="stc">
+                            <c:forEach items="${rework}" var="c" varStatus="stc">
                                 <tr>
                                     <td>${stc.index+1}</td>
                                     <td>${c.nickname}</td>
@@ -157,17 +157,17 @@
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>订单总价：${eng.number }</h4>
+                        <h4>订单总价：${rework.orderReworkNo }</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>优惠金额：${eng.number }</h4>
+                        <h4>优惠金额：${rework.orderReworkNo }</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>实付金额：${eng.number }</h4>
+                        <h4>实付金额：${rework.orderReworkNo }</h4>
                     </div>
                 </div>
 

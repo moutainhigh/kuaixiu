@@ -258,7 +258,7 @@
      * 查看订单详情
      */
     function showOrderDetail(id) {
-        func_reload_page("${ctx}/reworkOrder/reworkOrderDetail.do?reworkOrderNo=" + id);
+        func_reload_page("${ctx}/order/reworkOrderDetail.do?reworkNo=" + id);
     }
 
 

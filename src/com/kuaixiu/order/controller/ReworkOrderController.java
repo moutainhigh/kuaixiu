@@ -131,17 +131,17 @@ public class ReworkOrderController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/reworkOrder/reworkOrderDetail")
+    @RequestMapping(value = "/order/reworkOrderDetail")
     public ModelAndView reworkOrderDetail(HttpServletRequest request,
                                           HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
-            String reworkOrderNo = request.getParameter("reworkOrderNo");
+            String reworkOrderNo = request.getParameter("reworkNo");
 
             ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(reworkOrderNo);
             Order order = orderService.queryByOrderNo(reworkOrder.getParentOrder());
 
-            request.setAttribute("reworkOrder", reworkOrder);
+            request.setAttribute("rework", reworkOrder);
             request.setAttribute("order", order);
 
         } catch (Exception e) {

@@ -80,6 +80,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             } else {
                 //判断是否是因为session丢失
                 //throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
+                log.info("您离开系统时间过长，请重新登录");
                 result.setResultMessage("您离开系统时间过长，请重新登录");
                 renderJson(response, result);
                 return false;
@@ -99,6 +100,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             }
 
         }
+        log.info("对不起，您没有访问权限！");
         result.setResultMessage("对不起，您没有访问权限！");
         renderJson(response, result);
         return false;
