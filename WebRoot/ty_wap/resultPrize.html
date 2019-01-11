@@ -260,7 +260,7 @@
 					"code":codeNum
 				};
 				$.post(
-					getRealPath()+"/recycle/saveLotteryMobile.do",
+					getRealPath()+"/recycleNew/saveLotteryMobile.do",
 					{
 						params:JSON.stringify(param)
 					},
@@ -396,7 +396,7 @@
                 var paramData = {
                     "openId":G.openId
 				};
-                $.post(getRealPath()+'/recycle/getPrize.do',{params:JSON.stringify(paramData)},function (data) {
+                $.post(getRealPath()+'/recycleNew/getPrize.do',{params:JSON.stringify(paramData)},function (data) {
                     if (data.success){ 
 						//判断抽奖手机是否已经保存
 						if( data.result.status == 1 || data.result.status == 3){
@@ -448,7 +448,7 @@
                 var paramData = {
                     "mobile":happyGoMobile
 				};
-                $.post(getRealPath()+'/recycle/getRecyclePrize.do',{params:JSON.stringify(paramData)},function (data) {
+                $.post(getRealPath()+'/recycleNew/getRecyclePrize.do',{params:JSON.stringify(paramData)},function (data) {
                     if (data.success){ 
 						//G.candoPrizeCount = parseInt( data.result.surplusLotteryNumber );  //剩余的抽奖次数
 						G.candoPrizeCount = data.result.surplusLotteryNumber;
@@ -574,7 +574,7 @@
 						"modelName":G.modelCode,
 					};
 				}
-                $.post(getRealPath()+'/recycle/getChangePrice.do',{params:JSON.stringify(paramData)},function (data) {
+                $.post(getRealPath()+'/recycleNew/getChangePrice.do',{params:JSON.stringify(paramData)},function (data) {
                     if (data.success){
                         var dataInfo = data.result.datainfo; 
 						//设置当前价格

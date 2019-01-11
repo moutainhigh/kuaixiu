@@ -99,7 +99,7 @@
                     "items":itemsId,
                     "openId":openId
                 },base = new Base64();
-                $.post(linkUrl+'/recycle/getPrice.do',{params:JSON.stringify(param)},function (data) {
+                $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){
                         var dataInfo = data.result.datainfo;
                         prePrice = dataInfo.price;

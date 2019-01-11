@@ -226,7 +226,7 @@
                 mobile:mobile,
                 info:info
             }
-            $.post(linkUrl+"/recycle/addCompany.do",{params:JSON.stringify(param)},function(data){
+            $.post(linkUrl+"/recycleNew/addCompany.do",{params:JSON.stringify(param)},function(data){
                 if (data.success){
                     alertTip('提交成功！');
                     $('input[type="text"]').val('');
@@ -272,7 +272,7 @@
     
     //获取品牌
     function selectBrand(){
-    	 $.post(linkUrl+"/recycle/getBrandList.do",function(data){
+    	 $.post(linkUrl+"/recycleNew/getBrandList.do",function(data){
              if (data.success){
                  for(var i = 0; i < data.result.datainfo.length; i++){  
                      $("#selectBrand").append("<option value='"+data.result.datainfo[i].brandid+"'>"+data.result.datainfo[i].brandname+"</option>");//新增  
@@ -304,7 +304,7 @@
     
     //获取机型
     function selectModel(param){
-    	 $.post(linkUrl+"/recycle/getModelList.do",{params:JSON.stringify(param)},function(data){
+    	 $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
              if (data.success){
             	     var info=data.result.datainfo[0].sublist;
             	     //将之前的数据清空
@@ -332,7 +332,7 @@
     
     //得到该机型最高回收价
     function getMaxPrice(param){
-    	 $.post(linkUrl+"/recycle/getMaxPrice.do",{params:JSON.stringify(param)},function(data){
+    	 $.post(linkUrl+"/recycleNew/getMaxPrice.do",{params:JSON.stringify(param)},function(data){
              if (data.success){
             	     price=data.result.price;
             	     getPrice();

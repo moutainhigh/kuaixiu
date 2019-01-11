@@ -50,13 +50,13 @@
 					</dd>
 					<dd id="hasNoPrize" class="status-item result-no-status">
 						<div class="prize-content">先分享再来抽奖吧！</div>
-						<div class="prize-desc">转发评估结果到微信群<br>可以增加一次抽奖哦！</div>
-						<div id="sharePageBtn1" class="prize-btn">立即转发</div>
+				<!--	<div class="prize-desc">转发评估结果到微信群<br>可以增加一次抽奖哦！</div>
+						<div id="sharePageBtn1" class="prize-btn">立即转发</div>  -->
 					</dd>
 					<dd id="hasNoPrizeAndShare" class="status-item result-no-status">
 						<div class="prize-title">很遗憾，未中奖！</div>
-						<div class="prize-desc">转发评估结果到微信群<br>可以增加一次抽奖哦！</div>
-						<div id="sharePageBtn2" class="prize-btn">立即转发</div>
+					<!--	<div class="prize-desc">转发评估结果到微信群<br>可以增加一次抽奖哦！</div>
+						<div id="sharePageBtn2" class="prize-btn">立即转发</div>  -->
 					</dd>
 					<dd id="cardCanvas"  class="status-item check-prize-status show">
 						
@@ -202,7 +202,7 @@
 					"mobile":G.HappyGoMobile,
 				};
 				$.post(
-					getRealPath()+"/recycle/isSaveAddress.do",
+					getRealPath()+"/recycleNew/isSaveAddress.do",
 					{
 						params:JSON.stringify(param)
 					},
@@ -288,7 +288,7 @@
 					"code":codeNum
 				};
 				$.post(
-					getRealPath()+"/recycle/saveLotteryMobile.do",
+					getRealPath()+"/recycleNew/saveLotteryMobile.do",
 					{
 						params:JSON.stringify(param)
 					},
@@ -424,7 +424,7 @@
                 var paramData = {
                     "openId":G.openId
 				};
-                $.post(getRealPath()+'/recycle/getPrize.do',{params:JSON.stringify(paramData)},function (data) {
+                $.post(getRealPath()+'/recycleNew/getPrize.do',{params:JSON.stringify(paramData)},function (data) {
                     if (data.success){ 
 						//判断抽奖手机是否已经保存
 						if( data.result.status == 1 || data.result.status == 3){
@@ -476,7 +476,7 @@
                 var paramData = {
                     "mobile":happyGoMobile
 				};
-                $.post(getRealPath()+'/recycle/getRecyclePrize.do',{params:JSON.stringify(paramData)},function (data) {
+                $.post(getRealPath()+'/recycleNew/getRecyclePrize.do',{params:JSON.stringify(paramData)},function (data) {
                     if (data.success){ 
 						//G.candoPrizeCount = parseInt( data.result.surplusLotteryNumber );  //剩余的抽奖次数
 						G.candoPrizeCount = data.result.surplusLotteryNumber;
@@ -585,7 +585,7 @@
 						"status":true,
 					}
 					$.post(
-						getRealPath()+"/recycle/recycleShare.do",
+						getRealPath()+"/recycleNew/recycleShare.do",
 						{
 							params:JSON.stringify(param)
 						},
@@ -620,7 +620,7 @@
 					
 				};
 				
-                $.post(getRealPath()+'/recycle/getDeclinePrice.do',{params:JSON.stringify(paramData)},function (data) {
+                $.post(getRealPath()+'/recycleNew/getDeclinePrice.do',{params:JSON.stringify(paramData)},function (data) {
                     if (data.success){
                         var dataInfo = data.result.datainfo; 
 						//设置当前价格
