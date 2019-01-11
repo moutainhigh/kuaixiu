@@ -80,10 +80,9 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             } else {
                 //判断是否是因为session丢失
                 //throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
-//                result.setResultMessage("您离开系统时间过长，请重新登录");
-//                renderJson(response, result);
-//                return false;
-                return true;
+                result.setResultMessage("您离开系统时间过长，请重新登录");
+                renderJson(response, result);
+                return false;
             }
         } else {
             //如果是客户操作限制手机端唯一登录
@@ -103,6 +102,31 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
         result.setResultMessage("对不起，您没有访问权限！");
         renderJson(response, result);
         return false;
+    }
+    /**
+     * 以Json格式输出
+     *
+     * @param response
+     * @param result
+     * @throws IOException
+     */
+    public void renderJson(HttpServletResponse response, Object result) throws IOException {
+        initContentType(response, JSON_TYPE);
+        // 输入流
+        PrintWriter out = response.getWriter();
+        String outrs = JSON.toJSONString(result, mapping, SerializerFeature.WriteMapNullValue);
+        out.print(outrs);
+        out.flush();
+    }
+
+    /**
+     * 初始HTTP内容类型.
+     *
+     * @param response
+     * @param contentType
+     */
+    private void initContentType(HttpServletResponse response, String contentType) {
+        response.setContentType(contentType + ";charset=" + DEFAULT_ENCODING);
     }
 
     @Override
@@ -217,24 +241,5 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
         }
         return flag;
     }
-    public void renderJson(HttpServletResponse response, Object result) throws IOException {
-        initContentType(response, JSON_TYPE);
 
-        // 输入流
-        PrintWriter out = response.getWriter();
-        String outrs = JSON.toJSONString(result, mapping, SerializerFeature.WriteMapNullValue);
-
-        out.print(outrs);
-        out.flush();
-    }
-
-    /**
-     * 初始HTTP内容类型.
-     *
-     * @param response
-     * @param contentType
-     */
-    private void initContentType(HttpServletResponse response, String contentType) {
-        response.setContentType(contentType + ";charset=" + DEFAULT_ENCODING);
-    }
 }
