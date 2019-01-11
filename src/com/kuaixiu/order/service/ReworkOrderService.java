@@ -50,6 +50,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         return mapper;
     }
 
+    private static final Long totalTime = Long.valueOf(180);
 //**********自定义方法***********
 
     //创建保存返修订单
@@ -70,15 +71,14 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_DEPOSITED);
         reworkOrder.setInTime(new Date());
         Long time = order.getEndTime().getTime() - reworkOrder.getInTime().getTime();
-        reworkOrder.setSurplusDay(time / (1000 * 3600 * 24));
-        reworkOrder.setTotalDay(Long.valueOf(180));
+        reworkOrder.setSurplusDay(totalTime - time / (1000 * 3600 * 24));
+        reworkOrder.setTotalDay(totalTime);
         reworkOrder.setOrderPrice(new BigDecimal(getProject(order.getOrderNo()).get("orderPrice")));
         reworkOrder.setRealPrice(new BigDecimal(0));
         //下单完成给用户发送成功短信
         SmsSendUtil.sendSmsToCustomerforRework(order.getMobile());
         getDao().add(reworkOrder);
     }
-
 
 
     //售后订单派单给工程师
@@ -110,8 +110,8 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
     }
 
     //获取项目信息，所有项目名称，项目总金额
-    public Map<String,String> getProject(String orderNo){
-        Map<String,String> map=new HashMap<String ,String>();
+    public Map<String, String> getProject(String orderNo) {
+        Map<String, String> map = new HashMap<String, String>();
         //查询订单明细
         List<OrderDetail> details = detailService.queryByOrderNo(orderNo);
         List<String> projectNames = new ArrayList<>();
@@ -122,7 +122,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
                 break;
             }
         }
-        BigDecimal price=new BigDecimal("0");
+        BigDecimal price = new BigDecimal("0");
         for (OrderDetail detail : details) {
             if (isTrue) {
                 if (detail.getType() == 1) {//工程师确认的维修项目
@@ -136,8 +136,8 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
                 }
             }
         }
-        map.put("projectNames",StringUtils.join(projectNames, ","));
-        map.put("orderPrice",String.valueOf(price));
+        map.put("projectNames", StringUtils.join(projectNames, ","));
+        map.put("orderPrice", String.valueOf(price));
         return map;
     }
 }
