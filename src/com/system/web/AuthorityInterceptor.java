@@ -1,9 +1,10 @@
 package com.system.web;
 
 
-import com.common.base.controller.BaseController;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.common.exception.SessionInvalidateException;
-import com.common.exception.SystemException;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.LoginUser;
 import com.system.basic.user.entity.SessionUser;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -33,8 +35,12 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
     private SessionUserService sessionUserService;
     @Autowired
     private LoginUserService loginUserService;
-    @Autowired
-    private BaseController baseController;
+    private static final SerializeConfig mapping = new SerializeConfig();
+    private static final String DEFAULT_ENCODING = "UTF-8";
+    /**
+     * JSON_TYPE
+     */
+    public static final String JSON_TYPE = "application/json";
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -77,7 +83,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
                 //判断是否是因为session丢失
                 //throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
                 result.setResultMessage("您离开系统时间过长，请重新登录");
-                baseController.renderJson(response, result);
+                renderJson(response, result);
                 return false;
             }
         } else {
@@ -96,8 +102,33 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
 
         }
         result.setResultMessage("对不起，您没有访问权限！");
-        baseController.renderJson(response, result);
+        renderJson(response, result);
         return false;
+    }
+    /**
+     * 以Json格式输出
+     *
+     * @param response
+     * @param result
+     * @throws IOException
+     */
+    public void renderJson(HttpServletResponse response, Object result) throws IOException {
+        initContentType(response, JSON_TYPE);
+        // 输入流
+        PrintWriter out = response.getWriter();
+        String outrs = JSON.toJSONString(result, mapping, SerializerFeature.WriteMapNullValue);
+        out.print(outrs);
+        out.flush();
+    }
+
+    /**
+     * 初始HTTP内容类型.
+     *
+     * @param response
+     * @param contentType
+     */
+    private void initContentType(HttpServletResponse response, String contentType) {
+        response.setContentType(contentType + ";charset=" + DEFAULT_ENCODING);
     }
 
     @Override
