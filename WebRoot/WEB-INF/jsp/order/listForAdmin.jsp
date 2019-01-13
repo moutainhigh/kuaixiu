@@ -380,6 +380,19 @@
                     };
                     html += template_btn(context);
                 }
+                if (row.orderStatus == 50) {
+                    context = {
+                        func: [
+                            {
+                                "name": "售后",
+                                "fn": "rewordOrder(\'" + row.orderNo + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            }
+                        ]
+                    };
+                    html += template_btn(context);
+                }
                 var sessionUser=$("#sessionUserType").val();
                 if (row.orderStatus < 50) {
                     if (sessionUser == 7 || sessionUser==2) {

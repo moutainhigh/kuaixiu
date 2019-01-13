@@ -189,7 +189,31 @@ public class ReworkOrderController extends BaseController {
         String returnView = "order/reworkDetail";
         return new ModelAndView(returnView);
     }
+    /**
+     * 进入返修订单页面
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/order/reworkOrder")
+    public ModelAndView reworkOrder(HttpServletRequest request,
+                                          HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String orderNo = request.getParameter("orderNo");
 
+
+            request.setAttribute("orderNo", orderNo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
+        }
+        String returnView = "order/addRewordOrder";
+        return new ModelAndView(returnView);
+    }
 
     /**
      * H5订单售后生成订单
