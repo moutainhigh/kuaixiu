@@ -3,6 +3,8 @@ package com.kuaixiu.order.dao;
 import com.common.base.dao.BaseDao;
 import com.kuaixiu.order.entity.OrderDetail;
 
+import java.util.List;
+
 /**
  * OrderDetail Mapper
  *
@@ -17,6 +19,8 @@ public interface OrderDetailMapper<T> extends BaseDao<T> {
      * @return 订单明细
      */
     OrderDetail queryByOrderNo(String orderNo);
+
+    List<T> queryIsReworkByOrderNo(String orderNo);
     
     /**
      * 根据订单号删除维修记录

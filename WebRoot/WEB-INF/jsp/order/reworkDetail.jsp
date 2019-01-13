@@ -53,7 +53,7 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>下单时间：${rework.inTime }</h4>
+                        <h4>下单时间：${rework.strInTime }</h4>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -94,11 +94,11 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>预约时间：${rework.agreedTime }</h4>
+                        <h4>预约时间：${rework.strAgreedTime }</h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>完成时间：${rework.endTime }</h4>
+                        <h4>完成时间：${rework.strEndTime }</h4>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -138,47 +138,44 @@
                         <h4>维修工程师订单信息：</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
-                <%--<div class="row">--%>
-                    <%--<div class="col-md-12 col-sm-12 col-xs-12">--%>
-                        <%--<table class="table table-bordered">--%>
-                            <%--<thead>--%>
-                            <%--<tr>--%>
-                                <%--<th><input type="checkbox" id="checkAll" disabled autocomplete="off"/></th>--%>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" id="checkAll" disabled autocomplete="off"/></th>
                                 <%--<th>故障类型</th>--%>
-                                <%--<th>故障部件</th>--%>
+                                <th>故障部件</th>
                                 <%--<th>故障现象</th>--%>
-                                <%--<th>剩余/总质保天数</th>--%>
-                                <%--<th>价格（元）</th>--%>
-                            <%--</tr>--%>
-                            <%--</thead>--%>
+                                <th>剩余/总质保天数</th>
+                                <th>价格（元）</th>
+                            </tr>
+                            </thead>
 
-                            <%--<c:forEach items="${rework}" var="c" varStatus="stc">--%>
-                                <%--<tr>--%>
-                                    <%--<td>${stc.index+1}</td>--%>
-                                    <%--<td>${c.nickname}</td>--%>
-                                    <%--<td>${c.email}</td>--%>
-                                    <%--<td>${c.status}</td>--%>
-                                    <%--<td>${c.create_time}</td>--%>
-                                    <%--<td>${c.last_login_time}</td>--%>
-
-                                <%--</tr>--%>
-                            <%--</c:forEach>--%>
-                        <%--</table>--%>
-                    <%--</div><!-- /.col -->--%>
-                <%--</div><!-- /.row -->--%>
+                            <c:forEach items="${projects}" var="c" varStatus="stc">
+                                <tr>
+                                    <td>${stc.index+1}</td>
+                                    <td>${c.projectName}</td>
+                                    <td>${c.surplusDay}/${c.totalDay}</td>
+                                    <td>${c.price}</td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>订单总价：${rework.orderReworkNo }</h4>
+                        <h4>订单总价：${realPrice} 元</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>优惠金额：${rework.orderReworkNo }</h4>
+                        <h4>优惠金额：${couponPrice} 元</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>实付金额：${rework.orderReworkNo }</h4>
+                        <h4>实付金额：0.00 元</h4>
                     </div>
                 </div>
 

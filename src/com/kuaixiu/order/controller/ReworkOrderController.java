@@ -9,7 +9,9 @@ import com.kuaixiu.brand.service.BrandService;
 import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.order.entity.Order;
+import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.entity.ReworkOrder;
+import com.kuaixiu.order.service.OrderDetailService;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.order.service.ReworkOrderService;
 import com.kuaixiu.project.entity.Project;
@@ -25,6 +27,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +117,7 @@ public class ReworkOrderController extends BaseController {
                 map.put("projectNames", map1.get("projectNames"));
                 //订单状态筛选列表
                 Map<Integer, Object> m = orderService.getSelectOrderStatus();
-                map.put("orderStatusName",m.get(map.get("orderStatus")).toString());
+                map.put("orderStatusName", m.get(map.get("orderStatus")).toString());
             }
 
             page.setData(reworkOrders);
@@ -122,6 +128,9 @@ public class ReworkOrderController extends BaseController {
         }
         this.renderJson(response, page);
     }
+
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     /**
      * 返修订单详情
@@ -140,7 +149,32 @@ public class ReworkOrderController extends BaseController {
 
             ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(reworkOrderNo);
             Order order = orderService.queryByOrderNo(reworkOrder.getParentOrder());
+            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            reworkOrder.setStrInTime(sdf.format(reworkOrder.getInTime()));
+            reworkOrder.setStrAgreedTime(sdf.format(reworkOrder.getAgreedTime()));
+            reworkOrder.setStrEndTime(sdf.format(reworkOrder.getEndTime()));
+            List<OrderDetail> orderDetails;
+            //查询是否有返修项目
+            orderDetails = orderDetailService.getDao().queryIsReworkByOrderNo(order.getOrderNo());
+            if (CollectionUtils.isEmpty(orderDetails)) {
+                //没有返修项目就查询全部
+                orderDetails = orderDetailService.queryByOrderNo(order.getOrderNo());
+            }
+            BigDecimal price = new BigDecimal("0");
+            for (OrderDetail orderDetail : orderDetails) {
+                Map<String, String> map = new HashMap<>();
+                map.put("projectName", orderDetail.getProjectName());
+                map.put("price", orderDetail.getRealPrice().toString());
+                map.put("surplusDay", reworkOrder.getSurplusDay().toString());
+                map.put("totalDay", reworkOrder.getTotalDay().toString());
+                list.add(map);
+                price = price.add(orderDetail.getRealPrice());
+            }
 
+            request.setAttribute("realPrice", order.getOrderPrice());
+            request.setAttribute("couponPrice",order.getOrderPrice().subtract(price));
+            request.setAttribute("projects", list);
             request.setAttribute("rework", reworkOrder);
             request.setAttribute("order", order);
 
