@@ -236,4 +236,47 @@ public class ReworkOrderController extends BaseController {
         return result;
     }
 
+
+    /**
+     * 工程师去人返修故障
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/reworkOrder/submitProject")
+    @ResponseBody
+    public ResultData submitReworkProject(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String reOrderNo = params.getString("reOrderNo");
+            String projectId = params.getString("projectId");
+
+            if (StringUtils.isBlank(reOrderNo)) {
+                return getResult(result, null, false, "2", "参数不完整");
+            }
+            ReworkOrder reworkOrder=reworkOrderService.getDao().queryByReworkNo(reOrderNo);
+            if(reworkOrder==null){
+                return getResult(result, null, false, "2", "该返修订单不存在");
+            }
+            OrderDetail orderDetail=new OrderDetail();
+            orderDetail.setOrderNo(reworkOrder.getParentOrder());
+            orderDetail.setProjectId(projectId);
+            List<OrderDetail> orderDetails=orderDetailService.queryList(orderDetail);
+            for(OrderDetail orderDetail1:orderDetails){
+                orderDetail1.setIsRework(1);
+                orderDetailService.saveUpdate(orderDetail1);
+            }
+
+            getResult(result, null, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
+        }
+        return result;
+    }
+
+
 }

@@ -12,6 +12,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kuaixiu.order.entity.*;
+import com.kuaixiu.order.service.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,14 +54,6 @@ import com.kuaixiu.oldtonew.service.AgreedService;
 import com.kuaixiu.oldtonew.service.NewOrderService;
 import com.kuaixiu.oldtonew.service.OldToNewService;
 import com.kuaixiu.order.constant.OrderConstant;
-import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderComment;
-import com.kuaixiu.order.entity.OrderDetail;
-import com.kuaixiu.order.entity.OrderPayLog;
-import com.kuaixiu.order.service.OrderCommentService;
-import com.kuaixiu.order.service.OrderDetailService;
-import com.kuaixiu.order.service.OrderPayService;
-import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.project.entity.CancelReason;
 import com.kuaixiu.project.entity.Project;
 import com.kuaixiu.project.service.CancelReasonService;
@@ -627,7 +621,7 @@ public class WechatOrderController extends BaseController {
                 j.put("orderType", o.getOrderType());
                 j.put("color", order.getColor());
                 j.put("realPrice", order.getRealPrice());
-                j.put("isUpdatePrice",order.getIsUpdatePrice());
+                j.put("isUpdatePrice", order.getIsUpdatePrice());
                 j.put("shopName", order.getShopName());
                 List<OrderDetail> detail = detailService.queryByOrderNo(order.getOrderNo());
                 JSONArray jsonDetails = new JSONArray();
@@ -895,6 +889,9 @@ public class WechatOrderController extends BaseController {
     }
 
 
+    @Autowired
+    private ReworkOrderService reworkOrderService;
+
     /**
      * 取消订单
      *
@@ -913,7 +910,8 @@ public class WechatOrderController extends BaseController {
             String id = params.getString("id");//订单id
             Order o = orderService.queryById(id);
             NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
-            if (o == null && newOrder == null) {
+            ReworkOrder reworkOrder = reworkOrderService.queryById(id);
+            if (o == null && newOrder == null && reworkOrder == null) {
                 throw new SystemException("订单不存在");
             }
             String reason = params.getString("reason");//选择的原因
@@ -932,6 +930,8 @@ public class WechatOrderController extends BaseController {
                 orderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
             } else if (newOrder != null) {
                 newOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
+            } else {
+                reworkOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
             }
             result.setSuccess(true);
             result.setResultCode("0");
@@ -997,13 +997,16 @@ public class WechatOrderController extends BaseController {
             //判断是维修订单评价还是以旧换新订单评价
             Order o = orderService.queryById(id);
             NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
-            if (o == null && newOrder == null) {
+            ReworkOrder reworkOrder = reworkOrderService.queryById(id);
+            if (o == null && newOrder == null && reworkOrder == null) {
                 throw new SystemException("订单不存在，不能进行评价");
             }
             if (o != null) {
                 commentService.save(id, comm, su);
-            } else {
+            } else if (newOrder != null) {
                 commentService.orderSave(id, comm, su);
+            } else {
+                commentService.reSave(id, comm, su);
             }
             result.setSuccess(true);
             result.setResultCode("0");

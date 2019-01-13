@@ -2,8 +2,10 @@ package com.kuaixiu.order.service;
 
 
 import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
 import com.common.util.NOUtil;
 import com.common.util.SmsSendUtil;
+import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.engineer.service.NewEngineerService;
@@ -15,11 +17,13 @@ import com.kuaixiu.order.entity.ReworkOrder;
 
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
+import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -139,5 +143,71 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         map.put("projectNames", StringUtils.join(projectNames, ","));
         map.put("orderPrice", String.valueOf(price));
         return map;
+    }
+
+    @Autowired
+    private OrderService orderService;
+
+    /**
+     * 取消订单
+     *
+     * @param id
+     * @param su
+     * @author: lijx
+     * @CreateDate: 2016-9-7 下午10:41:04
+     */
+    @Transactional
+    public void orderCancel(String id, int cancelType, String cancelReason, SessionUser su) {
+        ReworkOrder reworkOrder = getDao().queryById(id);
+        if (reworkOrder == null) {
+            throw new SystemException("订单不存在！");
+        }
+        if (reworkOrder.getOrderStatus() == OrderConstant.ORDER_STATUS_CANCEL) {
+            throw new SystemException("该订单已取消，无需重复操作！");
+        }
+
+        if (reworkOrder.getOrderStatus() == OrderConstant.ORDER_STATUS_FINISHED) {
+            throw new SystemException("该订单已完成，不能取消！");
+        }
+        Order o=orderService.queryByOrderNo(reworkOrder.getParentOrder());
+        //执行取消订单
+        //保存修改前订单状态
+        reworkOrder.setCancelStatus(reworkOrder.getOrderStatus());
+        reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_CANCEL);
+        reworkOrder.setCancelType(cancelType);
+        reworkOrder.setUpdateUserid(su.getUserId());
+        reworkOrder.setEndTime(new Date());
+        if (cancelReason != null) {
+            reworkOrder.setCancelReason(cancelReason);
+        }
+        getDao().update(reworkOrder);
+
+
+        //如果订单已派单则将工程师改为空闲状态
+        if (reworkOrder.getCancelStatus() >= OrderConstant.ORDER_STATUS_DISPATCHED) {
+//            Engineer eng = engineerService.queryByEngineerNumber(o.getEngineerNumber());
+//            if(eng.getIsDispatch() == 1){
+//	            eng.setIsDispatch(0);
+//	            engineerService.saveUpdate(eng);
+//            }
+            engineerService.checkDispatchState(reworkOrder.getEngineerId());
+
+            if (cancelType != OrderConstant.ORDER_CANCEL_TYPE_ENGINEER) {
+                //如果取消人不是工程师取消发送短信
+                try {
+                    SmsSendUtil.sendSmsToEngineerForCancel(reworkOrder.getEngineerMobile(), reworkOrder.getOrderReworkNo());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (cancelType != OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER) {
+            //如果取消人不是客户取消发送短信
+            try {
+                SmsSendUtil.sendSmsToCustomerForCancel(o.getMobile(), o.getOrderNo());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
