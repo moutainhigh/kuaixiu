@@ -150,10 +150,14 @@ public class ReworkOrderController extends BaseController {
             ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(reworkOrderNo);
             Order order = orderService.queryByOrderNo(reworkOrder.getParentOrder());
             List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             reworkOrder.setStrInTime(sdf.format(reworkOrder.getInTime()));
-            reworkOrder.setStrAgreedTime(sdf.format(reworkOrder.getAgreedTime()));
-            reworkOrder.setStrEndTime(sdf.format(reworkOrder.getEndTime()));
+            if (null != reworkOrder.getAgreedTime()) {
+                reworkOrder.setStrAgreedTime(sdf.format(reworkOrder.getAgreedTime()));
+            }
+            if (null != reworkOrder.getEndTime()) {
+                reworkOrder.setStrEndTime(sdf.format(reworkOrder.getEndTime()));
+            }
             List<OrderDetail> orderDetails;
             //查询是否有返修项目
             orderDetails = orderDetailService.getDao().queryIsReworkByOrderNo(order.getOrderNo());
@@ -173,7 +177,7 @@ public class ReworkOrderController extends BaseController {
             }
 
             request.setAttribute("realPrice", order.getOrderPrice());
-            request.setAttribute("couponPrice",order.getOrderPrice().subtract(price));
+            request.setAttribute("couponPrice", order.getOrderPrice().subtract(price));
             request.setAttribute("projects", list);
             request.setAttribute("rework", reworkOrder);
             request.setAttribute("order", order);
