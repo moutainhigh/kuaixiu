@@ -29,10 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ReworkOrder Controller
@@ -53,7 +50,8 @@ public class ReworkOrderController extends BaseController {
     private ModelService modelService;
     @Autowired
     private ProjectService projectService;
-
+    @Autowired
+    private OrderDetailService orderDetailService;
     /**
      * 列表查询
      *
@@ -129,8 +127,7 @@ public class ReworkOrderController extends BaseController {
         this.renderJson(response, page);
     }
 
-    @Autowired
-    private OrderDetailService orderDetailService;
+
 
     /**
      * 返修订单详情
@@ -200,19 +197,60 @@ public class ReworkOrderController extends BaseController {
     @RequestMapping(value = "/order/reworkOrder")
     public ModelAndView reworkOrder(HttpServletRequest request,
                                           HttpServletResponse response) throws Exception {
-        ResultData result = new ResultData();
         try {
             String orderNo = request.getParameter("orderNo");
-
-
             request.setAttribute("orderNo", orderNo);
-
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());
         }
         String returnView = "order/addRewordOrder";
         return new ModelAndView(returnView);
+    }
+
+    /**
+     * 后台售后生成订单
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/reworkOrder/endAddRework")
+    @ResponseBody
+    public ResultData endAddRework(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String orderNo = request.getParameter("orderNo");
+            String reworkReason = request.getParameter("reworkReason");
+            String reasonDetail = request.getParameter("reasonDetail");
+
+            if (StringUtils.isBlank(reworkReason) || StringUtils.isBlank(orderNo)) {
+                return getResult(result, null, false, "2", "参数不完整");
+            }
+            Order order = orderService.queryByOrderNo(orderNo);
+            if (order == null) {
+                return getResult(result, null, false, "3", "该订单不存在");
+            }
+            List<ReworkOrder> reworkOrders = reworkOrderService.getDao().queryByParentOrder(order.getOrderNo());
+            if (!CollectionUtils.isEmpty(reworkOrders)) {
+                return getResult(result, null, false, "4", "该订单正在售后中");
+            }
+            ReworkOrder reworkOrder = new ReworkOrder();
+            reworkOrder.setReworkReasons(Integer.valueOf(reworkReason));
+            reworkOrder.setReasonsDetail(reasonDetail);
+            //创建保存返修订单
+            reworkOrderService.save(order, reworkOrder);
+            //给工程师派单
+            reworkOrderService.dispatch(order, reworkOrder);
+
+            getResult(result, null, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
+        }
+        return result;
     }
 
     /**
@@ -285,14 +323,23 @@ public class ReworkOrderController extends BaseController {
             if(reworkOrder==null){
                 return getResult(result, null, false, "2", "该返修订单不存在");
             }
-            OrderDetail orderDetail=new OrderDetail();
-            orderDetail.setOrderNo(reworkOrder.getParentOrder());
-            orderDetail.setProjectId(projectId);
-            List<OrderDetail> orderDetails=orderDetailService.queryList(orderDetail);
-            for(OrderDetail orderDetail1:orderDetails){
-                orderDetail1.setIsRework(1);
-                orderDetailService.saveUpdate(orderDetail1);
+            if(projectId.contains(",")) {
+                String[] project=projectId.split(",");
+                for(int i=0;i<project.length;i++) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrderNo(reworkOrder.getParentOrder());
+                    orderDetail.setProjectId(project[i]);
+                    List<OrderDetail> orderDetails = orderDetailService.queryList(orderDetail);
+                    for (OrderDetail orderDetail1 : orderDetails) {
+                        orderDetail1.setIsRework(1);
+                        orderDetailService.saveUpdate(orderDetail1);
+                    }
+                }
             }
+
+            reworkOrder.setEndTime(new Date());
+            reworkOrderService.saveUpdate(reworkOrder);
+
 
             getResult(result, null, true, "0", "成功");
         } catch (Exception e) {

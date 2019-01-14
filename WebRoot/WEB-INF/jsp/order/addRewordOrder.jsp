@@ -98,7 +98,7 @@
             btn.button("loading");
             //遮盖层
             var options = {
-                url: "${ctx}/reworkOrder/addRework.do",
+                url: "${ctx}/reworkOrder/endAddRework.do",
                 dataType: "JSON",
                 success: function (data) {
                     if (data.success) {

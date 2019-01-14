@@ -908,12 +908,7 @@ public class WechatOrderController extends BaseController {
             SessionUser su = getCurrentUser(request);//得到当前用户
             JSONObject params = getPrarms(request);
             String id = params.getString("id");//订单id
-            Order o = orderService.queryById(id);
-            NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
-            ReworkOrder reworkOrder = reworkOrderService.queryById(id);
-            if (o == null && newOrder == null && reworkOrder == null) {
-                throw new SystemException("订单不存在");
-            }
+            String isRework = params.getString("isRework");//是否返修单
             String reason = params.getString("reason");//选择的原因
             String selectReason = params.getString("selectReason");//填写的原因
             String cancelReason = null;
@@ -926,12 +921,23 @@ public class WechatOrderController extends BaseController {
             if (!StringUtils.isBlank(reason) && StringUtils.isBlank(selectReason)) {
                 cancelReason = reason;
             }
-            if (o != null) {
-                orderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
-            } else if (newOrder != null) {
-                newOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
-            } else {
+            if (StringUtils.isNotBlank(isRework) && Integer.valueOf(isRework) == 1) {
+                ReworkOrder reworkOrder = reworkOrderService.queryById(id);
+                if (reworkOrder == null) {
+                    throw new SystemException("订单不存在");
+                }
                 reworkOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
+            } else {
+                Order o = orderService.queryById(id);
+                NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
+                if (o == null && newOrder == null) {
+                    throw new SystemException("订单不存在");
+                }
+                if (o != null) {
+                    orderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
+                } else if (newOrder != null) {
+                    newOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER, cancelReason, su);
+                }
             }
             result.setSuccess(true);
             result.setResultCode("0");
@@ -991,22 +997,29 @@ public class WechatOrderController extends BaseController {
             String id = params.getString("id");
             String overallRate = params.getString("overallRate");//星评数
             String content = params.getString("content");//评价内容
+            String isRework = params.getString("isRework");//是否返修   1：返修
             OrderComment comm = new OrderComment();
             comm.setOverallRate(new BigDecimal(overallRate));
             comm.setContent(content);
-            //判断是维修订单评价还是以旧换新订单评价
-            Order o = orderService.queryById(id);
-            NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
-            ReworkOrder reworkOrder = reworkOrderService.queryById(id);
-            if (o == null && newOrder == null && reworkOrder == null) {
-                throw new SystemException("订单不存在，不能进行评价");
-            }
-            if (o != null) {
-                commentService.save(id, comm, su);
-            } else if (newOrder != null) {
-                commentService.orderSave(id, comm, su);
-            } else {
+            if (StringUtils.isNotBlank(isRework) && Integer.valueOf(isRework) == 1) {
+                ReworkOrder reworkOrder = reworkOrderService.queryById(id);
+                if (reworkOrder == null) {
+                    throw new SystemException("订单不存在，不能进行评价");
+                }
                 commentService.reSave(id, comm, su);
+            } else {
+                //判断是维修订单评价还是以旧换新订单评价
+                Order o = orderService.queryById(id);
+                NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
+
+                if (o == null && newOrder == null) {
+                    throw new SystemException("订单不存在，不能进行评价");
+                }
+                if (o != null) {
+                    commentService.save(id, comm, su);
+                } else if (newOrder != null) {
+                    commentService.orderSave(id, comm, su);
+                }
             }
             result.setSuccess(true);
             result.setResultCode("0");
