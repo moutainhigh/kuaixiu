@@ -7,7 +7,7 @@
             <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
         </div>
         <div class="modal-body">
-            <form id="insertForm" method="post" class="form-horizontal">
+            <form id="reworkForm" method="post" class="form-horizontal">
                 <input type="hidden" id="orderNo" name="orderNo"/>
                 <div class="form-group">
                     <label for="reworkReason" class="col-sm-2 control-label"><span
@@ -29,14 +29,14 @@
                           maxlength="1220"></textarea>
                     </div>
                 </div>
-                <button type="submit" class="hide" id="addSubmitPriceBtn"></button>
+                <button type="submit" class="hide" id="addSubmitReworkBtn"></button>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" id="addSavePriceBtn" class="btn modal-btn"><span
+            <button type="button" id="addSaveReworkBtn" class="btn modal-btn"><span
                     class="am-icon-save icon-save"></span>提交
             </button>
-            <button type="button" id="addMissPriceBtn" class="btn modal-btn" data-dismiss="modal" aria-label="Close">
+            <button type="button" id="addMissReworkBtn" class="btn modal-btn" data-dismiss="modal" aria-label="Close">
                 <span class="am-icon-close icon-close"></span>取消
             </button>
         </div>
@@ -52,14 +52,14 @@
     });
 
     //点击保存按钮,提交form表单，触发校验
-    $("#addSavePriceBtn").click(function () {
+    $("#addSaveReworkBtn").click(function () {
         //格式化分类属性信息为JSON串
-        $("#addSubmitPriceBtn").click();
+        $("#addSubmitReworkBtn").click();
     });
 
     //初始化表单
     function insertValidatorForm() {
-        $("#insertForm")
+        $("#reworkForm")
             .bootstrapValidator({
                 message: "不能为空",
                 feedbackIcons: {
@@ -89,7 +89,7 @@
             //加载等待
             AlertText.tips("d_loading");
             //校验成功后的操作
-            var btn = $("#addSaveBtn");
+            var btn = $("#addSaveReworkBtn");
             //让按钮不能点击
             btn.button("loading");
             //遮盖层
@@ -100,9 +100,11 @@
                     if (data.success) {
                         //保存成功,关闭窗口，刷新列表
                         //refreshPage();
+                        addFormReset();
                         AlertText.tips("d_alert", "提示", "订单提交成功", function () {
                             func_reload_page("${ctx}/order/reworkOrderDetail.do?reworkNo=" + data.result.orderReworkNo);
                         });
+
                     } else {
                         addFormReset();
                         //保存失败
@@ -114,7 +116,7 @@
                     AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
                 }
             }; // end options
-            $("#insertForm").ajaxSubmit(options);
+            $("#reworkForm").ajaxSubmit(options);
         }); // end on("success.form.bv"
     }
 
@@ -123,9 +125,9 @@
      */
     function addFormReset() {
         //重置表单验证
-        $("#insertForm").data("bootstrapValidator").resetForm();
+        $("#reworkForm").data("bootstrapValidator").resetForm();
         //让按钮重新能点击
-        $("#addSubmitPriceBtn").button("reset");
+        $("#addSaveReworkBtn").button("reset");
         //隐藏等待
         AlertText.hide();
     }
