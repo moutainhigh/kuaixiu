@@ -490,14 +490,24 @@ public class WechatOrderController extends BaseController {
             String pageSize = params.getString("pageSize");//每页加载数
             String orderStatus = params.getString("status");
             String newOrderStatus = params.getString("newStatus");
-            String isRework = params.getString("is_rework");
             getLoginUser(request);//验证token
             SessionUser sessionUser = getCurrentUser(request); //得到当前用户
-            String currentUserId = sessionUser.getUserId();//当前用户业务ID
+//            String currentUserId = sessionUser.getUserId();//当前用户业务ID
+            Order order = new Order();
+            List<Object> statusL = new ArrayList<Object>();
+            if (StringUtils.isNotBlank(orderStatus)) {
+                String[] statusArray = orderStatus.split(",");
+                for (String s : statusArray) {
+                    statusL.add(s);
+                }
+            }
+            order.setQueryStatusArray(statusL);
             Page p = getPageByRequestParams(pageIndex, pageSize);
-            List<OrderShow> orderPage = getList(currentUserId, request, p, orderStatus, newOrderStatus); //得到实际返回的数据
+            order.setPage(p);
+            List<Order> orderPage = orderService.getDao().queryListApiForPage(order);
+//            List<OrderShow> orderPage = getList(currentUserId, request, p, orderStatus, newOrderStatus); //得到实际返回的数据
             int orderSize = p.getRecordsTotal();//总记录数
-            JSONArray jsonArray = getJsonResult(orderPage);//封装成json数组返回
+            JSONArray jsonArray = getReworkJsonResult(orderPage);//封装成json数组返回
             JSONObject jsonResult = new JSONObject();
             jsonResult.put("orderList", jsonArray);
             jsonResult.put("orderSize", orderSize);
@@ -599,6 +609,42 @@ public class WechatOrderController extends BaseController {
         //将得到的集合按更新时间递减排序
         Collections.sort(orderShow, new UpdateTimeCompare());
         return orderShow;
+    }
+
+    /**
+     * 将得到集合包装成json数组返回
+     */
+    public JSONArray getReworkJsonResult(List<Order> orders) {
+        JSONArray json = new JSONArray();
+        for (Order order : orders) {
+            JSONObject j = new JSONObject();
+            //维修订单
+            j.put("id", order.getId());
+            j.put("orderNo", order.getOrderNo());
+            j.put("inTime", order.getInTime());
+            j.put("isComment", order.getIsComment());
+            j.put("mobile", order.getMobile());
+            j.put("customerName", order.getCustomerName());
+            j.put("modelName", order.getModelName());
+            j.put("orderStatus", order.getOrderStatus());
+            j.put("color", order.getColor());
+            j.put("realPrice", order.getRealPrice());
+            j.put("shopName", order.getShopName());
+            j.put("is_rework",order.getIsRework());
+            List<OrderDetail> detail = detailService.queryByOrderNo(order.getOrderNo());
+            JSONArray jsonDetails = new JSONArray();
+            for (OrderDetail od : detail) {
+                JSONObject item = new JSONObject();
+                item.put("type", od.getType());
+                item.put("projectId", od.getProjectId());
+                item.put("projectName", od.getProjectName());
+                item.put("price", od.getRealPrice());
+                jsonDetails.add(item);
+            }
+            j.put("projects", jsonDetails);
+            json.add(j);
+        }
+        return json;
     }
 
     /**

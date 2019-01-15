@@ -84,6 +84,7 @@
         <result column="is_show" property="isShow"/>
         <result column="cancel_reason" property="cancelReason"/>
         <result column="send_agreed_news" property="sendAgreedNews"/>
+        <result column="isRework" property="isRework"/>
         <association property="shop" column="shop_code" resultMap="ShopMap"></association>
     </resultMap>
 
