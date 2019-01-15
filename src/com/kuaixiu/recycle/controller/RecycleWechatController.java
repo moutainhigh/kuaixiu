@@ -86,14 +86,14 @@ public class RecycleWechatController extends BaseController {
             if (StringUtils.isBlank(code)) {
                 throw new SystemException("请求参数不完整");
             }
-            String fromType=params.getString("fromType");
+            String fromType = params.getString("fromType");
             String url = "https://api.weixin.qq.com/sns/jscode2session?";
             //翼回收
-            if(StringUtils.isBlank(fromType)||"".equals(fromType)||Integer.valueOf(fromType)==0||Integer.valueOf(fromType)==1){
+            if (StringUtils.isBlank(fromType) || "".equals(fromType) || Integer.valueOf(fromType) == 0 || Integer.valueOf(fromType) == 1) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
-            }else if(Integer.valueOf(fromType)==2){
+            } else if (Integer.valueOf(fromType) == 2) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_POSTMAN_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_POSTMAN_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
-            }else if(Integer.valueOf(fromType)==3){
+            } else if (Integer.valueOf(fromType) == 3) {
                 //待定
             }
             String httpGet = HttpClientUtil.httpGet(url);
@@ -105,8 +105,8 @@ public class RecycleWechatController extends BaseController {
             String openId = parse.getString("openid");
             String unionid = parse.getString("unionid");
             String sessionKey = parse.getString("session_key");
-            if(Integer.valueOf(fromType)==3){
-                ActivityUser user=new ActivityUser();
+            if (StringUtils.isNotBlank(fromType) && Integer.valueOf(fromType) == 3) {
+                ActivityUser user = new ActivityUser();
                 //保存该用户
                 user.setId(UUID.randomUUID().toString().replace("-", ""));
                 user.setOpenId(openId);
@@ -115,7 +115,7 @@ public class RecycleWechatController extends BaseController {
                 }
                 user.setSessionKey(sessionKey);
                 activityUserService.getDao().add(user);
-            }else {
+            } else {
                 //保存该用户
                 RecycleWechat wechat = new RecycleWechat();
                 wechat.setId(UUID.randomUUID().toString().replace("-", ""));
