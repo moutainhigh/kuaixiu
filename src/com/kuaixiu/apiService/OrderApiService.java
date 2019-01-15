@@ -164,7 +164,7 @@ public class OrderApiService implements ApiServiceInf {
                 json.put("cancel_type", o.getCancelType());
                 json.put("in_time", o.getInTime());
                 json.put("eng_note", o.getEngNote());
-                json.put("is_rework", o.getIsRework());
+                json.put("is_rework", Integer.valueOf(o.getIsRework()));
                 //查询订单明细
                 List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
                 if ("0".equals(o.getIsRework())) {
