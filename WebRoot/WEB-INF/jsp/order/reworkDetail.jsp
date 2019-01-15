@@ -18,17 +18,17 @@
 
         <h4>
             订单状态：
-            <c:if test="${order.orderStatus==50&&order.isComment!=1}">
+            <c:if test="${rework.orderStatus==50&&rework.isComment!=1}">
                 已完成(待评价)
             </c:if>
-            <c:if test="${order.orderStatus==50&&order.isComment==1}">
+            <c:if test="${rework.orderStatus==50&&rework.isComment==1}">
                 已完成
             </c:if>
-            <c:if test="${order.orderStatus!=50}">
-                ${order.orderStatusName}
+            <c:if test="${rework.orderStatus!=50}">
+                ${rework.orderStatusName}
             </c:if>
 
-            <c:if test="${order.orderStatus != 50 && order.orderStatus != 60}">
+            <c:if test="${rework.orderStatus != 50 && rework.orderStatus != 60}">
                 <div class="am-btn-group am-btn-group-sm fr mt-5">
                     <button id="cancelBtn" type="button" class="am-btn am-btn-default">
                         <span class="am-icon-trash-o"></span> 取消订单

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.kuaixiu.order.entity.ReworkOrder;
 import com.kuaixiu.order.entity.UpdateOrderPrice;
+import com.kuaixiu.order.service.ReworkOrderService;
 import com.kuaixiu.order.service.UpdateOrderPriceService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -50,6 +52,8 @@ public class OrderApiService implements ApiServiceInf {
     private CouponService couponService;
     @Autowired
     private UpdateOrderPriceService updateOrderPriceService;
+    @Autowired
+    private ReworkOrderService reworkOrderService;
 
     @Override
     public Object process(Map<String, String> params) {
@@ -85,7 +89,7 @@ public class OrderApiService implements ApiServiceInf {
             }
         }
         order.setQueryStatusArray(statusL);
-        Page page1=new Page();
+        Page page1 = new Page();
         Integer pageIndex = pmJson.getInteger("pageIndex");
         Integer pageSize = pmJson.getInteger("pageSize");
         //将值转化为绝对值
@@ -107,15 +111,15 @@ public class OrderApiService implements ApiServiceInf {
                 json.put("model_name", o.getModelName());
                 json.put("repair_type", o.getRepairType());
                 json.put("price", o.getOrderPrice());
-                json.put("color",o.getColor());
-                List<UpdateOrderPrice> orderPrices=updateOrderPriceService.getDao().queryByUpOrderNo(o.getOrderNo());
-                if(!CollectionUtils.isEmpty(orderPrices)){
+                json.put("color", o.getColor());
+                List<UpdateOrderPrice> orderPrices = updateOrderPriceService.getDao().queryByUpOrderNo(o.getOrderNo());
+                if (!CollectionUtils.isEmpty(orderPrices)) {
                     json.put("real_price", o.getRealPrice());//管理员修改过金额。直接显示总价
-                }else{
+                } else {
                     json.put("real_price", o.getRealPriceSubCoupon());//未修改金额，去掉优惠券
                 }
                 json.put("is_use_coupon", o.getIsUseCoupon());
-                json.put("is_update_price",o.getIsUpdatePrice());
+                json.put("is_update_price", o.getIsUpdatePrice());
                 json.put("coupon_code", o.getCouponCode());
                 json.put("coupon_name", o.getCouponName());
                 json.put("coupon_price", o.getCouponPrice());
@@ -159,9 +163,16 @@ public class OrderApiService implements ApiServiceInf {
                 json.put("pay_Status", o.getPayStatus());
                 json.put("cancel_type", o.getCancelType());
                 json.put("in_time", o.getInTime());
-                json.put("eng_note",o.getEngNote());
+                json.put("eng_note", o.getEngNote());
+                json.put("is_rework", o.getIsRework());
                 //查询订单明细
-                List<OrderDetail> orderDetails = detailService.queryByOrderNo(o.getOrderNo());
+                List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
+                if ("0".equals(o.getIsRework())) {
+                    orderDetails = detailService.queryByOrderNo(o.getOrderNo());
+                } else if ("0".equals(o.getIsRework())) {
+                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
+                    orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
+                }
                 JSONArray jsonDetails = new JSONArray();
                 for (OrderDetail od : orderDetails) {
                     JSONObject item = new JSONObject();
