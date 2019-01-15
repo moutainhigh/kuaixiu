@@ -490,6 +490,7 @@ public class WechatOrderController extends BaseController {
             String pageSize = params.getString("pageSize");//每页加载数
             String orderStatus = params.getString("status");
             String newOrderStatus = params.getString("newStatus");
+            String isRework = params.getString("is_rework");
             getLoginUser(request);//验证token
             SessionUser sessionUser = getCurrentUser(request); //得到当前用户
             String currentUserId = sessionUser.getUserId();//当前用户业务ID
@@ -691,20 +692,31 @@ public class WechatOrderController extends BaseController {
             SessionUser sessionUser = getCurrentUser(request); //得到当前用户
             JSONObject params = getPrarms(request);
             String id = params.getString("id");
-            Order order = orderService.queryById(id);
-            NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
-            if (order == null && newOrder == null) {
-                throw new SystemException(ApiResultConstant.resultCode_str_3003, ApiResultConstant.resultCode_3003);
-            }
+            String isRework = params.getString("is_rework");
             JSONObject jsonResult = new JSONObject();
             JSONObject j = new JSONObject();
-            //只能查看用户自己名下的订单
-            if (order != null && order.getCustomerId().equals(sessionUser.getUserId())) {                                                       //维修订单
-                j = getDetailJson(order, j);
-            } else if (newOrder != null && newOrder.getCustomerId().equals(sessionUser.getUserId())) {                                                                 //换新订单
-                j = getNewDetailJson(newOrder, j);
+            if ("1".equals(isRework)) {
+                ReworkOrder reworkOrder = reworkOrderService.queryById(id);
+                if (reworkOrder == null) {
+                    throw new SystemException(ApiResultConstant.resultCode_str_3003, ApiResultConstant.resultCode_3003);
+                }
+                Order order = orderService.queryByOrderNo(reworkOrder.getParentOrder());
+                getReworkDetailJson(order, reworkOrder, j);
             } else {
-                throw new SystemException("对不起，您无权操作该订单");
+                Order order = orderService.queryById(id);
+                NewOrder newOrder = (NewOrder) newOrderService.queryById(id);
+                if (order == null && newOrder == null) {
+                    throw new SystemException(ApiResultConstant.resultCode_str_3003, ApiResultConstant.resultCode_3003);
+                }
+                //只能查看用户自己名下的订单
+                if (order != null && order.getCustomerId().equals(sessionUser.getUserId())) {                                                       //维修订单
+                    j = getDetailJson(order, j);
+                } else if (newOrder != null && newOrder.getCustomerId().equals(sessionUser.getUserId())) {                                                                 //换新订单
+                    j = getNewDetailJson(newOrder, j);
+                } else {
+                    throw new SystemException("对不起，您无权操作该订单");
+                }
+
             }
             jsonResult.put("order", j);
             sessionUserService.getSuccessResult(result, jsonResult);
@@ -717,6 +729,51 @@ public class WechatOrderController extends BaseController {
         renderJson(response, result);
     }
 
+
+    /**
+     * 返修订单详情Json格式包装
+     */
+    public JSONObject getReworkDetailJson(Order order, ReworkOrder reworkOrder, JSONObject j) {
+        j.put("id", reworkOrder.getId());
+        j.put("orderNo", reworkOrder.getOrderReworkNo());
+        j.put("inTime", reworkOrder.getInTime());
+        j.put("isComment", reworkOrder.getIsComment());
+        j.put("customerName", order.getCustomerName());
+        j.put("fullAddress", order.getFullAddress());
+        j.put("mobile", order.getMobile());
+        j.put("modelName", order.getModelName());
+        j.put("orderStatus", reworkOrder.getOrderStatus());
+        j.put("orderType", 0);
+        j.put("color", order.getColor());
+        j.put("realPrice", reworkOrder.getRealPrice());
+        j.put("shopName", order.getShopName());
+        j.put("endTime", reworkOrder.getEndTime());
+        j.put("repairType", order.getRepairType());
+        Shop shop = shopService.queryByCode(order.getShopCode());
+        if (shop != null) {
+            j.put("shopName", shop.getName());
+            j.put("shopFullAddress", shop.getFullAddress());
+            j.put("shopTel", shop.getTel());
+            j.put("shopManagerName", shop.getManagerName());
+            j.put("shopManagerMobile", shop.getManagerMobile());
+        }
+        List<OrderDetail> detail = detailService.queryByOrderNo(order.getOrderNo());
+        JSONArray jsonDetails = new JSONArray();
+        for (OrderDetail od : detail) {
+            JSONObject item = new JSONObject();
+            item.put("id", od.getId());
+            item.put("orderNo", od.getOrderNo());
+            item.put("type", od.getType());
+            item.put("projectId", od.getProjectId());
+            item.put("projectName", od.getProjectName());
+            item.put("price", od.getRealPrice());
+            jsonDetails.add(item);
+        }
+        j.put("details", jsonDetails);
+
+
+        return j;
+    }
 
     /**
      * 维修订单详情Json格式包装
