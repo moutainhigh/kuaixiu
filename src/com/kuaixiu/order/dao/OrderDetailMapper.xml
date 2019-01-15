@@ -179,6 +179,7 @@
         <include refid="Base_Column_List"/>
         from kx_order_detail where order_no = #{orderNo}
         and is_rework=1
+        and type=1
         order by type asc, project_id asc
     </select>
 

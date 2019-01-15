@@ -80,13 +80,13 @@ public class OrderDetailsApiService implements ApiServiceInf {
         //验证请求参数
         if (pmJson == null
                 || !pmJson.containsKey("orderNo")
-                || !pmJson.containsKey("is_rework")) {
+                || !pmJson.containsKey("isRework")) {
             throw new ApiServiceException(ApiResultConstant.resultCode_1001, ApiResultConstant.resultCode_str_1001);
         }
 
         //获取订单号
         String orderNo = pmJson.getString("orderNo");
-        Integer isRework = pmJson.getInteger("is_rework");
+        Integer isRework = pmJson.getInteger("isRework");
         JSONObject json = new JSONObject();
         if (isRework == 1) {
             ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(orderNo);

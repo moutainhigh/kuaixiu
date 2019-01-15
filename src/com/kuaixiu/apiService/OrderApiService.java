@@ -169,7 +169,7 @@ public class OrderApiService implements ApiServiceInf {
                 List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
                 if ("0".equals(o.getIsRework())) {
                     orderDetails = detailService.queryByOrderNo(o.getOrderNo());
-                } else if ("0".equals(o.getIsRework())) {
+                } else if ("1".equals(o.getIsRework())) {
                     ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
                     orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
                 }

@@ -738,7 +738,7 @@ public class WechatOrderController extends BaseController {
             SessionUser sessionUser = getCurrentUser(request); //得到当前用户
             JSONObject params = getPrarms(request);
             String id = params.getString("id");
-            String isRework = params.getString("is_rework");
+            String isRework = params.getString("isRework");
             JSONObject jsonResult = new JSONObject();
             JSONObject j = new JSONObject();
             if ("1".equals(isRework)) {

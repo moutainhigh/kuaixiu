@@ -52,6 +52,7 @@ public class ReworkOrderController extends BaseController {
     private ProjectService projectService;
     @Autowired
     private OrderDetailService orderDetailService;
+
     /**
      * 列表查询
      *
@@ -128,7 +129,6 @@ public class ReworkOrderController extends BaseController {
     }
 
 
-
     /**
      * 返修订单详情
      *
@@ -160,7 +160,10 @@ public class ReworkOrderController extends BaseController {
             orderDetails = orderDetailService.getDao().queryIsReworkByOrderNo(order.getOrderNo());
             if (CollectionUtils.isEmpty(orderDetails)) {
                 //没有返修项目就查询全部
-                orderDetails = orderDetailService.queryByOrderNo(order.getOrderNo());
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrderNo(order.getOrderNo());
+                orderDetail.setType(1);
+                orderDetails = orderDetailService.queryList(orderDetail);
             }
             BigDecimal price = new BigDecimal("0");
             for (OrderDetail orderDetail : orderDetails) {
@@ -174,7 +177,7 @@ public class ReworkOrderController extends BaseController {
             }
 
             request.setAttribute("realPrice", order.getOrderPrice());
-            request.setAttribute("couponPrice", order.getOrderPrice().subtract(price));
+            request.setAttribute("couponPrice", "-" + order.getOrderPrice());
             request.setAttribute("projects", list);
             request.setAttribute("rework", reworkOrder);
             request.setAttribute("order", order);
@@ -186,6 +189,7 @@ public class ReworkOrderController extends BaseController {
         String returnView = "order/reworkDetail";
         return new ModelAndView(returnView);
     }
+
     /**
      * 进入返修订单页面
      *
@@ -196,7 +200,7 @@ public class ReworkOrderController extends BaseController {
      */
     @RequestMapping(value = "/order/reworkOrder")
     public ModelAndView reworkOrder(HttpServletRequest request,
-                                          HttpServletResponse response) throws Exception {
+                                    HttpServletResponse response) throws Exception {
         try {
             String orderNo = request.getParameter("orderNo");
             request.setAttribute("orderNo", orderNo);
@@ -240,7 +244,7 @@ public class ReworkOrderController extends BaseController {
             reworkOrder.setReworkReasons(Integer.valueOf(reworkReason));
             reworkOrder.setReasonsDetail(reasonDetail);
             //创建保存返修订单
-            ReworkOrder reworkOrder1=reworkOrderService.save(order, reworkOrder);
+            ReworkOrder reworkOrder1 = reworkOrderService.save(order, reworkOrder);
             //给工程师派单
             reworkOrderService.dispatch(order, reworkOrder);
 
@@ -318,13 +322,13 @@ public class ReworkOrderController extends BaseController {
             if (StringUtils.isBlank(reOrderNo)) {
                 return getResult(result, null, false, "2", "参数不完整");
             }
-            ReworkOrder reworkOrder=reworkOrderService.getDao().queryByReworkNo(reOrderNo);
-            if(reworkOrder==null){
+            ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(reOrderNo);
+            if (reworkOrder == null) {
                 return getResult(result, null, false, "2", "该返修订单不存在");
             }
-            if(projectId.contains(",")) {
-                String[] project=projectId.split(",");
-                for(int i=0;i<project.length;i++) {
+            if (projectId.contains(",")) {
+                String[] project = projectId.split(",");
+                for (int i = 0; i < project.length; i++) {
                     OrderDetail orderDetail = new OrderDetail();
                     orderDetail.setOrderNo(reworkOrder.getParentOrder());
                     orderDetail.setProjectId(project[i]);
