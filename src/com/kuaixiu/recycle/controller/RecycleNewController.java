@@ -1234,9 +1234,9 @@ public class RecycleNewController extends BaseController {
 //            }
 
             //返回数据
-            jsonResult.put("brandName",o.getJSONArray("brandName"));
-            jsonResult.put("brandId", o.getJSONArray("brandId"));
-            jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelName"));
+            jsonResult.put("brandName",o.get("brandname"));
+            jsonResult.put("brandId", o.get("brandid"));
+            jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
             jsonResult.put("productId", productId);
 //            jsonResult.put("modelId", map.get("modelId"));
             jsonResult.put("goodPrice", goodPirce);

@@ -81,11 +81,11 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
                 return true;
             } else {
                 //判断是否是因为session丢失
-                //throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
-                log.info("您离开系统时间过长，请重新登录");
-                result.setResultMessage("您离开系统时间过长，请重新登录");
-                renderJson(response, result);
-                return false;
+                throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
+//                log.info("您离开系统时间过长，请重新登录");
+//                result.setResultMessage("您离开系统时间过长，请重新登录");
+//                renderJson(response, result);
+//                return false;
             }
         } else {
             //如果是客户操作限制手机端唯一登录
@@ -102,10 +102,11 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             }
 
         }
-        log.info("对不起，您没有访问权限！");
-        result.setResultMessage("对不起，您没有访问权限！");
-        renderJson(response, result);
-        return false;
+        throw new SessionInvalidateException("对不起，您没有访问权限！");
+//        log.info("对不起，您没有访问权限！");
+//        result.setResultMessage("对不起，您没有访问权限！");
+//        renderJson(response, result);
+//        return false;
     }
     /**
      * 以Json格式输出
