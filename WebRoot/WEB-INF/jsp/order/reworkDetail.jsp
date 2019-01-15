@@ -3,7 +3,8 @@
 <link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">返修订单管理</a></strong> /
+        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">返修订单管理</a></strong>
+        /
         <small>返修订单详情</small>
         <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_to_back();">返回</a></strong>
     </div>
@@ -84,7 +85,7 @@
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>订单来源：${rework.fromSystem }</h4>
+                        <h4>订单来源：<span style="color:red">${rework.fromSystem }</span></h4>
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
@@ -92,16 +93,18 @@
                     </div>
                     <!-- /.col -->
                 </div>
-                <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>预约时间：${rework.strAgreedTime }</h4>
+                <c:if test="${order.orderStatus<=12}">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>预约时间：${rework.strAgreedTime }</h4>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>完成时间：${rework.strEndTime }</h4>
+                        </div>
+                        <!-- /.col -->
                     </div>
-                    <!-- /.col -->
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>完成时间：${rework.strEndTime }</h4>
-                    </div>
-                    <!-- /.col -->
-                </div>
+                </c:if>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>打卡时间：</h4>
@@ -128,11 +131,13 @@
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>取消订单原因：${rework.cancelReason }</h4>
+                <c:if test="${order.orderStatus==60}">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>取消订单原因：${rework.cancelReason }</h4>
+                        </div>
                     </div>
-                </div>
+                </c:if>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>维修工程师订单信息：</h4>
@@ -164,17 +169,17 @@
                     </div><!-- /.col -->
                 </div><!-- /.row -->
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="text-right col-md-11 col-sm-11 col-xs-12">
                         <h4>订单总价：${realPrice} 元</h4>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="text-right col-md-11 col-sm-11 col-xs-12">
                         <h4>优惠金额：${couponPrice} 元</h4>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="text-right col-md-11 col-sm-11 col-xs-12">
                         <h4>实付金额：0.00 元</h4>
                     </div>
                 </div>

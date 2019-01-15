@@ -184,6 +184,9 @@
 <div id="modal-updatePriceView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <%@ include file="updatePrice.jsp" %>
 </div>
+<div id="modal-createReworkView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <%@ include file="addRewordOrder.jsp" %>
+</div>
 <!-- 新增弹窗 end -->
 
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
@@ -436,6 +439,10 @@
     }
 
 
+    function rewordOrder(orderNo) {
+        $("#orderNo").val(orderNo);
+        $("#modal-createReworkView").modal("show");
+    }
 
     /**
      * 全选按钮

@@ -221,7 +221,6 @@ public class ReworkOrderController extends BaseController {
     public ResultData endAddRework(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
         try {
-            JSONObject params = getPrarms(request);
             String orderNo = request.getParameter("orderNo");
             String reworkReason = request.getParameter("reworkReason");
             String reasonDetail = request.getParameter("reasonDetail");
@@ -241,11 +240,11 @@ public class ReworkOrderController extends BaseController {
             reworkOrder.setReworkReasons(Integer.valueOf(reworkReason));
             reworkOrder.setReasonsDetail(reasonDetail);
             //创建保存返修订单
-            reworkOrderService.save(order, reworkOrder);
+            ReworkOrder reworkOrder1=reworkOrderService.save(order, reworkOrder);
             //给工程师派单
             reworkOrderService.dispatch(order, reworkOrder);
 
-            getResult(result, null, true, "0", "成功");
+            getResult(result, reworkOrder1, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());

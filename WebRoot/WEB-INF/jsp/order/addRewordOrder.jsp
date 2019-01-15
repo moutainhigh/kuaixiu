@@ -1,64 +1,60 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/commons/taglibs.jsp" %>
-<link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
-<script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
-<div class="am-cf am-padding am-padding-bottom-0">
-    <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">订单管理</a></strong> /
-        <small>快速下单</small>
-    </div>
+<div class="modal-backdrop fade in"></div>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-title"><span>创建售后订单</span>
+            <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+        </div>
+        <div class="modal-body">
+            <form id="insertForm" method="post" class="form-horizontal">
+                <input type="hidden" id="orderNo" name="orderNo"/>
+                <div class="form-group">
+                    <label for="reworkReason" class="col-sm-2 control-label"><span
+                            style="color:red">*</span>选择原因</label>
+                    <div class="col-sm-9">
+                        <select id="reworkReason" style="width:400px" name="reworkReason" onchange="brandChange(this.value);"
+                                class="form-control">
+                            <option value="">--请选择--</option>
+                            <option value="1">物料原因</option>
+                            <option value="2">装配原因</option>
+                            <option value="3">客户原因</option>
+                        </select>
+                    </div>
+                    <br/><br/>
+                    <label for="reasonDetail" class="col-sm-2 control-label"><span
+                            style="color:red">*</span>原因详情</label>
+                    <div class="col-sm-9">
+                <textarea class="reasonDetail" name="reasonDetail" style="width:400px; height:100px" id="reason" placeholder="请写下您的原因吧！"
+                          maxlength="1220"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="hide" id="addSubmitPriceBtn"></button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="addSavePriceBtn" class="btn modal-btn"><span
+                    class="am-icon-save icon-save"></span>提交
+            </button>
+            <button type="button" id="addMissPriceBtn" class="btn modal-btn" data-dismiss="modal" aria-label="Close">
+                <span class="am-icon-close icon-close"></span>取消
+            </button>
+        </div>
+    </div><!-- /.modal-content -->
 </div>
-
-<hr>
-
-<div class="am-g">
-    <form id="insertForm" method="post" class="form-horizontal">
-
-        <div class="form-group">
-            <label for="reworkReason" class="col-sm-2 control-label"><span style="color:red">*</span>选择原因</label>
-            <div class="col-sm-9">
-                <select id="reworkReason" name="reworkReason" onchange="brandChange(this.value);" class="form-control">
-                    <option value="">--请选择--</option>
-                    <option value="1">物料原因</option>
-                    <option value="2">装配原因</option>
-                    <option value="3">客户原因</option>
-                </select>
-            </div>
-        </div>
-        <input type="hidden" id="orderNo" value="${orderNo}"/>
-        <div class="form-group" id="projects">
-            <label for="reasonDetail" class="col-sm-2 control-label"><span style="color:red">*</span>原因详情</label>
-            <div class="col-sm-9">
-                <textarea class="reasonDetail" name="reasonDetail" id="reason" placeholder="请写下您的原因吧！"
-                          maxlength="220"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-9 col-sm-offset-2">
-                <button id="addSaveBtn" type="button" class="btn btn-default fl" style="padding: 6px 80px;">保 存</button>
-            </div>
-        </div>
-        <button type="submit" class="hide" id="addSubmitBtn"></button>
-    </form>
-</div>
-<!-- /am-g -->
+<!-- /.modal-dialog -->
 
 
 <script type="text/javascript">
-    function toList() {
-        func_reload_page("${ctx}/order/list.do");
-    }
-
     //表单验证
     $(document).ready(function () {
         insertValidatorForm();
     });
 
     //点击保存按钮,提交form表单，触发校验
-    $("#addSaveBtn").click(function () {
+    $("#addSavePriceBtn").click(function () {
         //格式化分类属性信息为JSON串
-        $("#addSubmitBtn").click();
+        $("#addSubmitPriceBtn").click();
     });
 
     //初始化表单
@@ -105,12 +101,12 @@
                         //保存成功,关闭窗口，刷新列表
                         //refreshPage();
                         AlertText.tips("d_alert", "提示", "订单提交成功", function () {
-                            func_reload_page("${ctx}/order/detail.do?id=" + data.data);
+                            func_reload_page("${ctx}/order/reworkOrderDetail.do?reworkNo=" + data.result.orderReworkNo);
                         });
                     } else {
                         addFormReset();
                         //保存失败
-                        AlertText.tips("d_alert", "提示", data.msg);
+                        AlertText.tips("d_alert", "提示", data.resultMessage);
                     }
                 },
                 error: function () {
@@ -129,23 +125,11 @@
         //重置表单验证
         $("#insertForm").data("bootstrapValidator").resetForm();
         //让按钮重新能点击
-        $("#addSaveBtn").button("reset");
+        $("#addSubmitPriceBtn").button("reset");
         //隐藏等待
         AlertText.hide();
     }
 
     var isLoading = false;
-
-    $(function () {
-        $("input:radio[name=repairType]").change(function () {
-            var choose = $('input:radio[name="repairType"]:checked').val();
-            if (choose == 0) {
-                //上门维修
-                $("#sendAddress").hide();
-            }
-
-        });
-
-    });
 
 </script>

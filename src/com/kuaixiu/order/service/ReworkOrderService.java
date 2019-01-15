@@ -58,7 +58,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
 //**********自定义方法***********
 
     //创建保存返修订单
-    public void save(Order order, ReworkOrder reworkOrder) {
+    public ReworkOrder save(Order order, ReworkOrder reworkOrder) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         reworkOrder.setOrderReworkNo(NOUtil.getNo(""));
@@ -82,6 +82,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         //下单完成给用户发送成功短信
         SmsSendUtil.sendSmsToCustomerforRework(order.getMobile());
         getDao().add(reworkOrder);
+        return reworkOrder;
     }
 
 
