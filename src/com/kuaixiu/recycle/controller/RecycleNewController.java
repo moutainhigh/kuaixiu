@@ -640,9 +640,9 @@ public class RecycleNewController extends BaseController {
                 order.setMailType(1);        //快递类型   1超人系统推送
             }
             if (!source.equals("null") && StringUtils.isNotBlank(source)) {
-                String sourceType=source;
-                if(source.contains("?")){
-                    sourceType=org.apache.commons.lang3.StringUtils.substringBefore(source,"?");
+                String sourceType = source;
+                if (source.contains("?")) {
+                    sourceType = org.apache.commons.lang3.StringUtils.substringBefore(source, "?");
                 }
                 order.setSourceType(Integer.parseInt(sourceType));
             } else {
@@ -1098,8 +1098,6 @@ public class RecycleNewController extends BaseController {
     }
 
 
-
-
     /**
      * 根据机型获取最高报价
      *
@@ -1174,57 +1172,37 @@ public class RecycleNewController extends BaseController {
     public void getProductId(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
-        String productId = null;   //通过回收结果返回的最终机型id
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
             String brand = params.getString("brand");
             String modelName = params.getString("modelName");
             String openId = params.getString("openId");
-            String categoryid = params.getString("categoryid");
+//            String categoryid = params.getString("categoryid");
             if (StringUtil.isBlank(brand) || StringUtil.isBlank(modelName) || StringUtil.isBlank(openId)) {
                 throw new SystemException("参数不完整");
             }
             //将微信小程序检测的机型名称转换成回收平台的机型名称
-            Map<String, String> map = AES.getModelName(brand, modelName);
+//            Map<String, String> map = AES.getModelName(brand, modelName);
             JSONObject requestNews = new JSONObject();
-            if (map.isEmpty()) {
-                throw new SystemException("对应机型未找到!");
-            }
             //通过转换过的机型 使用回收搜索接口得到对应机型id
             JSONObject code = new JSONObject();
-            code.put("pageindex", "1");
-            code.put("pagesize", "50");
-            code.put("categoryid", categoryid);
-            code.put("keyword", map.get("modelName").replaceAll(" ", ""));
+            code.put("brandcode", brand);
+            code.put("modelcode", modelName);
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
             //发起获取对应productid请求
-            String getResult = AES.post(baseNewUrl + "getmodellist", requestNews);
+            String getResult = AES.post(baseNewUrl + "getmodelbycode", requestNews);
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
             JSONArray product = code.getJSONArray("datainfo");
             if (product.isEmpty()) {
                 throw new SystemException("对应机型不存在");
             }
-            int goodPirce=0;
-            //判断返回的机型是否有多个
-            if (product.size() > 1) {
-                //如果有多个机型 则通过机型名称匹配唯一
-                for (int i = 0; i < product.size(); i++) {
-                    JSONObject object = (JSONObject) product.get(i);
-                    JSONArray sublist = object.getJSONArray("sublist");
-                    if (((JSONObject) sublist.get(0)).getString("modelname").equals(map.get("modelName"))) {
-                        productId = object.getString("productid");
-                        goodPirce = (int) (object.getInteger("productprice") * 0.9);
-                    }
-                }
-            } else {
-                JSONObject o = (JSONObject) product.get(0);
-                JSONArray sublist = o.getJSONArray("sublist");
-                productId = ((JSONObject) sublist.get(0)).getString("productid");
-                goodPirce = (int) (((JSONObject) sublist.get(0)).getInteger("productprice") * 0.9);
-            }
+            JSONObject o = (JSONObject) product.get(0);
+            JSONArray sublist = o.getJSONArray("sublist");
+            String productId = ((JSONObject) sublist.get(0)).getString("productid");
+            int goodPirce = (int) (((JSONObject) sublist.get(0)).getInteger("productprice") * 0.9);
             if (StringUtils.isBlank(productId)) {
                 throw new SystemException("对应机型id不存在");
             }
@@ -1241,29 +1219,29 @@ public class RecycleNewController extends BaseController {
             if (!checkList.isEmpty() && checkList.get(0).getLastPrice() != null) {
                 lastPrice = checkList.get(0).getLastPrice().intValue();
             }
-            //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
-            String imageUrl = map.get("modelLogo");
-            //String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + "webapps" + System.getProperty("file.separator") + "ROOT" + System.getProperty("file.separator") + "resource" + System.getProperty("file.separator") + "brandLogo";
-            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") +SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
-            log.info("图片保存路径:" + savePath);
-            //String modelUrl = getProjectUrl(request) + "/resource/brandLogo/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-            String modelUrl = getProjectUrl(request) + "/images/recycleModel/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-            //先判断文件是否存在  不存在则下载
-            File f = new File(savePath + System.getProperty("file.separator") + (imageUrl.substring(imageUrl.lastIndexOf("/") + 1)));
-            if (!f.exists()) {
-                log.info("图片不存在，开始下载");
-                FileUtil.download(imageUrl, imageUrl.substring(imageUrl.lastIndexOf("/") + 1), savePath);
-            }
+//            //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
+//            String imageUrl = map.get("modelLogo");
+//            //String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + "webapps" + System.getProperty("file.separator") + "ROOT" + System.getProperty("file.separator") + "resource" + System.getProperty("file.separator") + "brandLogo";
+//            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
+//            log.info("图片保存路径:" + savePath);
+//            //String modelUrl = getProjectUrl(request) + "/resource/brandLogo/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+//            String modelUrl = getProjectUrl(request) + "/images/recycleModel/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+//            //先判断文件是否存在  不存在则下载
+//            File f = new File(savePath + System.getProperty("file.separator") + (imageUrl.substring(imageUrl.lastIndexOf("/") + 1)));
+//            if (!f.exists()) {
+//                log.info("图片不存在，开始下载");
+//                FileUtil.download(imageUrl, imageUrl.substring(imageUrl.lastIndexOf("/") + 1), savePath);
+//            }
 
             //返回数据
-            jsonResult.put("brandName", map.get("brandName"));
-            jsonResult.put("brandId", map.get("brandId"));
-            jsonResult.put("modelName", map.get("modelName"));
+            jsonResult.put("brandName",o.get("brandname"));
+            jsonResult.put("brandId", o.get("brandid"));
+            jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
             jsonResult.put("productId", productId);
-            jsonResult.put("modelId", map.get("modelId"));
+//            jsonResult.put("modelId", map.get("modelId"));
             jsonResult.put("goodPrice", goodPirce);
             jsonResult.put("lastPrice", lastPrice);
-            jsonResult.put("modelLogo", modelUrl);
+            jsonResult.put("modelLogo", ((JSONObject) sublist.get(0)).getString("modellogo"));
             result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
@@ -1272,9 +1250,8 @@ public class RecycleNewController extends BaseController {
             // 将用户手机品牌  品牌id  微信小程序检测的机型  以及对应的回收平台的进行名称存入数据库
             if (checkList.isEmpty()) {
                 //新增
-                checkItems.setBrandId(map.get("brandId"));
-                checkItems.setModelId(map.get("modelId"));
-                checkItems.setRecycleModel(map.get("modelName"));
+                checkItems.setBrandId(o.get("brandid").toString());
+                checkItems.setRecycleModel(o.get("brandname").toString());
                 checkItems.setWechatModel(modelName);
                 checkItems.setBrand(brand);
                 checkItems.setProductId(productId);
@@ -1288,9 +1265,8 @@ public class RecycleNewController extends BaseController {
             } else {
                 //修改
                 RecycleCheckItems cr = checkList.get(0);
-                cr.setBrandId(map.get("brandId"));
-                cr.setModelId(map.get("modelId"));
-                cr.setRecycleModel(map.get("modelName"));
+                cr.setBrandId(o.get("brandid").toString());
+                cr.setRecycleModel(o.get("brandname").toString());
                 cr.setWechatModel(modelName);
                 cr.setBrand(brand);
                 cr.setProductId(productId);
