@@ -115,7 +115,10 @@ public class OrderDetailsApiService implements ApiServiceInf {
             json.put("in_time", reworkOrder.getInTime());
             json.put("eng_note", reworkOrder.getEngNote());
             //查询订单明细
-            List<OrderDetail> orderDetails = detailService.queryByOrderNo(o.getOrderNo());
+            OrderDetail orderDetail=new OrderDetail();
+            orderDetail.setOrderNo(o.getOrderNo());
+            orderDetail.setType(1);
+            List<OrderDetail> orderDetails = detailService.queryList(orderDetail);
             JSONArray jsonDetails = new JSONArray();
             for (OrderDetail od : orderDetails) {
                 JSONObject item = new JSONObject();
