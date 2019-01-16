@@ -86,7 +86,7 @@ public class OrderAgreedTimeApiService implements ApiServiceInf {
                 } else {
                     reworkOrder.setEngNote(engNote);
                 }
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 reworkOrder.setUpdateUserid(engNumber);
                 reworkOrder.setAgreedTime(sdf.parse(agreedTime));
                 reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_RECEIVED);
@@ -128,7 +128,7 @@ public class OrderAgreedTimeApiService implements ApiServiceInf {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.info(e.getMessage());
+            throw new ApiServiceException(ApiResultConstant.resultCode_3002, ApiResultConstant.resultCode_str_3002);
         }
         return "OK";
     }
