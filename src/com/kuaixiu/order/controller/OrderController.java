@@ -99,6 +99,8 @@ public class OrderController extends BaseController {
     private NewEngineerService newEngineerService;
     @Autowired
     private FromSystemService fromSystemService;
+    @Autowired
+    private EngineerSignInService engineerSignInService;
 
     /**
      * 列表查询 -- 后台管理员
@@ -759,8 +761,6 @@ public class OrderController extends BaseController {
         renderJson(response, resultMap);
     }
 
-    @Autowired
-    private EngineerSignInService engineerSignInService;
 
     /**
      * 列表查询

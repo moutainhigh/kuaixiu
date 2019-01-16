@@ -6,6 +6,8 @@ import com.common.paginate.Page;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.service.BrandService;
+import com.kuaixiu.engineer.entity.EngineerSignIn;
+import com.kuaixiu.engineer.service.EngineerSignInService;
 import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.order.entity.Order;
@@ -52,6 +54,8 @@ public class ReworkOrderController extends BaseController {
     private ProjectService projectService;
     @Autowired
     private OrderDetailService orderDetailService;
+    @Autowired
+    private EngineerSignInService engineerSignInService;
 
     /**
      * 列表查询
@@ -174,6 +178,13 @@ public class ReworkOrderController extends BaseController {
                 map.put("totalDay", reworkOrder.getTotalDay().toString());
                 list.add(map);
                 price = price.add(orderDetail.getRealPrice());
+            }
+            EngineerSignIn signIn = new EngineerSignIn();
+            signIn.setOrderNo(reworkOrderNo);
+            List<EngineerSignIn> signIns = engineerSignInService.getDao().queryList(signIn);
+            if (!CollectionUtils.isEmpty(signIns)) {
+                signIns.get(0).setStrCreateTime(sdf.format(signIns.get(0).getCreateTime()));
+                request.setAttribute("engineerSignIn", signIns.get(0));
             }
 
             request.setAttribute("realPrice", order.getOrderPrice());

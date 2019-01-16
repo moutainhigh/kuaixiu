@@ -107,14 +107,12 @@
                 </c:if>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>打卡时间：</h4>
-                    </div>
-                    <!-- /.col -->
+                        <h4>打卡时间：${engineerSignIn.strCreateTime }</h4>
+                    </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>打卡地址：</h4>
-                    </div>
-                    <!-- /.col -->
-                </div>
+                        <h4>打卡地点：${engineerSignIn.areas } ${engineerSignIn.address }</h4>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>母订单号：${rework.parentOrder }</h4>
