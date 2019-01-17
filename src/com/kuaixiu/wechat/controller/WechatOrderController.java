@@ -3,10 +3,7 @@ package com.kuaixiu.wechat.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -795,7 +792,13 @@ public class WechatOrderController extends BaseController {
         j.put("shopName", order.getShopName());
         j.put("endTime", reworkOrder.getEndTime());
         j.put("repairType", order.getRepairType());
-        Shop shop = shopService.queryByCode(order.getShopCode());
+        Shop shop = new Shop();
+        if (order.getShopCode().contains(",")) {
+            List<String> shopCodeList = Arrays.asList(order.getShopCode().split(","));
+            shop = shopService.queryByCode(shopCodeList.get(0));
+        } else {
+            shop = shopService.queryByCode(order.getShopCode());
+        }
         if (shop != null) {
             j.put("shopName", shop.getName());
             j.put("shopFullAddress", shop.getFullAddress());
@@ -840,7 +843,13 @@ public class WechatOrderController extends BaseController {
         j.put("shopName", order.getShopName());
         j.put("endTime", order.getEndTime());
         j.put("repairType", order.getRepairType());
-        Shop shop = shopService.queryByCode(order.getShopCode());
+        Shop shop = new Shop();
+        if (order.getShopCode().contains(",")) {
+            List<String> shopCodeList = Arrays.asList(order.getShopCode().split(","));
+            shop = shopService.queryByCode(shopCodeList.get(0));
+        } else {
+            shop = shopService.queryByCode(order.getShopCode());
+        }
         if (shop != null) {
             j.put("shopName", shop.getName());
             j.put("shopFullAddress", shop.getFullAddress());
