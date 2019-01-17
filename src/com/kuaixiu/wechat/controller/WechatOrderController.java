@@ -738,7 +738,7 @@ public class WechatOrderController extends BaseController {
             Integer isRework = params.getInteger("isRework");
             JSONObject jsonResult = new JSONObject();
             JSONObject j = new JSONObject();
-            if (1 == isRework) {
+            if (isRework != null && 1 == isRework) {
                 ReworkOrder reworkOrder = reworkOrderService.queryById(id);
                 if (reworkOrder == null) {
                     throw new SystemException(ApiResultConstant.resultCode_str_3003, ApiResultConstant.resultCode_3003);
@@ -1033,7 +1033,7 @@ public class WechatOrderController extends BaseController {
             if (!StringUtils.isBlank(reason) && StringUtils.isBlank(selectReason)) {
                 cancelReason = reason;
             }
-            if (1 == isRework) {
+            if (isRework != null && 1 == isRework) {
                 ReworkOrder reworkOrder = reworkOrderService.queryById(id);
                 if (reworkOrder == null) {
                     throw new SystemException("订单不存在");
@@ -1113,7 +1113,7 @@ public class WechatOrderController extends BaseController {
             OrderComment comm = new OrderComment();
             comm.setOverallRate(new BigDecimal(overallRate));
             comm.setContent(content);
-            if (1 == isRework) {
+            if (isRework != null && 1 == isRework) {
                 ReworkOrder reworkOrder = reworkOrderService.queryById(id);
                 if (reworkOrder == null) {
                     throw new SystemException("订单不存在，不能进行评价");
