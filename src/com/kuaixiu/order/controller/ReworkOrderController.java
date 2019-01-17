@@ -301,11 +301,12 @@ public class ReworkOrderController extends BaseController {
             reworkOrder.setReworkReasons(Integer.valueOf(reworkReason));
             reworkOrder.setReasonsDetail(reasonDetail);
             //创建保存返修订单
-            reworkOrderService.save(order, reworkOrder);
+            ReworkOrder reworkOrder1=reworkOrderService.save(order, reworkOrder);
             //给工程师派单
             reworkOrderService.dispatch(order, reworkOrder);
-
-            getResult(result, null, true, "0", "成功");
+            JSONObject json=new JSONObject();
+            json.put("orderReworkNo",reworkOrder1.getOrderReworkNo());
+            getResult(result, json, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());
