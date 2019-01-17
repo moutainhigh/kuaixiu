@@ -10,6 +10,7 @@ import com.kuaixiu.engineer.entity.EngineerSignIn;
 import com.kuaixiu.engineer.service.EngineerSignInService;
 import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.model.service.ModelService;
+import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.entity.ReworkOrder;
@@ -352,6 +353,7 @@ public class ReworkOrderController extends BaseController {
             }
 
             reworkOrder.setEndTime(new Date());
+            reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_FINISHED);
             reworkOrderService.saveUpdate(reworkOrder);
 
 
