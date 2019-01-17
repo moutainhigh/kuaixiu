@@ -623,9 +623,11 @@ public class WechatOrderController extends BaseController {
             j.put("mobile", order.getMobile());
             j.put("customerName", order.getCustomerName());
             j.put("modelName", order.getModelName());
+            j.put("orderType", order.getOrderType());
             j.put("orderStatus", order.getOrderStatus());
             j.put("color", order.getColor());
             j.put("realPrice", order.getRealPrice());
+            j.put("isUpdatePrice", order.getIsUpdatePrice());
             j.put("shopName", order.getShopName());
             j.put("is_rework", order.getIsRework());
             List<OrderDetail> detail = detailService.queryByOrderNo(order.getOrderNo());
