@@ -630,7 +630,7 @@ public class WechatOrderController extends BaseController {
             j.put("color", order.getColor());
             j.put("realPrice", order.getRealPrice());
             j.put("shopName", order.getShopName());
-            j.put("is_rework",order.getIsRework());
+            j.put("is_rework", order.getIsRework());
             List<OrderDetail> detail = detailService.queryByOrderNo(order.getOrderNo());
             JSONArray jsonDetails = new JSONArray();
             for (OrderDetail od : detail) {
@@ -738,10 +738,10 @@ public class WechatOrderController extends BaseController {
             SessionUser sessionUser = getCurrentUser(request); //得到当前用户
             JSONObject params = getPrarms(request);
             String id = params.getString("id");
-            String isRework = params.getString("isRework");
+            Integer isRework = params.getInteger("isRework");
             JSONObject jsonResult = new JSONObject();
             JSONObject j = new JSONObject();
-            if ("1".equals(isRework)) {
+            if (1 == isRework) {
                 ReworkOrder reworkOrder = reworkOrderService.queryById(id);
                 if (reworkOrder == null) {
                     throw new SystemException(ApiResultConstant.resultCode_str_3003, ApiResultConstant.resultCode_3003);
@@ -1011,7 +1011,7 @@ public class WechatOrderController extends BaseController {
             SessionUser su = getCurrentUser(request);//得到当前用户
             JSONObject params = getPrarms(request);
             String id = params.getString("id");//订单id
-            String isRework = params.getString("isRework");//是否返修单
+            Integer isRework = params.getInteger("isRework");//是否返修单
             String reason = params.getString("reason");//选择的原因
             String selectReason = params.getString("selectReason");//填写的原因
             String cancelReason = null;
@@ -1024,7 +1024,7 @@ public class WechatOrderController extends BaseController {
             if (!StringUtils.isBlank(reason) && StringUtils.isBlank(selectReason)) {
                 cancelReason = reason;
             }
-            if (StringUtils.isNotBlank(isRework) && Integer.valueOf(isRework) == 1) {
+            if (1 == isRework) {
                 ReworkOrder reworkOrder = reworkOrderService.queryById(id);
                 if (reworkOrder == null) {
                     throw new SystemException("订单不存在");
@@ -1100,11 +1100,11 @@ public class WechatOrderController extends BaseController {
             String id = params.getString("id");
             String overallRate = params.getString("overallRate");//星评数
             String content = params.getString("content");//评价内容
-            String isRework = params.getString("isRework");//是否返修   1：返修
+            Integer isRework = params.getInteger("isRework");//是否返修   1：返修
             OrderComment comm = new OrderComment();
             comm.setOverallRate(new BigDecimal(overallRate));
             comm.setContent(content);
-            if (StringUtils.isNotBlank(isRework) && Integer.valueOf(isRework) == 1) {
+            if (1 == isRework) {
                 ReworkOrder reworkOrder = reworkOrderService.queryById(id);
                 if (reworkOrder == null) {
                     throw new SystemException("订单不存在，不能进行评价");
