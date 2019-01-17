@@ -85,6 +85,7 @@
         <result column="cancel_reason" property="cancelReason"/>
         <result column="send_agreed_news" property="sendAgreedNews"/>
         <result column="isRework" property="isRework"/>
+        <result column="order_type" property="orderType"/>
         <association property="shop" column="shop_code" resultMap="ShopMap"></association>
     </resultMap>
 
@@ -646,7 +647,7 @@
         ,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
         ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
         ,t.agreed_time,t.eng_note,t.isRework,t.isUpdatePrice,t.orderType
-        ,t.isComment,t.shopName
+        ,t.is_comment,t.shop_name
         from
         (
         select t1.id id,t1.order_no order_no,t1.customer_id customer_id,t1.customer_name customer_name
@@ -662,8 +663,8 @@
         ,date_format(t1.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
         ,t1.is_use_coupon is_use_coupon,t1.coupon_id coupon_id,t1.coupon_code coupon_code
         ,t1.coupon_name coupon_name,t1.coupon_type coupon_type,t1.coupon_price coupon_price
-        ,t1.agreed_time agreed_time,t1.eng_note eng_note,0 isRework,t1.is_update_price isUpdatePrice
-        ,1 orderType,t1.is_comment isComment,t1.shop_name shopName
+        ,t1.agreed_time agreed_time,t1.eng_note eng_note,0 isRework,t1.is_update_price is_update_price
+        ,1 order_type,t1.is_comment is_comment,t1.shop_name shop_name
         from kx_order t1
         UNION ALL
         select t2.id,t2.order_rework_no order_no,t3.customer_id,t3.customer_name
@@ -678,8 +679,8 @@
         ,date_format(t2.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
         ,date_format(t2.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
         ,null is_use_coupon,null coupon_id,null coupon_code,null coupon_name,null coupon_type,null coupon_price
-        ,t2.agreed_time,t2.eng_note,1 isRework,null isUpdatePrice,1 orderType,t2.is_comment isComment
-        ,t2.shop_name shopName
+        ,t2.agreed_time,t2.eng_note,1 isRework,0 is_update_price,1 order_type,t2.is_comment is_comment
+        ,t2.shop_name shop_name
         from kx_rework_order t2 LEFT JOIN kx_order t3 ON t2.parent_order=t3.order_no
         )t
         where 1=1
