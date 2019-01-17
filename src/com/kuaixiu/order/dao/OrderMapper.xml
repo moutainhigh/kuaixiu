@@ -646,7 +646,7 @@
         ,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
         ,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
         ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
-        ,t.agreed_time,t.eng_note,t.isRework,t.isUpdatePrice,t.orderType
+        ,t.agreed_time,t.eng_note,t.isRework,t.is_update_price,t.order_type
         ,t.is_comment,t.shop_name
         from
         (
