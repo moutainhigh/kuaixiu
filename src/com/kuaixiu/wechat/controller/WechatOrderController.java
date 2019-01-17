@@ -629,7 +629,7 @@ public class WechatOrderController extends BaseController {
             j.put("realPrice", order.getRealPrice());
             j.put("isUpdatePrice", order.getIsUpdatePrice());
             j.put("shopName", order.getShopName());
-            j.put("is_rework", order.getIsRework());
+            j.put("isRework", order.getIsRework());
             List<OrderDetail> detail = detailService.queryByOrderNo(order.getOrderNo());
             JSONArray jsonDetails = new JSONArray();
             for (OrderDetail od : detail) {

@@ -164,12 +164,12 @@ public class OrderApiService implements ApiServiceInf {
                 json.put("cancel_type", o.getCancelType());
                 json.put("in_time", o.getInTime());
                 json.put("eng_note", o.getEngNote());
-                json.put("is_rework", Integer.valueOf(o.getIsRework()));
+                json.put("is_rework", o.getIsRework());
                 //查询订单明细
                 List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
-                if ("0".equals(o.getIsRework())) {
+                if (0==o.getIsRework()) {
                     orderDetails = detailService.queryByOrderNo(o.getOrderNo());
-                } else if ("1".equals(o.getIsRework())) {
+                } else if (1==o.getIsRework()) {
                     ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
                     orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
                 }
