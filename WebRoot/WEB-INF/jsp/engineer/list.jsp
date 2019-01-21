@@ -47,13 +47,22 @@
                         <option value="2">不去掉</option>
                     </select>
                 </td>
+                <td class="search_th"><label class="control-label">订 单 类 别 ：</label></td>
+                <td class="search_td">
+                    <select name="orderType" id="orderType" class="form-control">
+                        <option value="">--请选择--</option>
+                        <option value="1">快修单</option>
+                        <option value="2">返修单</option>
+                    </select>
+                </td>
             </tr>
         </table>
         <div class="form-group">
             <div class="am-u-sm-12 am-u-md-6">
                 <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-sm m20">
-                            <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜 索 </button>
+                        <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜 索
+                        </button>
                     </div>
                     <div class="am-btn-group am-btn-group-sm">
                         <button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span
@@ -117,7 +126,7 @@
                 d[this.name] = this.value;
             });
         },
-        "error":function (xhr, error, thrown) {
+        "error": function (xhr, error, thrown) {
             alert("1");
         }
 
@@ -166,6 +175,18 @@
                 }
             }
         },
+        {//状态
+            targets: -2,
+            render: function (data, type, row, meta) {
+                if (row.orderType == 1) {
+                    return row.orderDayNum;
+                } else if (row.orderType == 2) {
+                    return row.reworkOrderNum;
+                } else {
+                    return row.reworkOrderNum + row.orderDayNum;
+                }
+            }
+        },
         {
             targets: -1,
             render: function (data, type, row, meta) {
@@ -198,13 +219,13 @@
      */
     function refreshPage() {
         $("#pageStatus").val(1);
-        if($("#order_status").val()==40){
-            if($("#query_startTime").val()!="" || $("#query_endTime").val()!=""){
+        if ($("#order_status").val() == 40) {
+            if ($("#query_startTime").val() != "" || $("#query_endTime").val() != "") {
                 alert("订单进行中状态不可与时间同时筛选");
-            }else{
+            } else {
                 myTable.ajax.reload(null, false);
             }
-        }else{
+        } else {
             myTable.ajax.reload(null, false);
         }
     }

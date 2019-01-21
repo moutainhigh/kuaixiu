@@ -87,6 +87,7 @@ public class EngineerController extends BaseController {
         String queryStartTime = request.getParameter("query_startTime");
         String queryEndTime = request.getParameter("query_endTime");
         String isPatch = request.getParameter("isPatch");
+        String orderType = request.getParameter("orderType");
 
         Engineer eng = new Engineer();
         eng.setName(name);
@@ -139,6 +140,7 @@ public class EngineerController extends BaseController {
         eng.setPage(page);
         List<Engineer> endList = newEngineerService.getDao().queryAchievementForPage(eng);
         for (Engineer engineer : endList) {
+            engineer.setOrderType(orderType);
             //如果是多个门店，就便利查找名称
             newEngineerService.engineerShopCode(engineer);
         }
