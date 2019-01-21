@@ -696,6 +696,252 @@
         order by t.in_time desc
     </select>
 
+    <!-- 查询列表无分页 -->
+    <select id="queryEngineerListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select t.id,t.order_no,t.customer_id,t.customer_name
+        ,t.brand_id,t.brand_name,t.model_id,t.model_name,t.color
+        ,t.repair_type,t.order_price,t.real_price
+        ,t.order_status,t.cancel_type,t.cancel_status
+        ,t.pay_type
+        ,t.pay_status,date_format(t.`pay_time`,'%Y-%m-%d %H:%i:%s')pay_time,t.pay_price
+        ,t.engineer_id
+        ,t.mobile
+        ,t.balance_status
+        ,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
+        ,t.agreed_time,t.eng_note,t.isRework,t.is_update_price,t.order_type
+        ,t.is_comment,t.shop_name,t.from_system_name,t.engineer_number
+        ,date_format(t.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from
+        (
+        select t1.id id,t1.order_no order_no,t1.customer_id customer_id,t1.customer_name customer_name
+        ,t1.brand_id brand_id,t1.brand_name brand_name,t1.model_id model_id,t1.model_name model_name,t1.color color
+        ,t1.repair_type repair_type,t1.order_price order_price,t1.real_price real_price
+        ,t1.order_status order_status,t1.cancel_type cancel_type,t1.cancel_status cancel_status
+        ,t1.pay_type pay_type
+        ,t1.pay_status pay_status,date_format(t1.`pay_time`,'%Y-%m-%d %H:%i:%s')pay_time,t1.pay_price pay_price
+        ,t1.engineer_id engineer_id
+        ,t1.mobile mobile
+        ,t1.balance_status balance_status
+        ,date_format(t1.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t1.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,t1.is_use_coupon is_use_coupon,t1.coupon_id coupon_id,t1.coupon_code coupon_code
+        ,t1.coupon_name coupon_name,t1.coupon_type coupon_type,t1.coupon_price coupon_price
+        ,t1.agreed_time agreed_time,t1.eng_note eng_note,t1.is_rework isRework,t1.is_update_price is_update_price
+        ,0 order_type,t1.is_comment is_comment,t1.shop_name shop_name
+        ,fs.name from_system_name,t1.engineer_number
+        ,date_format(t1.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from kx_order t1
+        left join kx_from_system fs on t1.from_system = fs.id
+        where 1=1
+        <if test="isPatch == 1 and isPatch != ''">
+            and order_no in
+            (select order_no from kx_order_detail d
+            where 1=1
+            AND d.project_name NOT LIKE CONCAT('%','贴膜','%')
+            )
+        </if>
+        UNION ALL
+        select t2.id,t2.order_rework_no order_no,t3.customer_id,t3.customer_name
+        ,t3.brand_id,t3.brand_name,t3.model_id,t3.model_name,t3.color
+        ,null repair_type,t2.order_price,t2.real_price
+        ,t2.order_status,t2.cancel_type,t2.cancel_status
+        ,null pay_type
+        ,null pay_status,null pay_time,null pay_price
+        ,t2.engineer_id
+        ,t3.mobile
+        ,null balance_status
+        ,date_format(t2.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t2.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,null is_use_coupon,null coupon_id,null coupon_code,null coupon_name,null coupon_type,null coupon_price
+        ,t2.agreed_time,t2.eng_note,1 isRework,0 is_update_price,0 order_type,t2.is_comment is_comment
+        ,t2.shop_name shop_name,fs.name from_system_name,t2.engineer_number
+        ,date_format(t2.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from kx_rework_order t2 LEFT JOIN kx_order t3 ON t2.parent_order=t3.order_no
+        left join kx_from_system fs on t3.from_system = fs.id
+        )t
+        where 1=1
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0">
+            and t.order_status in
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''">
+            and t.engineer_number like CONCAT('%', #{engineerNumber}, '%')
+        </if>
+        <if test="queryRepairStartTime != null and queryRepairStartTime != ''">
+            and t.end_time &gt;= #{queryRepairStartTime}
+        </if>
+        <if test="queryRepairEndTime != null and queryRepairEndTime != ''">
+            and t.end_time &lt;= #{queryRepairEndTime}
+        </if>
+        order by t.in_time desc
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryEngineerList" resultMap="BaseResultMap" parameterType="Object">
+        select t.id,t.order_no,t.customer_id,t.customer_name
+        ,t.brand_id,t.brand_name,t.model_id,t.model_name,t.color
+        ,t.repair_type,t.order_price,t.real_price
+        ,t.order_status,t.cancel_type,t.cancel_status
+        ,t.pay_type
+        ,t.pay_status,date_format(t.`pay_time`,'%Y-%m-%d %H:%i:%s')pay_time,t.pay_price
+        ,t.engineer_id
+        ,t.mobile
+        ,t.balance_status
+        ,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
+        ,t.agreed_time,t.eng_note,t.isRework,t.is_update_price,t.order_type
+        ,t.is_comment,t.shop_name,t.from_system_name,t.engineer_number
+        ,date_format(t.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from
+        (
+        select t1.id id,t1.order_no order_no,t1.customer_id customer_id,t1.customer_name customer_name
+        ,t1.brand_id brand_id,t1.brand_name brand_name,t1.model_id model_id,t1.model_name model_name,t1.color color
+        ,t1.repair_type repair_type,t1.order_price order_price,t1.real_price real_price
+        ,t1.order_status order_status,t1.cancel_type cancel_type,t1.cancel_status cancel_status
+        ,t1.pay_type pay_type
+        ,t1.pay_status pay_status,date_format(t1.`pay_time`,'%Y-%m-%d %H:%i:%s')pay_time,t1.pay_price pay_price
+        ,t1.engineer_id engineer_id
+        ,t1.mobile mobile
+        ,t1.balance_status balance_status
+        ,date_format(t1.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t1.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,t1.is_use_coupon is_use_coupon,t1.coupon_id coupon_id,t1.coupon_code coupon_code
+        ,t1.coupon_name coupon_name,t1.coupon_type coupon_type,t1.coupon_price coupon_price
+        ,t1.agreed_time agreed_time,t1.eng_note eng_note,t1.is_rework isRework,t1.is_update_price is_update_price
+        ,0 order_type,t1.is_comment is_comment,t1.shop_name shop_name
+        ,fs.name from_system_name,t1.engineer_number
+        ,date_format(t1.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from kx_order t1
+        left join kx_from_system fs on t1.from_system = fs.id
+        where 1=1
+        <if test="isPatch == 1 and isPatch != ''">
+            and order_no in
+            (select order_no from kx_order_detail d
+            where 1=1
+            AND d.project_name NOT LIKE CONCAT('%','贴膜','%')
+            )
+        </if>
+        UNION ALL
+        select t2.id,t2.order_rework_no order_no,t3.customer_id,t3.customer_name
+        ,t3.brand_id,t3.brand_name,t3.model_id,t3.model_name,t3.color
+        ,null repair_type,t2.order_price,t2.real_price
+        ,t2.order_status,t2.cancel_type,t2.cancel_status
+        ,null pay_type
+        ,null pay_status,null pay_time,null pay_price
+        ,t2.engineer_id
+        ,t3.mobile
+        ,null balance_status
+        ,date_format(t2.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t2.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,null is_use_coupon,null coupon_id,null coupon_code,null coupon_name,null coupon_type,null coupon_price
+        ,t2.agreed_time,t2.eng_note,1 isRework,0 is_update_price,0 order_type,t2.is_comment is_comment
+        ,t2.shop_name shop_name,fs.name from_system_name,t2.engineer_number
+        ,date_format(t2.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from kx_rework_order t2 LEFT JOIN kx_order t3 ON t2.parent_order=t3.order_no
+        left join kx_from_system fs on t3.from_system = fs.id
+        )t
+        where 1=1
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0">
+            and t.order_status in
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''">
+            and t.engineer_number like CONCAT('%', #{engineerNumber}, '%')
+        </if>
+        <if test="queryRepairStartTime != null and queryRepairStartTime != ''">
+            and t.end_time &gt;= #{queryRepairStartTime}
+        </if>
+        <if test="queryRepairEndTime != null and queryRepairEndTime != ''">
+            and t.end_time &lt;= #{queryRepairEndTime}
+        </if>
+        order by t.in_time desc
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryReworkListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        t2.id,t2.order_rework_no order_no,t3.customer_id,t3.customer_name
+        ,t3.brand_id,t3.brand_name,t3.model_id,t3.model_name,t3.color
+        ,null repair_type,t2.order_price,t2.real_price
+        ,t2.order_status,t2.cancel_type,t2.cancel_status
+        ,null pay_type
+        ,null pay_status,null pay_time,null pay_price
+        ,t2.engineer_id
+        ,t3.mobile
+        ,null balance_status
+        ,date_format(t2.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t2.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,null is_use_coupon,null coupon_id,null coupon_code,null coupon_name,null coupon_type,null coupon_price
+        ,t2.agreed_time,t2.eng_note,1 isRework,0 is_update_price,0 order_type,t2.is_comment is_comment
+        ,t2.shop_name shop_name,fs.name from_system_name,t2.engineer_number
+        ,date_format(t2.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from kx_rework_order t2 LEFT JOIN kx_order t3 ON t2.parent_order=t3.order_no
+        left join kx_from_system fs on t3.from_system = fs.id
+        where 1=1
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0">
+            and t2.order_status in
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''">
+            and t2.engineer_number like CONCAT('%', #{engineerNumber}, '%')
+        </if>
+        <if test="queryRepairStartTime != null and queryRepairStartTime != ''">
+            and t2.end_time &gt;= #{queryRepairStartTime}
+        </if>
+        <if test="queryRepairEndTime != null and queryRepairEndTime != ''">
+            and t2.end_time &lt;= #{queryRepairEndTime}
+        </if>
+        order by t2.in_time desc
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryReworkList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        t2.id,t2.order_rework_no order_no,t3.customer_id,t3.customer_name
+        ,t3.brand_id,t3.brand_name,t3.model_id,t3.model_name,t3.color
+        ,null repair_type,t2.order_price,t2.real_price
+        ,t2.order_status,t2.cancel_type,t2.cancel_status
+        ,null pay_type
+        ,null pay_status,null pay_time,null pay_price
+        ,t2.engineer_id
+        ,t3.mobile
+        ,null balance_status
+        ,date_format(t2.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,date_format(t2.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        ,null is_use_coupon,null coupon_id,null coupon_code,null coupon_name,null coupon_type,null coupon_price
+        ,t2.agreed_time,t2.eng_note,1 isRework,0 is_update_price,0 order_type,t2.is_comment is_comment
+        ,t2.shop_name shop_name,fs.name from_system_name,t2.engineer_number
+        ,date_format(t2.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
+        from kx_rework_order t2 LEFT JOIN kx_order t3 ON t2.parent_order=t3.order_no
+        left join kx_from_system fs on t3.from_system = fs.id
+        where 1=1
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0">
+            and t2.order_status in
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="engineerNumber != null and engineerNumber != ''">
+            and t2.engineer_number like CONCAT('%', #{engineerNumber}, '%')
+        </if>
+        <if test="queryRepairStartTime != null and queryRepairStartTime != ''">
+            and t2.end_time &gt;= #{queryRepairStartTime}
+        </if>
+        <if test="queryRepairEndTime != null and queryRepairEndTime != ''">
+            and t2.end_time &lt;= #{queryRepairEndTime}
+        </if>
+        order by t2.in_time desc
+    </select>
+
     <!-- 查询列表 带分页 -->
     <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
         select

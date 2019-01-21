@@ -122,7 +122,7 @@ public class OrderController extends BaseController {
         //判断用户类型系统管理员可以查看所有工程师
         if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
             //获取省份地址
-            FromSystem fromSystem=new FromSystem();
+            FromSystem fromSystem = new FromSystem();
             fromSystem.setIsDel(0);
             List<FromSystem> fromSystems = fromSystemService.queryList(fromSystem);
             request.setAttribute("fromSystems", fromSystems);
@@ -367,14 +367,109 @@ public class OrderController extends BaseController {
                 }
                 //查询订单明细
                 List<OrderDetail> details = detailService.queryByOrderNo(order.getOrderNo());
-//                if ("1".equals(isPatch)) {
-//                    if (details.size() == 1) {
-//                        if (details.get(0).getProjectName().contains("贴膜")) {
-//                            it.remove();
-//                            continue;
-//                        }
-//                    }
-//                }
+                List<String> projectNames = new ArrayList<>();
+                Boolean isTrue = false;//判断是否有工程师确认的维修项目
+                for (OrderDetail detail : details) {
+                    if (detail.getType() == 1) {
+                        isTrue = true;
+                        break;
+                    }
+                }
+                for (OrderDetail detail : details) {
+                    if (isTrue) {
+                        if (detail.getType() == 1) {//工程师确认的维修项目
+                            projectNames.add(detail.getProjectName());
+                        }
+                    } else {
+                        if (detail.getType() == 0) {//客户确认的维修项目
+                            projectNames.add(detail.getProjectName());
+                        }
+                    }
+                }
+                String a = StringUtils.join(projectNames, ",");
+                order.setProjectName(a);
+            }
+        }
+        page.setData(list);
+        this.renderJson(response, page);
+    }
+
+    @Autowired
+    private ReworkOrderService reworkOrderService;
+
+    /**
+     * queryListForPage
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/order/queryEngineerListForPage")
+    public void queryEngineerListForPage(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        //获取查询条件
+        String queryStartRepairTime = request.getParameter("query_startRepairTime");//完成时间
+        String queryEndRepairTime = request.getParameter("query_endRepairTime");
+        String engNumber = request.getParameter("query_engNumber");
+        String isRework = request.getParameter("isRework");
+        //维修方式
+        String repairType = request.getParameter("query_repairType");
+        String isPatch = request.getParameter("isPatch");//是否去掉贴膜优惠券
+        Order o = new Order();
+        if (StringUtils.isNotBlank(isPatch)) {
+            o.setIsPatch(Integer.valueOf(isPatch));
+        }
+        if (StringUtils.isNotBlank(queryStartRepairTime)) {
+            o.setQueryRepairStartTime(queryStartRepairTime);
+        }
+        if (StringUtils.isNotBlank(queryEndRepairTime)) {
+            o.setQueryRepairEndTime(queryEndRepairTime);
+        }
+        if (StringUtils.isNotBlank(engNumber)) {
+            o.setEngineerNumber(engNumber);
+        }
+        if (StringUtils.isNotBlank(repairType)) {
+            o.setRepairType(Integer.parseInt(repairType));
+        }
+        //获取登录用户
+        SessionUser su = getCurrentUser(request);
+        boolean tip = false;
+        //判断用户类型系统管理员可以查看所有订单
+        if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+            tip = true;
+        } else if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
+            //连锁商只能查看自己的订单
+            o.setProviderCode(su.getProviderCode());
+        } else if (su.getType() == SystemConstant.USER_TYPE_SHOP) {
+            //门店商只能查看自己的订单
+            o.setShopCode(su.getShopCode());
+        } else {
+            throw new SystemException("对不起，您无权查看此信息！");
+        }
+
+        Page page = getPageByRequest(request);
+        o.setPage(page);
+        List<Order> list = new ArrayList<Order>();
+        if (StringUtils.isBlank(isRework)) {
+            list = orderService.getDao().queryEngineerListForPage(o);
+        } else if (Integer.valueOf(isRework) == 0) {
+            list = orderService.getDao().queryListForPage(o);
+        } else if (Integer.valueOf(isRework) == 1) {
+            list = orderService.getDao().queryReworkListForPage(o);
+        }
+        if (tip) {
+            Iterator<Order> it = list.iterator();
+            while (it.hasNext()) {
+                Order order = it.next();
+                //查询订单明细
+                List<OrderDetail> details = new ArrayList<OrderDetail>();
+                if (!order.getOrderNo().contains("PO")) {
+                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(order.getOrderNo());
+                    details = detailService.queryByOrderNo(reworkOrder.getParentOrder());
+                } else {
+                    details = detailService.queryByOrderNo(order.getOrderNo());
+                }
                 List<String> projectNames = new ArrayList<>();
                 Boolean isTrue = false;//判断是否有工程师确认的维修项目
                 for (OrderDetail detail : details) {

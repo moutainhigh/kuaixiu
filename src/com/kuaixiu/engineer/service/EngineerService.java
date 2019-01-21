@@ -346,7 +346,11 @@ public class EngineerService extends BaseService<Engineer> {
             if (StringUtils.isBlank(orderType)) {
                 engineer.setOrderDayNum(engineer.getOrderDayNum() + Integer.valueOf(engineer.getReworkOrderNum()));
             } else if (Integer.valueOf(orderType) == 2) {
-                engineer.setOrderDayNum(Integer.valueOf(engineer.getReworkOrderNum()));
+                if(StringUtils.isBlank(engineer.getReworkOrderNum())) {
+                    engineer.setOrderDayNum(0);
+                }else{
+                    engineer.setOrderDayNum(Integer.valueOf(engineer.getReworkOrderNum()));
+                }
             }
             //如果是多个门店，就便利查找名称
             newEngineerService.engineerShopCode(engineer);

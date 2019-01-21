@@ -128,6 +128,14 @@ public interface OrderMapper<T> extends BaseDao<T> {
      */
     int deleteBalanceStatus(T t);
 
+    //工程师订单列表
+    List<T> queryEngineerList(T t);
+    List<T> queryEngineerListForPage(T t);
+
+    //查询工程师返修订单列表
+    List<T> queryReworkList(T t);
+    List<T> queryReworkListForPage(T t);
+
     List<T> queryListApiForPage(T t);
 }
 

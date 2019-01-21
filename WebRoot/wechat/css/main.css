@@ -1,4 +1,6 @@
 /* CSS Document */
+@import "http://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css";
+
 html,
 body,
 div,
@@ -978,20 +980,17 @@ body #wrap.loginWrap .logAgainbg .logAgain p#already {
 body #wrap.selectWrap .main {
   padding: 0 .15rem .44rem;
 }
-
 body #wrap.selectWrap .main .selList {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  -webkit-justify-content: space-between;    /**增加这一行**/
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
+      flex-wrap: wrap;
   padding: 0 0 .1rem;
 }
-
 body #wrap.selectWrap .main .selList a {
   display: block;
   min-width: 47%;
@@ -1028,13 +1027,12 @@ body #wrap.otherWrap .main .loadMore {
 }
 body #wrap.otherWrap .main .loadMore a {
   height: .3rem;
-  background-color: #d6d6d6;
+  background-color: #6e6f6f;
   border-radius: .045rem;
   font-size: .12rem;
   line-height: .3rem;
   color: #ffffff;
 }
-
 body #wrap.otherWrap .main .select_color .color_list {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2108,6 +2106,168 @@ body #wrap .layer .layer_box a.close {
 body #wrap .layer.hide {
   display: none;
 }
+
+body #wrap .back_order {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 55;
+  width: 100%;
+  height: 100%;
+  padding: 0 .15rem;
+  background: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  overflow: auto;
+}
+body #wrap .back_order .back_box {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+body #wrap .back_order .back_box .back_cont {
+  width: 100%;
+  height: 70%;
+  overflow: auto;
+  background-color: #FFFFFF;
+  border-radius: .1rem;
+  padding: .2rem .19rem 0;
+}
+
+body #wrap .back_order .back_box .back_cont .select {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 325px;
+    color: #cccccc;
+	margin-top:0.33rem;
+    vertical-align: middle;
+    text-align: left;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body #wrap .back_order .back_box .back_cont .select .placeholder {
+    position: relative;
+    display: block;
+    background-color: #393d41;
+    z-index: 1;
+    padding: 1em;
+    border-radius: 2px;
+    cursor: pointer;
+}
+body #wrap .back_order .back_box .back_cont .select .placeholder:hover {
+    background: #34383c;
+}
+body #wrap .back_order .back_box .back_cont .select .placeholder:after {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'FontAwesome';
+    content: '\f078';
+    z-index: 10;
+}
+body #wrap .back_order .back_box .back_cont .select.is-open .placeholder:after {
+    content: '\f077';
+}
+
+body #wrap .back_order .back_box .back_cont .select.is-open ul {
+    display: block;
+}
+body #wrap .back_order .back_box .back_cont .select.select--white .placeholder {
+    background: #fff;
+    color: #999;
+}
+body #wrap .back_order .back_box .back_cont .select.select--white .placeholder:hover {
+    background: #fafafa;
+}
+.select ul {
+    display: none;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+    top: 100%;
+    left: 0;
+    list-style: none;
+    margin: 5px 0 0 0;
+    padding: 0;
+    z-index: 100;
+}
+.select ul li {
+    display: block;
+    text-align: left;
+    padding: 0.8em 1em 0.8em 1em;
+    color: #999;
+    cursor: pointer;
+}
+.select ul li:hover {
+    background: #4ebbf0;
+    color: #fff;
+}
+
+body #wrap .back_order .back_box .back_cont p {
+  font-size: .14rem;
+}
+body #wrap .back_order .back_box .back_cont .fault_list {
+  padding-top: .08rem;
+  padding-bottom: .15rem;
+}
+body #wrap .back_order .back_box .back_cont .fault_list li {
+  margin-top: .15rem;
+  font-size: .11rem;
+}
+body #wrap .back_order .back_box .back_cont textarea {
+  width: 100%;
+  height: .75rem;
+  padding: .09rem;
+  border: 2px solid #dcdcdc;
+  border-radius: .04rem;
+  resize: none;
+  font-size: .12rem;
+}
+body #wrap .back_order .back_box .back_cont textarea:focus {
+  outline: none;
+}
+body #wrap .back_order .back_box .back_cont .cancel_sure {
+  padding: .12rem 0 .22rem;
+}
+body #wrap .back_order .back_box .back_cont .cancel_sure .btn-large {
+  height: .4rem;
+  font-size: .14rem;
+  line-height: .4rem;
+}
+body #wrap .back_order .back_box a.close {
+  display: inline-block;
+  width: .43rem;
+  height: .43rem;
+  margin-top: .28rem;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  font-size: .23rem;
+  line-height: calc(.43rem - 4px);
+  text-align: center;
+  text-decoration: none;
+  color: #FFFFFF;
+}
+body #wrap .back_order.hide {
+  display: none;
+}
+
 body #wrap.cardWrap {
   background-color: #fff;
 }
@@ -2729,3 +2889,5 @@ body #wrap.joinWrap .main .pages.page4 div.selMash {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+

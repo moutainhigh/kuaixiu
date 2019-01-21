@@ -86,12 +86,22 @@
 							</c:forEach>
 						</select>
 					</td>
+				</tr>
+				<tr>
 					<td class="search_th"><label class="control-label">去 掉 贴 膜 ：</label></td>
 					<td class="search_td">
 						<select name="isPatch" id="isPatch" class="form-control">
 							<option value="">--是否去掉--</option>
 							<option value="1">去掉</option>
 							<option value="2">不去掉</option>
+						</select>
+					</td>
+					<td class="search_th"><label class="control-label">订 单 类 型 ：</label></td>
+					<td class="search_td">
+						<select name="isRework" id="isRework" class="form-control">
+							<option value="">--请选择--</option>
+							<option value="0">快修单</option>
+							<option value="1">返修单</option>
 						</select>
 					</td>
 					<td>
@@ -131,6 +141,7 @@
 						<th class="fontWeight_normal tdwidth70">维修项目</th>
 						<th class="fontWeight_normal tdwidth80">来源系统</th>
 						<th class="fontWeight_normal tdwidth100">订单状态</th>
+						<th class="fontWeight_normal tdwidth100">是否售后单</th>
 						<th class="fontWeight_normal tdwidth80">结算状态</th>
 						<th class="fontWeight_normal tdwidth80">完成时间</th>
 					</tr>
@@ -162,51 +173,12 @@
 
 	</div>
 </div>
-<%--<div class="am-g mt20">--%>
-	<%--<div class="panel panel-success index-panel-msg">--%>
-
-		<%--<div class="row">--%>
-			<%--<div class="col-md-12 col-sm-12 col-xs-12">--%>
-				<%--<div id="echart-panel" style="width: 100%; height: 200px;"></div>--%>
-			<%--</div>--%>
-			<%--<!-- /.col -->--%>
-		<%--</div>--%>
-		<%--<!-- /.row -->--%>
-
-	<%--</div>--%>
-	<%--<!-- /panel -->--%>
-<%--</div>--%>
-<!-- /am-g -->
 
 <script type="text/javascript">
 	function toList() {
 		func_reload_page("${ctx}/engineer/list.do");
 	}
 
-//	// 初始化echarts实例
-//	var myChart = echarts.init(document.getElementById("echart-panel"),
-//			"macarons");
-
-	<%--function reloadEchart() {--%>
-		<%--var url_ = AppConfig.ctx + "/order/queryStatisticByEngineer.do";--%>
-		<%--$.ajax({--%>
-			<%--url : url_,--%>
-			<%--type : "POST",--%>
-			<%--data : {--%>
-				<%--"engineerId" : "${eng.id}"--%>
-			<%--},--%>
-			<%--dataType : "json",--%>
-			<%--success : function(result) {--%>
-				<%--if (result.success) {--%>
-					<%--myChart.setOption(result.data);--%>
-				<%--}--%>
-			<%--},--%>
-			<%--error : function() {--%>
-			<%--}--%>
-		<%--});--%>
-	<%--}--%>
-
-	<%--reloadEchart();--%>
 
     $("#query_startRepairTime").datetimepicker({
         format: "yyyy-mm-dd",
@@ -224,7 +196,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/order/queryListForPage.do",
+        "url": "${ctx}/order/queryEngineerListForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -247,8 +219,9 @@
         {"data": "projectName", "class": ""},
         {"data": "fromSystemName", "class": ""},
         {"data": "orderStatusName", "class": ""},
+        {"data": "isRework", "class": ""},
         {"data": "balanceStatus", "class": ""},
-        {"data": "endTime", "class": ""},
+        {"data": "endTime", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -317,13 +290,24 @@
             }
         },
         {//复选框
-            targets: -3,
+            targets: -4,
             render: function (data, type, row, meta) {
                 if (row.orderStatus == 50) {
                     return '已完成';
                 }
                 else {
                     return row.orderStatusName;
+                }
+            }
+        },
+        {//复选框
+            targets: -3,
+            render: function (data, type, row, meta) {
+                if (row.isRework == 1) {
+                    return '是';
+                }
+                else {
+                    return "否";
                 }
             }
         },
@@ -419,6 +403,6 @@
                 ids += this.value + ",";
             }
         });
-        window.open("${ctx}/file/download.do?fileId=7&ids=" + ids + params, "导出");
+        window.open("${ctx}/file/download.do?fileId=22&ids=" + ids + params, "导出");
     }
 </script>

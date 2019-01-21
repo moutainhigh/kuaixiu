@@ -46,10 +46,7 @@ import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.model.service.RepairCostService;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.dao.OrderMapper;
-import com.kuaixiu.order.entity.FromSystem;
-import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderDetail;
-import com.kuaixiu.order.entity.UpdateOrderPrice;
+import com.kuaixiu.order.entity.*;
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.kuaixiu.wechat.entity.WechatRangeOrder;
@@ -112,6 +109,8 @@ public class OrderService extends BaseService<Order> {
     private FromSystemService fromSystemService;
     @Autowired
     private UpdateOrderPriceService updateOrderPriceService;
+    @Autowired
+    private ReworkOrderService reworkOrderService;
 
     public OrderMapper<Order> getDao() {
         return mapper;
@@ -1724,6 +1723,136 @@ public class OrderService extends BaseService<Order> {
         }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("orderList", project);
+
+        XLSTransformer transformer = new XLSTransformer();
+        try {
+            transformer.transformXLS(templateFileName, map, destFileName);
+        } catch (ParsePropertyException e) {
+            log.error("文件导出--ParsePropertyException", e);
+        } catch (InvalidFormatException e) {
+            log.error("文件导出--InvalidFormatException", e);
+        } catch (IOException e) {
+            log.error("文件导出--IOException", e);
+        }
+    }
+
+    /**
+     * 已Excel形式导出列表数据
+     *
+     * @param params
+     */
+    @SuppressWarnings("rawtypes")
+    public void expDataExcelByEng(Map<String, Object> params) {
+        String templateFileName = params.get("tempFileName") + "";
+        String destFileName = params.get("outFileName") + "";
+
+        //获取登录用户
+        SessionUser su = (SessionUser) params.get("user");
+
+        //获取查询条件
+        String queryStartRepairTime = MapUtils.getString(params, "query_startRepairTime");//完成时间
+        String queryEndRepairTime = MapUtils.getString(params, "query_endRepairTime");
+        String engNumber = MapUtils.getString(params, "query_engNumber");
+        String isRework = MapUtils.getString(params, "isRework");
+        //维修方式
+        String repairType = MapUtils.getString(params, "query_repairType");
+        String isPatch = MapUtils.getString(params, "isPatch");//是否去掉贴膜优惠券
+
+        Order o = new Order();
+        o.setEngineerNumber(engNumber);
+        if (StringUtils.isNotBlank(isPatch)) {
+            o.setIsPatch(Integer.valueOf(isPatch));
+        }
+        if (StringUtils.isNotBlank(repairType)) {
+            o.setRepairType(Integer.parseInt(repairType));
+        }
+        if (StringUtils.isNotBlank(queryStartRepairTime)) {
+            o.setQueryRepairStartTime(queryStartRepairTime);
+        }
+        if (StringUtils.isNotBlank(queryEndRepairTime)) {
+            o.setQueryRepairEndTime(queryEndRepairTime);
+        }
+        //判断用户类型系统管理员可以查看所有订单
+        if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+
+        } else if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
+            //连锁商只能查看自己的订单
+            o.setProviderCode(su.getProviderCode());
+        } else if (su.getType() == SystemConstant.USER_TYPE_SHOP) {
+            //门店商只能查看自己的订单
+            o.setShopCode(su.getShopCode());
+        }
+
+        String idStr = MapUtils.getString(params, "ids");
+        if (StringUtils.isNotBlank(idStr)) {
+            String[] ids = StringUtils.split(idStr, ",");
+            o.setQueryIds(Arrays.asList(ids));
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        List<Order> list = new ArrayList<Order>();
+        if (StringUtils.isBlank(isRework)) {
+            list = getDao().queryEngineerList(o);
+        } else if (Integer.valueOf(isRework) == 0) {
+            list = getDao().queryList(o);
+        } else if (Integer.valueOf(isRework) == 1) {
+            list = getDao().queryReworkList(o);
+        }
+        Iterator<Order> it = list.iterator();
+        while (it.hasNext()) {
+            Order order = it.next();
+            //查询订单明细
+            List<OrderDetail> details = new ArrayList<OrderDetail>();
+            if (!order.getOrderNo().contains("PO")) {
+                ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(order.getOrderNo());
+                details = detailService.queryByOrderNo(reworkOrder.getParentOrder());
+            } else {
+                details = detailService.queryByOrderNo(order.getOrderNo());
+            }
+            switch (order.getRepairType()) {
+                case 0:
+                    order.setRepairStrType("上门维修");
+                    break;
+                case 1:
+                    order.setRepairStrType("到店维修");
+                    break;
+                case 2:
+                    order.setRepairStrType("返店维修");
+                    break;
+                case 3:
+                    order.setRepairStrType("寄修");
+                    break;
+                case 4:
+                    order.setRepairStrType("点对点二维码");
+                    break;
+            }
+            if (order.getEndTime() != null) {
+                order.setStrEndTime(sdf.format(order.getEndTime()));
+            }
+
+            List<String> projectNames = new ArrayList<>();
+            Boolean isTrue = false;//判断是否有工程师确认的维修项目
+            for (OrderDetail detail : details) {
+                if (detail.getType() == 1) {
+                    isTrue = true;
+                    break;
+                }
+            }
+            for (OrderDetail detail : details) {
+                if (isTrue) {
+                    if (detail.getType() == 1) {//工程师确认的维修项目
+                        projectNames.add(detail.getProjectName());
+                    }
+                } else {
+                    if (detail.getType() == 0) {//客户确认的维修项目
+                        projectNames.add(detail.getProjectName());
+                    }
+                }
+            }
+            String a = StringUtils.join(projectNames, ",");
+            order.setProjectName(a);
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("orderList", list);
 
         XLSTransformer transformer = new XLSTransformer();
         try {

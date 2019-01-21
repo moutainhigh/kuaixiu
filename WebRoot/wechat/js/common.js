@@ -53,6 +53,12 @@ var CacheKey = {
 	//订单类型：0表示维修订单 1表示以旧换新订单
     orderType:'order_type',
     //维修方式
+	isRework:'is_rework',//是否返修订单  0否  1是
+	//售后原因
+	reworkReason:'rework_reason',//1物料原因 2装配原因 3客户原因
+	//售后故障详情
+	reasonDetail:'reason_detail',
+	
     repairWay : "repair_way",
 	//手机品牌id
     phoneBrandId : "phone_brand_id",
@@ -425,6 +431,18 @@ function payBalance(){
     var wechatUrl="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appId+"&redirect_uri="+ url + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
     window.location.href=wechatUrl;
 }
+
+//显示发起售后弹出框
+function showBackOrderUI() {
+	 $('.back_order').slideDown();
+};
+
+
+$(".close").click(function () {
+   $('.back_order').hide();
+});
+
+
 
 //取消订单原因列表
 function cancelReason() {
