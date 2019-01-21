@@ -99,6 +99,7 @@
                 <value>^/wechat/order/payBalance\.do.*</value>
                 <value>^/wechat/order/startPayBalance\.do.*</value>
                 <value>^/wechat/getNews\.do.*</value>
+                <value>^/wechat/reworkOrder\.do.*</value>
                 <!--微信接口-->
                 <value>^/wechat/api\.do.*</value>
                 <value>^/wechat/pay/callback\.do.*</value>
