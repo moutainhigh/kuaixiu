@@ -663,7 +663,7 @@
         ,date_format(t1.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
         ,t1.is_use_coupon is_use_coupon,t1.coupon_id coupon_id,t1.coupon_code coupon_code
         ,t1.coupon_name coupon_name,t1.coupon_type coupon_type,t1.coupon_price coupon_price
-        ,t1.agreed_time agreed_time,t1.eng_note eng_note,1 isRework,t1.is_update_price is_update_price
+        ,t1.agreed_time agreed_time,t1.eng_note eng_note,t1.is_rework isRework,t1.is_update_price is_update_price
         ,0 order_type,t1.is_comment is_comment,t1.shop_name shop_name
         from kx_order t1
         UNION ALL

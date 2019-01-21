@@ -486,7 +486,7 @@ public class WechatOrderController extends BaseController {
             String pageIndex = params.getString("pageIndex");//页码数
             String pageSize = params.getString("pageSize");//每页加载数
             String orderStatus = params.getString("status");
-            String newOrderStatus = params.getString("newStatus");
+//            String newOrderStatus = params.getString("newStatus");
             getLoginUser(request);//验证token
             SessionUser sessionUser = getCurrentUser(request); //得到当前用户
 //            String currentUserId = sessionUser.getUserId();//当前用户业务ID
