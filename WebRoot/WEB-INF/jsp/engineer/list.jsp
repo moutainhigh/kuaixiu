@@ -183,7 +183,7 @@
                 } else if (row.orderType == 2) {
                     return row.reworkOrderNum;
                 } else {
-                    return row.reworkOrderNum + row.orderDayNum;
+                    return parseInt(row.reworkOrderNum) + parseInt(row.orderDayNum);
                 }
             }
         },

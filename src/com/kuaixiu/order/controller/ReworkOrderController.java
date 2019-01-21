@@ -293,6 +293,12 @@ public class ReworkOrderController extends BaseController {
             if (order == null) {
                 return getResult(result, null, false, "3", "该订单不存在");
             }
+            if (order.getOrderStatus() == 60) {
+                return getResult(result, null, false, "3", "该订单已取消，不能返修");
+            }
+            if (order.getOrderStatus() != 50) {
+                return getResult(result, null, false, "3", "该订单未完成，不能返修");
+            }
             List<ReworkOrder> reworkOrders = reworkOrderService.getDao().queryByParentOrder(order.getOrderNo());
             if (!CollectionUtils.isEmpty(reworkOrders)) {
                 return getResult(result, null, false, "4", "该订单正在售后中");
@@ -309,7 +315,7 @@ public class ReworkOrderController extends BaseController {
             getResult(result, json, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
-            log.info(e.getMessage());
+            log.error(e.getMessage());
         }
         return result;
     }
