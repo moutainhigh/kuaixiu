@@ -276,7 +276,7 @@ public class ReworkOrderController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/reworkOrder/addRework")
+    @RequestMapping(value = "/wechat/reworkOrder/addRework")
     @ResponseBody
     public ResultData addRework(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
@@ -323,7 +323,7 @@ public class ReworkOrderController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/reworkOrder/submitProject")
+    @RequestMapping(value = "/wechat/reworkOrder/submitProject")
     @ResponseBody
     public ResultData submitReworkProject(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
