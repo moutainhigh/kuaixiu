@@ -11,7 +11,7 @@
 
       <form id="againOrderSearchForm" method="post" class="form-horizontal">
           <label class="col-sm-3 control-label">筛选条件</label><br/>
-          <input type="hidden" id="againOrderId" name="againOrderId" /><br/>
+          <input type="hidden" id="againOrderNo" name="againOrderNo" /><br/>
         <div class="form-group">
           <label for="engName" class="col-sm-3 control-label">工程师姓名</label>
           <div class="col-sm-7">
@@ -151,11 +151,11 @@
 
     function resetOrder(id){
         AlertText.tips("d_confirm", "系统提示", "确定要重新派单吗？。", function() {
-            var againOrderId = $("#againOrderId").val();
+            var againOrderNo = $("#againOrderNo").val();
             //加载等待
             AlertText.tips("d_loading");
             var url_ = AppConfig.ctx + "/order/reDispatch.do";
-            var data_ = {orderId: againOrderId,engineerId:id};
+            var data_ = {orderNo: againOrderNO,engineerId:id};
             $.ajax({
                 url: url_,
                 data: data_,

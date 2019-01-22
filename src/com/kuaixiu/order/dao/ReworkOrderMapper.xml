@@ -130,6 +130,13 @@
         and order_status &lt; 50
     </select>
 
+    <!-- //根据父订单号查询未完成返修单  -->
+    <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_rework_order where parent_order=#{parentOrder}
+    </select>
+
     <!-- 根据查询  -->
     <select id="queryReworkListForPage" resultType="Map" parameterType="Object">
         select

@@ -241,7 +241,7 @@
                             func: [
                                 {
                                     "name": "重新派单",
-                                    "fn": "againOrderView(\'" + row.id + "\')",
+                                    "fn": "againOrderView(\'" + row.order_no + "\')",
                                     "icon": "am-icon-pencil-square-o",
                                     "class": "am-text-secondary"
                                 }
@@ -255,7 +255,7 @@
                         func: [
                             {
                                 "name": "重置故障",
-                                "fn": "resetRepair(\'" + row.id + "\')",
+                                "fn": "resetRepair(\'" + row.order_no + "\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -277,8 +277,8 @@
         myTable.ajax.reload(null, false);
     }
 
-    function againOrderView(id) {
-        $("#againOrderId").val(id);
+    function againOrderView(order_no) {
+        $("#againOrderNo").val(order_no);
         $("#modal-againOrderView").modal("show");
     }
 
@@ -332,12 +332,12 @@
     /**
      * 重置故障
      */
-    function resetRepair(id) {
+    function resetRepair(order_no) {
         AlertText.tips("d_confirm", "系统提示", "确定要重置故障吗？ 重置故障后需要工程师重新提交检修结果。", function () {
             //加载等待
             AlertText.tips("d_loading");
             var url_ = AppConfig.ctx + "/order/resetRepair.do";
-            var data_ = {id: id};
+            var data_ = {order_no: order_no};
             $.ajax({
                 url: url_,
                 data: data_,

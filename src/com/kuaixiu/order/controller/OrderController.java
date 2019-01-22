@@ -653,6 +653,63 @@ public class OrderController extends BaseController {
         this.renderJson(response, page);
     }
 
+    /**
+     * queryListForPage
+     * 订单调控
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/order/queryUnCheckForPage")
+    public void queryUnCheckForPage(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        ResultData resultData = new ResultData();
+        Page page = new Page();
+        try {
+            //获取查询条件
+            String orderNo = request.getParameter("query_orderNo");
+            String customerMobile = request.getParameter("query_customerMobile");
+            String queryEndTime = request.getParameter("query_endTime");
+            String orderStates = request.getParameter("query_orderStates");
+            Order o = new Order();
+            o.setOrderNo(orderNo);
+            o.setMobile(customerMobile);
+            o.setQueryEndTime(queryEndTime);
+            if (StringUtils.isNotBlank(orderStates)) {
+                o.setQueryStatusArray(Arrays.asList(StringUtils.split(orderStates, ",")));
+            }
+
+            //获取登录用户
+            SessionUser su = getCurrentUser(request);
+            //判断用户类型系统管理员可以查看所有订单
+            if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+
+            } else if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
+                //连锁商只能查看自己的订单
+                o.setProviderCode(su.getProviderCode());
+            } else if (su.getType() == SystemConstant.USER_TYPE_SHOP) {
+                //门店商只能查看自己的订单
+                o.setShopCode(su.getShopCode());
+            } else {
+                throw new SystemException("对不起，您无权查看此信息！");
+            }
+
+            page = getPageByRequest(request);
+            o.setPage(page);
+            o.setIsDel(0);
+            List<Map<String, Object>> list = orderService.getDao().queryUnCheckForPage(o);
+            page.setData(list);
+            resultData.setResult(page);
+        } catch (SystemException e) {
+            sessionUserService.getSystemException(e, resultData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionUserService.getException(resultData);
+        }
+        this.renderJson(response, page);
+    }
+
 
     /**
      * 重新派单
@@ -1013,9 +1070,9 @@ public class OrderController extends BaseController {
         SessionUser su = getCurrentUser(request);
 
         //获取网点id
-        String orderId = request.getParameter("orderId");
+        String orderNo = request.getParameter("orderNo");
         String engineerId = request.getParameter("engineerId");
-        if (StringUtils.isNotBlank(orderId) && StringUtils.isNotBlank(engineerId)) {
+        if (StringUtils.isNotBlank(orderNo) && StringUtils.isNotBlank(engineerId)) {
             Engineer eng = newEngineerService.queryById(engineerId);
             if (eng == null) {
                 throw new SystemException("该工程师不存在！");
@@ -1024,7 +1081,7 @@ public class OrderController extends BaseController {
             if (eng.getIsDispatch() == 2) {
                 throw new SystemException("派单失败，工程师：" + eng.getName() + ", 处于离线状态");
             }
-            orderService.againOrder(orderId, su, eng);
+            orderService.againOrder(orderNo, su, eng);
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "保存成功");
         } else {
@@ -1084,9 +1141,9 @@ public class OrderController extends BaseController {
         SessionUser su = getCurrentUser(request);
 
         //获取网点id
-        String id = request.getParameter("id");
-        if (StringUtils.isNotBlank(id)) {
-            orderService.resetRepair(id, su);
+        String order_no = request.getParameter("order_no");
+        if (StringUtils.isNotBlank(order_no)) {
+            orderService.resetRepair(order_no, su);
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "操作成功");
         } else {

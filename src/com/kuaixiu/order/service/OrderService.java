@@ -998,37 +998,68 @@ public class OrderService extends BaseService<Order> {
      * @CreateDate: 2016-9-15 下午5:48:51
      */
     @Transactional
-    public void againOrder(String id, SessionUser su, Engineer eng) {
+    public void againOrder(String orderNo, SessionUser su, Engineer eng) {
         //检查订单状态
-        Order o = getDao().queryById(id);
-        if (o == null) {
+        Order o = getDao().queryByOrderNo(orderNo);
+        ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(orderNo);
+        if (o == null && reworkOrder == null) {
             throw new SystemException("订单不存在！");
         }
-        //记录原来的维修门店及维修工程师
-        String oldEngineerId = o.getEngineerId();
-        if (eng.getId().equals(oldEngineerId)) {
-            throw new SystemException("该订单已派单给此工程师，无需重复操作！");
+        String oldEngineerId = "";
+        if (o != null) {
+            //记录原来的维修门店及维修工程师
+            oldEngineerId = o.getEngineerId();
+            if (eng.getId().equals(oldEngineerId)) {
+                throw new SystemException("该订单已派单给此工程师，无需重复操作！");
+            }
+            //获取工程师姓名
+            eng = newEngineerService.engineerShopCode(eng);
+            //派单给工程师
+            o.setProviderCode(eng.getProviderCode());
+            o.setProviderName(eng.getProviderName());
+            o.setShopCode(eng.getShopCode());
+            o.setShopName(eng.getShopName());
+            o.setEngineerId(eng.getId());
+            o.setEngineerName(eng.getName());
+            o.setEngineerNumber(eng.getNumber());
+            o.setEngineerMobile(eng.getMobile());
+            o.setIsDispatch(1);
+            o.setDispatchTime(new Date());
+            o.setOrderStatus(OrderConstant.ORDER_STATUS_DISPATCHED);
+            getDao().update(o);
+            //更改工程师状态
+            eng.setIsDispatch(1);
+            engineerService.saveUpdate(eng);
+            //给工程师发送短信提示
+            SmsSendUtil.sendSmsToEngineer(eng, null, o);
+        } else if (reworkOrder != null) {
+            Order order = getDao().queryByOrderNo(reworkOrder.getParentOrder());
+            //记录原来的维修门店及维修工程师
+            oldEngineerId = reworkOrder.getEngineerId();
+            if (eng.getId().equals(oldEngineerId)) {
+                throw new SystemException("该订单已派单给此工程师，无需重复操作！");
+            }
+            //获取工程师姓名
+            eng = newEngineerService.engineerShopCode(eng);
+            //派单给工程师
+            reworkOrder.setProviderCode(eng.getProviderCode());
+            reworkOrder.setProviderName(eng.getProviderName());
+            reworkOrder.setShopCode(eng.getShopCode());
+            reworkOrder.setShopName(eng.getShopName());
+            reworkOrder.setEngineerId(eng.getId());
+            reworkOrder.setEngineerName(eng.getName());
+            reworkOrder.setEngineerNumber(eng.getNumber());
+            reworkOrder.setEngineerMobile(eng.getMobile());
+            reworkOrder.setIsDispatch(1);
+            reworkOrder.setDispatchTime(new Date());
+            reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_DISPATCHED);
+            reworkOrderService.saveUpdate(reworkOrder);
+            //更改工程师状态
+            eng.setIsDispatch(1);
+            engineerService.saveUpdate(eng);
+            //给工程师发送短信提示
+            SmsSendUtil.sendSmsToEngineerForRework(eng, null, reworkOrder, order);
         }
-        //获取工程师姓名
-        eng = newEngineerService.engineerShopCode(eng);
-        //派单给工程师
-        o.setProviderCode(eng.getProviderCode());
-        o.setProviderName(eng.getProviderName());
-        o.setShopCode(eng.getShopCode());
-        o.setShopName(eng.getShopName());
-        o.setEngineerId(eng.getId());
-        o.setEngineerName(eng.getName());
-        o.setEngineerNumber(eng.getNumber());
-        o.setEngineerMobile(eng.getMobile());
-        o.setIsDispatch(1);
-        o.setDispatchTime(new Date());
-        o.setOrderStatus(OrderConstant.ORDER_STATUS_DISPATCHED);
-        getDao().update(o);
-        //更改工程师状态
-        eng.setIsDispatch(1);
-        engineerService.saveUpdate(eng);
-        //给工程师发送短信提示
-        SmsSendUtil.sendSmsToEngineer(eng, null, o);
 
         //将原工程师状态改为空闲
         engineerService.checkDispatchState(oldEngineerId);
@@ -1357,13 +1388,22 @@ public class OrderService extends BaseService<Order> {
     /**
      * 重置故障
      *
-     * @param id
+     * @param order_no
      * @param su
      * @author: lijx
      * @CreateDate: 2016-9-7 下午10:41:04
      */
-    public void resetRepair(String id, SessionUser su) {
-        Order o = getDao().queryById(id);
+    public void resetRepair(String order_no, SessionUser su) {
+        Order o = new Order();
+        if (order_no.contains("PO")) {
+            o = getDao().queryByOrderNo(order_no);
+        } else {
+            ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(order_no);
+            if (reworkOrder == null) {
+                throw new SystemException("订单不存在！");
+            }
+            o = getDao().queryByOrderNo(reworkOrder.getParentOrder());
+        }
         if (o == null) {
             throw new SystemException("订单不存在！");
         }
