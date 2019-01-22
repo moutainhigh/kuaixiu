@@ -75,7 +75,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_DEPOSITED);
         reworkOrder.setInTime(new Date());
         Long time = order.getEndTime().getTime() - reworkOrder.getInTime().getTime();
-        reworkOrder.setSurplusDay(totalTime - time / (1000 * 3600 * 24));
+        reworkOrder.setSurplusDay(totalTime + time / (1000 * 3600 * 24));
         reworkOrder.setTotalDay(totalTime);
         reworkOrder.setOrderPrice(new BigDecimal(getProject(order.getOrderNo()).get("orderPrice")));
         reworkOrder.setRealPrice(new BigDecimal(0));

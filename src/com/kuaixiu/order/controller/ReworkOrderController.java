@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.common.wechat.common.util.StringUtils;
+import com.google.common.collect.Maps;
 import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.service.BrandService;
 import com.kuaixiu.engineer.entity.EngineerSignIn;
@@ -17,9 +18,14 @@ import com.kuaixiu.order.entity.ReworkOrder;
 import com.kuaixiu.order.service.OrderDetailService;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.order.service.ReworkOrderService;
+import com.kuaixiu.project.entity.CancelReason;
 import com.kuaixiu.project.entity.Project;
+import com.kuaixiu.project.service.CancelReasonService;
 import com.kuaixiu.project.service.ProjectService;
 import com.system.api.entity.ResultData;
+import com.system.basic.user.entity.SessionUser;
+import com.system.constant.SystemConstant;
+import jodd.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -57,6 +64,8 @@ public class ReworkOrderController extends BaseController {
     private OrderDetailService orderDetailService;
     @Autowired
     private EngineerSignInService engineerSignInService;
+    @Autowired
+    private CancelReasonService cancelReasonService;
 
     /**
      * 列表查询
@@ -188,6 +197,10 @@ public class ReworkOrderController extends BaseController {
                 request.setAttribute("engineerSignIn", signIns.get(0));
             }
 
+            //取消原因标签列表
+            List<CancelReason> reasonList = cancelReasonService.queryListForPage(new CancelReason());
+
+            request.setAttribute("reasonList", reasonList);
             request.setAttribute("realPrice", order.getOrderPrice());
             request.setAttribute("couponPrice", "-" + order.getOrderPrice());
             request.setAttribute("projects", list);
@@ -266,6 +279,44 @@ public class ReworkOrderController extends BaseController {
             log.info(e.getMessage());
         }
         return result;
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     * @CreateDate: 2016-9-17 上午12:13:53
+     */
+    @RequestMapping("/order/reworkOrderCancel")
+    public void orderCancel(HttpServletRequest request,
+                            HttpServletResponse response) throws IOException {
+        SessionUser su = getCurrentUser(request);
+        //订单id
+        String id = request.getParameter("id");
+        String selectReason = request.getParameter("selectReason");
+        String reason = request.getParameter("reason");
+        String cancelReason = null;
+        if (!StringUtil.isBlank(selectReason)) {
+            cancelReason = selectReason;
+        }
+        if (!StringUtil.isBlank(reason) && !StringUtil.isBlank(selectReason)) {
+            cancelReason = cancelReason + "；" + reason;
+        }
+        if (!StringUtil.isBlank(reason) && StringUtil.isBlank(selectReason)) {
+            cancelReason = reason;
+        }
+
+        if (su.getType() == SystemConstant.USER_TYPE_SYSTEM) {
+            reworkOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_ADMIN, cancelReason, su);
+        } else if (su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+            reworkOrderService.orderCancel(id, OrderConstant.ORDER_CANCEL_TYPE_CUSTOMER_SERVICE, cancelReason, su);
+        }
+
+        Map<String, Object> resultMap = Maps.newHashMap();
+        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
+        renderJson(response, resultMap);
     }
 
     /**

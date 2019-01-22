@@ -1319,6 +1319,122 @@
         order by t.in_time desc
     </select>
 
+    <!-- 查询列表 带分页 -->
+    <select id="queryUnCheckForPage" resultType="Map" parameterType="Object">
+
+        select
+        t.id,t.order_no,t.customer_id,t.customer_name,t.provider_code,t.provider_name
+        ,t.shop_code,t.shop_name,t.brand_id,t.brand_name,t.model_id,t.model_name,t.color
+        ,t.repair_type,t.order_price,t.real_price,t.order_status,t.balance_status
+        ,date_format(t.`deposit_time`,'%Y-%m-%d %H:%i:%s')deposit_time
+        ,date_format(t.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time
+        ,t.engineer_id,t.engineer_number,t.engineer_name,t.engineer_mobile
+        ,t.mobile,t.areas,t.address,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
+        ,s.tel shop_tel,s.manager_mobile shop_manager_mobile,s.manager_name shop_manager_name
+        ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
+        ,t.from_system
+        ,(select count(1) from kx_engineer e where e.is_del = 0 and e.is_dispatch = 0 and e.shop_code = t.shop_code )
+        eng_count
+
+        ,date_format(now(),'%Y-%m-%d %H:%i:%s') sys_time
+        ,fs.name from_system_name
+        from kx_order t
+        left join kx_shop s on t.shop_code = s.`code`
+        left join kx_from_system fs on t.from_system = fs.id
+        where 1=1
+        <if test="orderNo != null and orderNo != ''">
+            and t.order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="customerId != null and customerId != ''">
+            and t.customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''">
+            and t.customer_name = #{customerName}
+        </if>
+        <if test="providerCode != null and providerCode != ''">
+            and t.provider_code = #{providerCode}
+        </if>
+        <if test="providerName != null and providerName != ''">
+            and t.provider_name = #{providerName}
+        </if>
+        <if test="shopCode != null and shopCode != ''">
+            and t.shop_code like CONCAT('%', #{shopCode}, '%')
+        </if>
+        <if test="shopName != null and shopName != ''">
+            and t.shop_name like CONCAT('%', #{shopName}, '%')
+        </if>
+        <if test="brandId != null and brandId != ''">
+            and t.brand_id = #{brandId}
+        </if>
+        <if test="isUpdatePrice != null and isUpdatePrice != ''">
+            and is_update_price = #{isUpdatePrice}
+        </if>
+        <if test="brandName != null and brandName != ''">
+            and t.brand_name like CONCAT('%', #{shopCode}, '%')
+        </if>
+        <if test="modelId != null and modelId != ''">
+            and t.model_id = #{modelId}
+        </if>
+        <if test="modelName != null and modelName != ''">
+            and t.model_name like CONCAT('%', #{modelName}, '%')
+        </if>
+
+        <if test="orderStatus != null and orderStatus != ''">
+            and t.order_status = #{orderStatus}
+        </if>
+
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0">
+            and t.order_status in
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isDispatch != null">
+            and t.is_dispatch = #{isDispatch}
+        </if>
+        <if test="engineerId != null and engineerId != ''">
+            and t.engineer_id = #{engineerId}
+        </if>
+
+        <if test="engineerNumber != null and engineerNumber != ''">
+            and t.engineer_number like CONCAT('%', #{engineerNumber}, '%')
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and t.mobile like CONCAT('%', #{mobile}, '%')
+        </if>
+        <if test="province != null and province != ''">
+            and t.province = #{province}
+        </if>
+        <if test="city != null and city != ''">
+            and t.city = #{city}
+        </if>
+        <if test="county != null and county != ''">
+            and t.county = #{county}
+        </if>
+        <if test="balanceStatus != null">
+            and t.balance_status = #{balanceStatus}
+        </if>
+        <if test="balanceNo != null and balanceNo != ''">
+            and t.balance_no = #{balanceNo}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isDel != null">
+            and t.is_del = #{isDel}
+        </if>
+        <if test="repairType != null">
+            and t.repair_type = #{repairType}
+        </if>
+        <if test="fromSystem != null and fromSystem != ''">
+            and t.from_system = #{fromSystem}
+        </if>
+        order by t.in_time desc
+    </select>
+
     <!-- 查询未处理订单数 -->
     <select id="orderMapCount" resultType="Integer" parameterType="Object">
         select count(order_no)

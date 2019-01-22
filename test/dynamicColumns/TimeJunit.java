@@ -26,21 +26,11 @@ public class TimeJunit extends JunitTest {
 
     @Test
     public void aaa() throws Exception {
-        JSONObject requestNews = new JSONObject();
-        //通过转换过的机型 使用回收搜索接口得到对应机型id
-        JSONObject code = new JSONObject();
-        code.put("brandcode", "HUAWEI");
-        code.put("modelcode", "HUAWEI NXT-AL10");
-        String realCode = AES.Encrypt(code.toString());  //加密
-        requestNews.put(cipherdata, realCode);
-        //发起获取对应productid请求
-        Date a=new Date();
-        String getResult = AES.post(SystemConstant.RECYCLE_NEW_URL + "getmodelbycode", requestNews);
-        Date b=new Date();
-        Long c=a.getTime()-b.getTime();
-        System.out.print("时间差是"+c);
-        //对得到结果进行解密
-        code = getResult(AES.Decrypt(getResult));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+Long totalTime=180l;
+
+        Long time = sdf.parse("2018-11-27 18:15:48").getTime() - sdf.parse("2019-01-22 18:15:48").getTime();
+        Long aa=totalTime + time / (1000 * 3600 * 24);
     }
     /**
      * 返回结果解析

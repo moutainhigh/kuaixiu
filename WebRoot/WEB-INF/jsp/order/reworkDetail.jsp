@@ -218,11 +218,49 @@
     </table>
 </div>
 <!-- /am-g -->
-
+<div class="order_cancel">
+    <div class="order_cancel_cont">
+        <p>能告诉我们原因么？</p>
+        <ul class="fault_list" id="selectReason">
+            <c:forEach items="${reasonList }" var="item" varStatus="i">
+                <li class=""><a href="javascript:void(0);">${item.reason}</a></li>
+            </c:forEach>
+        </ul>
+        <textarea class="reason" name="" id="reason" placeholder="请写下您取消的原因吧！" maxlength="220"></textarea>
+        <div class="index_but">
+            <a href="javascript:void(0);" class="btn-cancel">取消</a>
+            <a href="javascript:void (0);" onclick="orderCancel('${rework.id}',${rework.orderReworkNo});"
+               class="btn-confirm">确认取消订单</a>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     function toList() {
         func_reload_page("${ctx}/order/list.do");
     }
 
+
+    //取消订单
+    function orderCancel(id, orderReworkNo) {
+        var reason = $("#reason").val();
+        var url_ = AppConfig.ctx + "/order/reworkOrderCancel.do";
+        $.ajax({
+            url: url_,
+            type: "POST",
+            data: {id: id, reason: reason, selectReason: selectReason},
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    func_reload_page("${ctx}/order/reworkOrderDetail.do?reworkNo=" + orderReworkNo);
+                } else {
+                    AlertText.tips("d_alert", "提示", result.msg);
+                }
+            },
+            error: function () {
+                AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
+            }
+        });
+
+    }
 </script>

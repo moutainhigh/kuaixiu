@@ -75,6 +75,9 @@ public interface OrderMapper<T> extends BaseDao<T> {
      */
     List<Map<String, Object>> queryMapForPage(T t);
 
+    //查询未处理订单，返修单
+    List<Map<String, Object>> queryUnCheckForPage(T t);
+
     //查询未完成订单数
     Integer orderMapCount(T t);
 
