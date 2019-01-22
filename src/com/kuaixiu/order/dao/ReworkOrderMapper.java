@@ -18,7 +18,7 @@ public interface ReworkOrderMapper<T> extends BaseDao<T> {
     T queryByReworkNo(String reworkNo);
     //根据父订单号查询未完成返修单
     List<T> queryByParentOrder(String fatherOrderNo);
-
+    //根据父订单号查询返修单
     List<T> queryByOrderNo(String orderNo);
     //查询返修订单分页
     List<Map<String,String>> queryReworkListForPage(T t);

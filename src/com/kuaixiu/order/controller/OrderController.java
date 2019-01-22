@@ -935,6 +935,8 @@ public class OrderController extends BaseController {
         if (o == null) {
             throw new SystemException("订单未找到！！");
         }
+        //查询返修订单
+        List<ReworkOrder> reworkOrders=reworkOrderService.getDao().queryByOrderNo(o.getOrderNo());
         //查询订单明细
         List<OrderDetail> details = detailService.queryByOrderNo(o.getOrderNo());
         //取消原因标签列表
@@ -961,6 +963,7 @@ public class OrderController extends BaseController {
         request.setAttribute("reasonList", reasonList);
         request.setAttribute("order", o);
         request.setAttribute("details", details);
+        request.setAttribute("reworks", reworkOrders);
         String returnView = "order/detail";
         return new ModelAndView(returnView);
     }

@@ -129,6 +129,23 @@
                     </div>
 
                 </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <c:if test="${rework.reworkReasons==0}">
+                            <h4>返修原因：物料原因</h4>
+                        </c:if>
+                        <c:if test="${rework.reworkReasons==1}">
+                            <h4>返修原因：装配原因</h4>
+                        </c:if>
+                        <c:if test="${rework.reworkReasons==2}">
+                            <h4>返修原因：客户原因</h4>
+                        </c:if>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>返修原因详情：${rework.reasonsDetail }</h4>
+                    </div>
+
+                </div>
                 <c:if test="${order.orderStatus==60}">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -239,6 +256,28 @@
     function toList() {
         func_reload_page("${ctx}/order/list.do");
     }
+
+    $(function () {
+
+        $("#cancelBtn").click(function () {
+            $(".order_cancel").show();
+        });
+
+        $(".fault_list li").click(function () {
+            if ($(this).hasClass("fault_in")) {
+                $(this).removeClass("fault_in");
+            } else {
+                $(this).addClass("fault_in").siblings("li").removeClass("fault_in");
+                selectReason = $(this).find("a").eq(0).text();
+            }
+        });
+
+        $(".btn-cancel").click(function () {
+            $(".fault_list li").removeClass("fault_in");
+            $(".reason").val("");
+            $(".order_cancel").hide();
+        });
+    });
 
 
     //取消订单
