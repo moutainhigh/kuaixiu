@@ -155,7 +155,7 @@
             //加载等待
             AlertText.tips("d_loading");
             var url_ = AppConfig.ctx + "/order/reDispatch.do";
-            var data_ = {orderNo: againOrderNO,engineerId:id};
+            var data_ = {orderNo: againOrderNo,engineerId:id};
             $.ajax({
                 url: url_,
                 data: data_,

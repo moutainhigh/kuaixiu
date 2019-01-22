@@ -672,10 +672,14 @@ public class OrderController extends BaseController {
             String customerMobile = request.getParameter("query_customerMobile");
             String queryEndTime = request.getParameter("query_endTime");
             String orderStates = request.getParameter("query_orderStates");
+            String isRework = request.getParameter("is_rework");
             Order o = new Order();
             o.setOrderNo(orderNo);
             o.setMobile(customerMobile);
             o.setQueryEndTime(queryEndTime);
+            if (StringUtils.isNotBlank(isRework)) {
+                o.setIsRework(Integer.valueOf(isRework));
+            }
             if (StringUtils.isNotBlank(orderStates)) {
                 o.setQueryStatusArray(Arrays.asList(StringUtils.split(orderStates, ",")));
             }

@@ -1356,6 +1356,9 @@
         <if test="orderNo != null and orderNo != ''">
             and t.order_no like CONCAT('%', #{orderNo}, '%')
         </if>
+        <if test="isRework != null and isRework != ''">
+            and t.is_rework = #{isRework}
+        </if>
         <if test="queryStatusArray != null and queryStatusArray.size() > 0">
             and t.order_status in
             <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">

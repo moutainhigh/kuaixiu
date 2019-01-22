@@ -33,6 +33,14 @@
                         <option value="-5">5小时以上</option>
                     </select>
                 </td>
+                <td class="search_th"><label class="control-label">订 单 类 别 ：</label></td>
+                <td class="search_td">
+                    <select name="is_rework" id="orderType" class="form-control">
+                        <option value="">--请选择--</option>
+                        <option value="0">快修单</option>
+                        <option value="1">返修单</option>
+                    </select>
+                </td>
             </tr>
         </table>
         <div class="form-group">
@@ -72,6 +80,7 @@
                 <th class="fontWeight_normal tdwidth90">门店负责人</th>
                 <th class="fontWeight_normal tdwidth90">维修工程师</th>
                 <th class="fontWeight_normal tdwidth60">等待时间</th>
+                <th class="fontWeight_normal tdwidth50">是否返修单</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
             </tr>
             </thead>
@@ -104,7 +113,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/order/queryListMapForPage.do",
+        "url": "${ctx}/order/queryUnCheckForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -125,6 +134,7 @@
         {"data": "shop_manager_name", "class": ""},
         {"data": "engineer_name", "class": ""},
         {"data": "dispatch_time", "class": ""},
+        {"data": "is_rework", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
@@ -193,13 +203,13 @@
             render: function (data, type, row, meta) {
                 if (row.shop_tel == null) {
                     return "";
-                }else {
+                } else {
                     return row.shop_tel;
                 }
             }
         },
         {//复选框
-            targets: -4,
+            targets: -5,
             render: function (data, type, row, meta) {
                 if (row.shop_manager_name == null && row.shop_manager_mobile != null) {
                     return "" + "/<br/>" + row.shop_manager_mobile;
@@ -213,13 +223,13 @@
             }
         },
         {//复选框
-            targets: -3,
+            targets: -4,
             render: function (data, type, row, meta) {
                 return row.engineer_name + "/<br/>" + row.engineer_mobile;
             }
         },
         {
-            targets: -2,
+            targets: -3,
             render: function (data, type, row, meta) {
                 var ts = (new Date(row.sys_time)) - (new Date(row.dispatch_time));//计算已等待的毫秒数
                 var remainTime = ts / 1000 + 1;
@@ -234,9 +244,9 @@
             targets: -1,
 
             render: function (data, type, row, meta) {
-                var sessionUser=$("#sessionUserType").val();
+                var sessionUser = $("#sessionUserType").val();
                 if (row.order_status == 11 || row.order_status == 12 || row.order_status == 20) {
-                    if (sessionUser == 7 || sessionUser==2) {
+                    if (sessionUser == 7 || sessionUser == 2) {
                         var context = {
                             func: [
                                 {
