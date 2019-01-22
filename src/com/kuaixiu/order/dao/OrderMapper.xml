@@ -690,6 +690,12 @@
                 #{item}
             </foreach>
         </if>
+        <if test="customerId != null and customerId != ''">
+            and t.customer_id = #{customerId}
+        </if>
+        <if test="customerName != null and customerName != ''">
+            and t.customer_name = #{customerName}
+        </if>
         <if test="engineerId != null and engineerId != ''">
             and t.engineer_id = #{engineerId}
         </if>

@@ -488,9 +488,10 @@ public class WechatOrderController extends BaseController {
             String orderStatus = params.getString("status");
 //            String newOrderStatus = params.getString("newStatus");
             getLoginUser(request);//验证token
-//            SessionUser sessionUser = getCurrentUser(request); //得到当前用户
-//            String currentUserId = sessionUser.getUserId();//当前用户业务ID
+            SessionUser sessionUser = getCurrentUser(request); //得到当前用户
+            String currentUserId = sessionUser.getUserId();//当前用户业务ID
             Order order = new Order();
+            order.setCustomerId(currentUserId);
             List<Object> statusL = new ArrayList<Object>();
             if (StringUtils.isNotBlank(orderStatus)) {
                 String[] statusArray = orderStatus.split(",");

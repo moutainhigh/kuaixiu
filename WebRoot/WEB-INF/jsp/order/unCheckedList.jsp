@@ -25,7 +25,7 @@
 
             <tr>
                 <td class="search_th_frist"><label class="control-label">等待时间：</label></td>
-                <td class="form-group" colspan="5">
+                <td class="search_td">
                     <select onchange="changeWaitTime(this.value);" class="form-control-inline">
                         <option value="0" selected="selected">请选择</option>
                         <option value="-3">3小时以上</option>
@@ -33,7 +33,7 @@
                         <option value="-5">5小时以上</option>
                     </select>
                 </td>
-                <td class="search_th"><label class="control-label">订 单 类 别 ：</label></td>
+                <td class="search_th"><label class="control-label">订单类别 ：</label></td>
                 <td class="search_td">
                     <select name="is_rework" id="orderType" class="form-control">
                         <option value="">--请选择--</option>
@@ -238,6 +238,16 @@
                 }
                 var html = "<div class='waitTimeCountUp' remainTime='" + remainTime + "'>" + getHourTimeStr(remainTime) + "</div>"
                 return html;
+            }
+        },
+        {//复选框
+            targets: -4,
+            render: function (data, type, row, meta) {
+                if(row.is_rework==1){
+                    return "是";
+                }else{
+                    return "否";
+                }
             }
         },
         {
