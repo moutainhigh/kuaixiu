@@ -72,15 +72,15 @@
                 <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth130">下单时间</th>
-                <th class="fontWeight_normal tdwidth160">订单号</th>
+                <th class="fontWeight_normal tdwidth110">下单时间</th>
+                <th class="fontWeight_normal tdwidth120">订单号</th>
+                <th class="fontWeight_normal tdwidth50">是否返修单</th>
                 <th class="fontWeight_normal tdwidth90">客户名称</th>
-                <th class="fontWeight_normal tdwidth160">维修门店</th>
+                <th class="fontWeight_normal tdwidth300">维修门店</th>
                 <th class="fontWeight_normal tdwidth60">门店电话</th>
                 <th class="fontWeight_normal tdwidth90">门店负责人</th>
                 <th class="fontWeight_normal tdwidth90">维修工程师</th>
                 <th class="fontWeight_normal tdwidth60">等待时间</th>
-                <th class="fontWeight_normal tdwidth50">是否返修单</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
             </tr>
             </thead>
@@ -128,13 +128,13 @@
         {"data": "id", "class": "center"},
         {"data": "in_time", "class": ""},
         {"data": "order_no", "class": ""},
+        {"data": "is_rework", "class": ""},
         {"data": "customer_name", "class": ""},
         {"data": "shop_name", "class": ""},
         {"data": "shop_tel", "class": ""},
         {"data": "shop_manager_name", "class": ""},
         {"data": "engineer_name", "class": ""},
         {"data": "dispatch_time", "class": ""},
-        {"data": "is_rework", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
@@ -174,14 +174,24 @@
                 return html;
             }
         },
-        {
+        {//复选框
             targets: 3,
+            render: function (data, type, row, meta) {
+                if(row.is_rework == 1){
+                    return "是";
+                }else{
+                    return "否";
+                }
+            }
+        },
+        {
+            targets: 4,
             render: function (data, type, row, meta) {
                 return row.customer_name + "/<br/>" + row.mobile;
             }
         },
         {
-            targets: 4,
+            targets: 5,
             render: function (data, type, row, meta) {
                 if (row.shop_name != null) {
                     if (row.shop_name.length > 8) {
@@ -199,7 +209,7 @@
             }
         },
         {//复选框
-            targets: 5,
+            targets: 6,
             render: function (data, type, row, meta) {
                 if (row.shop_tel == null) {
                     return "";
@@ -209,7 +219,7 @@
             }
         },
         {//复选框
-            targets: -5,
+            targets: -4,
             render: function (data, type, row, meta) {
                 if (row.shop_manager_name == null && row.shop_manager_mobile != null) {
                     return "" + "/<br/>" + row.shop_manager_mobile;
@@ -223,13 +233,13 @@
             }
         },
         {//复选框
-            targets: -4,
+            targets: -3,
             render: function (data, type, row, meta) {
                 return row.engineer_name + "/<br/>" + row.engineer_mobile;
             }
         },
         {
-            targets: -3,
+            targets: -2,
             render: function (data, type, row, meta) {
                 var ts = (new Date(row.sys_time)) - (new Date(row.dispatch_time));//计算已等待的毫秒数
                 var remainTime = ts / 1000 + 1;
@@ -238,16 +248,6 @@
                 }
                 var html = "<div class='waitTimeCountUp' remainTime='" + remainTime + "'>" + getHourTimeStr(remainTime) + "</div>"
                 return html;
-            }
-        },
-        {//复选框
-            targets: -4,
-            render: function (data, type, row, meta) {
-                if(row.is_rework==1){
-                    return "是";
-                }else{
-                    return "否";
-                }
             }
         },
         {
