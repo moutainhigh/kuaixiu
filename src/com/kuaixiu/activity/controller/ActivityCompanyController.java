@@ -49,7 +49,7 @@ import java.util.*;
  */
 @Controller
 public class ActivityCompanyController extends BaseController {
-
+    private static final Logger log = Logger.getLogger(ActivityCompanyController.class);
     @Autowired
     private ActivityCompanyService activityCompanyService;
 
@@ -406,7 +406,6 @@ public class ActivityCompanyController extends BaseController {
         return result;
     }
 
-    private static final Logger log = Logger.getLogger(ActivityCompanyController.class);
 
     /*
          * 获取二维码

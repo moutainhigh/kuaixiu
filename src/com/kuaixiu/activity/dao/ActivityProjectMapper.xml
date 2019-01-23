@@ -6,6 +6,7 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityProject" >
         <result column="id" property="id"/>
+        <result column="activity_ident" property="activityIdent"/>
         <result column="type" property="type"/>
         <result column="project_no" property="projectNo"/>
         <result column="project_name" property="projectName"/>
@@ -13,15 +14,15 @@
     
     <!-- kx_activity_project table all fields -->
     <sql id="Base_Column_List" >
-        id,type,project_no,project_name
+        id,activity_ident,type,project_no,project_name
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_activity_project
-        (id,type,project_no,project_name)
+        (id,activity_ident,type,project_no,project_name)
         values
-        (#{id},#{type},#{projectNo},#{projectName})
+        (#{id},#{activityIdent},#{type},#{projectNo},#{projectName})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -29,6 +30,7 @@
         update kx_activity_project 
         set 
             id=#{id},
+            activity_ident=#{activityIdent},
             type=#{type},
             project_no=#{projectNo},
             project_name=#{projectName}
@@ -61,6 +63,9 @@
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
+        <if test="activityIdent != null and activityIdent != ''" >
+            and activity_ident=#{activityIdent}
+        </if>
         <if test="type != null and type != ''" >
             and type = #{type}
         </if>
@@ -80,6 +85,9 @@
         where 1=1
         <if test="id != null and id != ''" >
             and id = #{id}
+        </if>
+        <if test="activityIdent != null and activityIdent != ''" >
+            and activity_ident=#{activityIdent}
         </if>
         <if test="type != null and type != ''" >
             and type = #{type}

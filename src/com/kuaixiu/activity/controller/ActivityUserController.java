@@ -190,10 +190,12 @@ public class ActivityUserController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String type = params.getString("type");
-            if (StringUtils.isBlank(type) || "0".equals(type)) {
+            String activityIdent = params.getString("activityIdent");
+            if (StringUtils.isBlank(activityIdent) ||StringUtils.isBlank(type) || "0".equals(type)) {
                 throw new SystemException("请求参数不完整");
             }
             ActivityProject project = new ActivityProject();
+            project.setActivityIdent(activityIdent);
             project.setType(Integer.valueOf(type));
             List<ActivityProject> projects = activityProjectService.queryList(project);
 
@@ -295,9 +297,8 @@ public class ActivityUserController extends BaseController {
             JSONObject params = getPrarms(request);
             String brand = params.getString("brand");
             String modelName = params.getString("modelName");
-            String openId = params.getString("openId");
             String categoryid = params.getString("categoryid");
-            if (StringUtil.isBlank(brand) || StringUtil.isBlank(modelName) || StringUtil.isBlank(openId)) {
+            if (StringUtil.isBlank(brand) || StringUtil.isBlank(modelName)) {
                 throw new SystemException("参数不完整");
             }
             //将微信小程序检测的机型名称转换成回收平台的机型名称
