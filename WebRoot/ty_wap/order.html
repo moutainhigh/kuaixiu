@@ -6,7 +6,35 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="js/flexible.js"></script>
     <link rel="stylesheet" href="css/main.css?version=1.6">
+	<link rel="stylesheet" href="css/addPriceTicket.css">
     <title></title>
+    <style>
+        #wrap.orderWrap .main .ticket .ticket-box {
+            justify-content: space-between;
+            margin-top: 0;
+            color: red;
+        }
+
+        #wrap.orderWrap .main .ticket .ticket-box i {
+            font-style: normal;
+        }
+
+        .all-coupons  {
+            position: relative;
+            padding-right: 0.15rem;
+        }
+
+        .all-coupons p {
+            position: absolute;
+            right: 0;
+            top: 2px;
+        }
+
+        .all-coupons p img {
+            display: block;
+            width: .06rem;
+        }
+    </style>
 </head>
 <body>
     <div id='map-container'></div>
@@ -103,8 +131,19 @@
             </div>
             <div class="ticket">
                  <p class="moduleTitle">加价券</p>
-                 <div class="ticket-box">
-                    <input id="ticket-text" type="text" value="" placeholder="请输入加价券码">
+                 <div class="ticket-box js-ticket-btn">
+                    <span class="js-current-coupons">
+                        加价: 
+                        <i>0</i>
+                        元
+                    </span>
+                    <span class="all-coupons js-all-coupons">
+                        还有
+                        <i>0</i>
+                        张可用
+                        <p><img src="img/icon_arrow.png" alt=""></p>
+                    </span>
+                    <!-- <input id="ticket-text" type="text" value="" placeholder="请输入加价券码"> -->
                  </div>
             </div>
             <div class="mailing_addr">
@@ -190,7 +229,79 @@
         </div>
         <!--确认提示end-->
     </div>
-    <script src="js/jquery.js"></script>
+	
+	<div id="add-price-ticket" class="add-price-ticket hide">
+		<div>
+			<!--start of  可使用优惠券-->
+			<div class="can-use-ticket">
+				<div class="list-title">可使用优惠券(<span class="js-available-num">0</span>张)</div>
+				<dl class="ticket-list js-coupon-available">
+					<!-- <dd class="ticket-item can-use">
+						<div class="ticket-info">
+							<div class="ticket-value">60</div>
+							<div class="ticket-desc">
+								<label>加价券</label>
+								<span class="condition">满1000元使用</span>
+							</div>
+						</div>
+						<div class="ticket-date">
+							<label>有效期:</label>
+							<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+						</div>
+					</dd>
+					<dd class="ticket-item can-use default">
+						<div class="ticket-info">
+							<div class="ticket-value">50</div>
+							<div class="ticket-desc">
+								<label>加价券</label>
+								<span class="condition">满500元使用</span>
+							</div>
+						</div>
+						<div class="ticket-date">
+							<label>有效期:</label>
+							<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+						</div>
+					</dd>
+					<dd class="ticket-item can-use">
+						<div class="ticket-info">
+							<div class="ticket-value">10<span class="percent-label">%</span></div>
+							<div class="ticket-desc">
+								<label>加价券</label>
+								<span class="condition">满100元使用</span>
+							</div>
+						</div>
+						<div class="ticket-date">
+							<label>有效期:</label>
+							<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+						</div>
+					</dd> -->
+				</dl>
+			</div>
+			<!--end of  可使用优惠券-->
+			<!--start of  不可使用优惠券-->
+			<div class="cant-use-ticket">
+				<div class="list-title">不可使用优惠券(<span class="js-not-available-num">0</span>张)</div>
+				<dl class="ticket-list js-coupon-not-available">
+					<!-- <dd class="ticket-item used">
+						<div class="ticket-info">
+							<div class="ticket-value">50</div>
+							<div class="ticket-desc">
+								<label>加价券</label>
+								<span class="condition">满500元使用</span>
+							</div>
+						</div>
+						<div class="ticket-date">
+							<label>有效期:</label>
+							<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+						</div>
+					</dd> -->
+				</dl>
+			</div>
+			<!--end of  不可使用优惠券-->		
+		</div>
+    </div>
+	
+	<script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
     <script src="js/address.js"></script>
     <script src="js/jbase64.js"></script>
@@ -199,7 +310,6 @@
     <script src="js/location.js"></script>
     <script>
         $(function(){
-
             getAddr();
 
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
@@ -209,13 +319,18 @@
             if(isEmpty(fm)){
                 eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
             }
-            if(fm == 2 || fm == 9 || fm == 10){
-				document.title = '天翼回收';
-			}else if(fm == 7){
-				document.title = '翼回收';
-			}else{
-				document.title = '超人回收';
+            if(isGo == 'true'||tip == 1){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }
+			
+			eCacheUtil.storage.cache(CacheKey.HappyGoMobile,"18106538281");
+			if(eCacheUtil.storage.getCache(CacheKey.HappyGoMobile)){
+			  getIsUserCouponList(eCacheUtil.storage.getCache(CacheKey.HappyGoMobile));
 			}
+			
+			//判断用户的页面来源
             init();
             var num = 0;
             $('#pickTime').click(function () {
@@ -292,14 +407,19 @@
                 var base = new Base64(),
                     take_time = '';
                     mailType = $('input:radio[name="post"]:checked').val();
+					
+					
                     if (mailType == 2){
                         take_time = '';
                     }else{
-                        var str = $('#pickTime.active p').eq(1).html(),
-                            reg = /\(([^()]+)\)/g,
-                            res = str.match(reg);
-                        take_time = str.replace(res," ");
+                        var str = $('#pickTime.active p').eq(1).html();
+						
+						var    reg = /\(([^()]+)\)/g,
+								res = str.match(reg);
+							take_time = str.replace(res," ");
                     }
+					
+					
                 var params = {
                     quoteId:base.decode(eCacheUtil.storage.getCache(CacheKey.quoteId)),
                     customerName:$('#connect').val(),
@@ -316,7 +436,7 @@
                     takeTime:take_time,
                     fm:eCacheUtil.storage.getCache(CacheKey.source),
                     note:$('#note').val(),
-					couponCode:$('#ticket-text').val(),
+					couponCode:G.defaultCoupon.couponCode || ''
 					
                 }
 				$.post(linkUrl+'/recycleNew/wechatCreateOrder.do',{params:JSON.stringify(params)},
@@ -342,6 +462,14 @@
                         }
                     })//
             })
+
+            //加价券 跳转到addPriceTicket.html
+            $('.js-ticket-btn').on('click',function(){
+                //location.href = 'addPriceTicket.html';
+				initAddpricePage();
+				$('#add-price-ticket').removeClass( 'hide' );
+				return ;
+            })
         })
 		
 		//创建抬价订单
@@ -356,6 +484,123 @@
 				}else{
 					alert(data.resultMessage);
 				}
+            });
+		}
+		
+		//1.5.12查询所有可用加价券
+	    function getIsUserCouponList(mobile){
+
+            //测试用， 设置默认价格
+            // eCacheUtil.storage.cache(CacheKey.prePrice,"200");
+
+            //获取手机的估价
+            var MP = eCacheUtil.storage.getCache( CacheKey.prePrice );
+
+            var params = {
+                mobile:mobile
+            }
+            $.post(linkUrl+'/recycle/getIsUserCouponList.do',{params:JSON.stringify(params)},function (data) {
+                if ( data.success){
+                    var coupons = data.result.Coupons;
+                    var couponsNum = 0;          // 可用优惠券数量
+                    var couponsUsableArr = [];   // 可用
+                    var couponsNotUsableArr = [];// 不可用
+
+                    //区分 可用券or不可用券
+                    for( var i = 0; i < coupons.length; i++ ){
+                        if( MP >= coupons[i].subtractionPrice ){
+                            couponsNum++;
+                            couponsUsableArr.push( coupons[i] )
+                        }else{
+                            couponsNotUsableArr.push( coupons[i] )
+                        }
+                    }
+
+                    //缓存可用优惠券，不可用优惠券
+                    eCacheUtil.storage.cache(CacheKey.CouponsAvailable, couponsUsableArr);
+                    eCacheUtil.storage.cache(CacheKey.CouponNotAvailable, couponsNotUsableArr);
+
+                    // 计算可用券的优惠价格
+                    var couponsPriceFirstArr = [];
+
+                    for( var j = 0; j < couponsUsableArr.length; j++ ){
+                        var couponPrice = couponsUsableArr[j].couponPrice;
+                        var obj = {};
+                        if( couponsUsableArr[j].couponPrice.indexOf('%') != -1 ){
+                            obj = {
+                                couponPrice: Number(MP * couponsUsableArr[j].couponPrice.replace('%','') / 100 ),
+                                endTime: couponsUsableArr[j].endTime,
+                                couponCode: couponsUsableArr[j].couponCode
+                            }
+                        }else {
+                            obj = {
+                                couponPrice: Number(couponsUsableArr[j].couponPrice.replace('元','')),
+                                endTime: couponsUsableArr[j].endTime,
+                                couponCode: couponsUsableArr[j].couponCode
+                            }
+                        }
+                        couponsPriceFirstArr.push( obj )
+                    }
+
+                    //根据价格由大到小排序
+                    var couponsPriceSecondArr = couponsPriceFirstArr.sort(function (a, b) {
+                        var val1 = a.couponPrice;
+                        var val2 = b.couponPrice;
+                        if (val1 > val2) {
+                            return -1;
+                        } else if (val1 < val2) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }            
+                    })
+
+                    //比较是否有最低优惠价格相同的券，如果有比较日期
+                    //确认使用哪一张优惠券
+                    var couponsPriceThirdArr = [];
+                    var bestPrice = couponsPriceSecondArr[0] ? couponsPriceSecondArr[0].couponPrice : 0;
+                    for( var i = 0; i < couponsPriceSecondArr.length; i++ ){
+                        if( bestPrice == couponsPriceSecondArr[i].couponPrice ){
+                            couponsPriceThirdArr.push( couponsPriceSecondArr[i] )
+                        }
+                    };
+
+                    // 最优惠券按照过期时间排序
+                    couponsPriceFourthArr = couponsPriceThirdArr.sort(function (a, b) {
+                        var val1 = a.endTime;
+                        var val2 = b.endTime;
+                        if (val1 < val2) {
+                            return -1;
+                        } else if (val1 > val2) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }            
+                    });
+
+                    // 渲染页面 ，判断是否有默认优惠券，没有就渲染之前的bestPrice
+                    $('.js-all-coupons i').text( couponsNum );
+                    if( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) ){
+                        var couponsAvailableDefault = JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ));
+                    }else{
+                        var couponsAvailableDefault = {}                       
+                    }
+
+                    if( couponsAvailableDefault.couponPrice ){
+                        if( couponsAvailableDefault.couponPrice.indexOf('%') != -1 ){
+                            $('.js-current-coupons i').text( MP * couponsAvailableDefault.couponPrice.replace('%','') / 100 );
+                        }else {
+                            $('.js-current-coupons i').text( couponsAvailableDefault.couponPrice.replace('元','') );
+                        }
+                    }else{
+                        $('.js-current-coupons i').text( bestPrice );
+
+                        //缓存默认优惠券
+                        eCacheUtil.storage.cache(CacheKey.CouponsAvailableDefault, couponsPriceFourthArr[0]);
+                    }
+                }else{
+                    alert(data.resultMessage);
+                }
             });
 		}
 		
@@ -444,6 +689,109 @@
                     break;
             }
         }
+		
+		window.G = window.G || {};
+		function initAddpricePage(){
+			//G.couponsUsableArr = JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailable ) );
+			//G.couponsNotUsableArr = JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponNotAvailable ) );
+			//G.couponsAvailableDefault = JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) );
+			
+			G.couponsUsableArr = eCacheUtil.storage.getCache( CacheKey.CouponsAvailable ) ? JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailable ) ) : {};
+			G.couponsNotUsableArr = eCacheUtil.storage.getCache( CacheKey.CouponNotAvailable ) ? JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponNotAvailable ) ) : {}; 
+			G.couponsAvailableDefault = eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) ? JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) ) : {};
+
+
+			// 可用不可用优惠券的数量
+			$('.js-available-num').text( G.couponsUsableArr.length )
+			$('.js-not-available-num').text( G.couponsNotUsableArr.length )
+
+			// 可用优惠券
+			var couponAvailableHTML = ''
+			for( var i = 0; i < G.couponsUsableArr.length; i++ ){
+				var classHtml = '';
+				// 判断是否是默认优惠券
+				if( G.couponsUsableArr[i].couponCode == G.couponsAvailableDefault.couponCode ){
+					classHtml = '<dd class="ticket-item can-use default" data-code="'+ G.couponsUsableArr[i].couponCode +'">';
+				}else{
+					classHtml = '<dd class="ticket-item can-use" data-code="'+ G.couponsUsableArr[i].couponCode +'">'
+				}
+
+				couponAvailableHTML+=   classHtml+
+					'	<div class="ticket-info">'+
+					'		<div class="ticket-value">'+ G.couponsUsableArr[i].couponPrice.replace('元','') +'</div>'+
+					'		<div class="ticket-desc">'+
+					'			<label>加价券</label>'+
+					'			<span class="condition">满'+ G.couponsUsableArr[i].subtractionPrice +'元使用</span>'+
+					'		</div>'+
+					'	</div>'+
+					'	<div class="ticket-date">'+
+					'		<label>有效期:</label>'+
+					'		<span class="start-date">'+ G.couponsUsableArr[i].beginTime +'</span>至<span class="end-date">'+ G.couponsUsableArr[i].endTime +'</span>'+
+					'	</div>'+
+					'</dd>'
+			}
+			$('.js-coupon-available').html( couponAvailableHTML );
+
+			// 不可用优惠券
+			var couponNotAvailableHTML = ''
+			for( var i = 0; i < G.couponsNotUsableArr.length; i++ ){
+				couponNotAvailableHTML+=   '<dd class="ticket-item used" data-code="'+ G.couponsNotUsableArr[i].couponCode +'">'+
+					'	<div class="ticket-info">'+
+					'		<div class="ticket-value">'+ G.couponsNotUsableArr[i].couponPrice.replace('元','') +'</div>'+
+					'		<div class="ticket-desc">'+
+					'			<label>加价券</label>'+
+					'			<span class="condition">满'+ G.couponsNotUsableArr[i].subtractionPrice +'元使用</span>'+
+					'		</div>'+
+					'	</div>'+
+					'	<div class="ticket-date">'+
+					'		<label>有效期:</label>'+
+					'		<span class="start-date">'+ G.couponsNotUsableArr[i].beginTime +'</span>至<span class="end-date">'+ G.couponsNotUsableArr[i].endTime +'</span>'+
+					'	</div>'+
+					'</dd>'
+			}
+			$('.js-coupon-not-available').html( couponNotAvailableHTML );
+
+		}
+		
+		//切换优惠券
+		$('.js-coupon-available').delegate( '.ticket-item' , 'click' , function(){
+			//获取手机的估价
+            var MP = eCacheUtil.storage.getCache( CacheKey.prePrice );
+			
+			//缓存默认优惠券
+			for(var i = 0; i < G.couponsUsableArr.length; i++){
+				if( $(this).data('code') == G.couponsUsableArr[i].couponCode ){
+					eCacheUtil.storage.cache(CacheKey.CouponsAvailableDefault, G.couponsUsableArr[i]);
+				}
+			}
+
+			//跳转页面
+			//location.href = 'order.html';
+			//刷新页面内容 
+			if( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) ){
+                var couponsAvailableDefault = JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ));
+				G.defaultCoupon = couponsAvailableDefault ;
+			}else{
+				var couponsAvailableDefault = {}   
+				G.defaultCoupon = couponsAvailableDefault ;
+			}
+
+			if( couponsAvailableDefault.couponPrice ){
+				if( couponsAvailableDefault.couponPrice.indexOf('%') != -1 ){
+					$('.js-current-coupons i').text( MP * couponsAvailableDefault.couponPrice.replace('%','') / 100 );
+				}else {
+					$('.js-current-coupons i').text( couponsAvailableDefault.couponPrice.replace('元','') );
+				}
+			}else{
+				$('.js-current-coupons i').text( bestPrice );
+			}
+			
+			//关闭选择框
+			$('#add-price-ticket').addClass( 'hide' );
+		});
+		
+		//初始化优惠券列表
+		initAddpricePage();
     </script>
 <!--站长统计-->
 <div style="display: none;">
