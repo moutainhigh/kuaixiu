@@ -2,8 +2,10 @@ $(function(){
     var access_token = sessionStorage.getItem('access_token'),
         base = new Base64(),
         orderId = base.decode(eCacheUtil.storage.getCache(CacheKey.orderId)),
+		isRework = base.decode(eCacheUtil.storage.getCache(CacheKey.isRework)),
         params={
-            id:orderId
+            id:orderId,
+			isRework:isRework
         };
     $.ajax({
         type:'POST',
@@ -25,7 +27,14 @@ $(function(){
                 $('#orderNO').html(order.orderNo);
                 $('#orderTime').html(order.inTime);
                 var message = statusMes(order.orderStatus,order.isComment);
-                $('#status').html(message);
+				
+				//是否返修订单  0否  1是
+				if(isRework == 1){
+					$('#status').html(message+"(售后)");
+				}else{
+					$('#status').html(message);
+				}
+                
 
                 $('.addr_font').empty().append('<p>'+order.fullAddress+'</p>' +
                     '<p>'+order.customerName+'  '+order.mobile+'</p>');

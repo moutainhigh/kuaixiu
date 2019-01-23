@@ -102,7 +102,7 @@ public class SysUserService extends BaseService<SysUser> {
      * @CreateDate: 2016-8-28 下午4:54:14
      */
     public SysUser checkLogin(String loginId, String passwd){
-        log.info("用户登录：loginId：" + loginId + ", passwd: "+ passwd);
+        //log.info("用户登录：loginId：" + loginId + ", passwd: "+ passwd);
         SysUser user = getDao().queryById(loginId);
         if (user == null) {
             return null;
@@ -158,7 +158,7 @@ public class SysUserService extends BaseService<SysUser> {
      * @CreateDate: 2016-8-28 下午4:54:14
      */
     public SysUser checkCookieLogin(String loginId, String passwd){
-        log.info("用户登录：loginId：" + loginId + ", passwd: "+ passwd);
+        //log.info("用户登录：loginId：" + loginId + ", passwd: "+ passwd);
         SysUser user = getDao().queryById(loginId);
         if (user == null) {
             return null;

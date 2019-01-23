@@ -75,6 +75,9 @@ public interface OrderMapper<T> extends BaseDao<T> {
      */
     List<Map<String, Object>> queryMapForPage(T t);
 
+    //查询未处理订单，返修单
+    List<Map<String, Object>> queryUnCheckForPage(T t);
+
     //查询未完成订单数
     Integer orderMapCount(T t);
 
@@ -127,6 +130,14 @@ public interface OrderMapper<T> extends BaseDao<T> {
      * @CreateDate: 2016-10-26 下午10:47:16
      */
     int deleteBalanceStatus(T t);
+
+    //工程师订单列表
+    List<T> queryEngineerList(T t);
+    List<T> queryEngineerListForPage(T t);
+
+    //查询工程师返修订单列表
+    List<T> queryReworkList(T t);
+    List<T> queryReworkListForPage(T t);
 
     List<T> queryListApiForPage(T t);
 }

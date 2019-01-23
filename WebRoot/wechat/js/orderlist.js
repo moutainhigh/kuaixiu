@@ -64,14 +64,16 @@ function getSelInfo(index) {
 function eachFull(info) {
     var base = new Base64();
     $.each(info, function (i, n) {
-        var tmp,orderid,type = 0;
+        var tmp,orderid,type,isRework = 0;
         if(n.orderType==0){//是维修订单
             tmp = $("#template").clone();
             tmp.removeAttr("id");
             orderid = n.id;
+			orderNo=n.orderNo;
+			isRework= n.isRework;
             type = 0;
             $(".order_inside",tmp).on('click', function () {
-                onDetails(orderid,type);
+                onDetails(orderid,type,isRework,orderNo);
             });
             tmp.show();
             
@@ -82,7 +84,15 @@ function eachFull(info) {
                 $(".shop_name", tmp).text(n.shopName);
             }
 
-            $(".model", tmp).append(n.modelName+n.color);
+			//是否返修订单  0否 1是
+		  /*	if(n.isRework == 1){
+				$(".model", tmp).append(n.modelName+n.color+"(售后)");
+			}else{
+				$(".model", tmp).append(n.modelName+n.color);
+			}   */
+			
+			$(".model", tmp).append(n.modelName+n.color);
+            
             var cusPro = [],spePro = [];
             for (var j = 0;j<n.projects.length;j++){
                 if (n.projects[j].type == 1){
@@ -102,9 +112,10 @@ function eachFull(info) {
             tmp = $("#oldtonew").clone();
             tmp.removeAttr("id");
             orderid = n.id;
+			isRework= n.isRework;
             type = 1;
             $(".order_inside",tmp).on('click', function () {
-                onDetails(orderid,type);
+                onDetails(orderid,type,isRework,orderNo);
             });
             tmp.show();
             //如果订单还未派单
@@ -132,18 +143,34 @@ function eachFull(info) {
             var orderStatusName=orderStatusM[orderStatus];
             //是否已评价(0:未评价)
             var isComment = n.isComment;
-
-            //订单状态字体为蓝色,“已完成”为黑色
-            if(orderStatus == "50"){//已完成状态，判断是滞已评价：0为未评价，则订单状态为“待评价”，否则为“已完成”
-                if(isComment=="0"){
-                    $(".status", tmp).text("待评价");
-                    orderStatus = "50_0";
-                }else{
-                    $(".status", tmp).text("已完成").addClass('color-black');
-                }
-            }else {
-                $(".status", tmp).text(orderStatusName);
-            }
+			
+			//是否返修订单  0否 1是
+			if(n.isRework == 1){
+				//订单状态字体为蓝色,“已完成”为黑色
+				if(orderStatus == "50"){//已完成状态，判断是滞已评价：0为未评价，则订单状态为“待评价”，否则为“已完成”
+					if(isComment=="0"){
+						$(".status", tmp).text("待评价(售后)");
+						orderStatus = "50_0";
+					}else{
+						$(".status", tmp).text("已完成(售后)").addClass('color-black');
+					}
+				}else {
+					$(".status", tmp).text(orderStatusName + "(售后)");
+				}
+			}else{
+				//订单状态字体为蓝色,“已完成”为黑色
+				if(orderStatus == "50"){//已完成状态，判断是滞已评价：0为未评价，则订单状态为“待评价”，否则为“已完成”
+					if(isComment=="0"){
+						$(".status", tmp).text("待评价");
+						orderStatus = "50_0";
+					}else{
+						$(".status", tmp).text("已完成").addClass('color-black');
+					}
+				}else {
+					$(".status", tmp).text(orderStatusName);
+				}
+			}
+            
             //按钮是否显示
             var orderStatusStr = orderStatusForBtn[orderStatus];
             if(orderStatusStr != undefined && orderStatusStr != ""){
@@ -151,36 +178,43 @@ function eachFull(info) {
                 $("[name=btn_status]", tmp).text(orderStatusStr);
                 if(orderStatus == "50_0"){//评价按钮
                     $("[name=rebtn_status]", tmp).text("查看订单").on('click', function () {
-                        onDetails(orderid,type);
+                        onDetails(orderid,type,isRework,orderNo);
                     });
                     $("[name=btn_status]", tmp).text("去评价").on('click', function () {
                         var randomValue = getRandomStr();
                         eCacheUtil.storage.cache(CacheKey.orderType,type);
                         eCacheUtil.storage.cache(CacheKey.orderId,base.encode(orderid));
+						eCacheUtil.storage.cache(CacheKey.orderNo,orderNo);
+						eCacheUtil.storage.cache(CacheKey.isRework,isRework);
+						
                         window.location.href = "evaluation.html?r=" + randomValue;
                     });
                 }else if(orderStatus == "30"){
                     $("[name=rebtn_status]", tmp).text("查看订单").on('click', function () {
-                        onDetails(orderid,type);
+                        onDetails(orderid,type,isRework,orderNo);
                     });
                     //确认付款按钮
                     $("[name=btn_status]", tmp).text("确认付款").on('click', function () {
                         eCacheUtil.storage.cache(CacheKey.orderId,base.encode(orderid));
+						eCacheUtil.storage.cache(CacheKey.orderNo,orderNo);
+						eCacheUtil.storage.cache(CacheKey.isRework,isRework);
                         payBalance();
                     });
                 }else if(n.orderType == 1&&orderStatus == "12"){
                     $("[name=rebtn_status]", tmp).text("查看订单").on('click', function () {
-                        onDetails(orderid,type);
+                        onDetails(orderid,type,isRework,orderNo);
                     });
                     //确认付款按钮
                     $("[name=btn_status]", tmp).text("确认付款").on('click', function () {
                         eCacheUtil.storage.cache(CacheKey.orderId,base.encode(orderid));
+						eCacheUtil.storage.cache(CacheKey.orderNo,orderNo);
+						eCacheUtil.storage.cache(CacheKey.isRework,isRework);
                         payBalance();
                     });
                 }else{
                     $("[name=rebtn_status]",tmp).css("display","none");
                     $("[name=btn_status]", tmp).text("查看订单").on('click', function () {
-                        onDetails(orderid,type);
+                        onDetails(orderid,type,isRework,orderNo);
                     });
                 }
             }else{
@@ -188,7 +222,7 @@ function eachFull(info) {
                 $(".order_but",tmp).css("display","flex");
                 $("[name=rebtn_status]",tmp).css("display","none");
                 $("[name=btn_status]", tmp).text("查看订单").on('click', function () {
-                    onDetails(orderid,type);
+                    onDetails(orderid,type,isRework,orderNo);
                 });
             }
             //追加到对应区块
@@ -196,10 +230,12 @@ function eachFull(info) {
     });
 }
 
-function onDetails(orderId,num) {
+function onDetails(orderId,num,isRework,orderNo) {
     var randomValue = getRandomStr(),
         base = new Base64();
     eCacheUtil.storage.cache(CacheKey.orderId,base.encode(orderId));
+	eCacheUtil.storage.cache(CacheKey.orderNo,orderNo);
+	eCacheUtil.storage.cache(CacheKey.isRework,isRework);
     if (num == 0){
         window.location.href = "order_details.html?r=" + randomValue;
     }else {

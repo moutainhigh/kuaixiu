@@ -252,9 +252,11 @@ public class WechatSecurity {
         String httpGet = HttpClientUtil.httpGet(sb.toString());
         if (StringUtils.isNotBlank(httpGet)) {
             result = JSONObject.parseObject(httpGet);
-            if (40001 == result.getInteger("errcode") || 42001 == result.getInteger("errcode")) {
-                GlobalConstants.interfaceUrlProperties.remove("access_token");
-                result = getWechatUserInfo(openid);
+            if (result.getInteger("errcode") != null) {
+                if (40001 == result.getInteger("errcode") || 42001 == result.getInteger("errcode")) {
+                    GlobalConstants.interfaceUrlProperties.remove("access_token");
+                    result = getWechatUserInfo(openid);
+                }
             }
         } else {
             logger.info("微信用户信息返回异常");

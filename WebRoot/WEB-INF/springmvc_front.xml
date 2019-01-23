@@ -91,6 +91,7 @@
                 
                 <!--微信端-->
                 <value>^/wechat/repair/.*</value>
+                <value>^/wechat/reworkOrder/.*</value>
                 <value>^/wechat/sendSmsCode\.do.*</value>
                 <value>^/wechat/order/wechatLogin\.do.*</value>
                 <value>^/wechat/order/checkLogin\.do.*</value>

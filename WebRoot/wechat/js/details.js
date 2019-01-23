@@ -1,13 +1,17 @@
 var access_token = sessionStorage.getItem('access_token'),
 base = new Base64(),
 orderId = base.decode(eCacheUtil.storage.getCache(CacheKey.orderId));
+isRework = eCacheUtil.storage.getCache(CacheKey.isRework);
+
+var orderNo ='';
 $(function(){
     var descNews = '',//分享描述
         shareTitle='M-超人|手机上门维修专家，换碎屏、换电池、换听筒，快捷！实惠！',//分享标题
         link = linkUrl+'/wechat/share.html?id='+orderId,  //分享页面地址
         imgRealUrl=linkUrl+"/wechat/img/logo.jpg";          //分享定义图标地址
     var params={
-            id:orderId
+            id:orderId,
+			isRework:isRework
         };
     $.ajax({
         type:'POST',
@@ -26,9 +30,18 @@ $(function(){
                 var order = data.result.order,cusPro = [],specialPro = []
                     ,referPrice = 0.00;
                 $('#orderNO').html(order.orderNo);
+				orderNo=order.orderNo;
                 $('#orderTime').html(order.inTime);
                 var message = statusMes(order.orderStatus,order.isComment);
-                $('#status').html(message);
+				
+				//是否返修订单  0否  1是
+				if(isRework == 1){
+					$('#status').html(message+"(售后)");
+				}else{
+					$('#status').html(message);
+				}
+				
+               // $('#status').html(message);
 
                 $('.addr_font').empty().append('<p>'+order.fullAddress+'</p>' +
                     '<p>'+order.customerName+'  '+order.mobile+'</p>');
@@ -107,7 +120,11 @@ $(function(){
                     case 50:
                         $('.detailsBox').eq(0).append('<div class="eachRow"><span class="font">完成时间：</span><span class="cont">'+order.endTime+'</span></div>');
                         if (order.isComment == 0){
-                            $('.btn-box').empty().append('<a id="commentBtn" class="btn-large" href="evaluation.html?r='+getRandomStr()+'">评 价</a>');
+							if(isRework == 0){//是否返修订单  0否  1是
+								$('.btn-box').empty().append('<a onclick="showBackOrderUI()" class="btn-normal" href="javascript:void(0);">发起售后</a><a id="commentBtn" class="btn-large" href="evaluation.html?r='+getRandomStr()+'">评 价</a>');
+							}else{
+								$('.btn-box').empty().append('<a id="commentBtn" class="btn-large" href="evaluation.html?r='+getRandomStr()+'">评 价</a>');
+							}
                         }
                         break;
                     case 60:
@@ -153,7 +170,7 @@ $(function(){
 
         }
     });
-
+	
     function wxConfig(){
         var url = linkUrl+"/wechat/repair/shareForData.do";
         $.ajax({
@@ -245,6 +262,41 @@ $(function(){
     });
 
 });
+
+//提交售后订单
+function addRework(){
+	fn_loading();
+	var params = {
+        orderNo:orderNo,
+        reworkReason:reworkReason,
+        reasonDetail: $("#back_text").val()
+    };
+    $.ajax({
+        type:'POST',
+        url:linkUrl+'/wechat/reworkOrder/addRework.do',
+        dataType:'json',
+		data:{
+            params:JSON.stringify(params)
+        },
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success:function (data) {
+			loading_hide();
+			$('.back_order').hide();
+            if (data.success){
+                alertTip("您的售后订单已提交成功，请刷新订单列表查看！")
+            }else {
+                alertTip(data.resultMessage)
+            }
+        },
+        error:function (jqXHR) {
+            loading_hide();
+            alertTip('系统异常，请稍后再试！');
+        }
+    });
+}
 
 function orderConfirm() {
     fn_loading();

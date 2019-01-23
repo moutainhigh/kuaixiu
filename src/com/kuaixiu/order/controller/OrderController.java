@@ -99,6 +99,8 @@ public class OrderController extends BaseController {
     private NewEngineerService newEngineerService;
     @Autowired
     private FromSystemService fromSystemService;
+    @Autowired
+    private EngineerSignInService engineerSignInService;
 
     /**
      * 列表查询 -- 后台管理员
@@ -120,7 +122,7 @@ public class OrderController extends BaseController {
         //判断用户类型系统管理员可以查看所有工程师
         if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
             //获取省份地址
-            FromSystem fromSystem=new FromSystem();
+            FromSystem fromSystem = new FromSystem();
             fromSystem.setIsDel(0);
             List<FromSystem> fromSystems = fromSystemService.queryList(fromSystem);
             request.setAttribute("fromSystems", fromSystems);
@@ -365,14 +367,109 @@ public class OrderController extends BaseController {
                 }
                 //查询订单明细
                 List<OrderDetail> details = detailService.queryByOrderNo(order.getOrderNo());
-//                if ("1".equals(isPatch)) {
-//                    if (details.size() == 1) {
-//                        if (details.get(0).getProjectName().contains("贴膜")) {
-//                            it.remove();
-//                            continue;
-//                        }
-//                    }
-//                }
+                List<String> projectNames = new ArrayList<>();
+                Boolean isTrue = false;//判断是否有工程师确认的维修项目
+                for (OrderDetail detail : details) {
+                    if (detail.getType() == 1) {
+                        isTrue = true;
+                        break;
+                    }
+                }
+                for (OrderDetail detail : details) {
+                    if (isTrue) {
+                        if (detail.getType() == 1) {//工程师确认的维修项目
+                            projectNames.add(detail.getProjectName());
+                        }
+                    } else {
+                        if (detail.getType() == 0) {//客户确认的维修项目
+                            projectNames.add(detail.getProjectName());
+                        }
+                    }
+                }
+                String a = StringUtils.join(projectNames, ",");
+                order.setProjectName(a);
+            }
+        }
+        page.setData(list);
+        this.renderJson(response, page);
+    }
+
+    @Autowired
+    private ReworkOrderService reworkOrderService;
+
+    /**
+     * queryListForPage
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/order/queryEngineerListForPage")
+    public void queryEngineerListForPage(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        //获取查询条件
+        String queryStartRepairTime = request.getParameter("query_startRepairTime");//完成时间
+        String queryEndRepairTime = request.getParameter("query_endRepairTime");
+        String engNumber = request.getParameter("query_engNumber");
+        String isRework = request.getParameter("isRework");
+        //维修方式
+        String repairType = request.getParameter("query_repairType");
+        String isPatch = request.getParameter("isPatch");//是否去掉贴膜优惠券
+        Order o = new Order();
+        if (StringUtils.isNotBlank(isPatch)) {
+            o.setIsPatch(Integer.valueOf(isPatch));
+        }
+        if (StringUtils.isNotBlank(queryStartRepairTime)) {
+            o.setQueryRepairStartTime(queryStartRepairTime);
+        }
+        if (StringUtils.isNotBlank(queryEndRepairTime)) {
+            o.setQueryRepairEndTime(queryEndRepairTime);
+        }
+        if (StringUtils.isNotBlank(engNumber)) {
+            o.setEngineerNumber(engNumber);
+        }
+        if (StringUtils.isNotBlank(repairType)) {
+            o.setRepairType(Integer.parseInt(repairType));
+        }
+        //获取登录用户
+        SessionUser su = getCurrentUser(request);
+        boolean tip = false;
+        //判断用户类型系统管理员可以查看所有订单
+        if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+            tip = true;
+        } else if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
+            //连锁商只能查看自己的订单
+            o.setProviderCode(su.getProviderCode());
+        } else if (su.getType() == SystemConstant.USER_TYPE_SHOP) {
+            //门店商只能查看自己的订单
+            o.setShopCode(su.getShopCode());
+        } else {
+            throw new SystemException("对不起，您无权查看此信息！");
+        }
+
+        Page page = getPageByRequest(request);
+        o.setPage(page);
+        List<Order> list = new ArrayList<Order>();
+        if (StringUtils.isBlank(isRework)) {
+            list = orderService.getDao().queryEngineerListForPage(o);
+        } else if (Integer.valueOf(isRework) == 0) {
+            list = orderService.getDao().queryListForPage(o);
+        } else if (Integer.valueOf(isRework) == 1) {
+            list = orderService.getDao().queryReworkListForPage(o);
+        }
+        if (tip) {
+            Iterator<Order> it = list.iterator();
+            while (it.hasNext()) {
+                Order order = it.next();
+                //查询订单明细
+                List<OrderDetail> details = new ArrayList<OrderDetail>();
+                if (!order.getOrderNo().contains("PO")) {
+                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(order.getOrderNo());
+                    details = detailService.queryByOrderNo(reworkOrder.getParentOrder());
+                } else {
+                    details = detailService.queryByOrderNo(order.getOrderNo());
+                }
                 List<String> projectNames = new ArrayList<>();
                 Boolean isTrue = false;//判断是否有工程师确认的维修项目
                 for (OrderDetail detail : details) {
@@ -556,6 +653,67 @@ public class OrderController extends BaseController {
         this.renderJson(response, page);
     }
 
+    /**
+     * queryListForPage
+     * 订单调控
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/order/queryUnCheckForPage")
+    public void queryUnCheckForPage(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        ResultData resultData = new ResultData();
+        Page page = new Page();
+        try {
+            //获取查询条件
+            String orderNo = request.getParameter("query_orderNo");
+            String customerMobile = request.getParameter("query_customerMobile");
+            String queryEndTime = request.getParameter("query_endTime");
+            String orderStates = request.getParameter("query_orderStates");
+            String isRework = request.getParameter("is_rework");
+            Order o = new Order();
+            o.setOrderNo(orderNo);
+            o.setMobile(customerMobile);
+            o.setQueryEndTime(queryEndTime);
+            if (StringUtils.isNotBlank(isRework)) {
+                o.setIsRework(Integer.valueOf(isRework));
+            }
+            if (StringUtils.isNotBlank(orderStates)) {
+                o.setQueryStatusArray(Arrays.asList(StringUtils.split(orderStates, ",")));
+            }
+
+            //获取登录用户
+            SessionUser su = getCurrentUser(request);
+            //判断用户类型系统管理员可以查看所有订单
+            if (su.getType() == SystemConstant.USER_TYPE_SYSTEM || su.getType() == SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+
+            } else if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
+                //连锁商只能查看自己的订单
+                o.setProviderCode(su.getProviderCode());
+            } else if (su.getType() == SystemConstant.USER_TYPE_SHOP) {
+                //门店商只能查看自己的订单
+                o.setShopCode(su.getShopCode());
+            } else {
+                throw new SystemException("对不起，您无权查看此信息！");
+            }
+
+            page = getPageByRequest(request);
+            o.setPage(page);
+            o.setIsDel(0);
+            List<Map<String, Object>> list = orderService.getDao().queryUnCheckForPage(o);
+            page.setData(list);
+            resultData.setResult(page);
+        } catch (SystemException e) {
+            sessionUserService.getSystemException(e, resultData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionUserService.getException(resultData);
+        }
+        this.renderJson(response, page);
+    }
+
 
     /**
      * 重新派单
@@ -704,7 +862,6 @@ public class OrderController extends BaseController {
         o.setModelId(modelId);
         o.setColor(color);
         o.setIsMobile(1);
-        o.setRepairType(Integer.parseInt(repairType));
         o.setPostscript(note);
         o.setCouponCode(couponCode);
         o.setOrderStatus(OrderConstant.ORDER_STATUS_DEPOSITED);
@@ -760,8 +917,6 @@ public class OrderController extends BaseController {
         renderJson(response, resultMap);
     }
 
-    @Autowired
-    private EngineerSignInService engineerSignInService;
 
     /**
      * 列表查询
@@ -780,6 +935,8 @@ public class OrderController extends BaseController {
         if (o == null) {
             throw new SystemException("订单未找到！！");
         }
+        //查询返修订单
+        List<ReworkOrder> reworkOrders=reworkOrderService.getDao().queryByOrderNo(o.getOrderNo());
         //查询订单明细
         List<OrderDetail> details = detailService.queryByOrderNo(o.getOrderNo());
         //取消原因标签列表
@@ -806,6 +963,7 @@ public class OrderController extends BaseController {
         request.setAttribute("reasonList", reasonList);
         request.setAttribute("order", o);
         request.setAttribute("details", details);
+        request.setAttribute("reworks", reworkOrders);
         String returnView = "order/detail";
         return new ModelAndView(returnView);
     }
@@ -919,9 +1077,9 @@ public class OrderController extends BaseController {
         SessionUser su = getCurrentUser(request);
 
         //获取网点id
-        String orderId = request.getParameter("orderId");
+        String orderNo = request.getParameter("orderNo");
         String engineerId = request.getParameter("engineerId");
-        if (StringUtils.isNotBlank(orderId) && StringUtils.isNotBlank(engineerId)) {
+        if (StringUtils.isNotBlank(orderNo) && StringUtils.isNotBlank(engineerId)) {
             Engineer eng = newEngineerService.queryById(engineerId);
             if (eng == null) {
                 throw new SystemException("该工程师不存在！");
@@ -930,7 +1088,7 @@ public class OrderController extends BaseController {
             if (eng.getIsDispatch() == 2) {
                 throw new SystemException("派单失败，工程师：" + eng.getName() + ", 处于离线状态");
             }
-            orderService.againOrder(orderId, su, eng);
+            orderService.againOrder(orderNo, su, eng);
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "保存成功");
         } else {
@@ -990,9 +1148,9 @@ public class OrderController extends BaseController {
         SessionUser su = getCurrentUser(request);
 
         //获取网点id
-        String id = request.getParameter("id");
-        if (StringUtils.isNotBlank(id)) {
-            orderService.resetRepair(id, su);
+        String order_no = request.getParameter("order_no");
+        if (StringUtils.isNotBlank(order_no)) {
+            orderService.resetRepair(order_no, su);
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "操作成功");
         } else {

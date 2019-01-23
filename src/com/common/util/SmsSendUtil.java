@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.kuaixiu.order.entity.ReworkOrder;
 import org.apache.commons.lang3.StringUtils;
 
 import sun.misc.BASE64Encoder;
@@ -14,7 +15,6 @@ import com.common.exception.SystemException;
 import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.coupon.entity.CouponModel;
 import com.kuaixiu.coupon.entity.CouponProject;
-import com.kuaixiu.customerService.entity.CustService;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.oldtonew.entity.NewOrder;
 import com.kuaixiu.oldtonew.entity.OldToNewUser;
@@ -101,6 +101,17 @@ public class SmsSendUtil {
     public static boolean sendSmsToCustomer(String mobile){
         StringBuffer content = new StringBuffer();
         content.append("您已下单成功，我们的工程师会尽快联系您的，请注意接听电话；");
+        content.append("您也可以在http://t.cn/E2y7OEC或关注M超人公众号关注订单的动态。");
+        content.append("客服热线：4008110299");
+        return sendSmsThread(mobile, content.toString());
+    }
+
+    /**
+     * 用户售后下单成功发送成功信息
+     */
+    public static boolean sendSmsToCustomerforRework(String mobile){
+        StringBuffer content = new StringBuffer();
+        content.append("您的售后订单已生成，我们的工程师会尽快联系您的，请注意接听电话；");
         content.append("您也可以在http://t.cn/E2y7OEC或关注M超人公众号关注订单的动态。");
         content.append("客服热线：4008110299");
         return sendSmsThread(mobile, content.toString());
@@ -197,7 +208,36 @@ public class SmsSendUtil {
         content.append("，维修地址：").append(o.getFullAddress());
         return sendSmsThread(eng.getMobile(), content.toString());
     }
-    
+
+    /**
+     * 售后给工程师发送派单提示短信
+     * @param eng
+     * @param o
+     * @CreateDate: 2016-9-15 下午11:35:01
+     */
+    public static boolean sendSmsToEngineerForRework(Engineer eng, Shop s, ReworkOrder o,Order order){
+        try{
+            StringBuffer contentShop = new StringBuffer();
+            contentShop.append("派单提醒，售后订单").append(o.getOrderReworkNo());
+            contentShop.append("已派单给工程师：").append(eng.getName());
+            contentShop.append("，请注意关注订单处理进度。");
+            if(StringUtils.isNotBlank(s.getManagerMobile1())){
+                sendSmsThread(s.getManagerMobile1(), contentShop.toString());
+            }
+            if(StringUtils.isNotBlank(s.getManagerMobile2())){
+                sendSmsThread(s.getManagerMobile2(), contentShop.toString());
+            }
+            if(StringUtils.isNotBlank(s.getManagerMobile())) {
+                sendSmsThread(s.getManagerMobile(), contentShop.toString());
+            }
+        }catch(Exception e){}
+        StringBuffer content = new StringBuffer();
+        content.append("工单提醒，售后订单").append(o.getOrderReworkNo());
+        content.append("已派单，请及时上门维修，联系电话：").append(order.getMobile());
+        content.append("，联系人：").append(order.getCustomerName());
+        content.append("，维修地址：").append(order.getFullAddress());
+        return sendSmsThread(eng.getMobile(), content.toString());
+    }
     
     /**
      * 给工程师发送派单提示短信(以旧换新)

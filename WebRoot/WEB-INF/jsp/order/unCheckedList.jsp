@@ -25,12 +25,20 @@
 
             <tr>
                 <td class="search_th_frist"><label class="control-label">等待时间：</label></td>
-                <td class="form-group" colspan="5">
+                <td class="search_td">
                     <select onchange="changeWaitTime(this.value);" class="form-control-inline">
                         <option value="0" selected="selected">请选择</option>
                         <option value="-3">3小时以上</option>
                         <option value="-4">4小时以上</option>
                         <option value="-5">5小时以上</option>
+                    </select>
+                </td>
+                <td class="search_th"><label class="control-label">订单类别 ：</label></td>
+                <td class="search_td">
+                    <select name="is_rework" id="orderType" class="form-control">
+                        <option value="">--请选择--</option>
+                        <option value="0">快修单</option>
+                        <option value="1">返修单</option>
                     </select>
                 </td>
             </tr>
@@ -64,10 +72,11 @@
                 <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth130">下单时间</th>
-                <th class="fontWeight_normal tdwidth160">订单号</th>
+                <th class="fontWeight_normal tdwidth110">下单时间</th>
+                <th class="fontWeight_normal tdwidth120">订单号</th>
+                <th class="fontWeight_normal tdwidth50">是否返修单</th>
                 <th class="fontWeight_normal tdwidth90">客户名称</th>
-                <th class="fontWeight_normal tdwidth160">维修门店</th>
+                <th class="fontWeight_normal tdwidth300">维修门店</th>
                 <th class="fontWeight_normal tdwidth60">门店电话</th>
                 <th class="fontWeight_normal tdwidth90">门店负责人</th>
                 <th class="fontWeight_normal tdwidth90">维修工程师</th>
@@ -104,7 +113,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/order/queryListMapForPage.do",
+        "url": "${ctx}/order/queryUnCheckForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -119,6 +128,7 @@
         {"data": "id", "class": "center"},
         {"data": "in_time", "class": ""},
         {"data": "order_no", "class": ""},
+        {"data": "is_rework", "class": ""},
         {"data": "customer_name", "class": ""},
         {"data": "shop_name", "class": ""},
         {"data": "shop_tel", "class": ""},
@@ -164,14 +174,24 @@
                 return html;
             }
         },
-        {
+        {//复选框
             targets: 3,
+            render: function (data, type, row, meta) {
+                if(row.is_rework == 1){
+                    return "是";
+                }else{
+                    return "否";
+                }
+            }
+        },
+        {
+            targets: 4,
             render: function (data, type, row, meta) {
                 return row.customer_name + "/<br/>" + row.mobile;
             }
         },
         {
-            targets: 4,
+            targets: 5,
             render: function (data, type, row, meta) {
                 if (row.shop_name != null) {
                     if (row.shop_name.length > 8) {
@@ -189,11 +209,11 @@
             }
         },
         {//复选框
-            targets: 5,
+            targets: 6,
             render: function (data, type, row, meta) {
                 if (row.shop_tel == null) {
                     return "";
-                }else {
+                } else {
                     return row.shop_tel;
                 }
             }
@@ -234,14 +254,14 @@
             targets: -1,
 
             render: function (data, type, row, meta) {
-                var sessionUser=$("#sessionUserType").val();
+                var sessionUser = $("#sessionUserType").val();
                 if (row.order_status == 11 || row.order_status == 12 || row.order_status == 20) {
-                    if (sessionUser == 7 || sessionUser==2) {
+                    if (sessionUser == 7 || sessionUser == 2) {
                         var context = {
                             func: [
                                 {
                                     "name": "重新派单",
-                                    "fn": "againOrderView(\'" + row.id + "\')",
+                                    "fn": "againOrderView(\'" + row.order_no + "\')",
                                     "icon": "am-icon-pencil-square-o",
                                     "class": "am-text-secondary"
                                 }
@@ -255,7 +275,7 @@
                         func: [
                             {
                                 "name": "重置故障",
-                                "fn": "resetRepair(\'" + row.id + "\')",
+                                "fn": "resetRepair(\'" + row.order_no + "\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -277,8 +297,8 @@
         myTable.ajax.reload(null, false);
     }
 
-    function againOrderView(id) {
-        $("#againOrderId").val(id);
+    function againOrderView(order_no) {
+        $("#againOrderNo").val(order_no);
         $("#modal-againOrderView").modal("show");
     }
 
@@ -332,12 +352,12 @@
     /**
      * 重置故障
      */
-    function resetRepair(id) {
+    function resetRepair(order_no) {
         AlertText.tips("d_confirm", "系统提示", "确定要重置故障吗？ 重置故障后需要工程师重新提交检修结果。", function () {
             //加载等待
             AlertText.tips("d_loading");
             var url_ = AppConfig.ctx + "/order/resetRepair.do";
-            var data_ = {id: id};
+            var data_ = {order_no: order_no};
             $.ajax({
                 url: url_,
                 data: data_,

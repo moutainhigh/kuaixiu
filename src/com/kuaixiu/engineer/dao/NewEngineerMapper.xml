@@ -21,6 +21,7 @@
         <result column="service_rate" property="serviceRate"/>
         <result column="is_dispatch" property="isDispatch"/>
         <result column="order_day_num" property="orderDayNum"/>
+        <result column="rework_order_num" property="reworkOrderNum"/>
         <result column="is_del" property="isDel"/>
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
@@ -168,7 +169,7 @@
         <if test="queryEndTime != null and queryEndTime != ''">
             and o.end_time &lt;= #{queryEndTime}
         </if>
-        <if test="orderStatus == 50 or orderStatus == 60" >
+        <if test="orderStatus == 50 or orderStatus == 60">
             and o.order_status = #{orderStatus}
         </if>
         <if test="orderStatus == 40">
@@ -243,13 +244,15 @@
         <if test="queryEndTime != null and queryEndTime != ''">
             and o.end_time &lt;= #{queryEndTime}
         </if>
-        <if test="orderStatus == 50 or orderStatus == 60" >
+        <if test="orderStatus == 50 or orderStatus == 60">
             and o.order_status = #{orderStatus}
         </if>
         <if test="orderStatus == 40">
             and o.order_status &lt; 50
         </if>
-        ) order_day_num
+        ) order_day_num,
+        (select count(r.engineer_number) from kx_rework_order r
+        where r.engineer_number = t.number) rework_order_num
         ,p.`name` provider_name
         from kx_engineer t
         left join kx_provider p on t.provider_code = p.`code` AND p.is_del = 0
@@ -366,7 +369,7 @@
         from kx_engineer t
         where t.is_del = 0
         and t.is_dispatch = 0
-        <if test="shopCode != null and shopCode != ''" >
+        <if test="shopCode != null and shopCode != ''">
             and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
         </if>
         <if test="notEngId != null and notEngId != ''">
@@ -376,16 +379,17 @@
     </select>
 
     <!-- 根据门店查询忙碌工程师  -->
-    <select id="queryDispatchByShopCode"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryDispatchByShopCode" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         ,(select count(*) from kx_order o where o.engineer_id = t.id and o.order_status != 60) order_day_num
         from kx_engineer t
         where t.is_del = 0
         and t.is_dispatch = 1
-        <if test="shopCode != null and shopCode != ''" >
+        <if test="shopCode != null and shopCode != ''">
             and t.shop_code LIKE CONCAT('%',#{shopCode},'%')
         </if>
-        <if test="notEngId != null and notEngId != ''" >
+        <if test="notEngId != null and notEngId != ''">
             and t.id != #{notEngId}
         </if>
         order by t.is_dispatch,order_day_num asc

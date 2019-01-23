@@ -101,6 +101,37 @@
             <li><a href="tel:057188803875"><i class="icon3"></i>客服</a></li>
         </ul>
     </div>
+	
+	<!--售后订单-->
+    <div class="back_order hide">
+        <div class="back_box">
+            <div class="back_cont">
+                <p>发起售后</p>
+                <form>
+                   <div class="select dowebok">
+						<span class="placeholder">请选择</span>
+						<ul>
+							<li value='1'>物料原因</li>
+							<li value='2'>装配原因</li>
+							<li value='3'>客户原因</li>
+						</ul>
+					</div>
+                    <textarea class="reason" id="back_text" placeholder="请写下您售后的问题吧！"></textarea>
+                    <div class="cancel_sure">
+                        <a href="javascript:void(0);" class="btn-large" onclick="addRework()">确定</a>
+                    </div>
+                </form>
+            </div>
+            <a href="javascript:void(0);" class="close">×</a>
+        </div>
+    </div>
+    <!--售后订单end-->
+    <!--遮盖层-->
+   <!--<div id="mask_boxs">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>  -->
 
     <!--取消订单-->
     <div class="layer hide">
@@ -153,6 +184,31 @@
 <script src="js/jbase64.js"></script>
 <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript"></script>
 <script src="js/details.js"></script>
+<script>
+	$('.select').on('click', '.placeholder', function(e) {
+    var parent = $(this).closest('.select');
+    if (!parent.hasClass('is-open')) {
+        parent.addClass('is-open');
+        $('.select.is-open').not(parent).removeClass('is-open');
+    } else {
+        parent.removeClass('is-open');
+    }
+    e.stopPropagation();
+	}).on('click', 'ul>li', function() {
+		var parent = $(this).closest('.select');
+		parent.removeClass('is-open').find('.placeholder').text($(this).text());
+	});
+	 
+	$('body').on('click', function() {
+		$('.select.is-open').removeClass('is-open');
+	});
+
+    $("li").click(function(){
+		reworkReason=parseInt($(this).val());
+		//alert(reworkReason);                       // 这里能获取到当前点击的li标签当前的value值
+	}); 
+
+</script>
 <!--站长统计-->
 <div style="display: none;">
     <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

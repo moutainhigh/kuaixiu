@@ -266,7 +266,6 @@ public class EngineerService extends BaseService<Engineer> {
 
     /**
      * 检查工程师是否存在未完成的工单
-     *
      */
     public void checkDispatchState(String id) {
         //查询是否有未完成的订单,包括维修和换新订单
@@ -323,6 +322,7 @@ public class EngineerService extends BaseService<Engineer> {
         String queryStartTime = MapUtils.getString(params, "query_startTime");
         String queryEndTime = MapUtils.getString(params, "query_endTime");
         String isPatch = MapUtils.getString(params, "isPatch");
+        String orderType = MapUtils.getString(params, "orderType");
         Engineer eng = new Engineer();
 
         eng.setName(name);
@@ -332,7 +332,7 @@ public class EngineerService extends BaseService<Engineer> {
         eng.setOrderStatus(String.valueOf(orderStatus));
         eng.setQueryStartTime(queryStartTime);
         eng.setQueryEndTime(queryEndTime);
-        if(StringUtils.isNotBlank(isPatch)) {
+        if (StringUtils.isNotBlank(isPatch)) {
             eng.setIsPatch(Integer.valueOf(isPatch));
         }
         String idStr = MapUtils.getString(params, "ids");
@@ -343,6 +343,15 @@ public class EngineerService extends BaseService<Engineer> {
 
         List<Engineer> project = newEngineerService.getDao().queryListAchievement(eng);
         for (Engineer engineer : project) {
+            if (StringUtils.isBlank(orderType)) {
+                engineer.setOrderDayNum(engineer.getOrderDayNum() + Integer.valueOf(engineer.getReworkOrderNum()));
+            } else if (Integer.valueOf(orderType) == 2) {
+                if(StringUtils.isBlank(engineer.getReworkOrderNum())) {
+                    engineer.setOrderDayNum(0);
+                }else{
+                    engineer.setOrderDayNum(Integer.valueOf(engineer.getReworkOrderNum()));
+                }
+            }
             //如果是多个门店，就便利查找名称
             newEngineerService.engineerShopCode(engineer);
         }

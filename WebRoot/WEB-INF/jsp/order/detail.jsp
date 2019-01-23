@@ -194,6 +194,13 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>修改价格备注：${upOrderPrice.upReason }</h4>
                     </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>返修订单号：
+                            <c:forEach items="${reworks}" var="reworks" varStatus="i">
+                                <a href="javascript:void(0);" onclick="showReworkOrderDetail('${reworks.orderReworkNo}')"> ${reworks.orderReworkNo}</a>，
+                            </c:forEach>
+                        </h4>
+                    </div><!-- /.col -->
                 </div><!-- /.row -->
 
 
@@ -320,5 +327,12 @@
             }
         });
 
+    }
+
+    /**
+     * 查看订单详情
+     */
+    function showReworkOrderDetail(id) {
+        func_reload_page("${ctx}/order/reworkOrderDetail.do?reworkNo=" + id);
     }
 </script>

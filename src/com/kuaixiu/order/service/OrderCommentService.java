@@ -9,6 +9,7 @@ import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.dao.OrderCommentMapper;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderComment;
+import com.kuaixiu.order.entity.ReworkOrder;
 import com.system.basic.user.entity.SessionUser;
 
 import org.apache.log4j.Logger;
@@ -33,6 +34,8 @@ public class OrderCommentService extends BaseService<OrderComment> {
     private OrderService orderService;
     @Autowired
     private NewOrderService newOrderService;
+    @Autowired
+    private ReworkOrderService reworkOrderService;
 
     public OrderCommentMapper<OrderComment> getDao() {
         return mapper;
@@ -105,7 +108,39 @@ public class OrderCommentService extends BaseService<OrderComment> {
         comm.setIsDel(0);
         return getDao().add(comm);
     }
-    
+
+    /**
+     * 保存返修订单评价
+     * @param orderId
+     * @param comm
+     * @param su
+     * @return
+     * @CreateDate: 2016-9-17 下午8:44:33
+     */
+    @Transactional
+    public int reSave(String orderId, OrderComment comm, SessionUser su){
+        ReworkOrder o = reworkOrderService.queryById(orderId);
+        if(o == null){
+            throw new SystemException("订单不存在，不能进行评价");
+        }
+        if(o.getOrderStatus() == OrderConstant.ORDER_STATUS_CANCEL){
+            throw new SystemException("订单已取消，不能进行评价");
+        }
+        if(o.getOrderStatus() != OrderConstant.ORDER_STATUS_FINISHED){
+            throw new SystemException("订单未完成，不能进行评价");
+        }
+        if(o.getIsComment() == 1){
+            throw new SystemException("订单已评价，不能重复评价");
+        }
+
+        //修改订单已评价
+        o.setIsComment(1);
+        reworkOrderService.saveUpdate(o);
+        comm.setOrderNo(o.getOrderReworkNo());
+        comm.setIsDel(0);
+        return getDao().add(comm);
+    }
+
     /**
      * 根据订单号查询评价信息
      */

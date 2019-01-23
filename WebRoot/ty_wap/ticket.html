@@ -137,7 +137,7 @@
 					batchId:batchId
 			};
 			$.post(
-				linkUrl+'/recycle/receiveCoupons.do',
+				linkUrl+'/recycleNew/receiveCoupons.do',
 				{
 					params:JSON.stringify(param)
 				},
@@ -163,7 +163,7 @@
 							
 							//提示已经领取过
 							alert( '您已经领取过该加价劵' );
-						}if else(data.resultCode == "2"){
+						}else if(data.resultCode == "2"){
 						  alert( '该加价券已被领完,下次记得早点来哦!' );
 						}
 					 } 

@@ -2,13 +2,14 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.order.dao.OrderDetailMapper" >
+<mapper namespace="com.kuaixiu.order.dao.OrderDetailMapper">
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.OrderDetail" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.order.entity.OrderDetail">
         <result column="id" property="id"/>
         <result column="order_no" property="orderNo"/>
         <result column="project_id" property="projectId"/>
         <result column="project_name" property="projectName"/>
+        <result column="is_rework" property="isRework"/>
         <result column="type" property="type"/>
         <result column="price" property="price"/>
         <result column="real_price" property="realPrice"/>
@@ -20,14 +21,14 @@
         <result column="update_time" property="updateTime"/>
         <result column="update_userid" property="updateUserid"/>
     </resultMap>
-    
+
     <!-- kx_order_detail table all fields -->
-    <sql id="Base_Column_List" >
-        id,order_no,project_id,project_name,type,price,real_price,drawback_price,description,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    <sql id="Base_Column_List">
+        id,order_no,project_id,project_name,is_rework,type,price,real_price,drawback_price,description,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+    <insert id="add" parameterType="Object">
         insert into kx_order_detail
         (id,order_no,project_id,project_name,type,price,real_price,description,is_del,create_time,create_userid)
         values
@@ -35,7 +36,7 @@
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update kx_order_detail 
         set 
             project_id=#{projectId},
@@ -53,120 +54,132 @@
     <delete id="delete" parameterType="Object">
         delete from kx_order_detail where id = #{id}
     </delete>
-    
+
     <!-- 根据订单号删除维修记录 -->
     <delete id="delRepairByOrderNo" parameterType="Object">
         delete from kx_order_detail where type = 1 and order_no = #{orderNo}
     </delete>
-    
+
     <!-- 根据id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from kx_order_detail where id = #{id}
     </select>
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from kx_order_detail
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="orderNo != null and orderNo != ''" >
+        <if test="orderNo != null and orderNo != ''">
             and order_no = #{orderNo}
         </if>
-        <if test="projectId != null and projectId != ''" >
+        <if test="projectId != null and projectId != ''">
             and project_id = #{projectId}
         </if>
-        <if test="projectName != null and projectName != ''" >
+        <if test="projectName != null and projectName != ''">
             and project_name = #{projectName}
         </if>
-        <if test="type != null" >
+        <if test="type != null">
             and type = #{type}
         </if>
-        <if test="price != null and price != ''" >
+        <if test="price != null and price != ''">
             and price = #{price}
         </if>
-        <if test="realPrice != null and realPrice != ''" >
+        <if test="realPrice != null and realPrice != ''">
             and real_price = #{realPrice}
         </if>
-        <if test="drawbackPrice != null and drawbackPrice != ''" >
+        <if test="drawbackPrice != null and drawbackPrice != ''">
             and drawback_price = #{drawbackPrice}
         </if>
-        <if test="description != null and description != ''" >
+        <if test="description != null and description != ''">
             and description = #{description}
         </if>
-        <if test="isDel != null" >
+        <if test="isDel != null">
             and is_del = #{isDel}
         </if>
-        <if test="createTime != null and createTime != ''" >
+        <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
-        <if test="createUserid != null and createUserid != ''" >
+        <if test="createUserid != null and createUserid != ''">
             and create_userid = #{createUserid}
         </if>
-        <if test="updateTime != null and updateTime != ''" >
+        <if test="updateTime != null and updateTime != ''">
             and update_time = #{updateTime}
         </if>
-        <if test="updateUserid != null and updateUserid != ''" >
+        <if test="updateUserid != null and updateUserid != ''">
             and update_userid = #{updateUserid}
         </if>
         order by type asc, project_id asc
     </select>
-    
+
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from kx_order_detail
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="orderNo != null and orderNo != ''" >
+        <if test="orderNo != null and orderNo != ''">
             and order_no = #{orderNo}
         </if>
-        <if test="projectId != null and projectId != ''" >
+        <if test="projectId != null and projectId != ''">
             and project_id = #{projectId}
         </if>
-        <if test="projectName != null and projectName != ''" >
+        <if test="projectName != null and projectName != ''">
             and project_name = #{projectName}
         </if>
-        <if test="price != null and price != ''" >
+        <if test="price != null and price != ''">
             and price = #{price}
         </if>
-        <if test="realPrice != null and realPrice != ''" >
+        <if test="realPrice != null and realPrice != ''">
             and real_price = #{realPrice}
         </if>
-        <if test="drawbackPrice != null and drawbackPrice != ''" >
+        <if test="drawbackPrice != null and drawbackPrice != ''">
             and drawback_price = #{drawbackPrice}
         </if>
-        <if test="description != null and description != ''" >
+        <if test="description != null and description != ''">
             and description = #{description}
         </if>
-        <if test="isDel != null" >
+        <if test="isDel != null">
             and is_del = #{isDel}
         </if>
-        <if test="createTime != null and createTime != ''" >
+        <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
-        <if test="createUserid != null and createUserid != ''" >
+        <if test="createUserid != null and createUserid != ''">
             and create_userid = #{createUserid}
         </if>
-        <if test="updateTime != null and updateTime != ''" >
+        <if test="updateTime != null and updateTime != ''">
             and update_time = #{updateTime}
         </if>
-        <if test="updateUserid != null and updateUserid != ''" >
+        <if test="updateUserid != null and updateUserid != ''">
             and update_userid = #{updateUserid}
         </if>
     </select>
-    
+
     <!-- 根据id查询  -->
-    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
-        from kx_order_detail where orderNo = #{orderNo}
+    <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_order_detail where order_no = #{orderNo}
+        order by type asc, project_id asc
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryIsReworkByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_order_detail where order_no = #{orderNo}
+        and is_rework=1
+        and type=1
         order by type asc, project_id asc
     </select>
 

@@ -269,6 +269,7 @@ public class ShopController extends BaseController {
             resultMap.put(RESULTMAP_KEY_MSG, "保存成功");
         }catch (Exception e){
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
+            resultMap.put(RESULTMAP_KEY_MSG,e.getMessage());
             e.printStackTrace();
         }
         renderJson(response, resultMap);
