@@ -1,0 +1,111 @@
+/**加价优惠券列表页面**/
+.hide{
+	display:none;
+}
+
+.add-price-ticket{
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	font-size:14px;
+	padding:20px;
+	background-color:#FFF;
+	
+	z-index:9999;
+}
+.add-price-ticket .list-title{
+	position:relative;
+	line-height:2.em;
+	font-size:1.2em;
+	color:#666666;
+}
+
+.can-use-ticket{
+	position:relative;
+	padding-bottom:1em;
+}
+
+.add-price-ticket .ticket-item{
+	position:relative;
+	padding:.8em 1.2em;
+	margin-bottom:.8em;
+	background:url('../img/add-price-disable.png') no-repeat center center;
+	background-size:100% 100%;
+	color:#FFF;
+}
+.add-price-ticket .ticket-item.can-use{
+	background-image:url('../img/add-price-canuse.png');
+}
+
+/**优惠券的样式**/
+.ticket-item .ticket-info{
+	position:relative;
+	padding-bottom:5px;
+}
+.ticket-item .ticket-info:after{
+	content:'';
+	clear:both;
+	display:table;
+}
+.ticket-item .ticket-info .ticket-value{
+	float:left;
+	position:relative;
+	padding-left:.2em;
+	font-size:4em;
+}
+.ticket-item .ticket-info .ticket-value:before{
+	content:'￥';
+	font-size:.5em;
+}
+.ticket-item .ticket-info .ticket-value>.percent-label{
+	font-size:.5em;
+}
+.ticket-item .ticket-info .ticket-desc{
+	float:left;
+	position:relative;
+	padding-left:.5em;
+}
+.ticket-item .ticket-info .ticket-desc>label{
+	display:block;
+	line-height:2.4em;
+}
+
+.ticket-item .ticket-date{
+	position:relative;
+	padding-top:10px;
+	font-size:.8em;
+	background:url('../img/add-price-space.png') no-repeat center 0;
+	background-size:100% auto;
+}
+.ticket-item .ticket-date>.start-date{
+	margin-right:8px;
+}
+.ticket-item .ticket-date>.end-date{
+	margin-left:8px;
+}
+
+/**默认的优惠券**/
+.ticket-item.default:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	width:50%;
+	height:45%;
+	background:url('../img/add-price-default-label.png') no-repeat 100% 0;
+	background-size:auto 100%;
+}
+.ticket-item.used:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:8%;
+	width:50%;
+	height:50%;
+	background:url('../img/add-price-used-label.png') no-repeat 100% -5px;
+	background-size:auto 100%;
+}
+
+
