@@ -69,6 +69,7 @@
                   <th class="fontWeight_normal tdwidth90 center">加价券名称</th>
                   <th class="fontWeight_normal tdwidth90 center">加价券类型</th>
                     <th class="fontWeight_normal tdwidth90 center">加价券描述</th>
+                    <th class="fontWeight_normal tdwidth90 center">加价金额上限</th>
                     <th class="fontWeight_normal tdwidth90 center">加价金额下限</th>
                   <th class="fontWeight_normal tdwidth50 center">加价券<br/>金额</th>
                   <th class="fontWeight_normal tdwidth160 center">有效时间</th>
@@ -116,6 +117,7 @@ dto.setColumns([
     {"data": "couponName","class":""},
     {"data": "pricingType","class":""},
     {"data": "ruleDescription","class":""},
+    {"data": "upperLimit","class":""},
     {"data": "subtraction_price","class":""},
     {"data": "couponPrice","class":""},
     {"data": "beginTime","class":""},
@@ -160,7 +162,7 @@ dto.setColumnDefs([
         }
     },
     {//有效时间
-    	targets: 8,
+    	targets: 9,
         render: function (data, type, row, meta) {                           
             return row.beginTime + "-" + row.endTime;
         }

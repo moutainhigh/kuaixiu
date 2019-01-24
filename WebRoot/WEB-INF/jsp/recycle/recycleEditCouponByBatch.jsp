@@ -34,6 +34,12 @@
             <input type="text" id="pricingType" name="pricingType" value="${coupon.pricingType }" class="form-control" placeholder="请输入负责人手机号">
           </div>
         </div>
+        <div class="form-group" id="upperLimits">
+          <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
+          <div class="col-sm-9">
+            <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入加价券额度条件上限">
+          </div>
+        </div>
         <div class="form-group" id="prices">
           <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券规则描述</label>
           <div class="col-sm-9">
@@ -79,7 +85,16 @@
 $(document).ready(function() {
     insertValidatorForm();
 });
-
+$(function () {
+    $('input:radio[name="pricingType"]').change(function () {
+        var v = $(this).val();
+        if (v == 2) {
+            $("#upperLimits").hide();
+        } else {
+            $("#upperLimits").show();
+        }
+    });
+});
 //初始化表单
 function insertValidatorForm() {
     $("#insertForm")
