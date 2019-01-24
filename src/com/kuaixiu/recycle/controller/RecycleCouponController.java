@@ -105,7 +105,8 @@ public class RecycleCouponController extends BaseController {
             }
             String name = request.getParameter("name");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
-            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额额度
+            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额下限额度
+            String upperLimit = request.getParameter("upperLimit");//满减金额上限额度
             String price = request.getParameter("price");//优惠券金额
             String description = request.getParameter("ruleDescription");//加价规则描述
             String startTime = request.getParameter("startTime");//优惠券开始时间
@@ -114,7 +115,7 @@ public class RecycleCouponController extends BaseController {
             String note = request.getParameter("note");//优惠券备注
             if (StringUtils.isBlank(name) || StringUtils.isBlank(price) || StringUtils.isBlank(startTime)
                     || StringUtils.isBlank(endTime) || StringUtils.isBlank(number) || StringUtils.isBlank(pricingType)
-                    || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)) {
+                    || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description) || StringUtils.isBlank(upperLimit)) {
                 throw new SystemException("参数不完整");
             }
             if (1 == Integer.valueOf(pricingType)) {
@@ -136,6 +137,7 @@ public class RecycleCouponController extends BaseController {
                 recycleCoupon.setCouponName(name);
                 recycleCoupon.setPricingType(Integer.valueOf(pricingType));
                 recycleCoupon.setRuleDescription(description);
+                recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
                 recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
                 recycleCoupon.setStrCouponPrice(new BigDecimal(price));
                 recycleCoupon.setBeginTime(startTime);
