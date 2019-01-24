@@ -143,7 +143,7 @@
                 }
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
         
-                $('.priceBox span',tmp).html("¥"+ parseFloat((n.orderprice)).toFixed(2));
+                $('.priceBox span',tmp).html("¥"+(n.orderprice).toFixed(2));
         
                 //追加到对应区块
                 $(".cont").append(tmp);

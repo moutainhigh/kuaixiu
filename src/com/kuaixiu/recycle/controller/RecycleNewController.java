@@ -971,7 +971,8 @@ public class RecycleNewController extends BaseController {
                                         } else {
                                             quote.put("addCouponPrice", String.valueOf(addCouponPrice));
                                             quote.put("orderprice", (new BigDecimal(orderPrice).add((new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())))).toString());
-                                        }                                    } else {
+                                        }
+                                    } else {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                         quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
                                         quote.put("orderprice", (new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice())).toString());
