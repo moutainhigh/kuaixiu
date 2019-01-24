@@ -115,7 +115,7 @@ public class RecycleCouponController extends BaseController {
             String note = request.getParameter("note");//优惠券备注
             if (StringUtils.isBlank(name) || StringUtils.isBlank(price) || StringUtils.isBlank(startTime)
                     || StringUtils.isBlank(endTime) || StringUtils.isBlank(number) || StringUtils.isBlank(pricingType)
-                    || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description) || StringUtils.isBlank(upperLimit)) {
+                    || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)) {
                 throw new SystemException("参数不完整");
             }
             if (1 == Integer.valueOf(pricingType)) {
@@ -603,8 +603,7 @@ public class RecycleCouponController extends BaseController {
             String note = request.getParameter("note");//优惠券备注
             if (StringUtils.isBlank(name) || StringUtils.isBlank(price) || StringUtils.isBlank(startTime)
                     || StringUtils.isBlank(endTime) || StringUtils.isBlank(pricingType)
-                    || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)
-                    || StringUtils.isBlank(upperLimit)) {
+                    || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)) {
                 throw new SystemException("参数不完整");
             }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
