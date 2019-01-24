@@ -290,6 +290,7 @@ public class RecycleCouponController extends BaseController {
                 } else if (recycleCoupon1.getPricingType() == 2) {
                     json.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "元");
                 }
+                json.put("upperLimit", recycleCoupon1.getUpperLimit());
                 json.put("subtractionPrice", recycleCoupon1.getSubtraction_price());
                 json.put("ruleDescription", recycleCoupon1.getRuleDescription());
                 json.put("beginTime", recycleCoupon1.getBeginTime());
