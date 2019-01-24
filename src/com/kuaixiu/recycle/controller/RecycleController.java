@@ -777,7 +777,8 @@ public class RecycleController extends BaseController {
                 order.setWechatOpenId(openId);
             }
             if (StringUtils.isNotBlank(couponCode)) {
-                if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()) {
+                if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()
+                        || order.getPrice().intValue() > recycleCoupon.getUpperLimit().intValue()) {
                     throw new SystemException("加价券的使用不满足条件");
                 }
                 order.setCouponId(recycleCoupon.getId());
@@ -823,7 +824,7 @@ public class RecycleController extends BaseController {
                     json.put("percent", 0);
                     json.put("addFee", recycleCoupon.getStrCouponPrice().intValue());
                 }
-                json.put("up", recycleCoupon.getUpSubtractionrice());
+                json.put("up", recycleCoupon.getUpperLimit());
                 json.put("low", recycleCoupon.getSubtraction_price());
                 json.put("desc", recycleCoupon.getRuleDescription());
                 jsonArray.add(json);

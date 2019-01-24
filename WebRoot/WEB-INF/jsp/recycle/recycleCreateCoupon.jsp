@@ -24,7 +24,7 @@
 			<div class="form-group" id="prices">
 				<label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
 				<div class="col-sm-9">
-					<input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入加价券额度条件下限">
+					<input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入加价券额度条件上限">
 				</div>
 			</div>
 			<div class="form-group" id="prices">

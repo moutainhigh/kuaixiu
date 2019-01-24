@@ -21,6 +21,12 @@
             <input type="text" id="couponName" name="name" value="${coupon.couponName }" class="form-control" placeholder="请输入负责人姓名">
           </div>
         </div>
+        <div class="form-group">
+          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
+          <div class="col-sm-9">
+            <input type="text" id="upperLimit" name="upperLimit" value="${coupon.upperLimit }" class="form-control" placeholder="请输入负责人手机号">
+          </div>
+        </div>
           <div class="form-group">
               <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
               <div class="col-sm-9">
