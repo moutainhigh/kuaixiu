@@ -21,6 +21,7 @@ import jodd.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -76,7 +77,7 @@ public class RecycleController extends BaseController {
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
     //回收订单状态变化时调用，更改状态  参数签名
     private static final String autograph = "HZYNKJ@SUPER2017";
-
+    private static final String batchId="A016";
     /**
      * 欢GO首页
      *
@@ -798,6 +799,7 @@ public class RecycleController extends BaseController {
             cust.setAddress(address);
             recycleCustomerService.add(cust);  //添加用户信息
 
+            receviceCoupon(result,mobile);
 
             //请求回收平台调用下单接口
             JSONObject requestNews = new JSONObject();
@@ -885,6 +887,29 @@ public class RecycleController extends BaseController {
         renderJson(response, result);
     }
 
+    //下单赠送加价券
+    public ResultData receviceCoupon(ResultData result,String mobile){
+        RecycleCoupon recycleCoupon = new RecycleCoupon();
+        recycleCoupon.setBatchId(batchId);
+        recycleCoupon.setIsDel(0);
+        recycleCoupon.setIsUse(0);
+        recycleCoupon.setIsReceive(0);
+        recycleCoupon.setStatus(1);
+        //查询该批次所有未领取可用加价券
+        List<RecycleCoupon> recycleCoupons = recycleCouponService.queryList(recycleCoupon);
+        if (CollectionUtils.isEmpty(recycleCoupons)) {
+            result.setResultMessage("该加价券已被领完");
+            result.setResultCode("2");
+            result.setSuccess(false);
+            return result;
+        }
+        //加价券绑定手机号
+        recycleCoupon.setReceiveMobile(mobile);
+        String recycleCode = recycleCoupons.get(0).getCouponCode();
+        recycleCoupon.setCouponCode(recycleCode);
+        recycleCouponService.updateForReceive(recycleCoupon);
+        return result;
+    }
 
     /**
      * 超人系统地址为 上海市 黄浦区 城区    -----  浙江 杭州市 江干区

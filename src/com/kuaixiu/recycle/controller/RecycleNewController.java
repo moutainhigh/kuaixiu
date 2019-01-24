@@ -17,6 +17,7 @@ import jodd.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +64,7 @@ public class RecycleNewController extends BaseController {
      * 需要加密的数据名
      */
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
-
+    private static final String batchId="A016";
     /**
      * 获取品牌列表
      */
@@ -678,6 +679,7 @@ public class RecycleNewController extends BaseController {
             cust.setAddress(address);
             recycleCustomerService.add(cust);  //添加用户信息
 
+            receviceCoupon(result,mobile);
 
             //请求回收平台调用下单接口
             JSONObject requestNews = new JSONObject();
@@ -763,6 +765,31 @@ public class RecycleNewController extends BaseController {
             sessionUserService.getException(result);
         }
         renderJson(response, result);
+    }
+
+
+    //下单赠送加价券
+    public ResultData receviceCoupon(ResultData result,String mobile){
+        RecycleCoupon recycleCoupon = new RecycleCoupon();
+        recycleCoupon.setBatchId(batchId);
+        recycleCoupon.setIsDel(0);
+        recycleCoupon.setIsUse(0);
+        recycleCoupon.setIsReceive(0);
+        recycleCoupon.setStatus(1);
+        //查询该批次所有未领取可用加价券
+        List<RecycleCoupon> recycleCoupons = recycleCouponService.queryList(recycleCoupon);
+        if (CollectionUtils.isEmpty(recycleCoupons)) {
+            result.setResultMessage("该加价券已被领完");
+            result.setResultCode("2");
+            result.setSuccess(false);
+            return result;
+        }
+        //加价券绑定手机号
+        recycleCoupon.setReceiveMobile(mobile);
+        String recycleCode = recycleCoupons.get(0).getCouponCode();
+        recycleCoupon.setCouponCode(recycleCode);
+        recycleCouponService.updateForReceive(recycleCoupon);
+        return result;
     }
 
 
