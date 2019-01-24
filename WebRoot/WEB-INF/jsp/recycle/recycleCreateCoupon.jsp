@@ -23,12 +23,6 @@
                 <input type="text" id="couponName" name="name" class="form-control" placeholder="请输入加价券名称">
             </div>
         </div>
-        <div class="form-group" id="upperLimits">
-            <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
-            <div class="col-sm-9">
-                <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入加价券额度条件上限">
-            </div>
-        </div>
         <div class="form-group" id="upbtractionPrices">
             <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
             <div class="col-sm-9">
@@ -52,6 +46,12 @@
             <label><input name="pricingType" type="radio" value="2"/>
                 固定金额加价卷
             </label>
+        </div>
+        <div class="form-group" id="upperLimits">
+            <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
+            <div class="col-sm-9">
+                <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入加价券额度条件上限">
+            </div>
         </div>
         <div class="form-group" id="couponPrices">
             <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span>
