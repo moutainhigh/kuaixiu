@@ -453,8 +453,8 @@
                                 endTime: couponsUsableArr[j].endTime,
                                 couponCode: couponsUsableArr[j].couponCode
                             }
-							if(obj > couponsUsableArr[j].upperLimit){
-							  obj = couponsUsableArr[j].upperLimit;
+							if(obj.couponPrice > couponsUsableArr[j].upperLimit){
+							  obj.couponPrice = couponsUsableArr[j].upperLimit;
 							}
                         }else {
                             obj = {
@@ -672,7 +672,7 @@
 
 			//刷新页面内容 
 			if( G.couponsAvailableDefault.couponPrice.indexOf('%') != -1 ){
-			   if(MP * G.couponsAvailableDefault.couponPrice > G.couponsAvailableDefault.upperLimit){
+			   if(parseFloat(MP) * parseFloat(G.couponsAvailableDefault.couponPrice) > G.couponsAvailableDefault.upperLimit){
 			     $('.js-current-coupons i').text( G.couponsAvailableDefault.upperLimit );
 			   }else{
 			     $('.js-current-coupons i').text( MP * G.couponsAvailableDefault.couponPrice.replace('%','') / 100 );
@@ -686,7 +686,7 @@
 		});
 		
 		//初始化优惠券列表
-		initAddpricePage();
+		//initAddpricePage();
     </script>
 <!--站长统计-->
 <div style="display: none;">
