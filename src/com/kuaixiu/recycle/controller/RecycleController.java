@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -785,14 +786,17 @@ public class RecycleController extends BaseController {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
             }
-            if ("9".equals(source) || "10".equals(source)) {
-                RecycleCoupon recycleCoupon1 = receviceCoupon(mobile);
-                if (recycleCoupon1 != null) {
-                    order.setCouponId(recycleCoupon1.getId());
-                    recycleCouponService.updateForUse(recycleCoupon1);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date endTime = sdf.parse("2019-02-28 23:59:59");
+            if (new Date().getTime() < endTime.getTime()) {
+                if ("9".equals(source) || "10".equals(source)) {
+                    RecycleCoupon recycleCoupon1 = receviceCoupon(mobile);
+                    if (recycleCoupon1 != null) {
+                        order.setCouponId(recycleCoupon1.getId());
+                        recycleCouponService.updateForUse(recycleCoupon1);
+                    }
                 }
             }
-
             recycleOrderService.add(order);     //添加预付订单记录
 
             //保存用户信息
