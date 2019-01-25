@@ -91,6 +91,7 @@
             </tr>
 
             <tr>
+                <c:if test="${userId ne 'kf014'}">
                 <td class="search_th"><label class="control-label">地市 ：</label></td>
                 <td class="search_td">
                     <select name="query_city" class="form-control">
@@ -100,6 +101,7 @@
                         </c:forEach>
                     </select>
                 </td>
+                </c:if>
 
 
                 <td class="search_th"><label class="control-label">电渠状态：</label></td>

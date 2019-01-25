@@ -82,12 +82,14 @@ public class CardController extends BaseController{
     @RequestMapping(value = "/telecom/card")
     public ModelAndView card(HttpServletRequest request,
                                                HttpServletResponse response) throws Exception {
+        SessionUser su = getCurrentUser(request);//得到当前用户
         //地市数据
         List<String> list = batchImportService.queryProvince();
         List<CardType> cardTypes1=getCardType(2);
         List<CardType> cardTypes2=getCardType(1);
         request.setAttribute("type",cardTypes1);
         request.setAttribute("name",cardTypes2);
+        request.setAttribute("userId",su.getUserId());
         request.setAttribute("list",list);
         String returnView ="card/cardList";
         return new ModelAndView(returnView);
@@ -155,13 +157,17 @@ public class CardController extends BaseController{
         String zhuangEndTime=request.getParameter("query_endZhuangTime");
         String telecomStartTime=request.getParameter("query_startTelecomTime");
         String telecomEndTime=request.getParameter("query_endTelecomTime");
-
+        SessionUser su = getCurrentUser(request);//得到当前用户
 
         Page page = getPageByRequest(request);
         TelecomCard telecomCard=new TelecomCard();
         telecomCard.setIccid(iccid);
         telecomCard.setBatch(batch);
-        telecomCard.setProvince(city);
+        if("kf014".equals(su.getUserId())) {
+            telecomCard.setProvince("台州");
+        }else{
+            telecomCard.setProvince(city);
+        }
         telecomCard.setQueryStartTime(startTime);
         telecomCard.setQueryEndTime(endTime);
         telecomCard.setQueryStartDistributionTime(startDistributionTime);
