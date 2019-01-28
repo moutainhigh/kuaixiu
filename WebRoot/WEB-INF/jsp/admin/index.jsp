@@ -33,11 +33,20 @@
 	                <%@ include file="index_content_shop.jsp" %>
 			    </c:if>
 			    <c:if test="${loginUserType == USER_TYPE_CUSTOMER_SERVICE }">
+                    <c:if test="${loginUserId ne 'kf014' }">
 	                <script type="text/javascript">
 	                $(function () {
 	                	func_reload_page("${ctx}/order/list.do");
 	                });
 	                </script>
+                    </c:if>
+                    <c:if test="${loginUserId eq 'kf014' }">
+                        <script type="text/javascript">
+                            $(function () {
+                                func_reload_page("${ctx}/telecom/card.do");
+                            });
+                        </script>
+                    </c:if>
 			    </c:if>
             </div>
             <%-- 展示内容 end --%>
