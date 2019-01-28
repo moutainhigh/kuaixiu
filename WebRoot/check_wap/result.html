@@ -85,17 +85,16 @@
             }else{
                 var itemsId = eCacheUtil.storage.getCache(CacheKey.SelectItems);
                 var param = {
-				    "token":eCacheUtil.storage.getCache(CacheKey.CheckToke),
-					"brandId":eCacheUtil.storage.getCache(CacheKey.BrandId),
-                    "productId":eCacheUtil.storage.getCache(CacheKey.ProjectId),
+                    "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
                     "items":itemsId,
-					"detail":eCacheUtil.storage.getCache(CacheKey.itemsName)
+                    "openId":openId
                 },base = new Base64();
-                $.post(linkUrl+'/recycle/external/getPrice.do',{params:JSON.stringify(param)},function (data) {
+                $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){
-                        prePrice = data.result.datainfo.price;              
+                        var dataInfo = data.result.datainfo;
+                        prePrice = dataInfo.price;
                         $('.price').html(prePrice);
-                        quote = base.encode(data.result.datainfo.quoteid);
+                        quote = base.encode(dataInfo.quoteid);
                         loading_hide();
                     }else {
                         loading_hide();

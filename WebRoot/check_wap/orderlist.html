@@ -106,7 +106,7 @@
                 pagesize:"3",
                 processstatus:orderStatus
             }
-            $.post(linkUrl+'/recycle/getOrderList.do',{params:JSON.stringify(params)},function (data) {
+            $.post(linkUrl+'/recycleNew/getOrderList.do',{params:JSON.stringify(params)},function (data) {
             	if (data.success){
                     var dataInfo = data.result.datainfo;
                     if (dataInfo.length == 0){
