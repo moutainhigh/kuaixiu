@@ -5,6 +5,7 @@ import com.kuaixiu.card.entity.TelecomCard;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TelecomCardMapper<T> extends BaseDao<T>{
 
@@ -40,11 +41,13 @@ public interface TelecomCardMapper<T> extends BaseDao<T>{
     List<T> queryPushFail();
 
 
+    List<Map> queryListTwo(T t);
     /**
      * 联合查询列表 带分页
      * @param t
      * @return
      */
+    List<Map> queryTelecomList(T t);
     List<T> queryTelecomListForPage(T t);
 
 }

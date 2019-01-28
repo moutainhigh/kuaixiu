@@ -2,7 +2,8 @@
 <%@ include file="/commons/taglibs.jsp" %>
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg">卡号管理</strong> / <small>列表查询</small>
+        <strong class="am-text-primary am-text-lg">卡号管理</strong> /
+        <small>列表查询</small>
     </div>
 </div>
 
@@ -13,7 +14,7 @@
         <table id="searchTable">
             <tr>
                 <td class="search_th search_th_frist"><label class="control-label">&nbsp&nbsp&nbspICCID ：</label></td>
-                <td class="search_td"><input type="text" name="query_iccid" class="form-control" ></td>
+                <td class="search_td"><input type="text" name="query_iccid" class="form-control"></td>
 
                 <td class="search_th"><label class="control-label">是否已寄出 ：</label></td>
                 <td class="search_td">
@@ -28,7 +29,7 @@
 
             <tr>
                 <td class="search_th search_th_frist"><label class="control-label">&nbsp&nbsp&nbsp批次号 ：</label></td>
-                <td class="search_td"><input type="text" name="query_batchId" class="form-control" ></td>
+                <td class="search_td"><input type="text" name="query_batchId" class="form-control"></td>
 
                 <td class="search_th"><label class="control-label">是否已分配 ：</label></td>
                 <td class="search_td">
@@ -40,7 +41,6 @@
                 </td>
                 <td></td>
             </tr>
-
 
 
             <tr>
@@ -72,9 +72,11 @@
                 <td class="search_th"><label class="control-label">导入时间：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
-                        <input type="text" id="query_startTime" name="query_startTime" class="form-control am-datepicker-start" data-am-datepicker readonly >
+                        <input type="text" id="query_startTime" name="query_startTime"
+                               class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endTime" name="query_endTime" class="form-control am-datepicker-end" data-am-datepicker readonly >
+                        <input type="text" id="query_endTime" name="query_endTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>
 
@@ -82,9 +84,11 @@
                 <td class="search_th"><label class="control-label">分配时间：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
-                        <input type="text" id="query_startDistributionTime" name="query_startDistributionTime" class="form-control am-datepicker-start" data-am-datepicker readonly >
+                        <input type="text" id="query_startDistributionTime" name="query_startDistributionTime"
+                               class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endDistributionTime" name="query_endDistributionTime" class="form-control am-datepicker-end" data-am-datepicker readonly >
+                        <input type="text" id="query_endDistributionTime" name="query_endDistributionTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>
                 <td></td>
@@ -92,15 +96,15 @@
 
             <tr>
                 <c:if test="${userId ne 'kf014'}">
-                <td class="search_th"><label class="control-label">地市 ：</label></td>
-                <td class="search_td">
-                    <select name="query_city" class="form-control">
-                        <option value="">--选择地市--</option>
-                        <c:forEach items="${list}" var="item" varStatus="i">
-                            <option value="${item}">${item}</option>
-                        </c:forEach>
-                    </select>
-                </td>
+                    <td class="search_th"><label class="control-label">地市 ：</label></td>
+                    <td class="search_td">
+                        <select name="query_city" class="form-control">
+                            <option value="">--选择地市--</option>
+                            <c:forEach items="${list}" var="item" varStatus="i">
+                                <option value="${item}">${item}</option>
+                            </c:forEach>
+                        </select>
+                    </td>
                 </c:if>
 
 
@@ -121,18 +125,22 @@
                 <td class="search_th"><label class="control-label">转转推送：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
-                        <input type="text" id="query_startZhuangTime" name="query_startZhuangTime" class="form-control am-datepicker-start" data-am-datepicker readonly >
+                        <input type="text" id="query_startZhuangTime" name="query_startZhuangTime"
+                               class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endZhuangTime" name="query_endZhuangTime" class="form-control am-datepicker-end" data-am-datepicker readonly >
+                        <input type="text" id="query_endZhuangTime" name="query_endZhuangTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>
 
                 <td class="search_th"><label class="control-label">电渠推送：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
-                        <input type="text" id="query_startTelecomTime" name="query_startTelecomTime" class="form-control am-datepicker-start" data-am-datepicker readonly >
+                        <input type="text" id="query_startTelecomTime" name="query_startTelecomTime"
+                               class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endTelecomTime" name="query_endTelecomTime" class="form-control am-datepicker-end" data-am-datepicker readonly >
+                        <input type="text" id="query_endTelecomTime" name="query_endTelecomTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>
                 <td></td>
@@ -146,10 +154,16 @@
             <div class="am-u-sm-12 am-u-md-6">
                 <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-sm m20">
-                        <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜  索 </button>
+                        <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜 索
+                        </button>
                         <!--
                         <button onclick="adminPush();" class="am-btn am-btn-default search_btn" type="button"> 当日号卡推送(超人-电渠) </button>
                         -->
+                        <c:if test="${userId eq 'kf014'}">
+                            <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
+                                    class="am-icon-file-excel-o"></span> 导出
+                            </button>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -158,13 +172,14 @@
 </div>
 
 
-
 <div class="am-g">
     <div class="am-u-sm-12">
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)" type="checkbox" />序号</th>
+                <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
+                                                               type="checkbox"/>序号
+                </th>
                 <th class="fontWeight_normal table-title center">批次号</th>
                 <th class="fontWeight_normal table-title center">ICCID</th>
                 <th class="fontWeight_normal table-title center">号卡类型</th>
@@ -189,44 +204,43 @@
     $("#query_startTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
     $("#query_endTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
     $("#query_startDistributionTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
     $("#query_endDistributionTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
-
 
 
     $("#query_startZhuangTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
     $("#query_endZhuangTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
@@ -234,27 +248,27 @@
     $("#query_startTelecomTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
     $("#query_endTelecomTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
-        autoclose:true,//选中关闭
+        autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
     });
 
 
     //自定义datatable的数据
-    var dto=new DtOptions();
+    var dto = new DtOptions();
     //设置数据刷新路径
-    dto.ajax={
+    dto.ajax = {
         "url": "${ctx}/telecom/card/queryListForPage.do",
-        "data":function(d){
+        "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
-            $.each(array, function() {
+            $.each(array, function () {
                 d[this.name] = this.value;
             });
         }
@@ -262,17 +276,17 @@
 
     //设置数据列
     dto.setColumns([
-        {"data": "id","class":"tdwidth50 center"},
-        {"data": "batch","class":""},
-        {"data": "iccid","class":""},
-        {"data": "type","class":""},
-        {"data": "cardName","class":""},
-        {"data": "province","class":""},
-        {"data": "isDistribution","class":""},
-        {"data": "isUse","class":""},
-        {"data": "distributionTime","class":""},
-        {"data": "stationExpressNumber","class":""},
-        {"defaultContent": "操作","class":""}
+        {"data": "id", "class": "tdwidth50 center"},
+        {"data": "batch", "class": ""},
+        {"data": "iccid", "class": ""},
+        {"data": "type", "class": ""},
+        {"data": "cardName", "class": ""},
+        {"data": "province", "class": ""},
+        {"data": "isDistribution", "class": ""},
+        {"data": "isUse", "class": ""},
+        {"data": "distributionTime", "class": ""},
+        {"data": "stationExpressNumber", "class": ""},
+        {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -281,7 +295,7 @@
             render: function (data, type, row, meta) {
                 var context = {
                     func: [
-                        {"id": row.iccid, "order" : meta.row + 1}
+                        {"id": row.iccid, "order": meta.row + 1}
                     ]
                 };
                 var html = template_chk(context);
@@ -291,10 +305,10 @@
         {//号卡类型
             targets: 3,
             render: function (data, type, row, meta) {
-                if(row.type==0){
+                if (row.type == 0) {
                     return '小白卡';
                 }
-                else{
+                else {
                     return '即买即通卡';
                 }
             }
@@ -303,7 +317,7 @@
             targets: 4,
             render: function (data, type, row, meta) {
                 var state = "";
-                switch(row.cardName){
+                switch (row.cardName) {
                     case 0:
                         state = "白金卡";
                         break;
@@ -334,10 +348,10 @@
         {//分配
             targets: 6,
             render: function (data, type, row, meta) {
-                if(row.isDistribution==1){
+                if (row.isDistribution == 1) {
                     return '是';
                 }
-                else{
+                else {
                     return '否';
                 }
             }
@@ -345,10 +359,10 @@
         {//寄出
             targets: 7,
             render: function (data, type, row, meta) {
-                if(row.isUse==1){
+                if (row.isUse == 1) {
                     return '是';
                 }
-                else{
+                else {
                     return '否';
                 }
             }
@@ -356,17 +370,32 @@
         {
             targets: -1,
             render: function (data, type, row, meta) {
-                if(row.isPush==1){
+                if (row.isPush == 1) {
                     var context = {
                         func: [
-                            {"name" : "查看", "fn" : "detail(\'" + row.iccid + "\')","icon" : "am-icon-pencil-square-o","class" : "am-text-secondary"},
-                            {"name" : "重新推送", "fn" : "push(\'" + row.iccid + "\')","icon" : "am-icon-pencil-square-o","class" : "am-text-secondary"},
+                            {
+                                "name": "查看",
+                                "fn": "detail(\'" + row.iccid + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            },
+                            {
+                                "name": "重新推送",
+                                "fn": "push(\'" + row.iccid + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            },
                         ]
                     };
-                }else{
+                } else {
                     var context = {
                         func: [
-                            {"name" : "查看", "fn" : "detail(\'" + row.iccid + "\')","icon" : "am-icon-pencil-square-o","class" : "am-text-secondary"}
+                            {
+                                "name": "查看",
+                                "fn": "detail(\'" + row.iccid + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            }
                         ]
                     };
                 }
@@ -383,23 +412,23 @@
     /**
      * 刷新列表
      */
-    function refreshPage(){
+    function refreshPage() {
         myTable.ajax.reload(null, false);
     }
 
     /**
      * 全选按钮
      */
-    function checkAll(obj){
-        $("input[name='item_check_btn']").each(function(){
+    function checkAll(obj) {
+        $("input[name='item_check_btn']").each(function () {
             $(this).prop("checked", obj.checked);
         });
     }
 
-    function checkItem(obj){
+    function checkItem(obj) {
         var checked = true;
-        $("input[name='item_check_btn']").each(function(){
-            if(!this.checked){
+        $("input[name='item_check_btn']").each(function () {
+            if (!this.checked) {
                 checked = false;
                 return false;
             }
@@ -407,12 +436,12 @@
         $("#check_all_btn").prop("checked", checked);
     }
 
-    function addBtnClick(){
+    function addBtnClick() {
         $("#modal-insertView").modal("show");
     }
 
-    function detail(id){
-        func_reload_page("${ctx}/telecom/card/cardDetail.do?id="+id);
+    function detail(id) {
+        func_reload_page("${ctx}/telecom/card/cardDetail.do?id=" + id);
     }
 
     /**
@@ -441,7 +470,7 @@
         });
     }
 
-    function format(time){
+    function format(time) {
         var date = new Date(time);
         var year = date.getFullYear(),
             month = date.getMonth() + 1,//月份是从0开始的
@@ -474,7 +503,25 @@
                 AlertText.hide();
             }
         });
-        
+
+    }
+
+    /**
+     * 导出数据
+     */
+    function expDataExcel() {
+        var params = "";
+        var array = $("#searchForm").serializeArray();
+        $.each(array, function () {
+            params += "&" + this.name + "=" + this.value;
+        });
+        var ids = "";
+        $("input[name='item_check_btn']").each(function () {
+            if (this.checked) {
+                ids += this.value + ",";
+            }
+        });
+        window.open("${ctx}/file/download.do?fileId=23&ids=" + ids + params, "导出");
     }
 
 </script>

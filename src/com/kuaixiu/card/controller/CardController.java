@@ -164,7 +164,7 @@ public class CardController extends BaseController{
         telecomCard.setIccid(iccid);
         telecomCard.setBatch(batch);
         if("kf014".equals(su.getUserId())) {
-            telecomCard.setProvince("台州");
+            telecomCard.setProvince("台州市");
         }else{
             telecomCard.setProvince(city);
         }
