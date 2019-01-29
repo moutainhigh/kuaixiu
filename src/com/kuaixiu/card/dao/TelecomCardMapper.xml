@@ -215,9 +215,13 @@
   <!-- 查询列表 带分页 -->
   <select id="queryListTwo" resultType="Map" parameterType="Object">
     select
-    c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name, c.in_time, c.distribution_time, c.lose_efficacy,
+    c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name,
+    date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+    date_format(c.`distribution_time`,'%Y-%m-%d %H:%i:%s')distribution_time,
+    date_format(c.`lose_efficacy`,'%Y-%m-%d')lose_efficacy,
     c.station_id, c.station_express_id, c.is_use, c.success_order_id, c.express_name, c.express_number,
-    c.send_station_id, c.send_time, c.send_city,c.is_distribution,c.station_express_number,c.is_push,c.update_time,
+    c.send_station_id, date_format(c.`send_time`,'%Y-%m-%d %H:%i:%s')send_time, c.send_city,c.is_distribution,
+    c.station_express_number,c.is_push,c.update_time,
     t.id, t.station_name, t.name, t.tel, t.is_open, t.distribution_sum, t.repertory, t.address,t.is_del
     from hk_telecom_card c
     LEFT JOIN hk_station t ON c.station_id=t.id
@@ -276,9 +280,13 @@
   <!-- 联合查询列表 带分页 -->
   <select id="queryTelecomList" resultType="Map" parameterType="Object">
     select
-    c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name, c.in_time, c.distribution_time, c.lose_efficacy,
+    c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name,
+    date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+    date_format(c.`distribution_time`,'%Y-%m-%d %H:%i:%s')distribution_time,
+    date_format(c.`lose_efficacy`,'%Y-%m-%d')lose_efficacy,
     c.station_id, c.station_express_id, c.is_use, c.success_order_id, c.express_name, c.express_number,
-    c.send_station_id, c.send_time, c.send_city,c.is_distribution,c.station_express_number,c.is_push,c.update_time,
+    c.send_station_id, date_format(c.`send_time`,'%Y-%m-%d %H:%i:%s')send_time, c.send_city,
+    c.is_distribution,c.station_express_number,c.is_push,c.update_time,
     t.id, t.station_name, t.name, t.tel, t.is_open, t.distribution_sum, t.repertory, t.address,t.is_del
     from hk_telecom_card c,hk_super_to_channel s,hk_station t
     where s.iccid=c.iccid and c.station_id=t.id
