@@ -136,6 +136,14 @@
         where ur.user_id = #{uid}
         and t.state=0
     </select>
+    <!-- 根据用户id查询用户角色 -->
+    <select id="queryRoles1ByUserId" resultMap="BaseResultMap"  parameterType="String">
+        select <include refid="Base_Column_List" />
+        from sys_user_role ur
+        LEFT JOIN sys_role t on t.id = ur.role_id
+        where ur.user_id = #{uid}
+        and t.state=1
+    </select>
 
     <!-- 根据用户id查询用户角色 -->
     <select id="queryRolesByRoleName" resultMap="BaseResultMap"  parameterType="String">

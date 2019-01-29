@@ -139,7 +139,11 @@ public class SysMenuRoleController extends BaseController {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
                 menus = sysMenuService.queryMenusByUserId(userId);
-                List<SysRole> sysRoles = sysRoleService.queryRolesByUserId(userId);
+                List<SysRole> sysRoles=new ArrayList<SysRole>();
+                sysRoles = sysRoleService.queryRoles1ByUserId(userId);
+                if(CollectionUtils.isEmpty(sysRoles)) {
+                    sysRoles = sysRoleService.queryRolesByUserId(userId);
+                }
                 user1 = user;
                 role1 = sysRoles.get(0);
             } else if (StringUtils.isNotBlank(roleName)) {
