@@ -13,8 +13,6 @@ import com.kuaixiu.activity.entity.ActivityProject;
 import com.kuaixiu.activity.entity.ActivityUser;
 import com.kuaixiu.activity.service.ActivityProjectService;
 import com.kuaixiu.activity.service.ActivityUserService;
-import com.kuaixiu.recycle.controller.RecycleController;
-import com.kuaixiu.recycle.service.RecycleCheckItemsService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;
@@ -39,7 +37,7 @@ import java.util.*;
  */
 @Controller
 public class ActivityUserController extends BaseController {
-    private static final Logger log = Logger.getLogger(RecycleController.class);
+    private static final Logger log = Logger.getLogger(ActivityUserController.class);
     @Autowired
     private ActivityUserService activityUserService;
     @Autowired
@@ -127,6 +125,7 @@ public class ActivityUserController extends BaseController {
             page.setData(objects);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         this.renderJson(response, page);
     }
@@ -140,7 +139,7 @@ public class ActivityUserController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/activityCompany/login")
+    @RequestMapping(value = "/activityCompany/saveLogin")
     @ResponseBody
     public ResultData activityLogin(HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
@@ -169,6 +168,7 @@ public class ActivityUserController extends BaseController {
             result.setSuccess(true);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -204,6 +204,7 @@ public class ActivityUserController extends BaseController {
             result.setSuccess(true);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -273,6 +274,7 @@ public class ActivityUserController extends BaseController {
             result.setSuccess(true);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -367,6 +369,7 @@ public class ActivityUserController extends BaseController {
             result.setSuccess(true);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }

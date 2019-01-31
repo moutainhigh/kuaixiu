@@ -94,7 +94,7 @@ public class RecycleWechatController extends BaseController {
             } else if (Integer.valueOf(fromType) == 2) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_POSTMAN_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_POSTMAN_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
             } else if (Integer.valueOf(fromType) == 3) {
-                //待定
+                url = url + "appid=" + SystemConstant.WECHAT_ACTIVITY_APPID + "&secret=" + SystemConstant.WECHAT_ACTIVITY_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
             }
             String httpGet = HttpClientUtil.httpGet(url);
             JSONObject parse = (JSONObject) JSONObject.parse(httpGet);
