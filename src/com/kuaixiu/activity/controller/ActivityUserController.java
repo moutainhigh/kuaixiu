@@ -163,7 +163,9 @@ public class ActivityUserController extends BaseController {
             a.setActivityIdent(activityIdentification);
             activityUserService.getDao().updateByOpenId(a);
 
-            result.setResult(a);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("UserMobileNum",a.getLoginNumber());
+            result.setResult(jsonObject);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (Exception e) {

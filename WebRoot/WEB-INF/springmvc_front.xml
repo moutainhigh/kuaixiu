@@ -121,6 +121,7 @@
                 <value>^//recycle/.*</value>
                 <value>^/recycleNew/.*</value>
                 <value>^/join/.*</value>
+                <value>^/activityCompany/.*</value>
                 <!-- 接口 -->
                 <value>^/open/.*</value>
                 <value>^/swagger/.*</value>
