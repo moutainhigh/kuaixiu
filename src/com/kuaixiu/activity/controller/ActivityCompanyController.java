@@ -94,7 +94,7 @@ public class ActivityCompanyController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             ActivityCompany activityCompany = new ActivityCompany();
-            activityCompany.setCompanyName(companyName.replace(" ",""));
+            activityCompany.setCompanyName(companyName.replace(" ", ""));
             activityCompany.setActivityIdentification(activityIdentification);
             activityCompany.setQueryStartTime(queryStartTime);
             activityCompany.setQueryEndTime(queryEndTime);
@@ -145,6 +145,7 @@ public class ActivityCompanyController extends BaseController {
             page.setData(activityCompanies);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         this.renderJson(response, page);
     }
@@ -232,6 +233,7 @@ public class ActivityCompanyController extends BaseController {
             result.setResultMessage("保存成功");
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -311,6 +313,7 @@ public class ActivityCompanyController extends BaseController {
             result.setResultMessage("保存成功");
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -353,6 +356,7 @@ public class ActivityCompanyController extends BaseController {
             request.setAttribute("activity", activityCompany);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return new ModelAndView("activity/editActivity");
     }
@@ -378,21 +382,22 @@ public class ActivityCompanyController extends BaseController {
                 return getResult(result, null, false, "2", "参数不能为空");
             }
             ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityIdentification);
+            if (activityCompany == null) {
+                return getResult(result, null, false, "2", "该活动为空");
+            }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Long newTime = new Date().getTime();
-            if (activityCompany == null) {
-                if (sdf.parse(activityCompany.getStartTime()).getTime() <= newTime
-                        && newTime <= sdf.parse(activityCompany.getEndTime()).getTime()) {
-                    activityCompany.setIsEnd(0);
-                } else if (sdf.parse(activityCompany.getStartTime()).getTime() >= newTime) {
-                    activityCompany.setIsEnd(1);
-                } else if (newTime >= sdf.parse(activityCompany.getEndTime()).getTime()) {
-                    activityCompany.setIsEnd(2);
-                }
-                if (StringUtils.isBlank(activityCompany.getActivityImgUrl())) {
-                    String imageUrl = getProjectUrl(request) + "/images/activityCompany/default.png";
-                    activityCompany.setActivityImgUrl(imageUrl);
-                }
+            if (sdf.parse(activityCompany.getStartTime()).getTime() <= newTime
+                    && newTime <= sdf.parse(activityCompany.getEndTime()).getTime()) {
+                activityCompany.setIsEnd(0);
+            } else if (sdf.parse(activityCompany.getStartTime()).getTime() >= newTime) {
+                activityCompany.setIsEnd(1);
+            } else if (newTime >= sdf.parse(activityCompany.getEndTime()).getTime()) {
+                activityCompany.setIsEnd(2);
+            }
+            if (StringUtils.isBlank(activityCompany.getActivityImgUrl())) {
+                String imageUrl = getProjectUrl(request) + "/images/activityCompany/default.png";
+                activityCompany.setActivityImgUrl(imageUrl);
             }
 
 
@@ -402,6 +407,7 @@ public class ActivityCompanyController extends BaseController {
             result.setResultCode("0");
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -483,6 +489,7 @@ public class ActivityCompanyController extends BaseController {
         } catch (Exception e) {
             log.error("# 获取 token 出错... e:" + e);
             e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
 
@@ -514,6 +521,7 @@ public class ActivityCompanyController extends BaseController {
             } catch (Exception e) {
                 stateInt = 0;
                 e.printStackTrace();
+                log.error(e.getMessage());
             } finally {
             }
         }

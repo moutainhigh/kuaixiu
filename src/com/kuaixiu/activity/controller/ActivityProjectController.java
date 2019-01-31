@@ -80,6 +80,7 @@ public class ActivityProjectController extends BaseController{
             page.setData(activityProjects);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         this.renderJson(response, page);
     }
