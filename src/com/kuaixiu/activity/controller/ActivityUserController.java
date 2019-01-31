@@ -139,7 +139,7 @@ public class ActivityUserController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/activityCompany/saveLogin")
+    @RequestMapping(value = "/activityCompany/saveUserMobileNum")
     @ResponseBody
     public ResultData activityLogin(HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
