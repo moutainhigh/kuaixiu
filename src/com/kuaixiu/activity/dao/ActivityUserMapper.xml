@@ -61,7 +61,6 @@
             brand=#{brand},
             wechat_model=#{wechatModel},
             save_time=#{saveTime},
-            create_time=#{createTime},
             update_time=now(),
             session_key=#{sessionKey}
         where id=#{id}
@@ -221,7 +220,6 @@
         project=#{project},
         fault=#{fault},
         login_number=#{loginNumber},
-        create_time=#{createTime},
         save_time=#{saveTime},
         unionId=#{unionId}
         where openId=#{openId}
@@ -231,6 +229,7 @@
         select
         <include refid="Base_Column_List"/>
         from kx_activity_kx_user where openId=#{openId}
+        ORDER BY create_time DESC
     </select>
     <!-- 根据标识查询  -->
     <select id="queryByIdent" resultMap="BaseResultMap" parameterType="Object">

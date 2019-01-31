@@ -155,16 +155,17 @@ public class ActivityUserController extends BaseController {
                     || StringUtils.isBlank(activityIdentification)) {
                 throw new SystemException("请求参数不完整");
             }
-            ActivityUser a = activityUserService.getDao().queryByOpenId(openId);
-            String sessionKey = a.getSessionKey();
+            List<ActivityUser> activityUsers = activityUserService.getDao().queryByOpenId(openId);
+            ActivityUser activityUser = activityUsers.get(0);
+            String sessionKey = activityUser.getSessionKey();
             //解密参数
             JSONObject info = AesCbcUtil.decrypt(sessionKey, encryptedData, iv);
-            a.setLoginNumber(info.getString("phoneNumber"));
-            a.setActivityIdent(activityIdentification);
-            activityUserService.getDao().updateByOpenId(a);
+            activityUser.setLoginNumber(info.getString("phoneNumber"));
+            activityUser.setActivityIdent(activityIdentification);
+            activityUserService.getDao().updateByOpenId(activityUser);
 
             JSONObject jsonObject=new JSONObject();
-            jsonObject.put("UserMobileNum",a.getLoginNumber());
+            jsonObject.put("UserMobileNum",activityUser.getLoginNumber());
             result.setResult(jsonObject);
             result.setResultCode("0");
             result.setSuccess(true);

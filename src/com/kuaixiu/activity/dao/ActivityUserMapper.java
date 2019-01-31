@@ -17,7 +17,7 @@ public interface ActivityUserMapper<T> extends BaseDao<T> {
     //根据openId修改
     int updateByOpenId(T t);
     //根据openId查询
-    T queryByOpenId(String openId);
+    List<T> queryByOpenId(String openId);
     //根据标识查询
     T queryByIdent(String ident);
     //根据标识修改
