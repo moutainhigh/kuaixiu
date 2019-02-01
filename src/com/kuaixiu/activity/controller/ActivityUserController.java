@@ -162,7 +162,7 @@ public class ActivityUserController extends BaseController {
             JSONObject info = AesCbcUtil.decrypt(sessionKey, encryptedData, iv);
             activityUser.setLoginNumber(info.getString("phoneNumber"));
             activityUser.setActivityIdent(activityIdentification);
-            activityUserService.getDao().updateByOpenId(activityUser);
+            activityUserService.getDao().update(activityUser);
 
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("UserMobileNum",activityUser.getLoginNumber());
