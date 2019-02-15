@@ -306,7 +306,7 @@ public class RecycleNewController extends BaseController {
                     if (!list.isEmpty()) {
                         RecycleCheckItems checkItems = list.get(0);
                         checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
+                        checkItems.setLastPrice(checkItems.getPrice());
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 
@@ -326,7 +326,7 @@ public class RecycleNewController extends BaseController {
                     if (recycleCheckItems.isEmpty()) {
                         //新增
                         t.setItems(items);
-                        t.setLastPrice(new BigDecimal(price));
+                        t.setPrice(new BigDecimal(price));
                         t.setProductId(productId);
                         t.setBrand(selectBrandName);
                         t.setBrandId(selectBrandId);
@@ -336,7 +336,8 @@ public class RecycleNewController extends BaseController {
                         RecycleCheckItems checkItems = recycleCheckItems.get(0);
                         //修改
                         checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
+                        checkItems.setPrice(new BigDecimal(price));
+                        checkItems.setLastPrice(checkItems.getPrice());
                         checkItems.setProductId(productId);
                         checkItems.setBrand(selectBrandName);
                         checkItems.setBrandId(selectBrandId);
