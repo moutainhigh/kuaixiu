@@ -28,7 +28,7 @@
         insert into sys_role
         (id,name,type,state,is_del,create_time,create_userid,update_time,update_userid)
         values
-        (#{id},#{name},#{type},#{state},#{isDel},now(),#{createUserid},#{updateTime},#{updateUserid})
+        (#{id},#{name},0,#{state},0,now(),#{createUserid},#{updateTime},#{updateUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
