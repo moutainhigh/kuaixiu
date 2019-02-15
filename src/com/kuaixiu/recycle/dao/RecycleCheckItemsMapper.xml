@@ -35,24 +35,25 @@
 
     <insert id="add" parameterType="Object">
         insert into kx_recycle_checkitems
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, wechat_id, brand,
-            wechat_model, recycle_model, product_id,
-            in_time,last_price,brand_id,model_id,mobile
-            <if test="loginMobile!=null and loginMobile!=''">
-                ,login_mobile
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            uuid(), #{wechatId,jdbcType=VARCHAR},
-            #{brand,jdbcType=VARCHAR},
-            #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
-            now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},#{modelId,jdbcType=VARCHAR},
-            #{mobile,jdbcType=VARCHAR}
-            <if test="loginMobile!=null and loginMobile!=''">
-                ,#{loginMobile,jdbcType=VARCHAR}
-            </if>
-        </trim>
+        (
+        id, wechat_id, brand,
+        wechat_model, recycle_model, product_id,items,
+        in_time,last_price,brand_id,model_id,mobile,
+        <if test="loginMobile!=null and loginMobile!=''">
+            login_mobile,
+        </if>
+        price
+        )VALUES (
+        uuid(), #{wechatId,jdbcType=VARCHAR},
+        #{brand,jdbcType=VARCHAR},
+        #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
+        #{items,jdbcType=VARCHAR},now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},
+        #{modelId,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},
+        <if test="loginMobile!=null and loginMobile!=''">
+            #{loginMobile,jdbcType=VARCHAR},
+        </if>
+        #{price,jdbcType=DECIMAL}
+        )
     </insert>
 
 
@@ -68,7 +69,7 @@
             last_price = #{lastPrice,jdbcType=DECIMAL},
             price = #{price,jdbcType=DECIMAL},
             <if test="loginMobile!=null and loginMobile!=''">
-                #{loginMobile,jdbcType=VARCHAR},
+                login_mobile=#{loginMobile,jdbcType=VARCHAR},
             </if>
             update_time=now()
         </set>
