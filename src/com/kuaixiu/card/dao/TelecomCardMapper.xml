@@ -212,7 +212,134 @@
     order by in_time desc
   </select>
 
+  <!-- 查询列表 带分页 -->
+  <select id="queryListTwo" resultType="Map" parameterType="Object">
+    select
+    c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name,
+    date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+    date_format(c.`distribution_time`,'%Y-%m-%d %H:%i:%s')distribution_time,
+    date_format(c.`lose_efficacy`,'%Y-%m-%d')lose_efficacy,
+    c.station_id, c.station_express_id, c.is_use, c.success_order_id, c.express_name, c.express_number,
+    c.send_station_id, date_format(c.`send_time`,'%Y-%m-%d %H:%i:%s')send_time, c.send_city,c.is_distribution,
+    c.station_express_number,c.is_push,c.update_time,
+    t.id, t.station_name, t.name, t.tel, t.is_open, t.distribution_sum, t.repertory, t.address,t.is_del
+    from hk_telecom_card c
+    LEFT JOIN hk_station t ON c.station_id=t.id
+    where 1=1
+    <if test="iccid != null and iccid != ''">
+      and c.iccid = #{iccid}
+    </if>
+    <if test="batch != null and batch != ''">
+      and c.batch = #{batch}
+    </if>
+    <if test="batchId != null and batchId != ''">
+      and c.batch_id = #{batchId}
+    </if>
+    <if test="province != null and province != ''">
+      and c.province = #{province}
+    </if>
+    <if test="isUse != null">
+      and c.is_use = #{isUse}
+    </if>
+    <if test="type != null ">
+      and c.type = #{type}
+    </if>
+    <if test="isDistribution != null">
+      and c.is_distribution = #{isDistribution}
+    </if>
+    <if test="cardName != null">
+      and c.card_name = #{cardName}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and c.in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and c.in_time &lt;= #{queryEndTime}
+    </if>
+    <if test="queryStartDistributionTime != null and queryStartDistributionTime != ''" >
+      and c.distribution_time &gt;= #{queryStartDistributionTime}
+    </if>
+    <if test="queryEndDistributionTime != null and queryEndDistributionTime != ''" >
+      and c.distribution_time &lt;= #{queryEndDistributionTime}
+    </if>
+    <if test="queryZhuangStartTime != null and queryZhuangStartTime != ''" >
+      and c.update_time &gt;= #{queryZhuangStartTime}
+    </if>
+    <if test="queryZhuangEndTime != null and queryZhuangEndTime != ''" >
+      and c.update_time &lt;= #{queryZhuangEndTime}
+    </if>
+    <if test="isPush != null">
+      and c.is_push = #{isPush}
+    </if>
+    <if test="stationId != null and stationId != ''">
+      and c.station_id = #{stationId}
+    </if>
+    order by in_time desc
+  </select>
 
+  <!-- 联合查询列表 带分页 -->
+  <select id="queryTelecomList" resultType="Map" parameterType="Object">
+    select
+    c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name,
+    date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+    date_format(c.`distribution_time`,'%Y-%m-%d %H:%i:%s')distribution_time,
+    date_format(c.`lose_efficacy`,'%Y-%m-%d')lose_efficacy,
+    c.station_id, c.station_express_id, c.is_use, c.success_order_id, c.express_name, c.express_number,
+    c.send_station_id, date_format(c.`send_time`,'%Y-%m-%d %H:%i:%s')send_time, c.send_city,
+    c.is_distribution,c.station_express_number,c.is_push,c.update_time,
+    t.id, t.station_name, t.name, t.tel, t.is_open, t.distribution_sum, t.repertory, t.address,t.is_del
+    from hk_telecom_card c,hk_super_to_channel s,hk_station t
+    where s.iccid=c.iccid and c.station_id=t.id
+    <if test="batch != null and batch != ''">
+      and c.batch = #{batch}
+    </if>
+    <if test="batchId != null and batchId != ''">
+      and c.batch_id = #{batchId}
+    </if>
+    <if test="province != null and province != ''">
+      and c.province = #{province}
+    </if>
+    <if test="isUse != null">
+      and c.is_use = #{isUse}
+    </if>
+    <if test="type != null ">
+      and c.type = #{type}
+    </if>
+    <if test="isDistribution != null">
+      and c.is_distribution = #{isDistribution}
+    </if>
+    <if test="cardName != null">
+      and c.card_name = #{cardName}
+    </if>
+    <if test="queryStartTime != null and queryStartTime != ''" >
+      and c.in_time &gt;= #{queryStartTime}
+    </if>
+    <if test="queryEndTime != null and queryEndTime != ''" >
+      and c.in_time &lt;= #{queryEndTime}
+    </if>
+    <if test="queryStartDistributionTime != null and queryStartDistributionTime != ''" >
+      and c.distribution_time &gt;= #{queryStartDistributionTime}
+    </if>
+    <if test="queryEndDistributionTime != null and queryEndDistributionTime != ''" >
+      and c.distribution_time &lt;= #{queryEndDistributionTime}
+    </if>
+    <if test="queryZhuangStartTime != null and queryZhuangStartTime != ''" >
+      and c.update_time &gt;= #{queryZhuangStartTime}
+    </if>
+    <if test="queryZhuangEndTime != null and queryZhuangEndTime != ''" >
+      and c.update_time &lt;= #{queryZhuangEndTime}
+    </if>
+    <if test="isPush != null">
+      and c.is_push = #{isPush}
+    </if>
+    <if test="queryTelecomStartTime != null and queryTelecomStartTime != ''" >
+      and c.update_time &gt;= #{queryTelecomStartTime}
+    </if>
+    <if test="queryTelecomEndTime != null and queryTelecomEndTime != ''" >
+      and c.update_time &lt;= #{queryTelecomEndTime}
+    </if>
+    order by c.update_time desc
+  </select>
 
   <!-- 联合查询列表 带分页 -->
   <select id="queryTelecomListForPage" resultMap="BaseResultMap" parameterType="Object">

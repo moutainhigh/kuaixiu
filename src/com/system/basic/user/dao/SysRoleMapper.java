@@ -21,6 +21,7 @@ public interface SysRoleMapper<T> extends BaseDao<T> {
      * @CreateDate: 2016-8-27 上午12:52:54
      */
     List<SysRole> queryRolesByUserId(String uid);
+    List<SysRole> queryRoles1ByUserId(String uid);
 
     SysRole queryRolesByRoleName(String roleName);
 }

@@ -139,7 +139,11 @@ public class SysMenuRoleController extends BaseController {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
                 menus = sysMenuService.queryMenusByUserId(userId);
-                List<SysRole> sysRoles = sysRoleService.queryRolesByUserId(userId);
+                List<SysRole> sysRoles=new ArrayList<SysRole>();
+                sysRoles = sysRoleService.queryRoles1ByUserId(userId);
+                if(CollectionUtils.isEmpty(sysRoles)) {
+                    sysRoles = sysRoleService.queryRolesByUserId(userId);
+                }
                 user1 = user;
                 role1 = sysRoles.get(0);
             } else if (StringUtils.isNotBlank(roleName)) {
@@ -253,31 +257,34 @@ public class SysMenuRoleController extends BaseController {
                 }
             }
             //删除权限 查询前端显示的菜单
-            List<SysMenu> menuList=new ArrayList<>();
+//            List<SysMenu> menuList=new ArrayList<>();
+//            SysMenu menu = new SysMenu();
+//            menu.setType(1);
+//            menu.setCode("101");
+//            List<SysMenu> menuses = sysMenuService.queryList(menu);
+//            menuList.addAll(menuses);
+//            menu.setCode(null);
+//            for (SysMenu menu0 : menuses) {
+//                menu.setPcode(menu0.getCode());
+//                menu.setType(2);
+//                List<SysMenu> menus1 = sysMenuService.queryList(menu);
+//                menuList.addAll(menus1);
+//                for (SysMenu menu1 : menus1) {
+//                    menu.setType(3);
+//                    menu.setPcode(menu1.getCode());
+//                    List<SysMenu> menus2 = sysMenuService.queryList(menu);
+//                    menuList.addAll(menus2);
+//                    for (SysMenu menu2 : menus2) {
+//                        menu.setType(4);
+//                        menu.setPcode(menu2.getCode());
+//                        List<SysMenu> menus3 = sysMenuService.queryList(menu);
+//                        menuList.addAll(menus3);
+//                    }
+//                }
+//            }
             SysMenu menu = new SysMenu();
-            menu.setType(1);
-            menu.setCode("101");
-            List<SysMenu> menuses = sysMenuService.queryList(menu);
-            menuList.addAll(menuses);
-            menu.setCode(null);
-            for (SysMenu menu0 : menuses) {
-                menu.setPcode(menu0.getCode());
-                menu.setType(2);
-                List<SysMenu> menus1 = sysMenuService.queryList(menu);
-                menuList.addAll(menus1);
-                for (SysMenu menu1 : menus1) {
-                    menu.setType(3);
-                    menu.setPcode(menu1.getCode());
-                    List<SysMenu> menus2 = sysMenuService.queryList(menu);
-                    menuList.addAll(menus2);
-                    for (SysMenu menu2 : menus2) {
-                        menu.setType(4);
-                        menu.setPcode(menu2.getCode());
-                        List<SysMenu> menus3 = sysMenuService.queryList(menu);
-                        menuList.addAll(menus3);
-                    }
-                }
-            }
+            menu.setUserId(userId);
+            List<SysMenu> menuList = sysMenuService.getDao().queryMenuList(menu);
             for (SysMenu menu1 : menuList) {
                 isTrue = true;
                 for (String code : menuCodes) {
@@ -288,7 +295,8 @@ public class SysMenuRoleController extends BaseController {
                 }
                 if (isTrue) {
                     //删除权限
-                    sysRoleMenuService.getDao().deleteBYCode(menu1.getCode());
+                    menu1.setUserId(userId);
+                    sysRoleMenuService.getDao().deleteBYCode(menu1);
                 }
             }
             getResult(result, menus, true, "0", "成功");
