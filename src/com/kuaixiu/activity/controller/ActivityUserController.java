@@ -306,12 +306,8 @@ public class ActivityUserController extends BaseController {
             if (StringUtil.isBlank(brand) || StringUtil.isBlank(modelName)) {
                 throw new SystemException("参数不完整");
             }
-            //将微信小程序检测的机型名称转换成回收平台的机型名称
-            Map<String, String> map = AES.getModelName(brand, modelName);
+
             JSONObject requestNews = new JSONObject();
-            if (map.isEmpty()) {
-                throw new SystemException("对应机型未找到!");
-            }
             //通过转换过的机型 使用回收搜索接口得到对应机型id
             JSONObject code = new JSONObject();
             code.put("brandcode", brand);
@@ -335,10 +331,12 @@ public class ActivityUserController extends BaseController {
                     JSONArray sublist = object.getJSONArray("sublist");
                     jsonResult.put("brandName", object.getString("brandname"));
                     jsonResult.put("brandId", object.getInteger("brandid"));
+                    //将微信小程序检测的机型名称转换成回收平台的机型名称
+                    Map<String, String> map = AES.getModelName(brand, modelName);
                     if (((JSONObject) sublist.get(0)).getString("modelname").equals(map.get("modelName"))) {
                         productId = object.getString("productid");
-                        imageUrl=object.getString("modellogo");
-                        jsonResult.put("modelName", object.getString("modelname"));
+                        imageUrl=((JSONObject) sublist.get(0)).getString("modellogo");
+                        jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
                     }
                 }
             } else {
