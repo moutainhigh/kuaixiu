@@ -314,41 +314,47 @@ public class ActivityUserController extends BaseController {
             }
             //通过转换过的机型 使用回收搜索接口得到对应机型id
             JSONObject code = new JSONObject();
-            code.put("pageindex", "1");
-            code.put("pagesize", "50");
-            code.put("categoryid", categoryid);
-            code.put("keyword", map.get("modelName").replaceAll(" ", ""));
+            code.put("brandcode", brand);
+            code.put("modelcode", modelName);
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
             //发起获取对应productid请求
-            String getResult = AES.post(baseUrl + "getmodellist", requestNews);
+            String getResult = AES.post(baseUrl + "getmodelbycode", requestNews);
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
             JSONArray product = code.getJSONArray("datainfo");
             if (product.isEmpty()) {
                 throw new SystemException("对应机型不存在");
             }
+            String imageUrl="";
             //判断返回的机型是否有多个
             if (product.size() > 1) {
                 //如果有多个机型 则通过机型名称匹配唯一
                 for (int i = 0; i < product.size(); i++) {
                     JSONObject object = (JSONObject) product.get(i);
                     JSONArray sublist = object.getJSONArray("sublist");
+                    jsonResult.put("brandName", object.getString("brandname"));
+                    jsonResult.put("brandId", object.getInteger("brandid"));
                     if (((JSONObject) sublist.get(0)).getString("modelname").equals(map.get("modelName"))) {
                         productId = object.getString("productid");
+                        imageUrl=object.getString("modellogo");
+                        jsonResult.put("modelName", object.getString("modelname"));
                     }
                 }
             } else {
                 JSONObject o = (JSONObject) product.get(0);
                 JSONArray sublist = o.getJSONArray("sublist");
+                jsonResult.put("brandName", o.getString("brandname"));
+                jsonResult.put("brandId", o.getInteger("brandid"));
                 productId = ((JSONObject) sublist.get(0)).getString("productid");
+                imageUrl=((JSONObject) sublist.get(0)).getString("modellogo");
+                jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
             }
             if (StringUtils.isBlank(productId)) {
                 throw new SystemException("对应机型id不存在");
             }
 
             //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
-            String imageUrl = map.get("modelLogo");
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
             log.info("图片保存路径:" + savePath);
             String modelUrl = getProjectUrl(request) + "/images/recycleModel/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
@@ -360,11 +366,7 @@ public class ActivityUserController extends BaseController {
             }
 
             //返回数据
-            jsonResult.put("brandName", map.get("brandName"));
-            jsonResult.put("brandId", map.get("brandId"));
-            jsonResult.put("modelName", map.get("modelName"));
             jsonResult.put("productId", productId);
-            jsonResult.put("modelId", map.get("modelId"));
             jsonResult.put("modelLogo", modelUrl);
             result.setResult(jsonResult);
 
