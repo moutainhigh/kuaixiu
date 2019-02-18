@@ -45,7 +45,7 @@ public class ActivityUserController extends BaseController {
     /**
      * 基础访问接口地址
      */
-    private static final String baseUrl = SystemConstant.RECYCLE_URL;
+    private static final String baseUrl = SystemConstant.RECYCLE_NEW_URL;
     /**
      * 需要加密的数据名
      */
