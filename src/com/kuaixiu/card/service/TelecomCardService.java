@@ -156,19 +156,19 @@ public class TelecomCardService extends BaseService<TelecomCard> {
             telecomCard.setQueryTelecomEndTime(telecomEndTime);
             maps = getDao().queryTelecomList(telecomCard);
         } else {
-            for(int i=0;i<1000000;i++) {
-                List<Map<String, Object>> maps1 = new ArrayList<Map<String, Object>>();
-                Page page=new Page();
-                page.setStart(i);
-                page.setPageSize(1000);
-                telecomCard.setPage(page);
-                maps1 = getDao().queryListTwoForPage(telecomCard);
-                if(CollectionUtils.isEmpty(maps1)){
-                    break;
-                }
-                maps.addAll(maps1);
-                maps1.clear();
-            }
+//            for(int i=0;i<1000000;i++) {
+//                List<Map<String, Object>> maps1 = new ArrayList<Map<String, Object>>();
+//                Page page=new Page();
+//                page.setStart(i);
+//                page.setPageSize(1000);
+//                telecomCard.setPage(page);
+//                maps1 = getDao().queryListTwoForPage(telecomCard);
+//                if(CollectionUtils.isEmpty(maps1)){
+//                    break;
+//                }
+//                maps.addAll(maps1);
+//            }
+            maps = getDao().queryListTwo(telecomCard);
         }
 
         List<List<Map<String, Object>>> lists = new ArrayList<>();
@@ -183,11 +183,14 @@ public class TelecomCardService extends BaseService<TelecomCard> {
                 lists.add(list);
                 listAgent.add("集合" + i);
             }
+            //余数
+            int lastSize = maps.size() - size * 10000;
+            List<Map<String, Object>> list = maps.subList(size * 10000, size * 10000 + lastSize);
+            lists.add(list);
+            listAgent.add("集合" + size);
         }
-        maps.clear();
 
         //excel标题
-        String fileName = "D:" + System.currentTimeMillis() + ".xls";
         String[] header = new String[]{"批次", "导入时间", "所属本地网", "ICCID", "号卡类型",
                 "号卡名称", "分配时间", "失效时间", "站点ID", "站点名称",
                 "联系人", "联系电话", "地址", "订单ID", "发货时间",
@@ -216,12 +219,10 @@ public class TelecomCardService extends BaseService<TelecomCard> {
                 // 设置对应单元格的值
                 getRow(row, map);
             }
-            lists.clear();
         }
         // 写出文件（path为文件路径含文件名）
         OutputStream os = null;
         try {
-//            os = new FileOutputStream(new File(fileName));
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/x-download");
             String filedisplay = "号卡导出.xls";

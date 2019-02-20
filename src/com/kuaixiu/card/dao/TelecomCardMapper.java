@@ -41,7 +41,7 @@ public interface TelecomCardMapper<T> extends BaseDao<T>{
     List<T> queryPushFail();
 
 
-    List<Map<String,Object>> queryListTwoForPage(T t);
+    List<Map<String,Object>> queryListTwo(T t);
     /**
      * 联合查询列表 带分页
      * @param t
