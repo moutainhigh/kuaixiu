@@ -278,7 +278,7 @@
   </select>
 
   <!-- 联合查询列表 带分页 -->
-  <select id="queryTelecomList" resultType="Map" parameterType="Object">
+  <select id="queryTelecomListForPage" resultType="Map" parameterType="Object">
     select
     c.iccid, c.batch_id, c.batch, c.province, c.type, c.card_name,
     date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,

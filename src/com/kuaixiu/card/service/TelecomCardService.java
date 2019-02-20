@@ -1,9 +1,11 @@
 package com.kuaixiu.card.service;
 
 import com.common.base.service.BaseService;
+import com.common.paginate.Page;
 import com.kuaixiu.card.dao.TelecomCardMapper;
 import com.kuaixiu.card.entity.TelecomCard;
 import com.system.basic.user.entity.SessionUser;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -154,7 +156,19 @@ public class TelecomCardService extends BaseService<TelecomCard> {
             telecomCard.setQueryTelecomEndTime(telecomEndTime);
             maps = getDao().queryTelecomList(telecomCard);
         } else {
-            maps = getDao().queryListTwo(telecomCard);
+            for(int i=0;i<1000000;i++) {
+                List<Map<String, Object>> maps1 = new ArrayList<Map<String, Object>>();
+                Page page=new Page();
+                page.setStart(i);
+                page.setPageSize(1000);
+                telecomCard.setPage(page);
+                maps1 = getDao().queryListTwoForPage(telecomCard);
+                if(CollectionUtils.isEmpty(maps1)){
+                    break;
+                }
+                maps.addAll(maps1);
+                maps1.clear();
+            }
         }
 
         List<List<Map<String, Object>>> lists = new ArrayList<>();
@@ -170,6 +184,7 @@ public class TelecomCardService extends BaseService<TelecomCard> {
                 listAgent.add("集合" + i);
             }
         }
+        maps.clear();
 
         //excel标题
         String fileName = "D:" + System.currentTimeMillis() + ".xls";
@@ -201,6 +216,7 @@ public class TelecomCardService extends BaseService<TelecomCard> {
                 // 设置对应单元格的值
                 getRow(row, map);
             }
+            lists.clear();
         }
         // 写出文件（path为文件路径含文件名）
         OutputStream os = null;
