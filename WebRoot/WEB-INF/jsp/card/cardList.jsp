@@ -159,7 +159,7 @@
                         <!--
                         <button onclick="adminPush();" class="am-btn am-btn-default search_btn" type="button"> 当日号卡推送(超人-电渠) </button>
                         -->
-                        <c:if test="${userId eq 'kf014'}">
+                        <c:if test="${userId eq 'kf014'||userId eq'admin'}">
                             <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
                                     class="am-icon-file-excel-o"></span> 导出
                             </button>

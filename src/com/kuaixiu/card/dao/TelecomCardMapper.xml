@@ -250,6 +250,12 @@
     <if test="cardName != null">
       and c.card_name = #{cardName}
     </if>
+    <if test="queryIds != null and queryIds.size() > 0" >
+      and t.id in
+      <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+        #{item}
+      </foreach>
+    </if>
     <if test="queryStartTime != null and queryStartTime != ''" >
       and c.in_time &gt;= #{queryStartTime}
     </if>

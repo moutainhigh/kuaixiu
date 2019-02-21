@@ -89,8 +89,6 @@ public class TelecomCardService extends BaseService<TelecomCard> {
      */
     @SuppressWarnings("rawtypes")
     public void expDataExcel(Map<String, Object> params) {
-//        String templateFileName = params.get("tempFileName") + "";
-//        String destFileName = params.get("outFileName") + "";
         HttpServletResponse response = (HttpServletResponse) params.get("response");
         //获取登录用户
         SessionUser su = (SessionUser) params.get("user");
@@ -116,6 +114,11 @@ public class TelecomCardService extends BaseService<TelecomCard> {
         String telecomEndTime = MapUtils.getString(params, "query_endTelecomTime");
 
         TelecomCard telecomCard = new TelecomCard();
+        String idStr = MapUtils.getString(params, "ids");
+        if(StringUtils.isNotBlank(idStr)) {
+            String[] ids = StringUtils.split(idStr, ",");
+            telecomCard.setQueryIds(Arrays.asList(ids));
+        }
         telecomCard.setIccid(iccid);
         telecomCard.setBatch(batch);
         if ("kf014".equals(su.getUserId())) {
@@ -156,18 +159,6 @@ public class TelecomCardService extends BaseService<TelecomCard> {
             telecomCard.setQueryTelecomEndTime(telecomEndTime);
             maps = getDao().queryTelecomList(telecomCard);
         } else {
-//            for(int i=0;i<1000000;i++) {
-//                List<Map<String, Object>> maps1 = new ArrayList<Map<String, Object>>();
-//                Page page=new Page();
-//                page.setStart(i);
-//                page.setPageSize(1000);
-//                telecomCard.setPage(page);
-//                maps1 = getDao().queryListTwoForPage(telecomCard);
-//                if(CollectionUtils.isEmpty(maps1)){
-//                    break;
-//                }
-//                maps.addAll(maps1);
-//            }
             maps = getDao().queryListTwo(telecomCard);
         }
 
