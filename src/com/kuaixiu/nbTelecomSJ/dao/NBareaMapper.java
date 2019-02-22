@@ -3,13 +3,13 @@ package com.kuaixiu.nbTelecomSJ.dao;
 import com.common.base.dao.BaseDao;
 
 /**
- * NBarea Mapper
+ * NBArea Mapper
  *
  * @param <T>
- * @CreateDate: 2019-02-22 下午06:31:04
+ * @CreateDate: 2019-02-22 下午07:26:25
  * @version: V 1.0
  */
-public interface NBareaMapper<T> extends BaseDao<T> {
+public interface NBAreaMapper<T> extends BaseDao<T> {
 
 }
 

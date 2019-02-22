@@ -2,9 +2,12 @@ package com.kuaixiu.nbTelecomSJ.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
+import com.common.util.SmsSendUtil;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBManager;
+import com.kuaixiu.nbTelecomSJ.service.NBAreaService;
 import com.kuaixiu.nbTelecomSJ.service.NBBusinessService;
 import com.kuaixiu.nbTelecomSJ.service.NBManagerService;
 import com.system.api.entity.ResultData;
@@ -30,7 +33,8 @@ public class NBBusinessController extends BaseController {
     private NBBusinessService nBBusinessService;
     @Autowired
     private NBManagerService nBManagerService;
-
+    @Autowired
+    private NBAreaService nBAreaService;
     /**
      * 获取经营单元
      */
@@ -81,6 +85,10 @@ public class NBBusinessController extends BaseController {
             nbBusiness.setDemand(Integer.valueOf(demand));
             nbBusiness.setRemarks(remarks);
             nBBusinessService.add(nbBusiness);
+
+            NBArea nbArea=nBAreaService.queryById(areaId);
+            SmsSendUtil.mailSendSmsTobusiness(nbManager,nbBusiness,nbArea);
+
             getResult(result,null,true,"0","提交成功");
         }catch (Exception e){
             e.printStackTrace();

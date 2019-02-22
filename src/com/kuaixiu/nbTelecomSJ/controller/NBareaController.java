@@ -3,8 +3,8 @@ package com.kuaixiu.nbTelecomSJ.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.nbTelecomSJ.entity.NBarea;
-import com.kuaixiu.nbTelecomSJ.service.NBareaService;
+import com.kuaixiu.nbTelecomSJ.entity.NBArea;
+import com.kuaixiu.nbTelecomSJ.service.NBAreaService;
 import com.system.api.entity.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,17 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * NBarea Controller
+ * NBArea Controller
  *
- * @CreateDate: 2019-02-22 下午06:31:04
+ * @CreateDate: 2019-02-22 下午07:26:25
  * @version: V 1.0
  */
 @Controller
-public class NBareaController extends BaseController {
+public class NBAreaController extends BaseController {
 
     @Autowired
-    private NBareaService nBareaService;
-
+    private NBAreaService nBAreaService;
 
     /**
      * 获取支局包区
@@ -43,9 +42,9 @@ public class NBareaController extends BaseController {
                 return getResult(result,null,false,"2","参数为空");
             }
 
-            NBarea nBarea=new NBarea();
+            NBArea nBarea=new NBArea();
             nBarea.setCountyId(Integer.valueOf(countyId));
-            List<NBarea> nBareas=nBareaService.getDao().queryList(nBarea);
+            List<NBArea> nBareas=nBAreaService.getDao().queryList(nBarea);
 
             getResult(result,nBareas,true,"0","成功");
         }catch (Exception e){

@@ -2,27 +2,30 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBareaMapper" >
+<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBAreaMapper" >
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBarea" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBArea" >
         <result column="office_id" property="officeId"/>
         <result column="county_id" property="countyId"/>
         <result column="branch_office" property="branchOffice"/>
         <result column="area_id" property="areaId"/>
+        <result column="area_name" property="areaName"/>
+        <result column="area_type" property="areaType"/>
         <result column="area_person" property="areaPerson"/>
+        <result column="person_tel" property="personTel"/>
     </resultMap>
     
     <!-- nb_area table all fields -->
     <sql id="Base_Column_List" >
-        office_id,county_id,branch_office,area_id,area_person
+        office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_area
-        (office_id,county_id,branch_office,area_id,area_person)
+        (office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel)
         values
-        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaPerson})
+        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaName},#{areaType},#{areaPerson},#{personTel})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -33,7 +36,10 @@
             county_id=#{countyId},
             branch_office=#{branchOffice},
             area_id=#{areaId},
-            area_person=#{areaPerson}
+            area_name=#{areaName},
+            area_type=#{areaType},
+            area_person=#{areaPerson},
+            person_tel=#{personTel}
         where id=#{id}
     </update>
 
@@ -66,8 +72,17 @@
         <if test="areaId != null and areaId != ''" >
             and area_id = #{areaId}
         </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
         <if test="areaPerson != null and areaPerson != ''" >
             and area_person = #{areaPerson}
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel = #{personTel}
         </if>
     </select>
     
@@ -89,8 +104,17 @@
         <if test="areaId != null and areaId != ''" >
             and area_id = #{areaId}
         </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
         <if test="areaPerson != null and areaPerson != ''" >
             and area_person = #{areaPerson}
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel = #{personTel}
         </if>
     </select>
 

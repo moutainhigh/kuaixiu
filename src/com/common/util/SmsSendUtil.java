@@ -5,6 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.kuaixiu.nbTelecomSJ.entity.NBArea;
+import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
+import com.kuaixiu.nbTelecomSJ.entity.NBManager;
 import com.kuaixiu.order.entity.ReworkOrder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -307,6 +310,29 @@ public class SmsSendUtil {
         content.append("，机型颜色：").append(o.getColor());
         content.append("，请注意查收邮寄包裹！");
         return sendSmsThread(s.getTel(), content.toString());
+    }
+
+    /**
+     * 寄修订单派单给门店后给门店负责人发送信息
+     */
+    public static boolean mailSendSmsTobusiness(NBManager manager, NBBusiness business, NBArea area){
+        String StrDemand="";
+        switch (business.getDemand()){
+            case 1:
+                StrDemand="宽带体验";
+                break;
+            case 2:
+                StrDemand="其他需求";
+                break;
+        }
+        StringBuffer content = new StringBuffer();
+        content.append("商机提醒:客户经理").append(manager.getManagerName());
+        content.append("/").append(manager.getManagerTel());
+        content.append("，顾客：").append(business.getCoutomerName());
+        content.append("/").append(business.getTelephone());
+        content.append("，地址：").append(business.getAddress());
+        content.append("，通信需求：").append(StrDemand);
+        return sendSmsThread(area.getPersonTel(), content.toString());
     }
     
     
