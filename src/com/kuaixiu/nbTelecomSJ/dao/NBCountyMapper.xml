@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBCountyMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBCounty" >
+        <result column="county_id" property="countyId"/>
+        <result column="county" property="county"/>
+    </resultMap>
+    
+    <!-- nb_county table all fields -->
+    <sql id="Base_Column_List" >
+        county_id,county
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into nb_county
+        (county_id,county)
+        values
+        (#{countyId},#{county})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update nb_county 
+        set 
+            county_id=#{countyId},
+            county=#{county}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from nb_county where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_county where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_county
+        where 1=1
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_county
+        where 1=1
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBBusinessMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBBusiness" >
+        <result column="business_id" property="businessId"/>
+        <result column="manager_id" property="managerId"/>
+        <result column="county_id" property="countyId"/>
+        <result column="office_id" property="officeId"/>
+        <result column="area_id" property="areaId"/>
+        <result column="coutomer_name" property="coutomerName"/>
+        <result column="telephone" property="telephone"/>
+        <result column="address" property="address"/>
+        <result column="address_type" property="addressType"/>
+        <result column="demand" property="demand"/>
+        <result column="remarks" property="remarks"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- nb_business table all fields -->
+    <sql id="Base_Column_List" >
+        business_id,manager_id,county_id,office_id,area_id,coutomer_name,telephone,address,address_type,demand,remarks,create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into nb_business
+        (business_id,manager_id,county_id,office_id,area_id,coutomer_name,telephone,address,address_type,demand,remarks,create_time)
+        values
+        (#{businessId},#{managerId},#{countyId},#{officeId},#{areaId},#{coutomerName},#{telephone},#{address},#{addressType},#{demand},#{remarks},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update nb_business 
+        set 
+            business_id=#{businessId},
+            manager_id=#{managerId},
+            county_id=#{countyId},
+            office_id=#{officeId},
+            area_id=#{areaId},
+            coutomer_name=#{coutomerName},
+            telephone=#{telephone},
+            address=#{address},
+            address_type=#{addressType},
+            demand=#{demand},
+            remarks=#{remarks}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from nb_business where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_business where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_business
+        where 1=1
+        <if test="businessId != null and businessId != ''" >
+            and business_id = #{businessId}
+        </if>
+        <if test="managerId != null and managerId != ''" >
+            and manager_id = #{managerId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="coutomerName != null and coutomerName != ''" >
+            and coutomer_name = #{coutomerName}
+        </if>
+        <if test="telephone != null and telephone != ''" >
+            and telephone = #{telephone}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and demand = #{demand}
+        </if>
+        <if test="remarks != null and remarks != ''" >
+            and remarks = #{remarks}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_business
+        where 1=1
+        <if test="businessId != null and businessId != ''" >
+            and business_id = #{businessId}
+        </if>
+        <if test="managerId != null and managerId != ''" >
+            and manager_id = #{managerId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="coutomerName != null and coutomerName != ''" >
+            and coutomer_name = #{coutomerName}
+        </if>
+        <if test="telephone != null and telephone != ''" >
+            and telephone = #{telephone}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and demand = #{demand}
+        </if>
+        <if test="remarks != null and remarks != ''" >
+            and remarks = #{remarks}
+        </if>
+    </select>
+
+</mapper>   
