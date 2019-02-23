@@ -313,25 +313,34 @@ public class SmsSendUtil {
     }
 
     /**
-     * 寄修订单派单给门店后给门店负责人发送信息
+     * 商机提醒给包区人发送短信
      */
     public static boolean mailSendSmsTobusiness(NBManager manager, NBBusiness business, NBArea area){
         String StrDemand="";
         switch (business.getDemand()){
             case 1:
-                StrDemand="宽带体验";
+                StrDemand="无需求";
                 break;
             case 2:
+                StrDemand="宽带体验";
+                break;
+            case 3:
+                StrDemand="专线体验";
+                break;
+            case 4:
+                StrDemand="战狼办理";
+                break;
+            case 5:
                 StrDemand="其他需求";
                 break;
         }
         StringBuffer content = new StringBuffer();
-        content.append("商机提醒:客户经理").append(manager.getManagerName());
-        content.append("/").append(manager.getManagerTel());
-        content.append("，顾客：").append(business.getCoutomerName());
-        content.append("/").append(business.getTelephone());
+        content.append("商机提醒：").append(business.getCompanyName());
+        content.append("的通信需求：").append(StrDemand);
+        content.append("，电话：").append(business.getTelephone());
         content.append("，地址：").append(business.getAddress());
-        content.append("，通信需求：").append(StrDemand);
+        content.append("，走访人：").append(manager.getManagerName());
+        content.append("/").append(manager.getManagerTel());
         return sendSmsThread(area.getPersonTel(), content.toString());
     }
     

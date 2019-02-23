@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.nbTelecomSJ.entity.NBArea;
-import com.kuaixiu.nbTelecomSJ.entity.NBCounty;
 import com.kuaixiu.nbTelecomSJ.service.NBAreaService;
 import com.system.api.entity.ResultData;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +27,7 @@ import java.util.Map;
  */
 @Controller
 public class NBAreaController extends BaseController {
+    private static final Logger log= Logger.getLogger(NBAreaController.class);
 
     @Autowired
     private NBAreaService nBAreaService;
@@ -62,6 +63,7 @@ public class NBAreaController extends BaseController {
             getResult(result, maps, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }

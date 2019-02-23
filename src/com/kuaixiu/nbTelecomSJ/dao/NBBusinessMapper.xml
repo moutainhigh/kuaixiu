@@ -10,26 +10,29 @@
         <result column="county_id" property="countyId"/>
         <result column="office_id" property="officeId"/>
         <result column="area_id" property="areaId"/>
-        <result column="coutomer_name" property="coutomerName"/>
-        <result column="telephone" property="telephone"/>
+        <result column="company_name" property="companyName"/>
+        <result column="landline" property="landline"/>
+        <result column="broadband" property="broadband"/>
         <result column="address" property="address"/>
         <result column="address_type" property="addressType"/>
         <result column="demand" property="demand"/>
         <result column="remarks" property="remarks"/>
+        <result column="coutomer_name" property="coutomerName"/>
+        <result column="telephone" property="telephone"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
     
     <!-- nb_business table all fields -->
     <sql id="Base_Column_List" >
-        business_id,manager_id,county_id,office_id,area_id,coutomer_name,telephone,address,address_type,demand,remarks,create_time
+        business_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_business
-        (business_id,manager_id,county_id,office_id,area_id,coutomer_name,telephone,address,address_type,demand,remarks,create_time)
+        (business_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,create_time)
         values
-        (#{businessId},#{managerId},#{countyId},#{officeId},#{areaId},#{coutomerName},#{telephone},#{address},#{addressType},#{demand},#{remarks},now())
+        (#{businessId},#{managerId},#{countyId},#{officeId},#{areaId},#{companyName},#{landline},#{broadband},#{address},#{addressType},#{demand},#{remarks},#{coutomerName},#{telephone},now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -41,12 +44,16 @@
             county_id=#{countyId},
             office_id=#{officeId},
             area_id=#{areaId},
-            coutomer_name=#{coutomerName},
-            telephone=#{telephone},
+            company_name=#{companyName},
+            landline=#{landline},
+            broadband=#{broadband},
             address=#{address},
             address_type=#{addressType},
             demand=#{demand},
-            remarks=#{remarks}
+            remarks=#{remarks},
+            coutomer_name=#{coutomerName},
+            telephone=#{telephone},
+            create_time=#{createTime}
         where id=#{id}
     </update>
 
@@ -82,11 +89,14 @@
         <if test="areaId != null and areaId != ''" >
             and area_id = #{areaId}
         </if>
-        <if test="coutomerName != null and coutomerName != ''" >
-            and coutomer_name = #{coutomerName}
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
         </if>
-        <if test="telephone != null and telephone != ''" >
-            and telephone = #{telephone}
+        <if test="landline != null and landline != ''" >
+            and landline = #{landline}
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and broadband = #{broadband}
         </if>
         <if test="address != null and address != ''" >
             and address = #{address}
@@ -99,6 +109,15 @@
         </if>
         <if test="remarks != null and remarks != ''" >
             and remarks = #{remarks}
+        </if>
+        <if test="coutomerName != null and coutomerName != ''" >
+            and coutomer_name = #{coutomerName}
+        </if>
+        <if test="telephone != null and telephone != ''" >
+            and telephone = #{telephone}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
         </if>
     </select>
     
@@ -123,11 +142,14 @@
         <if test="areaId != null and areaId != ''" >
             and area_id = #{areaId}
         </if>
-        <if test="coutomerName != null and coutomerName != ''" >
-            and coutomer_name = #{coutomerName}
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
         </if>
-        <if test="telephone != null and telephone != ''" >
-            and telephone = #{telephone}
+        <if test="landline != null and landline != ''" >
+            and landline = #{landline}
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and broadband = #{broadband}
         </if>
         <if test="address != null and address != ''" >
             and address = #{address}
@@ -140,6 +162,15 @@
         </if>
         <if test="remarks != null and remarks != ''" >
             and remarks = #{remarks}
+        </if>
+        <if test="coutomerName != null and coutomerName != ''" >
+            and coutomer_name = #{coutomerName}
+        </if>
+        <if test="telephone != null and telephone != ''" >
+            and telephone = #{telephone}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
         </if>
     </select>
 

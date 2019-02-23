@@ -11,6 +11,7 @@ import com.kuaixiu.nbTelecomSJ.service.NBAreaService;
 import com.kuaixiu.nbTelecomSJ.service.NBBusinessService;
 import com.kuaixiu.nbTelecomSJ.service.NBManagerService;
 import com.system.api.entity.ResultData;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,12 @@ import java.util.List;
 /**
  * NBBusiness Controller
  *
- * @CreateDate: 2019-02-22 下午06:32:37
+ * @CreateDate: 2019-02-23 上午11:53:31
  * @version: V 1.0
  */
 @Controller
 public class NBBusinessController extends BaseController {
+    private static final Logger log= Logger.getLogger(NBBusinessController.class);
 
     @Autowired
     private NBBusinessService nBBusinessService;
@@ -44,27 +46,30 @@ public class NBBusinessController extends BaseController {
         ResultData result=new ResultData();
         try {
             JSONObject params=getPrarms(request);
-            String manager=params.getString("manager");
-            String managerTel=params.getString("managerTel");
-            String countyId=params.getString("countyId");
-            String officeId=params.getString("officeId");
-            String areaId=params.getString("areaId");
-            String coutomerName=params.getString("coutomerName");
-            String telephone=params.getString("telephone");
-            String address=params.getString("address");
-            String addressType=params.getString("addressType");
-            String demand=params.getString("demand");
-            String remarks=params.getString("remarks");
+            String manager=params.getString("manager");//走访人
+            String managerTel=params.getString("managerTel");//走访人手机号
+            String countyId=params.getString("countyId");//单元id
+            String officeId=params.getString("officeId");//支局id
+            String areaId=params.getString("areaId");//包区id
+            String companyName=params.getString("companyName");//单位名字
+            String landline=params.getString("landline");//固定电话
+            String broadband=params.getString("broadband");//宽带
+            String address=params.getString("address");//地址
+            String addressType=params.getString("addressType");//地址属性
+            String demand=params.getString("demand");//通信需求
+            String remarks=params.getString("remarks");//备注
+            String coutomerName=params.getString("coutomerName");//联系人
+            String telephone=params.getString("telephone");//联系人手机号
 
             if(StringUtils.isBlank(countyId)||StringUtils.isBlank(manager)||StringUtils.isBlank(managerTel)
-                    ||StringUtils.isBlank(officeId)||StringUtils.isBlank(areaId)||StringUtils.isBlank(coutomerName)
-                    ||StringUtils.isBlank(telephone)||StringUtils.isBlank(address)||StringUtils.isBlank(addressType)
-                    ||StringUtils.isBlank(demand)){
+                    ||StringUtils.isBlank(officeId)||StringUtils.isBlank(areaId)||StringUtils.isBlank(address)
+                    ||StringUtils.isBlank(addressType)||StringUtils.isBlank(broadband)||StringUtils.isBlank(landline)
+                    ||StringUtils.isBlank(demand)||StringUtils.isBlank(companyName)){
                 return getResult(result,null,false,"2","参数为空");
             }
-            if("3".equals(demand)){
-                if(StringUtils.isBlank(remarks)){
-                    return getResult(result,null,false,"2","请填写备注");
+            if(!"1".equals(demand)){
+                if(StringUtils.isBlank(coutomerName)||StringUtils.isBlank(telephone)){
+                    return getResult(result,null,false,"2","请填写联系人或手机号");
                 }
             }
             NBManager nbManager=new NBManager();
@@ -78,12 +83,15 @@ public class NBBusinessController extends BaseController {
             nbBusiness.setAreaId(Integer.valueOf(areaId));
             nbBusiness.setOfficeId(Integer.valueOf(officeId));
             nbBusiness.setManagerId(nbManagers.get(0).getManagerId());
-            nbBusiness.setCoutomerName(coutomerName);
-            nbBusiness.setTelephone(telephone);
+            nbBusiness.setCompanyName(companyName);
+            nbBusiness.setBroadband(Integer.valueOf(broadband));
+            nbBusiness.setLandline(Integer.valueOf(landline));
             nbBusiness.setAddress(address);
             nbBusiness.setAddressType(Integer.valueOf(addressType));
             nbBusiness.setDemand(Integer.valueOf(demand));
             nbBusiness.setRemarks(remarks);
+            nbBusiness.setCoutomerName(coutomerName);
+            nbBusiness.setTelephone(telephone);
             nBBusinessService.add(nbBusiness);
 
             NBArea nbArea=nBAreaService.queryById(areaId);
@@ -92,7 +100,10 @@ public class NBBusinessController extends BaseController {
             getResult(result,null,true,"0","提交成功");
         }catch (Exception e){
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
+
+
 }

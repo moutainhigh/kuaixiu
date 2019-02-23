@@ -5,6 +5,7 @@ import com.kuaixiu.nbTelecomSJ.entity.NBCounty;
 import com.kuaixiu.nbTelecomSJ.service.NBCountyService;
 import com.system.api.entity.ResultData;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 @Controller
 public class NBCountyController extends BaseController {
+    private static final Logger log= Logger.getLogger(NBCountyController.class);
 
     @Autowired
     private NBCountyService nBCountyService;
@@ -48,6 +50,7 @@ public class NBCountyController extends BaseController {
             getResult(result, maps, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
