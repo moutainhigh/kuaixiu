@@ -1333,7 +1333,6 @@
         ,date_format(t.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time
         ,t.engineer_name,t.engineer_mobile
         ,t.mobile,date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
-        ,t.shop_tel,t.shop_manager_mobile,t.shop_manager_name
         ,date_format(now(),'%Y-%m-%d %H:%i:%s') sys_time,t.is_rework,t.is_del
         from
         (select
@@ -1342,10 +1341,8 @@
         ,date_format(t1.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time
         ,t1.engineer_name,t1.engineer_mobile
         ,t1.mobile,date_format(t1.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
-        ,s.tel shop_tel,s.manager_mobile shop_manager_mobile,s.manager_name shop_manager_name
         ,date_format(now(),'%Y-%m-%d %H:%i:%s') sys_time,t1.is_rework,t1.is_del
         from kx_order t1
-        left join kx_shop s on t1.shop_code = s.`code`
         UNION ALL
         select
         t2.id,t2.order_rework_no,t3.customer_id,t3.customer_name
@@ -1353,10 +1350,8 @@
         ,date_format(t2.`dispatch_time`,'%Y-%m-%d %H:%i:%s')dispatch_time
         ,t2.engineer_name,t2.engineer_mobile
         ,t3.mobile,date_format(t2.`in_time`,'%Y-%m-%d %H:%i:%s')in_time
-        ,s1.tel shop_tel,s1.manager_mobile shop_manager_mobile,s1.manager_name shop_manager_name
         ,date_format(now(),'%Y-%m-%d %H:%i:%s') sys_time,1 is_rework,t2.is_del
         from kx_rework_order t2 LEFT JOIN kx_order t3 ON t2.parent_order=t3.order_no
-        left join kx_shop s1 on t3.shop_code = s1.`code`
         )t
         where 1=1
         <if test="orderNo != null and orderNo != ''">

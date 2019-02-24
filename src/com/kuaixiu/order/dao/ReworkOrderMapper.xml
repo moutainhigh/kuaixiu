@@ -175,6 +175,7 @@
         <if test="parentOrder != null and parentOrder != ''">
             and r.parent_order like CONCAT('%', #{parentOrder}, '%')
         </if>
+        ORDER BY inTime desc
     </select>
 
     <!-- 查询列表无分页 -->

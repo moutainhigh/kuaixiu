@@ -604,7 +604,61 @@ public class ShopService extends BaseService<Shop> {
         }
         return true;
     }
-    
+
+    //如果工程师门店账号是字符串分割
+    //获取工程师姓名，工程师工号和名称转化，
+    public Shop shopShopCode(Shop shops) {
+        if(shops.getCode()==null){
+            return shops;
+        }
+        if (shops.getCode().contains(",")) {
+            List<String> shopCodeList = Arrays.asList(shops.getCode().split(","));
+            List<String> shopCodeListCODE = new ArrayList<>(shopCodeList);
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sb1 = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
+            StringBuilder sb3 = new StringBuilder();
+            for (String shopCodeList1 : shopCodeList) {
+                Shop shop = getDao().queryByCode(shopCodeList1);
+                //如果没有此门店。要把工程师的门店号删除
+                if (shop == null) {
+                    shopCodeListCODE.remove(shopCodeList1);
+                    StringBuffer sb0 = new StringBuffer();
+                    for (int i = 0; i < shopCodeListCODE.size(); i++) {
+                        sb0.append(shopCodeListCODE.get(i));
+                        if ((i + 1) != shopCodeListCODE.size()) {
+                            sb0.append(",");
+                        }
+                    }
+                    shops.setCode(sb0.toString());
+                    sb0.delete(0,sb.length());
+                } else {
+                    sb.append(shop.getName() + ",");
+                    sb1.append(shop.getTel() + ",");
+                    sb2.append(shop.getManagerMobile() + ",");
+                    sb3.append(shop.getManagerName() + ",");
+                }
+            }
+            shops.setName(sb.toString());
+            shops.setTel(sb1.toString());
+            shops.setManagerMobile(sb2.toString());
+            shops.setManagerName(sb3.toString());
+            sb.delete(0,sb.length());
+            sb1.delete(0,sb.length());
+            sb2.delete(0,sb.length());
+            sb3.delete(0,sb.length());
+        } else {
+            Shop shop = getDao().queryByCode(shops.getCode());
+            if (shop != null) {
+                shops.setName(shop.getName());
+                shops.setTel(shop.getTel());
+                shops.setManagerMobile(shop.getManagerMobile());
+                shops.setManagerName(shop.getManagerName());
+            }
+        }
+        return shops;
+    }
+
     /**
      * 检查表格数据
      * @param workbook
