@@ -11,6 +11,7 @@ import com.kuaixiu.nbTelecomSJ.service.NBAreaService;
 import com.kuaixiu.nbTelecomSJ.service.NBBusinessService;
 import com.kuaixiu.nbTelecomSJ.service.NBManagerService;
 import com.system.api.entity.ResultData;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,8 +76,11 @@ public class NBBusinessController extends BaseController {
             NBManager nbManager=new NBManager();
             nbManager.setManagerName(manager);
             nbManager.setManagerTel(managerTel);
-            nBManagerService.getDao().add(nbManager);
             List<NBManager> nbManagers=nBManagerService.queryList(nbManager);
+            if(CollectionUtils.isEmpty(nbManagers)){
+                nBManagerService.getDao().add(nbManager);
+                nbManagers=nBManagerService.queryList(nbManager);
+            }
 
             NBBusiness nbBusiness=new NBBusiness();
             nbBusiness.setCountyId(Integer.valueOf(countyId));
