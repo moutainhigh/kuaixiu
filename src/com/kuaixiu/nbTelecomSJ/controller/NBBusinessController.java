@@ -94,7 +94,7 @@ public class NBBusinessController extends BaseController {
             nbBusiness.setTelephone(telephone);
             nBBusinessService.add(nbBusiness);
 
-            NBArea nbArea=nBAreaService.queryById(areaId);
+            NBArea nbArea=nBAreaService.getDao().queryByAreaId(areaId);
             SmsSendUtil.mailSendSmsTobusiness(nbManager,nbBusiness,nbArea);
 
             getResult(result,null,true,"0","提交成功");

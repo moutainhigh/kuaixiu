@@ -54,6 +54,12 @@
         from nb_area where office_id=#{officeId}
     </select>
 
+    <!-- 根据id查询  -->
+    <select id="queryByAreaId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_area where area_id=#{areaId}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select

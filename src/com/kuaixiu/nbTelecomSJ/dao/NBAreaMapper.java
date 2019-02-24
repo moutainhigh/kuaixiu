@@ -11,6 +11,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface NBAreaMapper<T> extends BaseDao<T> {
 
+    T queryByAreaId(String areaId);
 }
 
 
