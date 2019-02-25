@@ -110,8 +110,9 @@ public class NBBusinessController extends BaseController {
                     map.put("manager",nbManager.getManagerName());
                     map.put("managerTel",nbManager.getManagerTel());
                 }
+            }else{
+                return getResult(result, null, true, "1", "数据为空");
             }
-
             getResult(result, map, true, "0", "查询成功");
         } catch (Exception e) {
             getResult(result, null, false, "2", "失败");

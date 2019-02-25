@@ -5,6 +5,7 @@ import com.common.base.service.BaseService;
 import com.kuaixiu.nbTelecomSJ.dao.NBBusinessMapper;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class NBBusinessService extends BaseService<NBBusiness> {
     public NBBusiness queryByOpenId(String openId){
         NBBusiness nbBusiness=new NBBusiness();
         List<NBBusiness> nbBusinesses=getDao().queryByOpenId(openId);
+        if(CollectionUtils.isEmpty(nbBusinesses)){
+            return null;
+        }
         return nbBusinesses.get(0);
     }
 
