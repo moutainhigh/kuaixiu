@@ -62,14 +62,15 @@
 
     <!-- 根据县份id查询  -->
     <select id="queryByCountyId"  resultMap="BaseResultMap" parameterType="Object">
-        select DISTINCT branch_office
+        select office_id,branch_office
         from nb_area where county_id = #{countyId}
+        GROUP BY branch_office
     </select>
 
     <!-- 根据支局名字查询  -->
     <select id="queryByBranchOffice"  resultMap="BaseResultMap" parameterType="Object">
         select area_id,area_name
-        from nb_area where branch_office = #{branchOffice}
+        from nb_area where branch_office = #{branchOffice} and county_id = #{countyId}
     </select>
 
     <!-- 查询列表无分页 -->

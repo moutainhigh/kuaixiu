@@ -54,12 +54,15 @@ public class NBAreaController extends BaseController {
                 Map<String, Object> map = new HashedMap();
                 map.put("officeId", nbArea.getOfficeId());
                 map.put("branchOffice", nbArea.getBranchOffice());
-                List<NBArea> nbAreas1=nBAreaService.getDao().queryByBranchOffice(nbArea.getBranchOffice());
+                NBArea nbArea1=new NBArea();
+                nbArea1.setCountyId(Integer.valueOf(countyId));
+                nbArea1.setBranchOffice(nbArea.getBranchOffice());
+                List<NBArea> nbAreas1=nBAreaService.getDao().queryByBranchOffice(nbArea1);
                 List<Map<String, Object>> maps1 = new ArrayList<>();
-                for(NBArea nbArea1:nbAreas1){
+                for(NBArea nbArea2:nbAreas1){
                     Map<String, Object> map1 = new HashedMap();
-                    map1.put("areaId", nbArea1.getAreaId());
-                    map1.put("areaPerson", nbArea1.getAreaName());
+                    map1.put("areaId", nbArea2.getAreaId());
+                    map1.put("areaPerson", nbArea2.getAreaName());
                     maps1.add(map1);
                 }
                 map.put("area",maps1);

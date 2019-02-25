@@ -19,7 +19,7 @@ public interface NBAreaMapper<T> extends BaseDao<T> {
     List<T> queryByCountyId(String countyId);
 
     //根据支局名字查询
-    List<T> queryByBranchOffice(String branchOffice);
+    List<T> queryByBranchOffice(T t);
 }
 
 
