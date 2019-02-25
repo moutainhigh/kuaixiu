@@ -60,6 +60,18 @@
         from nb_area where area_id=#{areaId}
     </select>
 
+    <!-- 根据县份id查询  -->
+    <select id="queryByCountyId"  resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT branch_office
+        from nb_area where county_id = #{countyId}
+    </select>
+
+    <!-- 根据支局名字查询  -->
+    <select id="queryByBranchOffice"  resultMap="BaseResultMap" parameterType="Object">
+        select branch_office area_id,area_name
+        from nb_area where branch_office = #{branchOffice}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select

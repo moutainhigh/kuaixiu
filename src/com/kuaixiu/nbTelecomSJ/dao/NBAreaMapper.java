@@ -2,6 +2,8 @@ package com.kuaixiu.nbTelecomSJ.dao;
 
 import com.common.base.dao.BaseDao;
 
+import java.util.List;
+
 /**
  * NBArea Mapper
  *
@@ -12,6 +14,12 @@ import com.common.base.dao.BaseDao;
 public interface NBAreaMapper<T> extends BaseDao<T> {
 
     T queryByAreaId(String areaId);
+
+    //根据县份id查询
+    List<T> queryByCountyId(String countyId);
+
+    //根据支局名字查询
+    List<T> queryByBranchOffice(String branchOffice);
 }
 
 
