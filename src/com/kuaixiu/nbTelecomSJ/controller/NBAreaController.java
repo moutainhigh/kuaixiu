@@ -57,7 +57,7 @@ public class NBAreaController extends BaseController {
                 map.put("officeId", nbArea.getOfficeId());
                 map.put("branchOffice", nbArea.getBranchOffice());
                 map.put("areaId", nbArea.getAreaId());
-                map.put("areaPerson", nbArea.getAreaPerson());
+                map.put("areaPerson", nbArea.getAreaName());
                 maps.add(map);
             }
             getResult(result, maps, true, "0", "成功");
