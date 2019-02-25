@@ -68,7 +68,7 @@
 
     <!-- 根据支局名字查询  -->
     <select id="queryByBranchOffice"  resultMap="BaseResultMap" parameterType="Object">
-        select branch_office area_id,area_name
+        select area_id,area_name
         from nb_area where branch_office = #{branchOffice}
     </select>
 
