@@ -6,6 +6,7 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBBusiness" >
         <result column="business_id" property="businessId"/>
+        <result column="open_id" property="openId"/>
         <result column="manager_id" property="managerId"/>
         <result column="county_id" property="countyId"/>
         <result column="office_id" property="officeId"/>
@@ -24,15 +25,15 @@
     
     <!-- nb_business table all fields -->
     <sql id="Base_Column_List" >
-        business_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+        business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_business
-        (business_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,create_time)
+        (business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,create_time)
         values
-        (#{businessId},#{managerId},#{countyId},#{officeId},#{areaId},#{companyName},#{landline},#{broadband},#{address},#{addressType},#{demand},#{remarks},#{coutomerName},#{telephone},now())
+        (#{businessId},#{openId},#{managerId},#{countyId},#{officeId},#{areaId},#{companyName},#{landline},#{broadband},#{address},#{addressType},#{demand},#{remarks},#{coutomerName},#{telephone},now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -66,6 +67,13 @@
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from nb_business where id = #{id}
+    </select>
+
+    <!-- 根据openId查询  -->
+    <select id="queryByOpenId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_business where open_id = #{openId}
+        ORDER BY create_time DESC
     </select>
 
     <!-- 查询列表无分页 -->

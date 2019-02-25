@@ -41,7 +41,7 @@
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
-        from nb_manager where id = #{id}
+        from nb_manager where manager_id=#{managerId}
     </select>
 
     <!-- 查询列表无分页 -->

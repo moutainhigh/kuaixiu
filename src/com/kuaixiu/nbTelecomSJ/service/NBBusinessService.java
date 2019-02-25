@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * NBBusiness Service
  * @CreateDate: 2019-02-23 上午11:53:31
@@ -27,5 +29,11 @@ public class NBBusinessService extends BaseService<NBBusiness> {
     }
 
     //**********自定义方法***********
+
+    public NBBusiness queryByOpenId(String openId){
+        NBBusiness nbBusiness=new NBBusiness();
+        List<NBBusiness> nbBusinesses=getDao().queryByOpenId(openId);
+        return nbBusinesses.get(0);
+    }
 
 }

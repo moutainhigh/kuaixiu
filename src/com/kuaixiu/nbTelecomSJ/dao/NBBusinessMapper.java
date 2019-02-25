@@ -2,6 +2,8 @@ package com.kuaixiu.nbTelecomSJ.dao;
 
 import com.common.base.dao.BaseDao;
 
+import java.util.List;
+
 /**
  * NBBusiness Mapper
  *
@@ -11,6 +13,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface NBBusinessMapper<T> extends BaseDao<T> {
 
+    List<T> queryByOpenId(String OpenId);
 }
 
 
