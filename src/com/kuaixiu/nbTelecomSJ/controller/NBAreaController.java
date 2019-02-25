@@ -47,17 +47,22 @@ public class NBAreaController extends BaseController {
                 return getResult(result, null, false, "2", "参数为空");
             }
 
-            NBArea nBarea = new NBArea();
-            nBarea.setCountyId(Integer.valueOf(countyId));
-            List<NBArea> nBareas = nBAreaService.getDao().queryList(nBarea);
+            List<NBArea> nbAreas=nBAreaService.getDao().queryByCountyId(countyId);
 
             List<Map<String, Object>> maps = new ArrayList<>();
-            for (NBArea nbArea : nBareas) {
+            for (NBArea nbArea : nbAreas) {
                 Map<String, Object> map = new HashedMap();
                 map.put("officeId", nbArea.getOfficeId());
                 map.put("branchOffice", nbArea.getBranchOffice());
-                map.put("areaId", nbArea.getAreaId());
-                map.put("areaPerson", nbArea.getAreaName());
+                List<NBArea> nbAreas1=nBAreaService.getDao().queryByBranchOffice(nbArea.getBranchOffice());
+                List<Map<String, Object>> maps1 = new ArrayList<>();
+                for(NBArea nbArea1:nbAreas1){
+                    Map<String, Object> map1 = new HashedMap();
+                    map1.put("areaId", nbArea1.getAreaId());
+                    map1.put("areaPerson", nbArea1.getAreaName());
+                    maps1.add(map1);
+                }
+                map.put("area",maps1);
                 maps.add(map);
             }
             getResult(result, maps, true, "0", "成功");
