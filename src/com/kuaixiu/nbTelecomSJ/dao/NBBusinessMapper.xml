@@ -182,4 +182,92 @@
         </if>
     </select>
 
+    <!-- 查询列表 带分页 -->
+    <select id="queryListMap" resultMap="BaseResultMap"  parameterType="Object">
+        SELECT
+        date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
+        c.county,a.branch_office,a.area_name,b.company_name,
+        b.landline,b.broadband,b.address_type,b.address,b.demand,b.remarks,
+        b.coutomer_name,b.telephone,m.manager_name,m.manager_tel
+        from nb_business b
+        LEFT JOIN nb_county c ON c.county_id=b.county_id
+        LEFT JOIN nb_area a ON a.area_id=b.area_id
+        LEFT JOIN nb_manager m ON m.manager_id=b.manager_id
+        where 1=1
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="landline != null and landline != ''" >
+            and landline = #{landline}
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and broadband = #{broadband}
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and demand = #{demand}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListMapForPage" resultMap="BaseResultMap"  parameterType="Object">
+        SELECT
+        date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
+        c.county,a.branch_office,a.area_name,b.company_name,
+        b.landline,b.broadband,b.address_type,b.address,b.demand,b.remarks,
+        b.coutomer_name,b.telephone,m.manager_name,m.manager_tel
+        from nb_business b
+        LEFT JOIN nb_county c ON c.county_id=b.county_id
+        LEFT JOIN nb_area a ON a.area_id=b.area_id
+        LEFT JOIN nb_manager m ON m.manager_id=b.manager_id
+        where 1=1
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="landline != null and landline != ''" >
+            and landline = #{landline}
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and broadband = #{broadband}
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and demand = #{demand}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+    </select>
+
 </mapper>   

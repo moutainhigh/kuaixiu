@@ -2,11 +2,13 @@ package com.kuaixiu.nbTelecomSJ.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
+import com.common.paginate.Page;
 import com.common.util.SmsSendUtil;
 import com.common.wechat.api.WxMpService;
 import com.common.wechat.bean.result.WxMpOAuth2AccessToken;
 import com.common.wechat.common.exception.WxErrorException;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBCounty;
@@ -23,9 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +51,155 @@ public class NBBusinessController extends BaseController {
     @Autowired
     private NBAreaService nBAreaService;
     @Autowired
-    protected NBCountyService nbCountyService;
+    private NBCountyService nbCountyService;
     @Autowired
-    protected WxMpService wxMpService;
+    private WxMpService wxMpService;
+
+    /**
+     * 列表查询
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/NBTelecomSJ/list")
+    public ModelAndView list(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        List<NBCounty> counties=nbCountyService.queryList(null);
+        request.setAttribute("counties",counties);
+        String returnView ="NBTelecomSJ/list";
+        return new ModelAndView(returnView);
+    }
+
+    /**
+     * 获取支局
+     */
+    @RequestMapping(value = "NBTelecomSJ/getOffice")
+    @ResponseBody
+    public ResultData getOffice(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String countyId = params.getString("countyId");
+
+            if (StringUtils.isBlank(countyId)) {
+                return getResult(result, null, false, "2", "参数为空");
+            }
+
+            List<NBArea> nbAreas=nBAreaService.getDao().queryByCountyId(countyId);
+
+            List<Map<String, Object>> maps = new ArrayList<>();
+            for (NBArea nbArea : nbAreas) {
+                Map<String, Object> map = new HashedMap();
+                map.put("officeId", nbArea.getOfficeId());
+                map.put("branchOffice", nbArea.getBranchOffice());
+                maps.add(map);
+            }
+            getResult(result, maps, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 获取包区
+     */
+    @RequestMapping(value = "NBTelecomSJ/getArea")
+    @ResponseBody
+    public ResultData getOfficeAndArea(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String countyId = params.getString("countyId");
+            String officeId = params.getString("officeId");
+
+            if (StringUtils.isBlank(countyId)) {
+                return getResult(result, null, false, "2", "参数为空");
+            }
+
+            List<NBArea> nbAreas=nBAreaService.getDao().queryByCountyId(countyId);
+
+            List<Map<String, Object>> maps = new ArrayList<>();
+            for (NBArea nbArea : nbAreas) {
+                Map<String, Object> map = new HashedMap();
+                map.put("officeId", nbArea.getOfficeId());
+                map.put("branchOffice", nbArea.getBranchOffice());
+                NBArea nbArea1=new NBArea();
+                nbArea1.setCountyId(Integer.valueOf(countyId));
+                nbArea1.setBranchOffice(nbArea.getBranchOffice());
+                List<NBArea> nbAreas1=nBAreaService.getDao().queryByBranchOffice(nbArea1);
+                List<Map<String, Object>> maps1 = new ArrayList<>();
+                for(NBArea nbArea2:nbAreas1){
+                    Map<String, Object> map1 = new HashedMap();
+                    map1.put("areaId", nbArea2.getAreaId());
+                    map1.put("areaPerson", nbArea2.getAreaName());
+                    maps1.add(map1);
+                }
+                map.put("area",maps1);
+                maps.add(map);
+            }
+            getResult(result, maps, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * queryListForPage
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/NBTelecomSJ/queryListForPage")
+    public void queryListForPage(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        //获取查询条件
+        String queryStartTime = request.getParameter("queryStartTime");
+        String queryEndTime = request.getParameter("queryEndTime");
+        String countyId = request.getParameter("countyId");
+        String officeId = request.getParameter("officeId");
+        String areaId = request.getParameter("areaId");
+        String companyName = request.getParameter("companyName");
+        String landline = request.getParameter("landline");
+        String broadband = request.getParameter("broadband");
+        String addressType = request.getParameter("addressType");
+        String demand = request.getParameter("demand");
+
+        NBBusiness nbBusiness=new NBBusiness();
+        nbBusiness.setQueryStartTime(queryStartTime);
+        nbBusiness.setQueryEndTime(queryEndTime);
+        if(StringUtils.isNotBlank(countyId)){
+            nbBusiness.setCountyId(Integer.valueOf(countyId));
+        }
+        if(StringUtils.isNotBlank(officeId)){
+            nbBusiness.setOfficeId(Integer.valueOf(officeId));
+        }
+        if(StringUtils.isNotBlank(areaId)){
+            nbBusiness.setAreaId(Integer.valueOf(areaId));
+        }
+        nbBusiness.setCompanyName(companyName);
+        nbBusiness.setLandline(landline);
+        nbBusiness.setBroadband(broadband);
+        if(StringUtils.isNotBlank(addressType)){
+            nbBusiness.setAddressType(Integer.valueOf(addressType));
+        }
+        if(StringUtils.isNotBlank(demand)){
+            nbBusiness.setDemand(Integer.valueOf(demand));
+        }
+
+        Page page = getPageByRequest(request);
+        nbBusiness.setPage(page);
+        List<Map<String,Object>> list=nBBusinessService.getDao().queryListMapForPage(nbBusiness);
+
+        page.setData(list);
+        this.renderJson(response, page);
+    }
 
     /**
      * 用code换取oauth2的openid
@@ -59,6 +209,7 @@ public class NBBusinessController extends BaseController {
      * @param request
      */
     @RequestMapping(value = "NBTelecomSJ/getOpenid")
+    @ResponseBody
     public ResultData getOpenid(HttpServletResponse response, HttpServletRequest request) {
         ResultData resultData = new ResultData();
         WxMpOAuth2AccessToken accessToken;
