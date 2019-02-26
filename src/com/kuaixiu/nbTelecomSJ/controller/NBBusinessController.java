@@ -66,9 +66,9 @@ public class NBBusinessController extends BaseController {
     @RequestMapping(value = "/NBTelecomSJ/list")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-        List<NBCounty> counties=nbCountyService.queryList(null);
-        request.setAttribute("counties",counties);
-        String returnView ="NBTelecomSJ/list";
+        List<NBCounty> counties = nbCountyService.queryList(null);
+        request.setAttribute("counties", counties);
+        String returnView = "NBTelecomSJ/list";
         return new ModelAndView(returnView);
     }
 
@@ -87,7 +87,7 @@ public class NBBusinessController extends BaseController {
                 return getResult(result, null, false, "2", "参数为空");
             }
 
-            List<NBArea> nbAreas=nBAreaService.getDao().queryByCountyId(countyId);
+            List<NBArea> nbAreas = nBAreaService.getDao().queryByCountyId(countyId);
 
             List<Map<String, Object>> maps = new ArrayList<>();
             for (NBArea nbArea : nbAreas) {
@@ -120,27 +120,20 @@ public class NBBusinessController extends BaseController {
                 return getResult(result, null, false, "2", "参数为空");
             }
 
-            List<NBArea> nbAreas=nBAreaService.getDao().queryByCountyId(countyId);
+            NBArea nbArea = nBAreaService.queryById(officeId);
 
             List<Map<String, Object>> maps = new ArrayList<>();
-            for (NBArea nbArea : nbAreas) {
+            NBArea nbArea1 = new NBArea();
+            nbArea1.setCountyId(Integer.valueOf(countyId));
+            nbArea1.setBranchOffice(nbArea.getBranchOffice());
+            List<NBArea> nbAreas1 = nBAreaService.getDao().queryByBranchOffice(nbArea1);
+            for (NBArea nbArea2 : nbAreas1) {
                 Map<String, Object> map = new HashedMap();
-                map.put("officeId", nbArea.getOfficeId());
-                map.put("branchOffice", nbArea.getBranchOffice());
-                NBArea nbArea1=new NBArea();
-                nbArea1.setCountyId(Integer.valueOf(countyId));
-                nbArea1.setBranchOffice(nbArea.getBranchOffice());
-                List<NBArea> nbAreas1=nBAreaService.getDao().queryByBranchOffice(nbArea1);
-                List<Map<String, Object>> maps1 = new ArrayList<>();
-                for(NBArea nbArea2:nbAreas1){
-                    Map<String, Object> map1 = new HashedMap();
-                    map1.put("areaId", nbArea2.getAreaId());
-                    map1.put("areaPerson", nbArea2.getAreaName());
-                    maps1.add(map1);
-                }
-                map.put("area",maps1);
+                map.put("areaId", nbArea2.getAreaId());
+                map.put("areaPerson", nbArea2.getAreaName());
                 maps.add(map);
             }
+            
             getResult(result, maps, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,6 +144,7 @@ public class NBBusinessController extends BaseController {
 
     /**
      * queryListForPage
+     *
      * @param request
      * @param response
      * @return
@@ -171,31 +165,31 @@ public class NBBusinessController extends BaseController {
         String addressType = request.getParameter("addressType");
         String demand = request.getParameter("demand");
 
-        NBBusiness nbBusiness=new NBBusiness();
+        NBBusiness nbBusiness = new NBBusiness();
         nbBusiness.setQueryStartTime(queryStartTime);
         nbBusiness.setQueryEndTime(queryEndTime);
-        if(StringUtils.isNotBlank(countyId)){
+        if (StringUtils.isNotBlank(countyId)) {
             nbBusiness.setCountyId(Integer.valueOf(countyId));
         }
-        if(StringUtils.isNotBlank(officeId)){
+        if (StringUtils.isNotBlank(officeId)) {
             nbBusiness.setOfficeId(Integer.valueOf(officeId));
         }
-        if(StringUtils.isNotBlank(areaId)){
+        if (StringUtils.isNotBlank(areaId)) {
             nbBusiness.setAreaId(Integer.valueOf(areaId));
         }
         nbBusiness.setCompanyName(companyName);
         nbBusiness.setLandline(landline);
         nbBusiness.setBroadband(broadband);
-        if(StringUtils.isNotBlank(addressType)){
+        if (StringUtils.isNotBlank(addressType)) {
             nbBusiness.setAddressType(Integer.valueOf(addressType));
         }
-        if(StringUtils.isNotBlank(demand)){
+        if (StringUtils.isNotBlank(demand)) {
             nbBusiness.setDemand(Integer.valueOf(demand));
         }
 
         Page page = getPageByRequest(request);
         nbBusiness.setPage(page);
-        List<Map<String,Object>> list=nBBusinessService.getDao().queryListMapForPage(nbBusiness);
+        List<Map<String, Object>> list = nBBusinessService.getDao().queryListMapForPage(nbBusiness);
 
         page.setData(list);
         this.renderJson(response, page);
@@ -252,17 +246,17 @@ public class NBBusinessController extends BaseController {
                 }
                 NBArea nbArea = nBAreaService.getDao().queryByAreaId(String.valueOf(nbBusiness.getAreaId()));
                 if (nbArea != null) {
-                    map.put("officeId",nbArea.getOfficeId());
-                    map.put("branchOffice",nbArea.getBranchOffice());
-                    map.put("areaId",nbArea.getAreaId());
-                    map.put("areaPerson",nbArea.getAreaName());
+                    map.put("officeId", nbArea.getOfficeId());
+                    map.put("branchOffice", nbArea.getBranchOffice());
+                    map.put("areaId", nbArea.getAreaId());
+                    map.put("areaPerson", nbArea.getAreaName());
                 }
                 NBManager nbManager = nBManagerService.queryById(nbBusiness.getManagerId());
                 if (nbManager != null) {
-                    map.put("manager",nbManager.getManagerName());
-                    map.put("managerTel",nbManager.getManagerTel());
+                    map.put("manager", nbManager.getManagerName());
+                    map.put("managerTel", nbManager.getManagerTel());
                 }
-            }else{
+            } else {
                 return getResult(result, null, true, "1", "数据为空");
             }
             getResult(result, map, true, "0", "查询成功");
