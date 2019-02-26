@@ -63,7 +63,8 @@ public class NBBusinessController extends BaseController {
         ResultData resultData = new ResultData();
         WxMpOAuth2AccessToken accessToken;
         try {
-            String code = request.getParameter("code");
+            JSONObject params = getPrarms(request);
+            String code = params.getString("code");
             accessToken = this.wxMpService.oauth2getAccessToken(code);
             Map<String, String> map = new HashMap();
             map.put("openId", accessToken.getOpenId());
@@ -78,7 +79,7 @@ public class NBBusinessController extends BaseController {
     /**
      * 获取上次填写数据（会员机制）
      */
-    @RequestMapping(value = "NBTelecomSJ/getLaseTime")
+    @RequestMapping(value = "NBTelecomSJ/getLastTime")
     @ResponseBody
     public ResultData getLaseTime(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
@@ -175,8 +176,8 @@ public class NBBusinessController extends BaseController {
             nbBusiness.setOfficeId(Integer.valueOf(officeId));
             nbBusiness.setManagerId(nbManagers.get(0).getManagerId());
             nbBusiness.setCompanyName(companyName);
-            nbBusiness.setBroadband(Integer.valueOf(broadband));
-            nbBusiness.setLandline(Integer.valueOf(landline));
+            nbBusiness.setBroadband(broadband);
+            nbBusiness.setLandline(landline);
             nbBusiness.setAddress(address);
             nbBusiness.setAddressType(Integer.valueOf(addressType));
             nbBusiness.setDemand(Integer.valueOf(demand));
