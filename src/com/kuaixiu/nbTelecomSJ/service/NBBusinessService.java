@@ -55,7 +55,7 @@ public class NBBusinessService extends BaseService<NBBusiness> {
      * @param params
      */
     @SuppressWarnings("rawtypes")
-    public void expSummaryOrderDataExcel(Map<String, Object> params) {
+    public void expDataExcel(Map<String, Object> params) {
         String templateFileName = params.get("tempFileName") + "";
         String destFileName = params.get("outFileName") + "";
 
@@ -94,7 +94,34 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         }
 
         List<Map<String, Object>> list = getDao().queryListMap(nbBusiness);
-
+        for(Map map:list){
+            String address_type=getAddressType(map.get("address_type").toString());
+            map.put("address_type",address_type);
+            String getDemand=getDemand(map.get("demand").toString());
+            map.put("demand",getDemand);
+            String landline1=map.get("landline").toString();
+            if (landline1.contains(",")) {
+                String[] landlines = landline1.split(",");
+                StringBuilder sb=new StringBuilder();
+                for (int i = 0; i < landlines.length; i++) {
+                    sb.append(getlandlines(landlines[i])+",");
+                }
+                map.put("landline",sb.toString());
+            }else{
+                map.put("landline",getlandlines(landline1));
+            }
+            String broadband1=map.get("broadband").toString();
+            if (broadband1.contains(",")) {
+                String[] broadbands = broadband1.split(",");
+                StringBuilder sb=new StringBuilder();
+                for (int i = 0; i < broadbands.length; i++) {
+                    sb.append(getlandlines(broadbands[i])+",");
+                }
+                map.put("broadband",sb.toString());
+            }else{
+                map.put("broadband",getlandlines(broadband1));
+            }
+        }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("list", list);
         XLSTransformer transformer = new XLSTransformer();
@@ -109,4 +136,72 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         }
     }
 
+    private String getDemand(String demand){
+        String state = "";
+        switch (demand) {
+            case "1":
+                state = "无需求";
+                break;
+            case "2":
+                state = "宽带体验";
+                break;
+            case "3":
+                state = "专线体验";
+                break;
+            case "4":
+                state = "战狼办理";
+                break;
+            case "5":
+                state = "其他需求";
+                break;
+            default:
+                state = "";
+        }
+        return state;
+    }
+
+    private String getAddressType(String address_type){
+        String state = "";
+        switch (address_type) {
+            case "1":
+                state = "楼宇";
+                break;
+            case "2":
+                state = "园区";
+                break;
+            case "3":
+                state = "市场";
+                break;
+            case "4":
+                state = "沿街";
+                break;
+            case "5":
+                state = "工厂";
+                break;
+            default:
+                state = "";
+        }
+        return state;
+    }
+
+    private String getlandlines(String landline){
+        String landline1="";
+        switch (landline) {
+            case "1":
+                landline1 = "联通";
+                break;
+            case "2":
+                landline1 = "电信";
+                break;
+            case "3":
+                landline1 = "移动";
+                break;
+            case "4":
+                landline1 = "无";
+                break;
+            default:
+                landline1 = "";
+        }
+        return landline1;
+    }
 }

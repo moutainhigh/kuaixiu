@@ -79,8 +79,7 @@ public class NBBusinessController extends BaseController {
     public ResultData getOffice(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
         try {
-            JSONObject params = getPrarms(request);
-            String countyId = params.getString("countyId");
+            String countyId = request.getParameter("countyId");
 
             if (StringUtils.isBlank(countyId)) {
                 return getResult(result, null, false, "2", "参数为空");
@@ -111,9 +110,8 @@ public class NBBusinessController extends BaseController {
     public ResultData getOfficeAndArea(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
         try {
-            JSONObject params = getPrarms(request);
-            String countyId = params.getString("countyId");
-            String officeId = params.getString("officeId");
+            String countyId = request.getParameter("countyId");
+            String officeId = request.getParameter("officeId");
 
             if (StringUtils.isBlank(countyId)) {
                 return getResult(result, null, false, "2", "参数为空");
@@ -189,9 +187,53 @@ public class NBBusinessController extends BaseController {
         Page page = getPageByRequest(request);
         nbBusiness.setPage(page);
         List<Map<String, Object>> list = nBBusinessService.getDao().queryListMapForPage(nbBusiness);
-
+        for(Map map:list){
+            String landline1=map.get("landline").toString();
+            if (landline1.contains(",")) {
+                String[] landlines = landline1.split(",");
+                StringBuilder sb=new StringBuilder();
+                for (int i = 0; i < landlines.length; i++) {
+                    sb.append(getlandlines(landlines[i])+",");
+                }
+                map.put("landline",sb.toString());
+            }else{
+                map.put("landline",getlandlines(landline1));
+            }
+            String broadband1=map.get("broadband").toString();
+            if (broadband1.contains(",")) {
+                String[] broadbands = broadband1.split(",");
+                StringBuilder sb=new StringBuilder();
+                for (int i = 0; i < broadbands.length; i++) {
+                    sb.append(getlandlines(broadbands[i])+",");
+                }
+                map.put("broadband",sb.toString());
+            }else{
+                map.put("broadband",getlandlines(broadband1));
+            }
+        }
         page.setData(list);
         this.renderJson(response, page);
+    }
+
+    private String getlandlines(String landline){
+        String landline1="";
+        switch (landline) {
+            case "1":
+                landline1 = "联通";
+                break;
+            case "2":
+                landline1 = "电信";
+                break;
+            case "3":
+                landline1 = "移动";
+                break;
+            case "4":
+                landline1 = "无";
+                break;
+            default:
+                landline1 = "";
+        }
+        return landline1;
     }
 
     /**

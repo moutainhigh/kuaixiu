@@ -26,10 +26,10 @@
 
                 <td class="search_th"><label class="control-label">县分 ：</label></td>
                 <td class="search_td">
-                    <select name="query_cardType" class="form-control">
+                    <select id="countyId" name="countyId" onchange="CountyChange(this.value);" class="form-control">
                         <option value="">--选择类别--</option>
-                        <c:forEach items="${type}" var="item" varStatus="i">
-                            <option value="${item.cardNo}">${item.cardName}</option>
+                        <c:forEach items="${counties}" var="item" varStatus="i">
+                            <option value="${item.countyId}">${item.county}</option>
                         </c:forEach>
                     </select>
                 </td>
@@ -39,21 +39,15 @@
             <tr>
                 <td class="search_th"><label class="control-label">支局 ：</label></td>
                 <td class="search_td">
-                    <select name="query_cardType" class="form-control">
+                    <select id="officeId" name="officeId" onchange="OfficeChange(this.value);" class="form-control">
                         <option value="">--选择类别--</option>
-                        <c:forEach items="${type}" var="item" varStatus="i">
-                            <option value="${item.cardNo}">${item.cardName}</option>
-                        </c:forEach>
                     </select>
                 </td>
 
                 <td class="search_th"><label class="control-label">包区 ：</label></td>
                 <td class="search_td">
-                    <select name="query_cardName" class="form-control">
+                    <select id="areaId"  name="areaId" class="form-control">
                         <option value="">--选择名称--</option>
-                        <c:forEach items="${name}" var="item" varStatus="i">
-                            <option value="${item.cardNo}">${item.cardName}</option>
-                        </c:forEach>
                     </select>
                 </td>
                 <td></td>
@@ -61,17 +55,16 @@
 
             <tr>
                 <td class="search_th search_th_frist"><label class="control-label">单位名称：</label></td>
-                <td class="search_td"><input type="text" name="query_iccid" class="form-control"></td>
-
-
+                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
 
                 <td class="search_th"><label class="control-label">固定电话：</label></td>
                 <td class="search_td">
-                    <select name="query_pushStatus" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="0">不满足推送条件</option>
-                        <option value="1">推送失败</option>
-                        <option value="2">推送成功</option>
+                    <select name="landline" class="form-control">
+                        <option value="">--选择--</option>
+                        <option value="1">联通</option>
+                        <option value="2">电信</option>
+                        <option value="3">移动</option>
+                        <option value="4">无</option>
                     </select>
                 </td>
                 <td></td>
@@ -81,21 +74,24 @@
             <tr>
                 <td class="search_th"><label class="control-label">宽带：</label></td>
                 <td class="search_td">
-                    <select name="query_pushStatus" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="0">不满足推送条件</option>
-                        <option value="1">推送失败</option>
-                        <option value="2">推送成功</option>
+                    <select name="broadband" class="form-control">
+                        <option value="">--选择--</option>
+                        <option value="1">联通</option>
+                        <option value="2">电信</option>
+                        <option value="3">移动</option>
+                        <option value="4">无</option>
                     </select>
                 </td>
 
                 <td class="search_th"><label class="control-label">地址属性：</label></td>
                 <td class="search_td">
-                    <select name="query_pushStatus" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="0">不满足推送条件</option>
-                        <option value="1">推送失败</option>
-                        <option value="2">推送成功</option>
+                    <select name="addressType" class="form-control">
+                        <option value="">--选择--</option>
+                        <option value="1">楼宇</option>
+                        <option value="2">园区</option>
+                        <option value="3">市场</option>
+                        <option value="4">沿街</option>
+                        <option value="5">工厂</option>
                     </select>
                 </td>
             </tr>
@@ -103,14 +99,15 @@
             <tr>
                 <td class="search_th"><label class="control-label">通信需求：</label></td>
                 <td class="search_td">
-                    <select name="query_pushStatus" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="0">不满足推送条件</option>
-                        <option value="1">推送失败</option>
-                        <option value="2">推送成功</option>
+                    <select name="demand" class="form-control">
+                        <option value="">--选择--</option>
+                        <option value="1">无需求</option>
+                        <option value="2">宽带体验</option>
+                        <option value="3">专线体验</option>
+                        <option value="4">战狼体验</option>
+                        <option value="5">其他需求</option>
                     </select>
                 </td>
-
             </tr>
 
 
@@ -124,11 +121,9 @@
                         <!--
                         <button onclick="adminPush();" class="am-btn am-btn-default search_btn" type="button"> 当日号卡推送(超人-电渠) </button>
                         -->
-                        <c:if test="${userId eq 'kf014'||userId eq'admin'}">
                             <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
                                     class="am-icon-file-excel-o"></span> 导出
                             </button>
-                        </c:if>
                     </div>
                 </div>
             </div>
@@ -145,16 +140,19 @@
                 <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal table-title center">批次号</th>
-                <th class="fontWeight_normal table-title center">ICCID</th>
-                <th class="fontWeight_normal table-title center">号卡类型</th>
-                <th class="fontWeight_normal table-title center">号卡名称</th>
-                <th class="fontWeight_normal table-title center">所属本地网</th>
-                <th class="fontWeight_normal table-title center">分配</th>
-                <th class="fontWeight_normal table-title center">寄出</th>
-                <th class="fontWeight_normal table-title center">寄出时间</th>
-                <th class="fontWeight_normal table-date tdwidth130  center">寄出物流号</th>
-                <th class="fontWeight_normal table-set tdwidth130">操作</th>
+                <th class="fontWeight_normal table-title center">创建时间</th>
+                <th class="fontWeight_normal table-title center">县分</th>
+                <th class="fontWeight_normal table-title center">支局</th>
+                <th class="fontWeight_normal table-title center">包区</th>
+                <th class="fontWeight_normal table-title center">单位名称</th>
+                <th class="fontWeight_normal table-title center">固定电话</th>
+                <th class="fontWeight_normal table-title center">宽带</th>
+                <th class="fontWeight_normal table-title center">地址属性</th>
+                <th class="fontWeight_normal table-title center ">详细地址</th>
+                <th class="fontWeight_normal table-title center ">通信需求</th>
+                <th class="fontWeight_normal table-title center ">备注</th>
+                <th class="fontWeight_normal table-title center ">联系人/手机号</th>
+                <th class="fontWeight_normal table-title center ">走访人/手机号</th>
             </tr>
             </thead>
             <tbody>
@@ -180,56 +178,11 @@
         minView: "month"//设置只显示到月份
     });
 
-    $("#query_startDistributionTime").datetimepicker({
-        format: "yyyy-mm-dd",
-        language: "zh-CN",
-        autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
-    });
-
-    $("#query_endDistributionTime").datetimepicker({
-        format: "yyyy-mm-dd",
-        language: "zh-CN",
-        autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
-    });
-
-
-    $("#query_startZhuangTime").datetimepicker({
-        format: "yyyy-mm-dd",
-        language: "zh-CN",
-        autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
-    });
-
-    $("#query_endZhuangTime").datetimepicker({
-        format: "yyyy-mm-dd",
-        language: "zh-CN",
-        autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
-    });
-
-
-    $("#query_startTelecomTime").datetimepicker({
-        format: "yyyy-mm-dd",
-        language: "zh-CN",
-        autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
-    });
-
-    $("#query_endTelecomTime").datetimepicker({
-        format: "yyyy-mm-dd",
-        language: "zh-CN",
-        autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
-    });
-
-
     //自定义datatable的数据
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/telecom/card/queryListForPage.do",
+        "url": "${ctx}/NBTelecomSJ/queryListForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -241,17 +194,20 @@
 
     //设置数据列
     dto.setColumns([
-        {"data": "id", "class": "tdwidth50 center"},
-        {"data": "batch", "class": ""},
-        {"data": "iccid", "class": ""},
-        {"data": "type", "class": ""},
-        {"data": "cardName", "class": ""},
-        {"data": "province", "class": ""},
-        {"data": "isDistribution", "class": ""},
-        {"data": "isUse", "class": ""},
-        {"data": "distributionTime", "class": ""},
-        {"data": "stationExpressNumber", "class": ""},
-        {"defaultContent": "操作", "class": ""}
+        {"data": "business_id", "class": "tdwidth50 center"},
+        {"data": "createTime", "class": ""},
+        {"data": "county", "class": ""},
+        {"data": "branch_office", "class": ""},
+        {"data": "area_name", "class": ""},
+        {"data": "company_name", "class": ""},
+        {"data": "landline", "class": ""},
+        {"data": "broadband", "class": ""},
+        {"data": "address_type", "class": ""},
+        {"data": "address", "class": ""},
+        {"data": "demand", "class": ""},
+        {"data": "remarks", "class": ""},
+        {"data": "coutomer_name", "class": ""},
+        {"data": "manager_name", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -260,7 +216,7 @@
             render: function (data, type, row, meta) {
                 var context = {
                     func: [
-                        {"id": row.iccid, "order": meta.row + 1}
+                        {"id": row.business_id, "order": meta.row + 1}
                     ]
                 };
                 var html = template_chk(context);
@@ -268,41 +224,50 @@
             }
         },
         {//号卡类型
-            targets: 3,
+            targets: -6,
             render: function (data, type, row, meta) {
-                if (row.type == 0) {
-                    return '小白卡';
+                var state = "";
+                switch (row.address_type) {
+                    case 1:
+                        state = "楼宇";
+                        break;
+                    case 2:
+                        state = "园区";
+                        break;
+                    case 3:
+                        state = "市场";
+                        break;
+                    case 4:
+                        state = "沿街";
+                        break;
+                    case 5:
+                        state = "工厂";
+                        break;
+                    default:
+                        state = "";
                 }
-                else {
-                    return '即买即通卡';
-                }
+                return state;
             }
         },
         {
-            targets: 4,
+            targets: -4,
             render: function (data, type, row, meta) {
                 var state = "";
-                switch (row.cardName) {
-                    case 0:
-                        state = "白金卡";
-                        break;
+                switch (row.demand) {
                     case 1:
-                        state = "抖音卡";
+                        state = "无需求";
                         break;
                     case 2:
-                        state = "鱼卡";
+                        state = "宽带体验";
                         break;
                     case 3:
-                        state = "49元不限流量卡";
+                        state = "专线体验";
                         break;
                     case 4:
-                        state = "99元不限流量卡";
+                        state = "战狼办理";
                         break;
                     case 5:
-                        state = "199元不限流量卡";
-                        break;
-                    case 6:
-                        state = "29元不限流量卡";
+                        state = "其他需求";
                         break;
                     default:
                         state = "";
@@ -311,65 +276,18 @@
             }
         },
         {//分配
-            targets: 6,
+            targets: -2,
             render: function (data, type, row, meta) {
-                if (row.isDistribution == 1) {
-                    return '是';
-                }
-                else {
-                    return '否';
-                }
+                    return row.coutomer_name+"/"+row.telephone;
             }
         },
         {//寄出
-            targets: 7,
-            render: function (data, type, row, meta) {
-                if (row.isUse == 1) {
-                    return '是';
-                }
-                else {
-                    return '否';
-                }
-            }
-        },
-        {
             targets: -1,
             render: function (data, type, row, meta) {
-                if (row.isPush == 1) {
-                    var context = {
-                        func: [
-                            {
-                                "name": "查看",
-                                "fn": "detail(\'" + row.iccid + "\')",
-                                "icon": "am-icon-pencil-square-o",
-                                "class": "am-text-secondary"
-                            },
-                            {
-                                "name": "重新推送",
-                                "fn": "push(\'" + row.iccid + "\')",
-                                "icon": "am-icon-pencil-square-o",
-                                "class": "am-text-secondary"
-                            },
-                        ]
-                    };
-                } else {
-                    var context = {
-                        func: [
-                            {
-                                "name": "查看",
-                                "fn": "detail(\'" + row.iccid + "\')",
-                                "icon": "am-icon-pencil-square-o",
-                                "class": "am-text-secondary"
-                            }
-                        ]
-                    };
-                }
-
-
-                var html = template_btn(context);
-                return html;
+                return row.manager_name+"/"+row.manager_tel;
             }
         }
+
     ]);
 
     var myTable = $("#dt").DataTable(dto);
@@ -390,85 +308,44 @@
         });
     }
 
-    function checkItem(obj) {
-        var checked = true;
-        $("input[name='item_check_btn']").each(function () {
-            if (!this.checked) {
-                checked = false;
+
+    function CountyChange(id) {
+        $("#officeId option[value!='']").remove();
+        var url = AppConfig.ctx + "/NBTelecomSJ/getOffice.do";
+        $.get(url, {countyId: id}, function (result) {
+            if (!result.success) {
                 return false;
             }
+            var json = result.result;
+            var select_html = '';
+            if (json.length > 0) {
+                for (a in json) {
+                    select_html += '<option value="' + json[a]['officeId'] + '">' + json[a]['branchOffice'] + '</option>';
+                }
+            }
+            $("#officeId").append(select_html);
         });
-        $("#check_all_btn").prop("checked", checked);
     }
 
-    function addBtnClick() {
-        $("#modal-insertView").modal("show");
-    }
-
-    function detail(id) {
-        func_reload_page("${ctx}/telecom/card/cardDetail.do?id=" + id);
-    }
-
-    /**
-     * 重新推送
-     * @param id
-     */
-    function push(id) {
-        var url_ = AppConfig.ctx + "/telecom/card/push.do";
-        var data_ = {id: id};
-        $.ajax({
-            url: url_,
-            data: data_,
-            type: "POST",
-            dataType: "json",
-            success: function (result) {
-                if (result.success) {
-                    //保存成功,关闭窗口，刷新列表
-                    refreshPage();
-                } else {
-                    AlertText.tips("d_alert", "提示", result.msg);
+    function OfficeChange(id) {
+        $("#areaId option[value!='']").remove();
+        var countyId = $("#countyId").val();
+        if (id) {
+            var url = AppConfig.ctx + "/NBTelecomSJ/getArea.do";
+            $.get(url, {officeId: id, countyId: countyId}, function (result) {
+                if (!result.success) {
                     return false;
                 }
-                //隐藏等待
-                AlertText.hide();
-            }
-        });
-    }
-
-    function format(time) {
-        var date = new Date(time);
-        var year = date.getFullYear(),
-            month = date.getMonth() + 1,//月份是从0开始的
-            day = date.getDate();
-        var newTime = year + '-' +
-            month + '-' +
-            day;
-        return newTime;
-    }
-
-    /**
-     * 手动推送
-     */
-    function adminPush() {
-        var url_ = AppConfig.ctx + "/recycle/admin/push.do";
-        $.ajax({
-            url: url_,
-            type: "POST",
-            dataType: "json",
-            success: function (result) {
-                if (result.success) {
-                    alert("推送成功");
-                    //保存成功,关闭窗口，刷新列表
-                    refreshPage();
-                } else {
-                    AlertText.tips("d_alert", "提示", result.msg);
-                    return false;
+                var json = result.result;
+                var select_html = '';
+                if (json.length > 0) {
+                    for (a in json) {
+                        select_html += '<option value="' + json[a]['areaId'] + '">' + json[a]['areaPerson'] + '</option>';
+                    }
                 }
-                //隐藏等待
-                AlertText.hide();
-            }
-        });
-
+                $("#areaId").append(select_html);
+            });
+        }
     }
 
     /**
@@ -486,7 +363,7 @@
                 ids += this.value + ",";
             }
         });
-        window.open("${ctx}/file/download.do?fileId=23&ids=" + ids + params, "导出");
+        window.open("${ctx}/file/download.do?fileId=24&ids=" + ids + params, "导出");
     }
 
 </script>
