@@ -2,7 +2,6 @@ package com.kuaixiu.nbTelecomSJ.service;
 
 
 import com.common.base.service.BaseService;
-import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.nbTelecomSJ.dao.NBBusinessMapper;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 
@@ -10,12 +9,14 @@ import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +71,13 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         String broadband = MapUtils.getString(params,"broadband");
         String addressType = MapUtils.getString(params,"addressType");
         String demand = MapUtils.getString(params,"demand");
+        String idStr=MapUtils.getString(params,"ids");
 
         NBBusiness nbBusiness = new NBBusiness();
+        if (StringUtils.isNotBlank(idStr)) {
+            String[] ids = StringUtils.split(idStr, ",");
+            nbBusiness.setQueryIds(Arrays.asList(ids));
+        }
         nbBusiness.setQueryStartTime(queryStartTime);
         nbBusiness.setQueryEndTime(queryEndTime);
         if (StringUtils.isNotBlank(countyId)) {

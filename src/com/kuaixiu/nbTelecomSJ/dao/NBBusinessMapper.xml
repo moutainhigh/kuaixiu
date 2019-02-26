@@ -225,6 +225,12 @@
         <if test="queryEndTime != null and queryEndTime != ''">
             and b.create_time &lt;= #{queryEndTime}
         </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and b.business_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
     </select>
 
     <!-- 查询列表 带分页 -->
