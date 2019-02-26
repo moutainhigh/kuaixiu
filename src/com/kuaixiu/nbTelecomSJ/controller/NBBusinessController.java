@@ -209,9 +209,11 @@ public class NBBusinessController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String code = params.getString("code");
+            log.info("request:code="+code);
             accessToken = this.wxMpService.oauth2getAccessToken(code);
             Map<String, String> map = new HashMap();
             map.put("openId", accessToken.getOpenId());
+            log.info("response:openId="+accessToken.getOpenId());
             getResult(resultData, map, true, "0", "获取成功");
         } catch (WxErrorException e) {
             getResult(resultData, null, false, "2", "失败");

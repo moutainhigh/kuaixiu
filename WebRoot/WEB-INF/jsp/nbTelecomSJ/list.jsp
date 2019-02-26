@@ -24,7 +24,6 @@
                     </div>
                 </td>
 
-
                 <td class="search_th"><label class="control-label">县分 ：</label></td>
                 <td class="search_td">
                     <select name="query_cardType" class="form-control">
@@ -36,24 +35,9 @@
                 </td>
             </tr>
 
-            <tr>
-                <td class="search_th search_th_frist"><label class="control-label">&nbsp&nbsp&nbsp批次号 ：</label></td>
-                <td class="search_td"><input type="text" name="query_batchId" class="form-control"></td>
-
-                <td class="search_th"><label class="control-label">是否已分配 ：</label></td>
-                <td class="search_td">
-                    <select name="query_isDistribution" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </td>
-                <td></td>
-            </tr>
-
 
             <tr>
-                <td class="search_th"><label class="control-label">号卡类别 ：</label></td>
+                <td class="search_th"><label class="control-label">支局 ：</label></td>
                 <td class="search_td">
                     <select name="query_cardType" class="form-control">
                         <option value="">--选择类别--</option>
@@ -63,8 +47,7 @@
                     </select>
                 </td>
 
-
-                <td class="search_th"><label class="control-label">号卡名称 ：</label></td>
+                <td class="search_th"><label class="control-label">包区 ：</label></td>
                 <td class="search_td">
                     <select name="query_cardName" class="form-control">
                         <option value="">--选择名称--</option>
@@ -77,20 +60,12 @@
             </tr>
 
             <tr>
-                <c:if test="${userId ne 'kf014'}">
-                    <td class="search_th"><label class="control-label">地市 ：</label></td>
-                    <td class="search_td">
-                        <select name="query_city" class="form-control">
-                            <option value="">--选择地市--</option>
-                            <c:forEach items="${list}" var="item" varStatus="i">
-                                <option value="${item}">${item}</option>
-                            </c:forEach>
-                        </select>
-                    </td>
-                </c:if>
+                <td class="search_th search_th_frist"><label class="control-label">单位名称：</label></td>
+                <td class="search_td"><input type="text" name="query_iccid" class="form-control"></td>
 
 
-                <td class="search_th"><label class="control-label">电渠状态：</label></td>
+
+                <td class="search_th"><label class="control-label">固定电话：</label></td>
                 <td class="search_td">
                     <select name="query_pushStatus" class="form-control">
                         <option value="">--选择状态--</option>
@@ -104,29 +79,37 @@
 
 
             <tr>
-                <td class="search_th"><label class="control-label">转转推送：</label></td>
+                <td class="search_th"><label class="control-label">宽带：</label></td>
                 <td class="search_td">
-                    <div class="am-datepicker-date">
-                        <input type="text" id="query_startZhuangTime" name="query_startZhuangTime"
-                               class="form-control am-datepicker-start" data-am-datepicker readonly>
-                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endZhuangTime" name="query_endZhuangTime"
-                               class="form-control am-datepicker-end" data-am-datepicker readonly>
-                    </div>
+                    <select name="query_pushStatus" class="form-control">
+                        <option value="">--选择状态--</option>
+                        <option value="0">不满足推送条件</option>
+                        <option value="1">推送失败</option>
+                        <option value="2">推送成功</option>
+                    </select>
                 </td>
 
-                <td class="search_th"><label class="control-label">电渠推送：</label></td>
+                <td class="search_th"><label class="control-label">地址属性：</label></td>
                 <td class="search_td">
-                    <div class="am-datepicker-date">
-                        <input type="text" id="query_startTelecomTime" name="query_startTelecomTime"
-                               class="form-control am-datepicker-start" data-am-datepicker readonly>
-                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="query_endTelecomTime" name="query_endTelecomTime"
-                               class="form-control am-datepicker-end" data-am-datepicker readonly>
-                    </div>
+                    <select name="query_pushStatus" class="form-control">
+                        <option value="">--选择状态--</option>
+                        <option value="0">不满足推送条件</option>
+                        <option value="1">推送失败</option>
+                        <option value="2">推送成功</option>
+                    </select>
                 </td>
-                <td></td>
+            </tr>
 
+            <tr>
+                <td class="search_th"><label class="control-label">通信需求：</label></td>
+                <td class="search_td">
+                    <select name="query_pushStatus" class="form-control">
+                        <option value="">--选择状态--</option>
+                        <option value="0">不满足推送条件</option>
+                        <option value="1">推送失败</option>
+                        <option value="2">推送成功</option>
+                    </select>
+                </td>
 
             </tr>
 
