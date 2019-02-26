@@ -140,7 +140,8 @@
     <!-- 根据查询  -->
     <select id="queryReworkListForPage" resultType="Map" parameterType="Object">
         select
-        r.in_time inTime,r.order_rework_no reworkNo,r.parent_order parentNo,
+        date_format(`r.in_time`,'%Y-%m-%d %H:%i:%s')inTime
+        ,r.order_rework_no reworkNo,r.parent_order parentNo,
         o.customer_name name,o.mobile mobile,o.brand_name brandName,o.model_name modelName,
         o.color color,r.surplus_day surplusDay,r.total_day totalDay,
         o.engineer_number beforeEngNumber,o.engineer_name beforeEngName,
