@@ -8,7 +8,6 @@ import com.common.wechat.api.WxMpService;
 import com.common.wechat.bean.result.WxMpOAuth2AccessToken;
 import com.common.wechat.common.exception.WxErrorException;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBCounty;
@@ -68,7 +67,7 @@ public class NBBusinessController extends BaseController {
                              HttpServletResponse response) throws Exception {
         List<NBCounty> counties = nbCountyService.queryList(null);
         request.setAttribute("counties", counties);
-        String returnView = "NBTelecomSJ/list";
+        String returnView = "nbTelecomSJ/list";
         return new ModelAndView(returnView);
     }
 
