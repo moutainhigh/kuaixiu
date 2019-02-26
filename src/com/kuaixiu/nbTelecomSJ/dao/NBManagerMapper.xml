@@ -8,11 +8,12 @@
         <result column="manager_id" property="managerId"/>
         <result column="manager_name" property="managerName"/>
         <result column="manager_tel" property="managerTel"/>
+        <result column="department" property="department"/>
     </resultMap>
     
     <!-- nb_manager table all fields -->
     <sql id="Base_Column_List" >
-        manager_id,manager_name,manager_tel
+        manager_id,manager_name,manager_tel,department
     </sql>
 
     <!-- 插入记录 -->

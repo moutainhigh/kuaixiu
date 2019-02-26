@@ -165,8 +165,7 @@ public class NBBusinessController extends BaseController {
             nbManager.setManagerTel(managerTel);
             List<NBManager> nbManagers = nBManagerService.queryList(nbManager);
             if (CollectionUtils.isEmpty(nbManagers)) {
-                nBManagerService.getDao().add(nbManager);
-                nbManagers = nBManagerService.queryList(nbManager);
+                return getResult(result, null, false, "2", "您没有提交权限");
             }
 
             NBBusiness nbBusiness = new NBBusiness();
