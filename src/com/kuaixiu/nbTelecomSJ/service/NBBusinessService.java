@@ -5,21 +5,21 @@ import com.common.base.service.BaseService;
 import com.kuaixiu.nbTelecomSJ.dao.NBBusinessMapper;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * NBBusiness Service
@@ -58,8 +58,7 @@ public class NBBusinessService extends BaseService<NBBusiness> {
      */
     @SuppressWarnings("rawtypes")
     public void expDataExcel(Map<String, Object> params) {
-        String templateFileName = params.get("tempFileName") + "";
-        String destFileName = params.get("outFileName") + "";
+        HttpServletResponse response = (HttpServletResponse) params.get("response");
 
         //获取查询条件
         String queryStartTime = MapUtils.getString(params, "queryStartTime");
@@ -100,31 +99,166 @@ public class NBBusinessService extends BaseService<NBBusiness> {
             nbBusiness.setDemand(Integer.valueOf(demand));
         }
 
-        List<Map<String, Object>> list = getDao().queryListMap(nbBusiness);
-        for (Map<String, Object> map : list) {
+        List<Map<String, Object>> maps = getDao().queryListMap(nbBusiness);
+        for (Map<String, Object> map : maps) {
             getMap(map);
         }
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("list", list);
-        XLSTransformer transformer = new XLSTransformer();
-        try {
-            transformer.transformXLS(templateFileName, map, destFileName);
-        } catch (ParsePropertyException e) {
-            log.error("文件导出--ParsePropertyException", e);
-        } catch (InvalidFormatException e) {
-            log.error("文件导出--InvalidFormatException", e);
-        } catch (IOException e) {
-            log.error("文件导出--IOException", e);
+        List<List<Map<String, Object>>> lists = new ArrayList<>();
+        int size = maps.size() / 10000;
+        List<String> listAgent = new ArrayList<>();
+        if (maps.size() < 10000) {
+            lists.add(maps);
+            listAgent.add("集合");
+        } else {
+            for (int i = 0; i < size; i++) {
+                List<Map<String, Object>> list = maps.subList(i * 10000, (i + 1) * 10000);
+                lists.add(list);
+                listAgent.add("集合" + i);
+            }
+            //余数
+            int lastSize = maps.size() - size * 10000;
+            List<Map<String, Object>> list = maps.subList(size * 10000, size * 10000 + lastSize);
+            lists.add(list);
+            listAgent.add("集合" + size);
         }
+
+        //excel标题
+        String[] header = new String[]{"创建时间", "县分", "支局", "包区", "单位名称",
+                "固定电话", "宽带", "地址属性", "通信需求", "备注",
+                "联系人/手机号", "走访人/手机号", "包区人/手机号"};
+
+// 导出到多个sheet中--------------------------------------------------------------------------------开始
+        // 创建一个EXCEL
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 循环经销商，每个经销商一个sheet
+        for (int i = 0; i < listAgent.size(); i++) {
+            // 第 i 个sheet,以经销商命名
+            HSSFSheet sheet = wb.createSheet(listAgent.get(i).toString());
+            // 第i个sheet第二行为列名
+            HSSFRow rowFirst = sheet.createRow(0);
+            // 写标题
+            for (int j = 0; j < header.length; j++) {
+                // 获取第一行的每一个单元格
+                HSSFCell cell = rowFirst.createCell(j);
+                // 往单元格里面写入值
+                cell.setCellValue(header[j]);
+            }
+            for (int j = 0; j < lists.get(i).size(); j++) {
+                Map<?, ?> map = (Map<?, ?>) lists.get(i).get(j);
+                // 创建数据行，从第三行开始
+                HSSFRow row = sheet.createRow(j + 1);
+                // 设置对应单元格的值
+                getRow(row, map);
+            }
+        }
+        // 写出文件（path为文件路径含文件名）
+        OutputStream os = null;
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/x-download");
+            String filedisplay = "号卡导出.xls";
+            //防止文件名含有中文乱码
+            filedisplay = new String(filedisplay.getBytes("gb2312"), "ISO8859-1");
+            response.setHeader("Content-Disposition", "attachment;filename=" + filedisplay);
+
+            os = response.getOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            System.out.println("导出文件出错了.....\n" + e.getMessage());
+        } finally {
+            try {
+                os.flush();
+                os.close();
+            } catch (IOException e) {
+                System.out.println("导出文件出错了.....\n" + e.getMessage());
+            }
+        }
+        // 导出到多个sheet中---------------------------------------------------------------------------------结束
+
+    }
+
+    private HSSFRow getRow(HSSFRow row, Map<?, ?> map) {
+        // 设置对应单元格的值
+        if (map.get("createTime") == null) {
+            row.createCell(0).setCellValue("");
+        } else {
+            row.createCell(0).setCellValue(map.get("createTime").toString());
+        }
+        if (map.get("county") == null) {
+            row.createCell(1).setCellValue("");
+        } else {
+            row.createCell(1).setCellValue(map.get("county").toString());
+        }
+        if (map.get("branch_office") == null) {
+            row.createCell(2).setCellValue("");
+        } else {
+            row.createCell(2).setCellValue(map.get("branch_office").toString());
+        }
+        if (map.get("area_name") == null) {
+            row.createCell(3).setCellValue("");
+        } else {
+            row.createCell(3).setCellValue(map.get("area_name").toString());
+        }
+        if (map.get("company_name") == null) {
+            row.createCell(4).setCellValue("");
+        } else {
+            row.createCell(4).setCellValue(map.get("company_name").toString());
+        }
+        if (map.get("landline") == null) {
+            row.createCell(5).setCellValue("");
+        } else {
+            row.createCell(5).setCellValue(map.get("landline").toString());
+        }
+        if (map.get("broadband") == null) {
+            row.createCell(6).setCellValue("");
+        } else {
+            row.createCell(6).setCellValue(map.get("broadband").toString());
+        }
+        if (map.get("address_type") == null) {
+            row.createCell(7).setCellValue("");
+        } else {
+            row.createCell(7).setCellValue(map.get("address_type").toString());
+        }
+        if (map.get("address") == null) {
+            row.createCell(8).setCellValue("");
+        } else {
+            row.createCell(8).setCellValue(map.get("address").toString());
+        }
+        if (map.get("demand") == null) {
+            row.createCell(9).setCellValue("");
+        } else {
+            row.createCell(9).setCellValue(map.get("demand").toString());
+        }
+        if (map.get("remarks") == null) {
+            row.createCell(10).setCellValue("");
+        } else {
+            row.createCell(10).setCellValue(map.get("remarks").toString());
+        }
+        if (map.get("coutomer_name") == null) {
+            row.createCell(11).setCellValue("");
+        } else {
+            row.createCell(11).setCellValue(map.get("coutomer_name").toString());
+        }
+        if (map.get("manager_name") == null) {
+            row.createCell(12).setCellValue("");
+        } else {
+            row.createCell(12).setCellValue(map.get("manager_name").toString());
+        }
+        if (map.get("area_person") == null) {
+            row.createCell(13).setCellValue("");
+        } else {
+            row.createCell(13).setCellValue(map.get("area_person").toString());
+        }
+        return row;
     }
 
     private void getMap(Map<String, Object> map) {
-        String coutomer_name="";
-        String telephone ="";
-        if(map.get("coutomer_name")!=null){
+        String coutomer_name = "";
+        String telephone = "";
+        if (map.get("coutomer_name") != null) {
             coutomer_name = map.get("coutomer_name").toString();
         }
-        if(map.get("telephone")!=null){
+        if (map.get("telephone") != null) {
             telephone = map.get("telephone").toString();
         }
         if (StringUtils.isBlank(coutomer_name) && StringUtils.isBlank(telephone)) {
@@ -132,12 +266,12 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         } else {
             map.put("coutomer_name", coutomer_name + "/" + telephone);
         }
-        String manager_name="";
-        String manager_tel ="";
-        if(map.get("manager_name")!=null){
+        String manager_name = "";
+        String manager_tel = "";
+        if (map.get("manager_name") != null) {
             manager_name = map.get("manager_name").toString();
         }
-        if(map.get("manager_tel")!=null){
+        if (map.get("manager_tel") != null) {
             manager_tel = map.get("manager_tel").toString();
         }
         if (StringUtils.isBlank(manager_name) && StringUtils.isBlank(manager_tel)) {
@@ -145,12 +279,12 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         } else {
             map.put("manager_name", manager_name + "/" + manager_tel);
         }
-        String area_person="";
-        String person_tel ="";
-        if(map.get("area_person")!=null){
+        String area_person = "";
+        String person_tel = "";
+        if (map.get("area_person") != null) {
             area_person = map.get("area_person").toString();
         }
-        if(map.get("person_tel")!=null){
+        if (map.get("person_tel") != null) {
             person_tel = map.get("person_tel").toString();
         }
         if (StringUtils.isBlank(area_person) && StringUtils.isBlank(person_tel)) {
