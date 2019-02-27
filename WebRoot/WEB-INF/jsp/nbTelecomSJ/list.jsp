@@ -323,6 +323,7 @@
 
     function CountyChange(id) {
         $("#officeId option[value!='']").remove();
+        $("#areaId option[value!='']").remove();
         var url = AppConfig.ctx + "/nbTelecomSJ/getOffice.do";
         $.get(url, {countyId: id}, function (result) {
             if (!result.success) {
