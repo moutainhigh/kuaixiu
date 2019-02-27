@@ -23,12 +23,13 @@ import java.util.Map;
 
 /**
  * NBBusiness Service
+ *
  * @CreateDate: 2019-02-23 上午11:53:31
  * @version: V 1.0
  */
 @Service("nBBusinessService")
 public class NBBusinessService extends BaseService<NBBusiness> {
-    private static final Logger log= Logger.getLogger(NBBusinessService.class);
+    private static final Logger log = Logger.getLogger(NBBusinessService.class);
 
     @Autowired
     private NBBusinessMapper<NBBusiness> mapper;
@@ -40,10 +41,10 @@ public class NBBusinessService extends BaseService<NBBusiness> {
 
     //**********自定义方法***********
 
-    public NBBusiness queryByOpenId(String openId){
-        NBBusiness nbBusiness=new NBBusiness();
-        List<NBBusiness> nbBusinesses=getDao().queryByOpenId(openId);
-        if(CollectionUtils.isEmpty(nbBusinesses)){
+    public NBBusiness queryByOpenId(String openId) {
+        NBBusiness nbBusiness = new NBBusiness();
+        List<NBBusiness> nbBusinesses = getDao().queryByOpenId(openId);
+        if (CollectionUtils.isEmpty(nbBusinesses)) {
             return null;
         }
         return nbBusinesses.get(0);
@@ -61,17 +62,17 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         String destFileName = params.get("outFileName") + "";
 
         //获取查询条件
-        String queryStartTime = MapUtils.getString(params,"queryStartTime");
-        String queryEndTime = MapUtils.getString(params,"queryEndTime");
-        String countyId = MapUtils.getString(params,"countyId");
-        String officeId = MapUtils.getString(params,"officeId");
-        String areaId = MapUtils.getString(params,"areaId");
-        String companyName = MapUtils.getString(params,"companyName");
-        String landline = MapUtils.getString(params,"landline");
-        String broadband = MapUtils.getString(params,"broadband");
-        String addressType = MapUtils.getString(params,"addressType");
-        String demand = MapUtils.getString(params,"demand");
-        String idStr=MapUtils.getString(params,"ids");
+        String queryStartTime = MapUtils.getString(params, "queryStartTime");
+        String queryEndTime = MapUtils.getString(params, "queryEndTime");
+        String countyId = MapUtils.getString(params, "countyId");
+        String officeId = MapUtils.getString(params, "officeId");
+        String areaId = MapUtils.getString(params, "areaId");
+        String companyName = MapUtils.getString(params, "companyName");
+        String landline = MapUtils.getString(params, "landline");
+        String broadband = MapUtils.getString(params, "broadband");
+        String addressType = MapUtils.getString(params, "addressType");
+        String demand = MapUtils.getString(params, "demand");
+        String idStr = MapUtils.getString(params, "ids");
 
         NBBusiness nbBusiness = new NBBusiness();
         if (StringUtils.isNotBlank(idStr)) {
@@ -100,33 +101,8 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         }
 
         List<Map<String, Object>> list = getDao().queryListMap(nbBusiness);
-        for(Map map:list){
-            String address_type=getAddressType(map.get("address_type").toString());
-            map.put("address_type",address_type);
-            String getDemand=getDemand(map.get("demand").toString());
-            map.put("demand",getDemand);
-            String landline1=map.get("landline").toString();
-            if (landline1.contains(",")) {
-                String[] landlines = landline1.split(",");
-                StringBuilder sb=new StringBuilder();
-                for (int i = 0; i < landlines.length; i++) {
-                    sb.append(getlandlines(landlines[i])+",");
-                }
-                map.put("landline",sb.toString());
-            }else{
-                map.put("landline",getlandlines(landline1));
-            }
-            String broadband1=map.get("broadband").toString();
-            if (broadband1.contains(",")) {
-                String[] broadbands = broadband1.split(",");
-                StringBuilder sb=new StringBuilder();
-                for (int i = 0; i < broadbands.length; i++) {
-                    sb.append(getlandlines(broadbands[i])+",");
-                }
-                map.put("broadband",sb.toString());
-            }else{
-                map.put("broadband",getlandlines(broadband1));
-            }
+        for (Map<String, Object> map : list) {
+            getMap(map);
         }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("list", list);
@@ -142,7 +118,58 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         }
     }
 
-    private String getDemand(String demand){
+    private void getMap(Map<String, Object> map) {
+        String coutomer_name = map.get("coutomer_name").toString();
+        String telephone = map.get("telephone").toString();
+        if (StringUtils.isBlank(coutomer_name) && StringUtils.isBlank(telephone)) {
+            map.put("coutomer_name", "");
+        } else {
+            map.put("coutomer_name", coutomer_name + "/" + telephone);
+        }
+        String manager_name = map.get("manager_name").toString();
+        String manager_tel = map.get("manager_tel").toString();
+        if (StringUtils.isBlank(manager_name) && StringUtils.isBlank(manager_tel)) {
+            map.put("manager_name", "");
+        } else {
+            map.put("manager_name", manager_name + "/" + manager_tel);
+        }
+        String area_person = map.get("area_person").toString();
+        String person_tel = map.get("person_tel").toString();
+        if (StringUtils.isBlank(area_person) && StringUtils.isBlank(person_tel)) {
+            map.put("area_person", "");
+        } else {
+            map.put("area_person", area_person + "/" + person_tel);
+        }
+
+        String address_type = getAddressType(map.get("address_type").toString());
+        map.put("address_type", address_type);
+        String getDemand = getDemand(map.get("demand").toString());
+        map.put("demand", getDemand);
+        String landline1 = map.get("landline").toString();
+        if (landline1.contains(",")) {
+            String[] landlines = landline1.split(",");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < landlines.length; i++) {
+                sb.append(getlandlines(landlines[i]) + ",");
+            }
+            map.put("landline", sb.toString());
+        } else {
+            map.put("landline", getlandlines(landline1));
+        }
+        String broadband1 = map.get("broadband").toString();
+        if (broadband1.contains(",")) {
+            String[] broadbands = broadband1.split(",");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < broadbands.length; i++) {
+                sb.append(getlandlines(broadbands[i]) + ",");
+            }
+            map.put("broadband", sb.toString());
+        } else {
+            map.put("broadband", getlandlines(broadband1));
+        }
+    }
+
+    private String getDemand(String demand) {
         String state = "";
         switch (demand) {
             case "1":
@@ -166,7 +193,7 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         return state;
     }
 
-    private String getAddressType(String address_type){
+    private String getAddressType(String address_type) {
         String state = "";
         switch (address_type) {
             case "1":
@@ -190,8 +217,8 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         return state;
     }
 
-    private String getlandlines(String landline){
-        String landline1="";
+    private String getlandlines(String landline) {
+        String landline1 = "";
         switch (landline) {
             case "1":
                 landline1 = "联通";

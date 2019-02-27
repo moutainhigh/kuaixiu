@@ -208,10 +208,10 @@
             and b.company_name = #{companyName}
         </if>
         <if test="landline != null and landline != ''" >
-            and b.landline = #{landline}
+            and b.landline like CONCAT('%', #{landline}, '%')
         </if>
         <if test="broadband != null and broadband != ''" >
-            and b.broadband = #{broadband}
+            and b.broadband like CONCAT('%', #{broadband}, '%')
         </if>
         <if test="addressType != null and addressType != ''" >
             and b.address_type = #{addressType}
@@ -259,10 +259,10 @@
             and b.company_name = #{companyName}
         </if>
         <if test="landline != null and landline != ''" >
-            and b.landline = #{landline}
+            and b.landline like CONCAT('%', #{landline}, '%')
         </if>
         <if test="broadband != null and broadband != ''" >
-            and b.broadband = #{broadband}
+            and b.broadband like CONCAT('%', #{broadband}, '%')
         </if>
         <if test="addressType != null and addressType != ''" >
             and b.address_type = #{addressType}

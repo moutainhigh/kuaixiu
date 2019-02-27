@@ -2,7 +2,7 @@
 <%@ include file="/commons/taglibs.jsp" %>
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg">卡号管理</strong> /
+        <strong class="am-text-primary am-text-lg">商机甩单管理</strong> /
         <small>列表查询</small>
     </div>
 </div>
@@ -46,7 +46,7 @@
 
                 <td class="search_th"><label class="control-label">包区 ：</label></td>
                 <td class="search_td">
-                    <select id="areaId"  name="areaId" class="form-control">
+                    <select id="areaId" name="areaId" class="form-control">
                         <option value="">--选择名称--</option>
                     </select>
                 </td>
@@ -54,7 +54,7 @@
             </tr>
 
             <tr>
-                <td class="search_th search_th_frist"><label class="control-label">单位名称：</label></td>
+                <td class="search_th"><label class="control-label">单位名称：</label></td>
                 <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
 
                 <td class="search_th"><label class="control-label">固定电话：</label></td>
@@ -121,9 +121,9 @@
                         <!--
                         <button onclick="adminPush();" class="am-btn am-btn-default search_btn" type="button"> 当日号卡推送(超人-电渠) </button>
                         -->
-                            <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
-                                    class="am-icon-file-excel-o"></span> 导出
-                            </button>
+                        <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
+                                class="am-icon-file-excel-o"></span> 导出
+                        </button>
                     </div>
                 </div>
             </div>
@@ -137,22 +137,22 @@
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
+                <th class="fontWeight_normal tdwidth180"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal table-title center">创建时间</th>
-                <th class="fontWeight_normal table-title center">县分</th>
-                <th class="fontWeight_normal table-title center">支局</th>
-                <th class="fontWeight_normal table-title center">包区</th>
-                <th class="fontWeight_normal table-title center">单位名称</th>
-                <th class="fontWeight_normal table-title center">固定电话</th>
-                <th class="fontWeight_normal table-title center">宽带</th>
-                <th class="fontWeight_normal table-title center">地址属性</th>
-                <th class="fontWeight_normal table-title center ">详细地址</th>
-                <th class="fontWeight_normal table-title center ">通信需求</th>
-                <th class="fontWeight_normal table-title center ">备注</th>
-                <th class="fontWeight_normal table-title center ">联系人/手机号</th>
-                <th class="fontWeight_normal table-title center ">走访人/手机号</th>
+                <th class="fontWeight_normal tdwidth180">创建时间</th>
+                <th class="fontWeight_normal tdwidth80">县分</th>
+                <th class="fontWeight_normal tdwidth200">支局</th>
+                <th class="fontWeight_normal tdwidth200">包区</th>
+                <th class="fontWeight_normal tdwidth200">单位名称</th>
+                <th class="fontWeight_normal tdwidth200">固定电话</th>
+                <th class="fontWeight_normal tdwidth200">宽带</th>
+                <th class="fontWeight_normal tdwidth80">地址属性</th>
+                <th class="fontWeight_normal tdwidth200 ">详细地址</th>
+                <th class="fontWeight_normal tdwidth100 ">通信需求</th>
+                <th class="fontWeight_normal tdwidth100 ">备注</th>
+                <th class="fontWeight_normal table-title tdwidth180 ">联系人/手机号</th>
+                <th class="fontWeight_normal table-title tdwidth180 ">走访人/手机号</th>
             </tr>
             </thead>
             <tbody>
@@ -278,13 +278,25 @@
         {//分配
             targets: -2,
             render: function (data, type, row, meta) {
-                    return row.coutomer_name+"/"+row.telephone;
+                if (row.coutomer_name == "" && row.telephone == "") {
+                    return "";
+                } else if (row.coutomer_name == null && row.telephone == null) {
+                    return "";
+                } else {
+                    return row.coutomer_name + "/" + row.telephone;
+                }
             }
         },
         {//寄出
             targets: -1,
             render: function (data, type, row, meta) {
-                return row.manager_name+"/"+row.manager_tel;
+                if (row.manager_name == "" && row.manager_tel == "") {
+                    return "";
+                } else if (row.manager_name == null && row.manager_tel == null) {
+                    return "";
+                } else {
+                    return row.manager_name + "/" + row.manager_tel;
+                }
             }
         }
 
