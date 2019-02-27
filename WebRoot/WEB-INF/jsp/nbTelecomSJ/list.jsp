@@ -137,22 +137,22 @@
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal tdwidth180"><input id="check_all_btn" onclick="checkAll(this)"
+                <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth180">创建时间</th>
-                <th class="fontWeight_normal tdwidth80">县分</th>
-                <th class="fontWeight_normal tdwidth200">支局</th>
-                <th class="fontWeight_normal tdwidth200">包区</th>
-                <th class="fontWeight_normal tdwidth200">单位名称</th>
-                <th class="fontWeight_normal tdwidth200">固定电话</th>
-                <th class="fontWeight_normal tdwidth200">宽带</th>
+                <th class="fontWeight_normal tdwidth70">创建时间</th>
+                <th class="fontWeight_normal tdwidth40">县分</th>
+                <th class="fontWeight_normal tdwidth70">支局</th>
+                <th class="fontWeight_normal tdwidth80">包区</th>
+                <th class="fontWeight_normal tdwidth80">单位名称</th>
+                <th class="fontWeight_normal tdwidth80">固定电话</th>
+                <th class="fontWeight_normal tdwidth80">宽带</th>
                 <th class="fontWeight_normal tdwidth80">地址属性</th>
-                <th class="fontWeight_normal tdwidth200 ">详细地址</th>
-                <th class="fontWeight_normal tdwidth100 ">通信需求</th>
-                <th class="fontWeight_normal tdwidth100 ">备注</th>
-                <th class="fontWeight_normal table-title tdwidth180 ">联系人/手机号</th>
-                <th class="fontWeight_normal table-title tdwidth180 ">走访人/手机号</th>
+                <th class="fontWeight_normal tdwidth80 ">详细地址</th>
+                <th class="fontWeight_normal tdwidth80 ">通信需求</th>
+                <th class="fontWeight_normal tdwidth80 ">备注</th>
+                <th class="fontWeight_normal table-title tdwidth80 ">联系人/<br/>手机号</th>
+                <th class="fontWeight_normal table-title tdwidth80 ">走访人/<br/>手机号</th>
             </tr>
             </thead>
             <tbody>
@@ -194,7 +194,7 @@
 
     //设置数据列
     dto.setColumns([
-        {"data": "business_id", "class": "tdwidth50 center"},
+        {"data": "business_id", "class": " center"},
         {"data": "createTime", "class": ""},
         {"data": "county", "class": ""},
         {"data": "branch_office", "class": ""},
@@ -207,7 +207,7 @@
         {"data": "demand", "class": ""},
         {"data": "remarks", "class": ""},
         {"data": "coutomer_name", "class": ""},
-        {"data": "manager_name", "class": ""}
+        {"defaultContent": "manager_name", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([

@@ -635,7 +635,7 @@ public class ShopService extends BaseService<Shop> {
                 } else {
                     sb.append(shop.getName() + ",");
                     sb1.append(shop.getTel() + ",");
-                    sb2.append(shop.getManagerMobile() + ",");
+                    sb2.append(shop.getManagerName() + "/"+shop.getManagerMobile() + ",");
                     sb3.append(shop.getManagerName() + ",");
                 }
             }
@@ -652,7 +652,7 @@ public class ShopService extends BaseService<Shop> {
             if (shop != null) {
                 shops.setName(shop.getName());
                 shops.setTel(shop.getTel());
-                shops.setManagerMobile(shop.getManagerMobile());
+                shops.setManagerMobile(shop.getManagerName()+"/"+shop.getManagerMobile());
                 shops.setManagerName(shop.getManagerName());
             }
         }

@@ -4,7 +4,7 @@
 <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
   <div class="am-offcanvas-bar admin-offcanvas-bar">
     <ul class="am-list admin-sidebar-list">
-		<c:if test="${loginUserId ne 'kf014' }">
+		<c:if test="${loginUserId ne 'kf014' || loginUserId ne 'kf015'}">
       <li><a href="${commonurl_home }"><span class="am-icon-home"></span> 首页</a></li>
 		</c:if>
       <%-- 循环输出菜单 --%>
