@@ -156,7 +156,7 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/x-download");
-            String filedisplay = "号卡导出.xls";
+            String filedisplay = "商机甩单导出.xls";
             //防止文件名含有中文乱码
             filedisplay = new String(filedisplay.getBytes("gb2312"), "ISO8859-1");
             response.setHeader("Content-Disposition", "attachment;filename=" + filedisplay);
