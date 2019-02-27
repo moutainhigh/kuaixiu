@@ -119,22 +119,40 @@ public class NBBusinessService extends BaseService<NBBusiness> {
     }
 
     private void getMap(Map<String, Object> map) {
-        String coutomer_name = map.get("coutomer_name").toString();
-        String telephone = map.get("telephone").toString();
+        String coutomer_name="";
+        String telephone ="";
+        if(map.get("coutomer_name")!=null){
+            coutomer_name = map.get("coutomer_name").toString();
+        }
+        if(map.get("telephone")!=null){
+            telephone = map.get("telephone").toString();
+        }
         if (StringUtils.isBlank(coutomer_name) && StringUtils.isBlank(telephone)) {
             map.put("coutomer_name", "");
         } else {
             map.put("coutomer_name", coutomer_name + "/" + telephone);
         }
-        String manager_name = map.get("manager_name").toString();
-        String manager_tel = map.get("manager_tel").toString();
+        String manager_name="";
+        String manager_tel ="";
+        if(map.get("manager_name")!=null){
+            manager_name = map.get("manager_name").toString();
+        }
+        if(map.get("manager_tel")!=null){
+            manager_tel = map.get("manager_tel").toString();
+        }
         if (StringUtils.isBlank(manager_name) && StringUtils.isBlank(manager_tel)) {
             map.put("manager_name", "");
         } else {
             map.put("manager_name", manager_name + "/" + manager_tel);
         }
-        String area_person = map.get("area_person").toString();
-        String person_tel = map.get("person_tel").toString();
+        String area_person="";
+        String person_tel ="";
+        if(map.get("area_person")!=null){
+            area_person = map.get("area_person").toString();
+        }
+        if(map.get("person_tel")!=null){
+            person_tel = map.get("person_tel").toString();
+        }
         if (StringUtils.isBlank(area_person) && StringUtils.isBlank(person_tel)) {
             map.put("area_person", "");
         } else {
