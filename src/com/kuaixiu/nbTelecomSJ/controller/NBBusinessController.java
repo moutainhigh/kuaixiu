@@ -59,7 +59,7 @@ public class NBBusinessController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/NBTelecomSJ/list")
+    @RequestMapping(value = "/nbTelecomSJ/list")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
         List<NBCounty> counties = nbCountyService.queryList(null);
@@ -71,7 +71,7 @@ public class NBBusinessController extends BaseController {
     /**
      * 获取支局
      */
-    @RequestMapping(value = "NBTelecomSJ/getOffice")
+    @RequestMapping(value = "nbTelecomSJ/getOffice")
     @ResponseBody
     public ResultData getOffice(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
@@ -102,7 +102,7 @@ public class NBBusinessController extends BaseController {
     /**
      * 获取包区
      */
-    @RequestMapping(value = "NBTelecomSJ/getArea")
+    @RequestMapping(value = "nbTelecomSJ/getArea")
     @ResponseBody
     public ResultData getOfficeAndArea(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
@@ -144,7 +144,7 @@ public class NBBusinessController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/NBTelecomSJ/queryListForPage")
+    @RequestMapping(value = "/nbTelecomSJ/queryListForPage")
     public void queryListForPage(HttpServletRequest request,
                                  HttpServletResponse response) throws Exception {
         //获取查询条件

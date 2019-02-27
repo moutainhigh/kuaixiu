@@ -182,7 +182,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/NBTelecomSJ/queryListForPage.do",
+        "url": "${ctx}/nbTelecomSJ/queryListForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -311,7 +311,7 @@
 
     function CountyChange(id) {
         $("#officeId option[value!='']").remove();
-        var url = AppConfig.ctx + "/NBTelecomSJ/getOffice.do";
+        var url = AppConfig.ctx + "/nbTelecomSJ/getOffice.do";
         $.get(url, {countyId: id}, function (result) {
             if (!result.success) {
                 return false;
@@ -331,7 +331,7 @@
         $("#areaId option[value!='']").remove();
         var countyId = $("#countyId").val();
         if (id) {
-            var url = AppConfig.ctx + "/NBTelecomSJ/getArea.do";
+            var url = AppConfig.ctx + "/nbTelecomSJ/getArea.do";
             $.get(url, {officeId: id, countyId: countyId}, function (result) {
                 if (!result.success) {
                     return false;

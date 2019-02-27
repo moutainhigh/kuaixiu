@@ -231,6 +231,7 @@
                 #{item}
             </foreach>
         </if>
+        ORDER BY b.create_time DESC
     </select>
 
     <!-- 查询列表 带分页 -->
@@ -275,6 +276,7 @@
         <if test="queryEndTime != null and queryEndTime != ''">
             and b.create_time &lt;= #{queryEndTime}
         </if>
+        ORDER BY b.create_time DESC
     </select>
 
 </mapper>   
