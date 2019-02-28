@@ -1217,10 +1217,11 @@ public class RecycleNewController extends BaseController {
             String getResult = AES.post(baseNewUrl + "getmodelbycode", requestNews);
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
-            JSONArray product = code.getJSONArray("datainfo");
-            if (product.isEmpty()) {
+            if (StringUtils.isBlank(code.getString("datainfo"))) {
                 throw new SystemException("对应机型不存在");
             }
+            JSONArray product = code.getJSONArray("datainfo");
+
             JSONObject o = (JSONObject) product.get(0);
             JSONArray sublist = o.getJSONArray("sublist");
             String productId = ((JSONObject) sublist.get(0)).getString("productid");
