@@ -11,6 +11,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface NBManagerMapper<T> extends BaseDao<T> {
 
+    int deleteByManagerId(T t);
 }
 
 
