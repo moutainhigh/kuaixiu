@@ -3,7 +3,7 @@
 <div class="modal-backdrop fade in"></div>
 <div class="modal-dialog" style="width: 700px;">
   <div class="modal-content">
-    <div class="modal-title"><span>新增门店商</span>
+    <div class="modal-title"><span>新增走访人</span>
       <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
     </div>
     <div class="modal-body">

@@ -90,6 +90,7 @@
             </foreach>
         </if>
         and is_del=0
+        ORDER BY create_time DESC ,manager_id DESC
     </select>
 
     <!-- 查询列表 带分页 -->
@@ -123,6 +124,7 @@
             </foreach>
         </if>
         and is_del=0
+        ORDER BY create_time DESC ,manager_id DESC
     </select>
 
 </mapper>   
