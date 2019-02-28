@@ -2,81 +2,129 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBManagerMapper" >
+<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBManagerMapper">
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBManager" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBManager">
         <result column="manager_id" property="managerId"/>
         <result column="manager_name" property="managerName"/>
         <result column="manager_tel" property="managerTel"/>
         <result column="department" property="department"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_id" property="updateUserId"/>
     </resultMap>
-    
+
     <!-- nb_manager table all fields -->
-    <sql id="Base_Column_List" >
-        manager_id,manager_name,manager_tel,department
+    <sql id="Base_Column_List">
+        manager_id,manager_name,manager_tel,department,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user_id,update_time,update_user_id
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+    <insert id="add" parameterType="Object">
         insert into nb_manager
-        (manager_id,manager_name,manager_tel)
+        (manager_id,manager_name,manager_tel,department,create_time,create_user_id,update_time,update_user_id)
         values
-        (#{managerId},#{managerName},#{managerTel})
+        (#{managerId},#{managerName},#{managerTel},#{department},now(),#{createUserId},now(),#{updateUserId})
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update nb_manager 
         set 
-            manager_id=#{managerId},
             manager_name=#{managerName},
-            manager_tel=#{managerTel}
-        where id=#{id}
+            manager_tel=#{managerTel},
+            department=#{department},
+            update_time=now(),
+            update_user_id=#{updateUserId}
+        where manager_id=#{managerId}
     </update>
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
-        delete from nb_manager where id = #{id}
+        delete from nb_manager where manager_id=#{managerId}
     </delete>
-    
+    <!-- 根据id，修改记录-->
+    <update id="deleteByManagerId" parameterType="Object">
+        update nb_manager
+        set
+        is_del=1
+        where manager_id=#{managerId}
+    </update>
     <!-- 根据id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from nb_manager where manager_id=#{managerId}
     </select>
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from nb_manager
         where 1=1
-        <if test="managerId != null and managerId != ''" >
+        <if test="managerId != null and managerId != ''">
             and manager_id = #{managerId}
         </if>
-        <if test="managerName != null and managerName != ''" >
-            and manager_name = #{managerName}
+        <if test="managerName != null and managerName != ''">
+            and manager_name like CONCAT('%', #{managerName}, '%')
         </if>
-        <if test="managerTel != null and managerTel != ''" >
-            and manager_tel = #{managerTel}
+        <if test="managerTel != null and managerTel != ''">
+            and manager_tel like CONCAT('%', #{managerTel}, '%')
         </if>
+        <if test="department != null and department != ''">
+            and department like CONCAT('%', #{department}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and manager_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,manager_id DESC
     </select>
-    
+
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from nb_manager
         where 1=1
-        <if test="managerId != null and managerId != ''" >
+        <if test="managerId != null and managerId != ''">
             and manager_id = #{managerId}
         </if>
-        <if test="managerName != null and managerName != ''" >
-            and manager_name = #{managerName}
+        <if test="managerName != null and managerName != ''">
+            and manager_name like CONCAT('%', #{managerName}, '%')
         </if>
-        <if test="managerTel != null and managerTel != ''" >
-            and manager_tel = #{managerTel}
+        <if test="managerTel != null and managerTel != ''">
+            and manager_tel like CONCAT('%', #{managerTel}, '%')
         </if>
+        <if test="department != null and department != ''">
+            and department like CONCAT('%', #{department}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and manager_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,manager_id DESC
     </select>
 
 </mapper>   
