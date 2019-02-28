@@ -318,10 +318,10 @@ public class ActivityUserController extends BaseController {
             String getResult = AES.post(baseUrl + "getmodelbycode", requestNews);
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
-            JSONArray product = code.getJSONArray("datainfo");
-            if (product.isEmpty()) {
-                throw new SystemException("对应机型不存在");
+            if (StringUtils.isBlank(code.getString("datainfo"))) {
+                return getResult(result,null,false,"1","机型不存在");
             }
+            JSONArray product = code.getJSONArray("datainfo");
             String imageUrl="";
             //判断返回的机型是否有多个
             if (product.size() > 1) {
