@@ -20,7 +20,7 @@
 	      <div class="form-group">
             <label class="col-sm-3 control-label">步骤：</label>
             <div class="col-sm-9">
-              <p class="form-control-static">1、点击 <a href="${ctx}/file/download.do?fileId=25" target="_blank">这里</a> 打开Excel表格，在Excel表格中录入数据。</p>
+              <p class="form-control-static">1、点击 <a href="${ctx}/file/download.do?fileId=26" target="_blank">这里</a> 打开Excel表格，在Excel表格中录入数据。</p>
             </div>
           </div>
           <div class="form-group">
