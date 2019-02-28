@@ -37,6 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -132,26 +134,6 @@ public class NBManagerService extends BaseService<NBManager> {
         Sheet sheet = workbook.getSheetAt(0);
         int rowNum = sheet.getLastRowNum();
         List<NBManager> list = new ArrayList<NBManager>();
-        //存放维修项目名称
-        Map<Integer, String> projectName = new HashMap<Integer, String>();
-        Row rowTitle = sheet.getRow(0);
-        for (int i = 3; ; i++) {
-            String title = rowTitle.getCell(i).toString().trim();
-            if (StringUtils.isBlank(title)) {
-                break;
-            }
-            projectName.put(i, title);
-        }
-
-        if (projectName.size() == 0) {
-            ImportError error = new ImportError();
-            error.setPosition("第1行,3列");
-            error.setMsgType("模板错误");
-            error.setMessage("维修费用不能为空");
-            report.getErrorList().add(error);
-            report.setPass(false);
-            return list;
-        }
 
         for (int i = 1; i <= rowNum; i++) {
             Row row = sheet.getRow(i);
@@ -283,13 +265,37 @@ public class NBManagerService extends BaseService<NBManager> {
         }
         return true;
     }
+
+    /**
+     * 下载导入模板
+     *
+     * @param params
+     */
+    @SuppressWarnings("rawtypes")
+    public void expImportTemplate(Map<String, Object> params) {
+        String templateFileName = params.get("tempFileName") + "";
+        String outFileName = params.get("outFileName") + "";
+        try {
+            Workbook workbook = new HSSFWorkbook(new FileInputStream(templateFileName));
+            FileOutputStream fileOut = new FileOutputStream(outFileName);
+            workbook.write(fileOut);
+            fileOut.close();
+        } catch (ParsePropertyException e) {
+            e.printStackTrace();
+            log.error("文件导出--ParsePropertyException", e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("文件导出--IOException", e);
+        }
+    }
+
     /**
      * 已Excel形式导出列表数据
      *
      * @param params
      */
     @SuppressWarnings("rawtypes")
-    public void expDataExcel(Map<String, Object> params) {
+    public void expExcel(Map<String, Object> params) {
         String templateFileName = params.get("tempFileName") + "";
         String destFileName = params.get("outFileName") + "";
 

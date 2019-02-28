@@ -201,6 +201,21 @@ public class NBManagerController extends BaseController {
     }
 
     /**
+     * 编辑
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/nbTelecomSJ/import")
+    public ModelAndView importManager(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        String returnView = "nbTelecomSJ/importManager";
+        return new ModelAndView(returnView);
+    }
+
+    /**
      * fileUpload:文件上传.
      *
      * @param myfile

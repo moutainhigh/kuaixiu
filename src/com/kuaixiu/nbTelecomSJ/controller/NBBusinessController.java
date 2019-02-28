@@ -371,8 +371,9 @@ public class NBBusinessController extends BaseController {
             nBBusinessService.add(nbBusiness);
 
             NBArea nbArea = nBAreaService.getDao().queryByAreaId(areaId);
-            SmsSendUtil.mailSendSmsTobusiness(nbManager, nbBusiness, nbArea);
-
+            if(nbBusiness.getDemand()!=1) {
+                SmsSendUtil.mailSendSmsTobusiness(nbManager, nbBusiness, nbArea);
+            }
             getResult(result, null, true, "0", "提交成功");
         } catch (Exception e) {
             getResult(result, null, false, "2", "失败");
