@@ -13,19 +13,24 @@
         <result column="area_type" property="areaType"/>
         <result column="area_person" property="areaPerson"/>
         <result column="person_tel" property="personTel"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_id" property="updateUserId"/>
     </resultMap>
     
     <!-- nb_area table all fields -->
     <sql id="Base_Column_List" >
-        office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel
+        office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user_id,update_time,update_user_id
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_area
-        (office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel)
+        (office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel,create_time,create_user_id,update_time,update_user_id)
         values
-        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaName},#{areaType},#{areaPerson},#{personTel})
+        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaName},#{areaType},#{areaPerson},#{personTel},now(),#{createUserId},now(),#{updateUserId})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -39,15 +44,23 @@
             area_name=#{areaName},
             area_type=#{areaType},
             area_person=#{areaPerson},
-            person_tel=#{personTel}
+            person_tel=#{personTel},
+            update_time=now(),
+            update_user_id=#{updateUserId}
         where id=#{id}
     </update>
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
-        delete from nb_area where id = #{id}
+        delete from nb_area where office_id=#{officeId}
     </delete>
-    
+    <!-- 根据id，修改记录-->
+    <update id="deleteByOfficeId" parameterType="Object">
+        update nb_area
+        set
+        is_del=1
+        where office_id=#{officeId}
+    </update>
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />

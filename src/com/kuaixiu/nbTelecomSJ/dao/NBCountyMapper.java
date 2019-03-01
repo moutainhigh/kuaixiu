@@ -11,6 +11,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface NBCountyMapper<T> extends BaseDao<T> {
 
+    T queryByName(String countyName);
 }
 
 
