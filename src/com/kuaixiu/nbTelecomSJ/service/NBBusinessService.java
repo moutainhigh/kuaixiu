@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -42,14 +41,12 @@ public class NBBusinessService extends BaseService<NBBusiness> {
     //**********自定义方法***********
 
     public NBBusiness queryByOpenId(String openId) {
-        NBBusiness nbBusiness = new NBBusiness();
         List<NBBusiness> nbBusinesses = getDao().queryByOpenId(openId);
         if (CollectionUtils.isEmpty(nbBusinesses)) {
             return null;
         }
         return nbBusinesses.get(0);
     }
-
 
     /**
      * 已Excel形式导出列表数据

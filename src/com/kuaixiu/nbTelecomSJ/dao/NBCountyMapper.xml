@@ -17,9 +17,9 @@
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_county
-        (county_id,county)
+        (county)
         values
-        (#{countyId},#{county})
+        (#{county})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -40,6 +40,12 @@
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from nb_county where county_id=#{countyId}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryByName"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_county where county=#{county}
     </select>
 
     <!-- 查询列表无分页 -->

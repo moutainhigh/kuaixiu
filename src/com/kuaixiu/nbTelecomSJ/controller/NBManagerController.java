@@ -189,6 +189,8 @@ public class NBManagerController extends BaseController {
             if (nbManager == null) {
                 return getResult(result, null, false, "2", "参数为空");
             }
+            SessionUser su = getCurrentUser(request);
+            nbManager.setUpdateUserId(su.getUserId());
             nbManagerService.getDao().deleteByManagerId(nbManager);
 
             getResult(result, null, true, "0", "成功");
@@ -201,7 +203,7 @@ public class NBManagerController extends BaseController {
     }
 
     /**
-     * 编辑
+     * 进入导入页面
      *
      * @param request
      * @param response

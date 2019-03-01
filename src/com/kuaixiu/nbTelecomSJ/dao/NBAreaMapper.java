@@ -20,6 +20,10 @@ public interface NBAreaMapper<T> extends BaseDao<T> {
 
     //根据支局名字查询
     List<T> queryByBranchOffice(T t);
+
+    int deleteByOfficeId(T t);
+
+    List<T> queryImportList(T t);
 }
 
 

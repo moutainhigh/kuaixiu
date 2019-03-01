@@ -13,41 +13,55 @@
         <result column="area_type" property="areaType"/>
         <result column="area_person" property="areaPerson"/>
         <result column="person_tel" property="personTel"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_id" property="updateUserId"/>
     </resultMap>
     
     <!-- nb_area table all fields -->
     <sql id="Base_Column_List" >
-        office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel
+        office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user_id,update_time,update_user_id
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_area
-        (office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel)
+        (office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel,create_time,create_user_id,update_time,update_user_id)
         values
-        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaName},#{areaType},#{areaPerson},#{personTel})
+        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaName},#{areaType},#{areaPerson},#{personTel},now(),#{createUserId},now(),#{updateUserId})
     </insert>
 
     <!-- 根据id，修改记录-->
     <update id="update" parameterType="Object" >
         update nb_area 
         set 
-            office_id=#{officeId},
             county_id=#{countyId},
             branch_office=#{branchOffice},
             area_id=#{areaId},
             area_name=#{areaName},
             area_type=#{areaType},
             area_person=#{areaPerson},
-            person_tel=#{personTel}
-        where id=#{id}
+            person_tel=#{personTel},
+            update_time=now(),
+            update_user_id=#{updateUserId}
+        where office_id=#{officeId}
     </update>
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
-        delete from nb_area where id = #{id}
+        delete from nb_area where office_id=#{officeId}
     </delete>
-    
+    <!-- 根据id，修改记录-->
+    <update id="deleteByOfficeId" parameterType="Object">
+        update nb_area
+        set
+        is_del=1,
+        update_time=now(),
+        update_user_id=#{updateUserId}
+        where office_id=#{officeId}
+    </update>
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
@@ -103,8 +117,53 @@
         <if test="personTel != null and personTel != ''" >
             and person_tel = #{personTel}
         </if>
+        and is_del=0
     </select>
-    
+    <!-- 查询列表无分页 -->
+    <select id="queryImportList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_area
+        where 1=1
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="branchOffice != null and branchOffice != ''" >
+            and branch_office = #{branchOffice}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
+        <if test="areaPerson != null and areaPerson != ''" >
+            and area_person like CONCAT('%', #{areaPerson}, '%')
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel like CONCAT('%', #{personTel}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and office_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,office_id DESC
+    </select>
     <!-- 查询列表 带分页 -->
     <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
         select
@@ -130,11 +189,19 @@
             and area_type = #{areaType}
         </if>
         <if test="areaPerson != null and areaPerson != ''" >
-            and area_person = #{areaPerson}
+            and area_person like CONCAT('%', #{areaPerson}, '%')
         </if>
         <if test="personTel != null and personTel != ''" >
-            and person_tel = #{personTel}
+            and person_tel like CONCAT('%', #{personTel}, '%')
         </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,office_id DESC
     </select>
 
 </mapper>   

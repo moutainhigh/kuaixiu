@@ -21,7 +21,8 @@ public class NOUtil {
         return prefix + DateUtil.getSerialFullSSSDate();
     }
     
-    private static String base = "0123456789abcdefg0123456789hijklmn0123456789opqrst0123456789uvwxyz0123456789ABCDEFG0123456789HIJKLMN0123456789OPQRST0123456789UVWXYZ0123456789";   
+    private static String base = "0123456789abcdefg0123456789hijklmn0123456789opqrst0123456789uvwxyz0123456789ABCDEFG0123456789HIJKLMN0123456789OPQRST0123456789UVWXYZ0123456789";
+    private static String baseInt ="0123456789";
     /**
      * length表示生成字符串的长度
      * @param length
@@ -35,8 +36,23 @@ public class NOUtil {
             sb.append(base.charAt(number));   
         }   
         return sb.toString();   
-     }  
-    
+     }
+
+    /**
+     * length表示生成字符串的长度
+     * @param length
+     * @return
+     */
+    public static String getRandomInteger(int length) {
+        Random r = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = r.nextInt(baseInt.length());
+            sb.append(baseInt.charAt(number));
+        }
+        return sb.toString();
+    }
+
     /**
      * 顺丰快递交易流水号 YYYYMMDD+流水号{10}, 例如:201404120000000001,交易流水号唯一 且不能重复
      */
