@@ -12,32 +12,32 @@
         <div class="form-group">
           <label for="county" class="col-sm-3 control-label"><span style="color:red">*</span> 县分</label>
           <div class="col-sm-9">
-            <input type="text" id="county" name="county" value="${nbArea.county }" class="form-control" placeholder="请输入连锁商名称">
+            <input type="text" id="county" name="county" value="${nbArea.county }" class="form-control" placeholder="请输入县分">
           </div>
         </div>
 
         <div class="form-group">
           <label for="officeName" class="col-sm-3 control-label"><span style="color:red">*</span> 支局</label>
           <div class="col-sm-9">
-            <input type="text" id="officeName" name="officeName" value="${nbArea.branchOffice }" class="form-control" placeholder="请输入负责人手机号">
+            <input type="text" id="officeName" name="officeName" value="${nbArea.branchOffice }" class="form-control" placeholder="请输入支局">
           </div>
         </div>
         <div class="form-group">
           <label for="areaName" class="col-sm-3 control-label"><span style="color:red">*</span> 包区</label>
           <div class="col-sm-9">
-            <input type="text" id="areaName" name="areaName" value="${nbArea.areaName }" class="form-control" placeholder="请输入负责人姓名">
+            <input type="text" id="areaName" name="areaName" value="${nbArea.areaName }" class="form-control" placeholder="请输入包区">
           </div>
         </div>
         <div class="form-group">
           <label for="areaPerson" class="col-sm-3 control-label"><span style="color:red">*</span> 包区人</label>
           <div class="col-sm-9">
-            <input type="text" id="areaPerson" name="areaPerson" value="${nbArea.areaPerson }" class="form-control" placeholder="请输入负责人姓名">
+            <input type="text" id="areaPerson" name="areaPerson" value="${nbArea.areaPerson }" class="form-control" placeholder="请输入包区人">
           </div>
         </div>
         <div class="form-group">
           <label for="personTel" class="col-sm-3 control-label"><span style="color:red">*</span> 包区人手机号</label>
           <div class="col-sm-9">
-            <input type="text" id="personTel" name="personTel" value="${nbArea.personTel }" class="form-control" placeholder="请输入负责人姓名">
+            <input type="text" id="personTel" name="personTel" value="${nbArea.personTel }" class="form-control" placeholder="请输入包区人手机号">
           </div>
         </div>
         <button type="submit" class="hide" id="editSubmitBtn"></button>

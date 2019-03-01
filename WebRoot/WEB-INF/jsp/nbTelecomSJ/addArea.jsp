@@ -11,31 +11,31 @@
         <div class="form-group">
           <label for="county" class="col-sm-3 control-label"><span style="color:red">*</span> 县分</label>
           <div class="col-sm-9">
-            <input type="text" id="county" name="county" class="form-control" placeholder="姓名">
+            <input type="text" id="county" name="county" class="form-control" placeholder="县分">
           </div>
         </div>
         <div class="form-group">
           <label for="officeName" class="col-sm-3 control-label"><span style="color:red">*</span> 支局</label>
           <div class="col-sm-9">
-            <input type="text" id="officeName" name="officeName" class="form-control" placeholder="电话">
+            <input type="text" id="officeName" name="officeName" class="form-control" placeholder="支局">
           </div>
         </div>
         <div class="form-group">
           <label for="areaName" class="col-sm-3 control-label"><span style="color:red">*</span> 包区</label>
           <div class="col-sm-9">
-            <input type="text" id="areaName" name="areaName" class="form-control" placeholder="部门">
+            <input type="text" id="areaName" name="areaName" class="form-control" placeholder="包区">
           </div>
         </div>
         <div class="form-group">
           <label for="areaPerson" class="col-sm-3 control-label"><span style="color:red">*</span> 包区人</label>
           <div class="col-sm-9">
-            <input type="text" id="areaPerson" name="areaPerson" class="form-control" placeholder="部门">
+            <input type="text" id="areaPerson" name="areaPerson" class="form-control" placeholder="包区人">
           </div>
         </div>
         <div class="form-group">
           <label for="personTel" class="col-sm-3 control-label"><span style="color:red">*</span> 包区人手机号</label>
           <div class="col-sm-9">
-            <input type="text" id="personTel" name="personTel" class="form-control" placeholder="部门">
+            <input type="text" id="personTel" name="personTel" class="form-control" placeholder="包区人手机号">
           </div>
         </div>
 
