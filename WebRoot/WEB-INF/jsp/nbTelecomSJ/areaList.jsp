@@ -3,7 +3,7 @@
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg">商机甩单管理</strong> /
-        <small>包区列表查询</small>
+        <small>包区列表</small>
     </div>
 </div>
 
