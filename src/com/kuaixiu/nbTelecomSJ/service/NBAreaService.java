@@ -151,6 +151,8 @@ public class NBAreaService extends BaseService<NBArea> {
                     n.setCountyId(nbCounty.getCountyId());
                     n.setAreaId(Integer.valueOf(createAreaId()));
                     n.setAreaType("商客网格-5级");
+                    n.setCreateUserId(su.getUserId());
+                    n.setUpdateUserId(su.getUserId());
                     this.add(n);
                 } else {
                     if (nbAreas1.size() > 1) {
@@ -162,6 +164,7 @@ public class NBAreaService extends BaseService<NBArea> {
                     }
                     nbAreas1.get(0).setAreaPerson(n.getAreaPerson());
                     nbAreas1.get(0).setPersonTel(n.getPersonTel());
+                    nbAreas1.get(0).setUpdateUserId(su.getUserId());
                     this.saveUpdate(nbAreas1.get(0));
                 }
             } else {
@@ -172,9 +175,10 @@ public class NBAreaService extends BaseService<NBArea> {
                 n.setCountyId(nbCounty1.getCountyId());
                 n.setAreaId(Integer.valueOf(createAreaId()));
                 n.setAreaType("商客网格-5级");
+                n.setCreateUserId(su.getUserId());
+                n.setUpdateUserId(su.getUserId());
                 this.add(n);
             }
-            getDao().add(n);
         }
     }
 

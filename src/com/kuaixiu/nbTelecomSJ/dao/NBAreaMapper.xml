@@ -37,7 +37,6 @@
     <update id="update" parameterType="Object" >
         update nb_area 
         set 
-            office_id=#{officeId},
             county_id=#{countyId},
             branch_office=#{branchOffice},
             area_id=#{areaId},
@@ -47,7 +46,7 @@
             person_tel=#{personTel},
             update_time=now(),
             update_user_id=#{updateUserId}
-        where id=#{id}
+        where office_id=#{officeId}
     </update>
 
     <!-- 删除记录 -->
