@@ -12,12 +12,15 @@ import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBCounty;
 import com.system.basic.user.entity.SessionUser;
 import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -33,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -351,6 +355,67 @@ public class NBAreaService extends BaseService<NBArea> {
             log.error("文件导出--ParsePropertyException", e);
         } catch (IOException e) {
             e.printStackTrace();
+            log.error("文件导出--IOException", e);
+        }
+    }
+
+    /**
+     * 已Excel形式导出列表数据
+     *
+     * @param params
+     */
+    @SuppressWarnings("rawtypes")
+    public void expExcel(Map<String, Object> params) {
+        String templateFileName = params.get("tempFileName") + "";
+        String destFileName = params.get("outFileName") + "";
+
+        //获取查询条件
+        String queryStartTime = MapUtils.getString(params, "queryStartTime");
+        String queryEndTime = MapUtils.getString(params, "queryEndTime");
+        String countyId = MapUtils.getString(params, "countyId");
+        String officeId = MapUtils.getString(params, "officeId");
+        String areaId = MapUtils.getString(params, "areaId");
+        String areaPerson = MapUtils.getString(params, "areaPerson");
+        String personTel = MapUtils.getString(params, "personTel");
+        String idStr = MapUtils.getString(params, "ids");
+
+        NBArea nbArea = new NBArea();
+        if (StringUtils.isNotBlank(idStr)) {
+            String[] ids = StringUtils.split(idStr, ",");
+            nbArea.setQueryIds(Arrays.asList(ids));
+        }
+        nbArea.setQueryStartTime(queryStartTime);
+        nbArea.setQueryEndTime(queryEndTime);
+        if (StringUtils.isNotBlank(countyId)) {
+            nbArea.setCountyId(Integer.valueOf(countyId));
+        }
+        if (StringUtils.isNotBlank(officeId)) {
+            nbArea.setOfficeId(Integer.valueOf(officeId));
+        }
+        if (StringUtils.isNotBlank(areaId)) {
+            nbArea.setAreaId(Integer.valueOf(areaId));
+        }
+        nbArea.setAreaPerson(areaPerson);
+        nbArea.setPersonTel(personTel);
+        List<NBArea> nbAreas = this.getDao().queryImportList(nbArea);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (NBArea nbArea1 : nbAreas) {
+            NBCounty nbCounty = nbCountyService.queryById(nbArea1.getCountyId());
+            nbArea1.setCounty(nbCounty.getCounty());
+            nbArea1.setStrCreateTime(sdf.format(nbArea1.getCreateTime()));
+            nbArea1.setAreaPerson(nbArea1.getAreaPerson()+"/"+nbArea1.getPersonTel());
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("list", nbAreas);
+        XLSTransformer transformer = new XLSTransformer();
+        try {
+            transformer.transformXLS(templateFileName, map, destFileName);
+        } catch (ParsePropertyException e) {
+            log.error("文件导出--ParsePropertyException", e);
+        } catch (InvalidFormatException e) {
+            log.error("文件导出--InvalidFormatException", e);
+        } catch (IOException e) {
             log.error("文件导出--IOException", e);
         }
     }

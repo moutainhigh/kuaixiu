@@ -22,6 +22,8 @@ public interface NBAreaMapper<T> extends BaseDao<T> {
     List<T> queryByBranchOffice(T t);
 
     int deleteByOfficeId(T t);
+
+    List<T> queryImportList(T t);
 }
 
 

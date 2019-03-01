@@ -57,7 +57,9 @@
     <update id="deleteByOfficeId" parameterType="Object">
         update nb_area
         set
-        is_del=1
+        is_del=1,
+        update_time=now(),
+        update_user_id=#{updateUserId}
         where office_id=#{officeId}
     </update>
     <!-- 根据id查询  -->
@@ -115,8 +117,53 @@
         <if test="personTel != null and personTel != ''" >
             and person_tel = #{personTel}
         </if>
+        and is_del=0
     </select>
-    
+    <!-- 查询列表无分页 -->
+    <select id="queryImportList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_area
+        where 1=1
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="branchOffice != null and branchOffice != ''" >
+            and branch_office = #{branchOffice}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
+        <if test="areaPerson != null and areaPerson != ''" >
+            and area_person like CONCAT('%', #{areaPerson}, '%')
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel like CONCAT('%', #{personTel}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and office_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,office_id DESC
+    </select>
     <!-- 查询列表 带分页 -->
     <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
         select
@@ -142,11 +189,19 @@
             and area_type = #{areaType}
         </if>
         <if test="areaPerson != null and areaPerson != ''" >
-            and area_person = #{areaPerson}
+            and area_person like CONCAT('%', #{areaPerson}, '%')
         </if>
         <if test="personTel != null and personTel != ''" >
-            and person_tel = #{personTel}
+            and person_tel like CONCAT('%', #{personTel}, '%')
         </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,office_id DESC
     </select>
 
 </mapper>   

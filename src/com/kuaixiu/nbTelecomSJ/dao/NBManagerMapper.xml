@@ -49,7 +49,9 @@
     <update id="deleteByManagerId" parameterType="Object">
         update nb_manager
         set
-        is_del=1
+        is_del=1,
+        update_time=now(),
+        update_user_id=#{updateUserId}
         where manager_id=#{managerId}
     </update>
     <!-- 根据id查询  -->
