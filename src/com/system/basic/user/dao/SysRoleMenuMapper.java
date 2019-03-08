@@ -1,6 +1,7 @@
 package com.system.basic.user.dao;
 
 import com.common.base.dao.BaseDao;
+import com.system.basic.user.entity.SysMenu;
 
 /**
  * SysRoleMenu Mapper
@@ -12,7 +13,7 @@ import com.common.base.dao.BaseDao;
 public interface SysRoleMenuMapper<T> extends BaseDao<T> {
 
 
-    Integer deleteBYCode(String code);
+    Integer deleteBYCode(SysMenu sysMenu);
 }
 
 

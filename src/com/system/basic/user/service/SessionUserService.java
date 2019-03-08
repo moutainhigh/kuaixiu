@@ -91,6 +91,7 @@ public class SessionUserService {
         session.setAttribute("sysMenuList", su.getSysMenuList());
         session.setAttribute("loginUserName", su.getUserName());
         session.setAttribute("loginUserType", su.getType());
+        session.setAttribute("loginUserId", su.getUserId());
     }
     
     /**
@@ -131,6 +132,7 @@ public class SessionUserService {
         session.setAttribute("sysMenuList", su.getSysMenuList());
         session.setAttribute("loginUserName", su.getUserName());
         session.setAttribute("loginUserType", su.getType());
+        session.setAttribute("loginUserId", su.getUserId());
         session.setAttribute("accessToken", accessToken);
     }
     /**

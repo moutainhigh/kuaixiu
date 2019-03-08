@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBAreaMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBArea" >
+        <result column="office_id" property="officeId"/>
+        <result column="county_id" property="countyId"/>
+        <result column="branch_office" property="branchOffice"/>
+        <result column="area_id" property="areaId"/>
+        <result column="area_name" property="areaName"/>
+        <result column="area_type" property="areaType"/>
+        <result column="area_person" property="areaPerson"/>
+        <result column="person_tel" property="personTel"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_id" property="updateUserId"/>
+    </resultMap>
+    
+    <!-- nb_area table all fields -->
+    <sql id="Base_Column_List" >
+        office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user_id,update_time,update_user_id
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into nb_area
+        (office_id,county_id,branch_office,area_id,area_name,area_type,area_person,person_tel,create_time,create_user_id,update_time,update_user_id)
+        values
+        (#{officeId},#{countyId},#{branchOffice},#{areaId},#{areaName},#{areaType},#{areaPerson},#{personTel},now(),#{createUserId},now(),#{updateUserId})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update nb_area 
+        set 
+            county_id=#{countyId},
+            branch_office=#{branchOffice},
+            area_id=#{areaId},
+            area_name=#{areaName},
+            area_type=#{areaType},
+            area_person=#{areaPerson},
+            person_tel=#{personTel},
+            update_time=now(),
+            update_user_id=#{updateUserId}
+        where office_id=#{officeId}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from nb_area where office_id=#{officeId}
+    </delete>
+    <!-- 根据id，修改记录-->
+    <update id="deleteByOfficeId" parameterType="Object">
+        update nb_area
+        set
+        is_del=1,
+        update_time=now(),
+        update_user_id=#{updateUserId}
+        where office_id=#{officeId}
+    </update>
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_area where office_id=#{officeId}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryByAreaId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_area where area_id=#{areaId}
+    </select>
+
+    <!-- 根据县份id查询  -->
+    <select id="queryByCountyId"  resultMap="BaseResultMap" parameterType="Object">
+        select office_id,branch_office
+        from nb_area where county_id = #{countyId}
+        GROUP BY branch_office
+    </select>
+
+    <!-- 根据支局名字查询  -->
+    <select id="queryByBranchOffice"  resultMap="BaseResultMap" parameterType="Object">
+        select area_id,area_name
+        from nb_area where branch_office = #{branchOffice} and county_id = #{countyId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_area
+        where 1=1
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="branchOffice != null and branchOffice != ''" >
+            and branch_office = #{branchOffice}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
+        <if test="areaPerson != null and areaPerson != ''" >
+            and area_person = #{areaPerson}
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel = #{personTel}
+        </if>
+        and is_del=0
+    </select>
+    <!-- 查询列表无分页 -->
+    <select id="queryImportList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_area
+        where 1=1
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="branchOffice != null and branchOffice != ''" >
+            and branch_office = #{branchOffice}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
+        <if test="areaPerson != null and areaPerson != ''" >
+            and area_person like CONCAT('%', #{areaPerson}, '%')
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel like CONCAT('%', #{personTel}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and office_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,office_id DESC
+    </select>
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_area
+        where 1=1
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="branchOffice != null and branchOffice != ''" >
+            and branch_office = #{branchOffice}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="areaName != null and areaName != ''" >
+            and area_name = #{areaName}
+        </if>
+        <if test="areaType != null and areaType != ''" >
+            and area_type = #{areaType}
+        </if>
+        <if test="areaPerson != null and areaPerson != ''" >
+            and area_person like CONCAT('%', #{areaPerson}, '%')
+        </if>
+        <if test="personTel != null and personTel != ''" >
+            and person_tel like CONCAT('%', #{personTel}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        and is_del=0
+        ORDER BY create_time DESC ,office_id DESC
+    </select>
+
+</mapper>   

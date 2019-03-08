@@ -221,15 +221,16 @@
         {//复选框
             targets: -4,
             render: function (data, type, row, meta) {
-                if (row.shop_manager_name == null && row.shop_manager_mobile != null) {
-                    return "" + "/<br/>" + row.shop_manager_mobile;
-                } else if (row.shop_manager_name != null && row.shop_manager_mobile == null) {
-                    return row.shop_manager_name + "/<br/>" + "";
-                } else if (row.shop_manager_name == null && row.shop_manager_mobile == null) {
-                    return "";
-                } else {
-                    return row.shop_manager_name + "/<br/>" + row.shop_manager_mobile;
-                }
+//                if (row.shop_manager_name == null && row.shop_manager_mobile != null) {
+//                    return "" + "/<br/>" + row.shop_manager_mobile;
+//                } else if (row.shop_manager_name != null && row.shop_manager_mobile == null) {
+//                    return row.shop_manager_name + "/<br/>" + "";
+//                } else if (row.shop_manager_name == null && row.shop_manager_mobile == null) {
+//                    return "";
+//                } else {
+//                    return row.shop_manager_name + "/<br/>" + row.shop_manager_mobile;
+//                }
+                return row.shop_manager_mobile;
             }
         },
         {//复选框

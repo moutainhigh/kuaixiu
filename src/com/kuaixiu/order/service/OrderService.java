@@ -47,6 +47,8 @@ import com.kuaixiu.model.service.RepairCostService;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.dao.OrderMapper;
 import com.kuaixiu.order.entity.*;
+import com.kuaixiu.provider.entity.Provider;
+import com.kuaixiu.provider.service.ProviderService;
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.kuaixiu.wechat.entity.WechatRangeOrder;
@@ -111,6 +113,8 @@ public class OrderService extends BaseService<Order> {
     private UpdateOrderPriceService updateOrderPriceService;
     @Autowired
     private ReworkOrderService reworkOrderService;
+    @Autowired
+    private ProviderService providerService;
 
     public OrderMapper<Order> getDao() {
         return mapper;
@@ -1014,9 +1018,10 @@ public class OrderService extends BaseService<Order> {
             }
             //获取工程师姓名
             eng = newEngineerService.engineerShopCode(eng);
+            Provider provider=providerService.queryByCode(eng.getProviderCode());
             //派单给工程师
             o.setProviderCode(eng.getProviderCode());
-            o.setProviderName(eng.getProviderName());
+            o.setProviderName(provider.getName());
             o.setShopCode(eng.getShopCode());
             o.setShopName(eng.getShopName());
             o.setEngineerId(eng.getId());
@@ -1041,9 +1046,10 @@ public class OrderService extends BaseService<Order> {
             }
             //获取工程师姓名
             eng = newEngineerService.engineerShopCode(eng);
+            Provider provider=providerService.queryByCode(eng.getProviderCode());
             //派单给工程师
             reworkOrder.setProviderCode(eng.getProviderCode());
-            reworkOrder.setProviderName(eng.getProviderName());
+            reworkOrder.setProviderName(provider.getName());
             reworkOrder.setShopCode(eng.getShopCode());
             reworkOrder.setShopName(eng.getShopName());
             reworkOrder.setEngineerId(eng.getId());

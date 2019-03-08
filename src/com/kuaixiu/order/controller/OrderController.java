@@ -703,6 +703,14 @@ public class OrderController extends BaseController {
             o.setPage(page);
             o.setIsDel(0);
             List<Map<String, Object>> list = orderService.getDao().queryUnCheckForPage(o);
+            for(Map map:list){
+                Shop shop=new Shop();
+                shop.setCode(map.get("shop_code").toString());
+                shopService.shopShopCode(shop);
+                map.put("shop_tel",shop.getTel());
+                map.put("shop_manager_mobile",shop.getManagerMobile());
+                map.put("shop_manager_name",shop.getManagerName());
+            }
             page.setData(list);
             resultData.setResult(page);
         } catch (SystemException e) {

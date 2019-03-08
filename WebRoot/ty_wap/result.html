@@ -67,7 +67,6 @@
 			setCacheData(CacheKey.source,"fm");
 			eCacheUtil.storage.cache(CacheKey.isSelect,false);
 		}
-
     </script>
 	
     <script>
@@ -80,6 +79,8 @@
 			}else{
 				document.title = '超人回收';
 			}
+			
+			var HappyGoMobile=eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
 
             //判断是否为小程序来源
             var openId=eCacheUtil.storage.getCache(CacheKey.OpenId);
@@ -97,7 +98,8 @@
                 var param = {
                     "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
                     "items":itemsId,
-                    "openId":openId
+                    "openId":openId,
+					"loginMobile":HappyGoMobile
                 },base = new Base64();
                 $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){

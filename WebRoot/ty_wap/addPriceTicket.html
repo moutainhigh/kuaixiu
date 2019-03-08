@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/addPriceTicket.css">
+    <title>加价券</title>
+    <style>
+    	/*默认显示已领取，这里只是价格底线没到所起隐藏已领取图标样式*/
+		.ticket-item.used:after {
+			background: none;
+		}
+    </style>
+</head>
+<body class="add-price-ticket">
+	<div>
+		<!--start of  可使用优惠券-->
+		<div class="can-use-ticket">
+			<div class="list-title">可使用优惠券(<span class="js-available-num">0</span>张)</div>
+			<dl class="ticket-list js-coupon-available">
+				<!-- <dd class="ticket-item can-use">
+					<div class="ticket-info">
+						<div class="ticket-value">60</div>
+						<div class="ticket-desc">
+							<label>加价券</label>
+							<span class="condition">满1000元使用</span>
+						</div>
+					</div>
+					<div class="ticket-date">
+						<label>有效期:</label>
+						<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+					</div>
+				</dd>
+				<dd class="ticket-item can-use default">
+					<div class="ticket-info">
+						<div class="ticket-value">50</div>
+						<div class="ticket-desc">
+							<label>加价券</label>
+							<span class="condition">满500元使用</span>
+						</div>
+					</div>
+					<div class="ticket-date">
+						<label>有效期:</label>
+						<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+					</div>
+				</dd>
+				<dd class="ticket-item can-use">
+					<div class="ticket-info">
+						<div class="ticket-value">10<span class="percent-label">%</span></div>
+						<div class="ticket-desc">
+							<label>加价券</label>
+							<span class="condition">满100元使用</span>
+						</div>
+					</div>
+					<div class="ticket-date">
+						<label>有效期:</label>
+						<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+					</div>
+				</dd> -->
+			</dl>
+		</div>
+		<!--end of  可使用优惠券-->
+		<!--start of  不可使用优惠券-->
+		<div class="cant-use-ticket">
+			<div class="list-title">不可使用优惠券(<span class="js-not-available-num">0</span>张)</div>
+			<dl class="ticket-list js-coupon-not-available">
+				<!-- <dd class="ticket-item used">
+					<div class="ticket-info">
+						<div class="ticket-value">50</div>
+						<div class="ticket-desc">
+							<label>加价券</label>
+							<span class="condition">满500元使用</span>
+						</div>
+					</div>
+					<div class="ticket-date">
+						<label>有效期:</label>
+						<span class="start-date">2018-08-09</span>至<span class="end-date">2019-08-09</span>
+					</div>
+				</dd> -->
+			</dl>
+		</div>
+		<!--end of  不可使用优惠券-->		
+	</div>
+
+
+
+    <script src="js/jquery.js"></script>
+	<script src="js/util.js"></script>	
+    <script>
+		$(function(){
+			var couponsUsableArr = eCacheUtil.storage.getCache( CacheKey.CouponsAvailable ) ? JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailable ) ) : {};
+			var couponsNotUsableArr = eCacheUtil.storage.getCache( CacheKey.CouponNotAvailable ) ? JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponNotAvailable ) ) : {}; 
+			var couponsAvailableDefault = eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) ? JSON.parse( eCacheUtil.storage.getCache( CacheKey.CouponsAvailableDefault ) ) : {};
+
+
+			// 可用不可用优惠券的数量
+			$('.js-available-num').text( couponsUsableArr.length )
+			$('.js-not-available-num').text( couponsNotUsableArr.length )
+
+			// 可用优惠券
+			var couponAvailableHTML = ''
+			for( var i = 0; i < couponsUsableArr.length; i++ ){
+				var classHtml = '';
+				// 判断是否是默认优惠券
+				if( couponsUsableArr[i].couponCode == couponsAvailableDefault.couponCode ){
+					classHtml = '<dd class="ticket-item can-use default" data-code="'+ couponsUsableArr[i].couponCode +'">';
+				}else{
+					classHtml = '<dd class="ticket-item can-use" data-code="'+ couponsUsableArr[i].couponCode +'">'
+				}
+
+				couponAvailableHTML+=   classHtml+
+					'	<div class="ticket-info">'+
+					'		<div class="ticket-value">'+ couponsUsableArr[i].couponPrice.replace('元','') +'</div>'+
+					'		<div class="ticket-desc">'+
+					'			<label>加价券</label>'+
+					'			<span class="condition">满'+ couponsUsableArr[i].subtractionPrice +'元使用</span>'+
+					'		</div>'+
+					'	</div>'+
+					'	<div class="ticket-date">'+
+					'		<label>有效期:</label>'+
+					'		<span class="start-date">'+ couponsUsableArr[i].beginTime +'</span>至<span class="end-date">'+ couponsUsableArr[i].endTime +'</span>'+
+					'	</div>'+
+					'</dd>'
+			}
+			$('.js-coupon-available').html( couponAvailableHTML );
+
+			// 不可用优惠券
+			var couponNotAvailableHTML = ''
+			for( var i = 0; i < couponsNotUsableArr.length; i++ ){
+				couponNotAvailableHTML+=   '<dd class="ticket-item used" data-code="'+ couponsNotUsableArr[i].couponCode +'">'+
+					'	<div class="ticket-info">'+
+					'		<div class="ticket-value">'+ couponsNotUsableArr[i].couponPrice.replace('元','') +'</div>'+
+					'		<div class="ticket-desc">'+
+					'			<label>加价券</label>'+
+					'			<span class="condition">满'+ couponsNotUsableArr[i].subtractionPrice +'元使用</span>'+
+					'		</div>'+
+					'	</div>'+
+					'	<div class="ticket-date">'+
+					'		<label>有效期:</label>'+
+					'		<span class="start-date">'+ couponsUsableArr[i].beginTime +'</span>至<span class="end-date">'+ couponsNotUsableArr[i].endTime +'</span>'+
+					'	</div>'+
+					'</dd>'
+			}
+			$('.js-coupon-not-available').html( couponNotAvailableHTML );
+
+
+			//切换优惠券
+			$('.js-coupon-available').delegate( '.ticket-item' , 'click' , function(){
+				//缓存默认优惠券
+				for(var i = 0; i < couponsUsableArr.length; i++){
+					if( $(this).data('code') == couponsUsableArr[i].couponCode ){
+                    	eCacheUtil.storage.cache(CacheKey.CouponsAvailableDefault, couponsUsableArr[i]);
+					}
+				}
+
+				//跳转页面
+				location.href = 'order.html';
+			})
+		});
+    </script>
+</body>
+</html>

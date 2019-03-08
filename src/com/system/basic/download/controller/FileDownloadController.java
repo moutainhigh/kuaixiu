@@ -99,6 +99,7 @@ public class FileDownloadController extends BaseController{
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("tempFileName", tempPath);
                 params.put("outFileName", path);
+                params.put("response", response);
                 params.put("user", su);
                 params.putAll(requestMap);
                 
@@ -107,7 +108,11 @@ public class FileDownloadController extends BaseController{
             }
 
             String userAgent = request.getHeader("USER-AGENT").toLowerCase();
-            response.reset();
+            try {
+                response.reset();
+            }catch (IllegalStateException e){
+
+            }
             response.setContentType("application/x-msdownload");
 
             if (userAgent.indexOf("firefox") >= 0) {

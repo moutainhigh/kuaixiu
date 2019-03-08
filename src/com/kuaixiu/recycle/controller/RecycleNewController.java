@@ -306,7 +306,7 @@ public class RecycleNewController extends BaseController {
                     if (!list.isEmpty()) {
                         RecycleCheckItems checkItems = list.get(0);
                         checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
+                        checkItems.setLastPrice(checkItems.getPrice());
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 
@@ -326,7 +326,7 @@ public class RecycleNewController extends BaseController {
                     if (recycleCheckItems.isEmpty()) {
                         //新增
                         t.setItems(items);
-                        t.setLastPrice(new BigDecimal(price));
+                        t.setPrice(new BigDecimal(price));
                         t.setProductId(productId);
                         t.setBrand(selectBrandName);
                         t.setBrandId(selectBrandId);
@@ -336,7 +336,8 @@ public class RecycleNewController extends BaseController {
                         RecycleCheckItems checkItems = recycleCheckItems.get(0);
                         //修改
                         checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
+                        checkItems.setPrice(new BigDecimal(price));
+                        checkItems.setLastPrice(checkItems.getPrice());
                         checkItems.setProductId(productId);
                         checkItems.setBrand(selectBrandName);
                         checkItems.setBrandId(selectBrandId);
@@ -961,10 +962,21 @@ public class RecycleNewController extends BaseController {
                                     json.put("couponCode", recycleCoupon.getCouponCode());
                                     json.put("couponName", recycleCoupon.getCouponName());
                                     json.put("pricingType", recycleCoupon.getPricingType());
+                                    String orderPrice=quote.getString("orderprice");
                                     if (recycleCoupon.getPricingType() == 1) {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
+                                        Integer addCouponPrice = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
+                                        if (recycleCoupon.getUpperLimit() != null && addCouponPrice > recycleCoupon.getUpperLimit().intValue()) {
+                                            quote.put("addCouponPrice", recycleCoupon.getUpperLimit().toString());
+                                            quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getUpperLimit()).toString());
+                                        } else {
+                                            quote.put("addCouponPrice", String.valueOf(addCouponPrice));
+                                            quote.put("orderprice", (new BigDecimal(orderPrice).add((new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())))).toString());
+                                        }
                                     } else {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
+                                        quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
+                                        quote.put("orderprice", (new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice())).toString());
                                     }
                                     json.put("beginTime", recycleCoupon.getBeginTime());
                                     json.put("endTime", recycleCoupon.getEndTime());
@@ -1055,10 +1067,20 @@ public class RecycleNewController extends BaseController {
                             json.put("couponCode", recycleCoupon.getCouponCode());
                             json.put("couponName", recycleCoupon.getCouponName());
                             json.put("pricingType", recycleCoupon.getPricingType());
+                            String orderPrice=info.getString("orderprice");
                             if (recycleCoupon.getPricingType() == 1) {
                                 json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
-                            } else {
+                                Integer addCouponPrice = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
+                                if (recycleCoupon.getUpperLimit() != null && addCouponPrice > recycleCoupon.getUpperLimit().intValue()) {
+                                    info.put("addCouponPrice", recycleCoupon.getUpperLimit().toString());
+                                    info.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getUpperLimit()).toString());
+                                } else {
+                                    info.put("addCouponPrice", String.valueOf(addCouponPrice));
+                                    info.put("orderprice", (new BigDecimal(orderPrice).add((new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())))).toString());
+                                }                              } else {
                                 json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
+                                info.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
+                                info.put("orderprice", (new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice())).toString());
                             }
                             json.put("beginTime", recycleCoupon.getBeginTime());
                             json.put("endTime", recycleCoupon.getEndTime());
@@ -1195,10 +1217,11 @@ public class RecycleNewController extends BaseController {
             String getResult = AES.post(baseNewUrl + "getmodelbycode", requestNews);
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
-            JSONArray product = code.getJSONArray("datainfo");
-            if (product.isEmpty()) {
+            if (StringUtils.isBlank(code.getString("datainfo"))) {
                 throw new SystemException("对应机型不存在");
             }
+            JSONArray product = code.getJSONArray("datainfo");
+
             JSONObject o = (JSONObject) product.get(0);
             JSONArray sublist = o.getJSONArray("sublist");
             String productId = ((JSONObject) sublist.get(0)).getString("productid");

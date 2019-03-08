@@ -105,7 +105,8 @@ public class RecycleCouponController extends BaseController {
             }
             String name = request.getParameter("name");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
-            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额额度
+            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额下限额度
+            String upperLimit = request.getParameter("upperLimit");//满减金额上限额度
             String price = request.getParameter("price");//优惠券金额
             String description = request.getParameter("ruleDescription");//加价规则描述
             String startTime = request.getParameter("startTime");//优惠券开始时间
@@ -136,6 +137,7 @@ public class RecycleCouponController extends BaseController {
                 recycleCoupon.setCouponName(name);
                 recycleCoupon.setPricingType(Integer.valueOf(pricingType));
                 recycleCoupon.setRuleDescription(description);
+                recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
                 recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
                 recycleCoupon.setStrCouponPrice(new BigDecimal(price));
                 recycleCoupon.setBeginTime(startTime);
@@ -288,6 +290,7 @@ public class RecycleCouponController extends BaseController {
                 } else if (recycleCoupon1.getPricingType() == 2) {
                     json.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "元");
                 }
+                json.put("upperLimit", recycleCoupon1.getUpperLimit());
                 json.put("subtractionPrice", recycleCoupon1.getSubtraction_price());
                 json.put("ruleDescription", recycleCoupon1.getRuleDescription());
                 json.put("beginTime", recycleCoupon1.getBeginTime());
@@ -591,6 +594,7 @@ public class RecycleCouponController extends BaseController {
             String couponCode = request.getParameter("couponCode");//加价券编码
             String name = request.getParameter("name");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
+            String upperLimit = request.getParameter("upperLimit");//满减金额额度
             String subtractionPrice = request.getParameter("subtractionPrice");//满减金额额度
             String description = request.getParameter("ruleDescription");//加价规则描述
             String price = request.getParameter("price");//优惠券金额
@@ -607,6 +611,7 @@ public class RecycleCouponController extends BaseController {
             recycleCoupon.setCouponName(name);
             recycleCoupon.setPricingType(Integer.valueOf(pricingType));
             recycleCoupon.setRuleDescription(description);
+            recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
             recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
             if (price.contains("%")) {
                 price = StringUtils.remove(price, "%");
