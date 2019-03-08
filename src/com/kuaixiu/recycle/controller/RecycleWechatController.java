@@ -10,7 +10,9 @@ import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.aes.YouDaoUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.google.common.collect.Maps;
+import com.kuaixiu.activity.entity.ActivityLogin;
 import com.kuaixiu.activity.entity.ActivityUser;
+import com.kuaixiu.activity.service.ActivityLoginService;
 import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
@@ -66,7 +68,7 @@ public class RecycleWechatController extends BaseController {
     @Autowired
     private AddressService addressService;
     @Autowired
-    private ActivityUserService activityUserService;
+    private ActivityLoginService activityLoginService;
 
     /**
      * 通过微信临时code获取openid和session_key
@@ -106,15 +108,14 @@ public class RecycleWechatController extends BaseController {
             String unionid = parse.getString("unionid");
             String sessionKey = parse.getString("session_key");
             if (StringUtils.isNotBlank(fromType) && Integer.valueOf(fromType) == 3) {
-                ActivityUser user = new ActivityUser();
+                ActivityLogin login = new ActivityLogin();
+                String activityIdent = params.getString("activityIdent");
                 //保存该用户
-                user.setId(UUID.randomUUID().toString().replace("-", ""));
-                user.setOpenId(openId);
-                if (StringUtils.isNotBlank(unionid)) {
-                    user.setUnionId(unionid);
-                }
-                user.setSessionKey(sessionKey);
-                activityUserService.getDao().add(user);
+                login.setId(UUID.randomUUID().toString().replace("-", ""));
+                login.setOpenId(openId);
+                login.setActivityIdent(activityIdent);
+                login.setSessionKey(sessionKey);
+                activityLoginService.getDao().add(login);
             } else {
                 //保存该用户
                 RecycleWechat wechat = new RecycleWechat();

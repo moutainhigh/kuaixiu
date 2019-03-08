@@ -7,37 +7,31 @@
     <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityUser" >
         <result column="id" property="id"/>
         <result column="activity_ident" property="activityIdent"/>
-        <result column="unionId" property="unionId"/>
         <result column="openId" property="openId"/>
         <result column="person" property="person"/>
         <result column="number" property="number"/>
-        <result column="model" property="model"/>
         <result column="project" property="project"/>
         <result column="fault" property="fault"/>
         <result column="login_number" property="loginNumber"/>
-        <result column="model_id" property="modelId"/>
-        <result column="brand_id" property="brandId"/>
-        <result column="recycle_model" property="recycleModel"/>
         <result column="productId" property="productId"/>
+        <result column="model" property="model"/>
+        <result column="brand_id" property="brandId"/>
         <result column="brand" property="brand"/>
-        <result column="wechat_model" property="wechatModel"/>
-        <result column="save_time" property="saveTime"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
-        <result column="session_key" property="sessionKey"/>
     </resultMap>
     
     <!-- kx_activity_kx_user table all fields -->
     <sql id="Base_Column_List" >
-        id,activity_ident,unionId,openId,person,number,model,project,fault,login_number,model_id,brand_id,recycle_model,productId,brand,wechat_model,save_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')update_time,session_key
+        id,activity_ident,openId,person,number,model,project,fault,login_number,brand_id,productId,brand,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_activity_kx_user
-        (id,activity_ident,unionId,openId,person,number,model,project,fault,login_number,model_id,brand_id,recycle_model,productId,brand,wechat_model,create_time,update_time,session_key)
+        (id,activity_ident,openId,person,number,model,project,fault,login_number,brand_id,productId,brand,create_time,update_time)
         values
-        (#{id},#{activityIdent},#{unionId},#{openId},#{person},#{number},#{model},#{project},#{fault},#{loginNumber},#{modelId},#{brandId},#{recycleModel},#{productId},#{brand},#{wechatModel},now(),#{updateTime},#{sessionKey})
+        (#{id},#{activityIdent},#{openId},#{person},#{number},#{model},#{project},#{fault},#{loginNumber},#{brandId},#{productId},#{brand},now(),#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -46,7 +40,6 @@
         set 
             id=#{id},
             activity_ident=#{activityIdent},
-            unionId=#{unionId},
             openId=#{openId},
             person=#{person},
             number=#{number},
@@ -54,15 +47,10 @@
             project=#{project},
             fault=#{fault},
             login_number=#{loginNumber},
-            model_id=#{modelId},
             brand_id=#{brandId},
-            recycle_model=#{recycleModel},
             productId=#{productId},
             brand=#{brand},
-            wechat_model=#{wechatModel},
-            save_time=#{saveTime},
-            update_time=now(),
-            session_key=#{sessionKey}
+            update_time=now()
         where id=#{id}
     </update>
 
@@ -89,9 +77,6 @@
         <if test="activityIdent != null and activityIdent != ''" >
             and activity_ident = #{activityIdent}
         </if>
-        <if test="unionId != null and unionId != ''" >
-            and unionId = #{unionId}
-        </if>
         <if test="openId != null and openId != ''" >
             and openId = #{openId}
         </if>
@@ -113,14 +98,8 @@
         <if test="loginNumber != null and loginNumber != ''" >
             and login_number = #{loginNumber}
         </if>
-        <if test="modelId != null and modelId != ''" >
-            and model_id = #{modelId}
-        </if>
         <if test="brandId != null and brandId != ''" >
             and brand_id = #{brandId}
-        </if>
-        <if test="recycleModel != null and recycleModel != ''" >
-            and recycle_model = #{recycleModel}
         </if>
         <if test="productId != null and productId != ''" >
             and productId = #{productId}
@@ -128,17 +107,11 @@
         <if test="brand != null and brand != ''" >
             and brand = #{brand}
         </if>
-        <if test="wechatModel != null and wechatModel != ''" >
-            and wechat_model = #{wechatModel}
-        </if>
         <if test="createTime != null and createTime != ''" >
             and create_time = #{createTime}
         </if>
         <if test="updateTime != null and updateTime != ''" >
             and update_time = #{updateTime}
-        </if>
-        <if test="sessionKey != null and sessionKey != ''" >
-            and session_key = #{sessionKey}
         </if>
     </select>
     
@@ -154,9 +127,6 @@
         <if test="activityIdent != null and activityIdent != ''" >
             and activity_ident = #{activityIdent}
         </if>
-        <if test="unionId != null and unionId != ''" >
-            and unionId = #{unionId}
-        </if>
         <if test="openId != null and openId != ''" >
             and openId = #{openId}
         </if>
@@ -178,14 +148,8 @@
         <if test="loginNumber != null and loginNumber != ''" >
             and login_number = #{loginNumber}
         </if>
-        <if test="modelId != null and modelId != ''" >
-            and model_id = #{modelId}
-        </if>
         <if test="brandId != null and brandId != ''" >
             and brand_id = #{brandId}
-        </if>
-        <if test="recycleModel != null and recycleModel != ''" >
-            and recycle_model = #{recycleModel}
         </if>
         <if test="productId != null and productId != ''" >
             and productId = #{productId}
@@ -193,37 +157,14 @@
         <if test="brand != null and brand != ''" >
             and brand = #{brand}
         </if>
-        <if test="wechatModel != null and wechatModel != ''" >
-            and wechat_model = #{wechatModel}
-        </if>
         <if test="createTime != null and createTime != ''" >
             and create_time = #{createTime}
         </if>
         <if test="updateTime != null and updateTime != ''" >
             and update_time = #{updateTime}
         </if>
-        <if test="sessionKey != null and sessionKey != ''" >
-            and session_key = #{sessionKey}
-        </if>
     </select>
 
-    <!-- 根据openId修改记录-->
-    <update id="updateByOpenId" parameterType="Object">
-        update kx_activity_kx_user
-        set
-        id=#{id},
-        activity_ident=#{activityIdent},
-        openId=#{openId},
-        person=#{person},
-        number=#{number},
-        model=#{model},
-        project=#{project},
-        fault=#{fault},
-        login_number=#{loginNumber},
-        save_time=#{saveTime},
-        unionId=#{unionId}
-        where openId=#{openId}
-    </update>
     <!-- 根据openId查询  -->
     <select id="queryByOpenId" resultMap="BaseResultMap" parameterType="Object">
         select
@@ -231,41 +172,16 @@
         from kx_activity_kx_user where openId=#{openId}
         ORDER BY create_time DESC
     </select>
-    <!-- 根据标识查询  -->
-    <select id="queryByIdent" resultMap="BaseResultMap" parameterType="Object">
-        select
-        <include refid="Base_Column_List"/>
-        from kx_activity_kx_user where activity_ident=#{activityIdent}
-    </select>
-    <!-- 根据openId修改记录-->
-    <update id="updateByIden" parameterType="Object">
-        update kx_activity_kx_user
-        set
-        id=#{id},
-        activity_ident=#{activityIdent},
-        openId=#{openId},
-        person=#{person},
-        number=#{number},
-        model=#{model},
-        project=#{project},
-        fault=#{fault},
-        login_number=#{loginNumber},
-        create_time=#{createTime},
-        unionId=#{unionId},
-        save_time=#{saveTime},
-        update_time=now()
-        where activity_ident=#{activityIdent}
-    </update>
     <!-- 查询预约列表 带分页 -->
     <select id="queryEstimateForPage" resultType="Map" parameterType="Object">
         select
-        u.save_time saveTime,c.company_name companyName,
+        u.create_time saveTime,c.company_name companyName,
         u.person person,u.number number,u.login_number loginNumber,
-        u.recycle_model recycleModel,u.project project,u.fault fault,
+        u.model recycleModel,u.project project,u.fault fault,
         c.start_time startTime,c.end_time endTime,u.project project
         from kx_activity_kx_user u LEFT JOIN kx_activity_company c ON u.activity_ident=c.activity_identification
         where 1=1
-        and u.save_time is NOT NULL
+        and u.create_time is NOT NULL
         <if test="companyName != null and companyName != ''">
             and c.company_name LIKE CONCAT('%', #{companyName}, '%')
         </if>
@@ -278,7 +194,7 @@
         <if test="person != null and person != ''">
             and u.person LIKE CONCAT('%', #{person}, '%')
         </if>
-        ORDER BY saveTime DESC
+        ORDER BY u.create_time DESC
     </select>
 
 </mapper>   

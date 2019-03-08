@@ -9,13 +9,18 @@ import com.common.util.AES;
 import com.common.util.FileUtil;
 import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.activity.entity.ActivityLogin;
+import com.kuaixiu.activity.entity.ActivityModel;
 import com.kuaixiu.activity.entity.ActivityProject;
 import com.kuaixiu.activity.entity.ActivityUser;
+import com.kuaixiu.activity.service.ActivityLoginService;
+import com.kuaixiu.activity.service.ActivityModelService;
 import com.kuaixiu.activity.service.ActivityProjectService;
 import com.kuaixiu.activity.service.ActivityUserService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +47,10 @@ public class ActivityUserController extends BaseController {
     private ActivityUserService activityUserService;
     @Autowired
     private ActivityProjectService activityProjectService;
+    @Autowired
+    private ActivityModelService activityModelService;
+    @Autowired
+    private ActivityLoginService activityLoginService;
     /**
      * 基础访问接口地址
      */
@@ -50,8 +59,9 @@ public class ActivityUserController extends BaseController {
      * 需要加密的数据名
      */
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
+
     /**
-     * 根据活动标识登录
+     * 查询用户是否绑定手机号
      *
      * @param request
      * @param response
@@ -67,23 +77,25 @@ public class ActivityUserController extends BaseController {
             JSONObject params = getPrarms(request);
             String openId = params.getString("openId");
 
-            if (StringUtils.isBlank(openId) ) {
+            if (StringUtils.isBlank(openId)) {
                 throw new SystemException("请求参数不完整");
             }
-            List<ActivityUser> activityUsers = activityUserService.getDao().queryByOpenId(openId);
-            ActivityUser activityUser = activityUsers.get(0);
+            ActivityModel activityModel = activityModelService.getDao().queryByOpenId(openId);
+            JSONObject jsonObject = new JSONObject();
+            if (activityModel != null && StringUtils.isNotBlank(activityModel.getLoginMobile())) {
+                jsonObject.put("UserMobileNum", activityModel.getLoginMobile());
+                getResult(result, jsonObject, true, "0", "成功");
+            } else {
+                getResult(result, null, true, "1", "成功");
+            }
 
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("UserMobileNum",activityUser.getLoginNumber());
-            result.setResult(jsonObject);
-            result.setResultCode("0");
-            result.setSuccess(true);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
         }
         return result;
     }
+
     /**
      * 列表查询
      *
@@ -188,17 +200,36 @@ public class ActivityUserController extends BaseController {
                     || StringUtils.isBlank(activityIdentification)) {
                 throw new SystemException("请求参数不完整");
             }
-            List<ActivityUser> activityUsers = activityUserService.getDao().queryByOpenId(openId);
-            ActivityUser activityUser = activityUsers.get(0);
-            String sessionKey = activityUser.getSessionKey();
-            //解密参数
-            JSONObject info = AesCbcUtil.decrypt(sessionKey, encryptedData, iv);
-            activityUser.setLoginNumber(info.getString("phoneNumber"));
-            activityUser.setActivityIdent(activityIdentification);
-            activityUserService.getDao().update(activityUser);
+            List<ActivityLogin> activityLogins = activityLoginService.getDao().queryByOpenId(openId);
+            JSONObject info=new JSONObject();
+            if(!CollectionUtils.isEmpty(activityLogins)){
+                ActivityLogin activityLogin = activityLogins.get(0);
+                String sessionKey = activityLogin.getSessionKey();
+                //解密参数
+                info = AesCbcUtil.decrypt(sessionKey, encryptedData, iv);
+            } else{
+                return getResult(result,null,false,"1","openId错误");
+            }
 
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("UserMobileNum",activityUser.getLoginNumber());
+            String mobile = "";
+            ActivityModel activityModel = activityModelService.getDao().queryByOpenId(openId);
+            if (activityModel == null) {
+                ActivityModel activityModel1 = new ActivityModel();
+                activityModel1.setId(UUID.randomUUID().toString().replace("-", ""));
+                activityModel1.setLoginMobile(info.getString("phoneNumber"));
+                activityModel1.setOpenId(openId);
+                activityModel1.setActivityIdent(activityIdentification);
+                activityModelService.add(activityModel1);
+                mobile = activityModel1.getLoginMobile();
+            } else {
+                activityModel.setLoginMobile(info.getString("phoneNumber"));
+                activityModel.setActivityIdent(activityIdentification);
+                activityModelService.getDao().update(activityModel);
+                mobile = activityModel.getLoginMobile();
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("UserMobileNum", mobile);
             result.setResult(jsonObject);
             result.setResultCode("0");
             result.setSuccess(true);
@@ -226,8 +257,8 @@ public class ActivityUserController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String type = params.getString("type");
-            String activityIdent = params.getString("activityIdent");
-            if (StringUtils.isBlank(activityIdent) ||StringUtils.isBlank(type) || "0".equals(type)) {
+            String activityIdent = params.getString("iden");
+            if (StringUtils.isBlank(activityIdent) || StringUtils.isBlank(type) || "0".equals(type)) {
                 throw new SystemException("请求参数不完整");
             }
             ActivityProject project = new ActivityProject();
@@ -258,21 +289,18 @@ public class ActivityUserController extends BaseController {
     public ResultData kxSave(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
+            String openId = params.getString("openId");
             String activityIdent = params.getString("iden");
             String person = params.getString("userName");
             String number = params.getString("number");
 //            String model = params.getString("model");
             String project = params.getString("project");//1,5,9,6,3,4,
             String fault = params.getString("fault");//故障现象
-            String brand = params.getString("brandName");
-            String modelName = params.getString("modelName");
-            String productId = params.getString("productId");
-            if (StringUtil.isBlank(activityIdent) || StringUtil.isBlank(person) || StringUtil.isBlank(number)
-                    || StringUtil.isBlank(project) || StringUtil.isBlank(brand) || StringUtil.isBlank(modelName)
-                    || StringUtil.isBlank(productId)) {
+            if (StringUtil.isBlank(openId) || StringUtil.isBlank(activityIdent)
+                    || StringUtil.isBlank(person) || StringUtil.isBlank(number)
+                    || StringUtil.isBlank(project)) {
                 throw new SystemException("参数不完整");
             }
             StringBuilder sb = new StringBuilder();
@@ -291,20 +319,24 @@ public class ActivityUserController extends BaseController {
             }
             project = sb.toString();
 
-            ActivityUser user = activityUserService.getDao().queryByIdent(activityIdent);
+            ActivityModel activityModel = activityModelService.getDao().queryByOpenId(openId);
+
+            ActivityUser user = new ActivityUser();
+            if (activityModel != null) {
+                user.setBrandId(activityModel.getBrandId());
+                user.setBrand(activityModel.getBrandName());
+                user.setProductId(activityModel.getProductId());
+                user.setModel(activityModel.getModelName());
+                user.setLoginNumber(activityModel.getLoginMobile());
+            }
+            user.setId(UUID.randomUUID().toString().replace("-", ""));
+            user.setOpenId(openId);
+            user.setActivityIdent(activityIdent);
             user.setPerson(person);
             user.setNumber(number);
-//            user.setModel(model);
             user.setProject(project);
             user.setFault(fault);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date newTime = new Date();
-            user.setSaveTime(sdf.format(newTime));
-            user.setRecycleModel(modelName);
-            user.setBrand(brand);
-            user.setProductId(productId);
-            activityUserService.getDao().update(user);
-            activityUserService.getDao().updateByIden(user);
+            activityUserService.add(user);
 
             result.setResultCode("0");
             result.setSuccess(true);
@@ -333,6 +365,7 @@ public class ActivityUserController extends BaseController {
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
+            String openId = params.getString("openId");
             String brand = params.getString("brand");
             String modelName = params.getString("modelName");
             String categoryid = params.getString("categoryid");
@@ -352,10 +385,10 @@ public class ActivityUserController extends BaseController {
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
             if (StringUtils.isBlank(code.getString("datainfo"))) {
-                return getResult(result,null,false,"1","机型不存在");
+                return getResult(result, null, false, "1", "机型不存在");
             }
             JSONArray product = code.getJSONArray("datainfo");
-            String imageUrl="";
+            String imageUrl = "";
             //判断返回的机型是否有多个
             if (product.size() > 1) {
                 //如果有多个机型 则通过机型名称匹配唯一
@@ -368,7 +401,7 @@ public class ActivityUserController extends BaseController {
                     Map<String, String> map = AES.getModelName(brand, modelName);
                     if (((JSONObject) sublist.get(0)).getString("modelname").equals(map.get("modelName"))) {
                         productId = object.getString("productid");
-                        imageUrl=((JSONObject) sublist.get(0)).getString("modellogo");
+                        imageUrl = ((JSONObject) sublist.get(0)).getString("modellogo");
                         jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
                     }
                 }
@@ -378,7 +411,7 @@ public class ActivityUserController extends BaseController {
                 jsonResult.put("brandName", o.getString("brandname"));
                 jsonResult.put("brandId", o.getInteger("brandid"));
                 productId = ((JSONObject) sublist.get(0)).getString("productid");
-                imageUrl=((JSONObject) sublist.get(0)).getString("modellogo");
+                imageUrl = ((JSONObject) sublist.get(0)).getString("modellogo");
                 jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
             }
             if (StringUtils.isBlank(productId)) {
@@ -396,6 +429,22 @@ public class ActivityUserController extends BaseController {
                 FileUtil.download(imageUrl, imageUrl.substring(imageUrl.lastIndexOf("/") + 1), savePath);
             }
 
+            ActivityModel activityModel = activityModelService.getDao().queryByOpenId(openId);
+            if (activityModel == null) {
+                ActivityModel activityModel1 = new ActivityModel();
+                activityModel1.setId(UUID.randomUUID().toString().replace("-", ""));
+                activityModel1.setBrandId(jsonResult.getString("brandId"));
+                activityModel1.setBrandName(jsonResult.getString("brandName"));
+                activityModel1.setProductId(jsonResult.getString("productId"));
+                activityModel1.setModelName(jsonResult.getString("modelName"));
+                activityModelService.add(activityModel1);
+            } else {
+                activityModel.setBrandId(jsonResult.getString("brandId"));
+                activityModel.setBrandName(jsonResult.getString("brandName"));
+                activityModel.setProductId(jsonResult.getString("productId"));
+                activityModel.setModelName(jsonResult.getString("modelName"));
+                activityModelService.getDao().update(activityModel);
+            }
             //返回数据
             jsonResult.put("productId", productId);
             jsonResult.put("modelLogo", modelUrl);
