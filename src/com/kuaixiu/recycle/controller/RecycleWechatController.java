@@ -109,7 +109,7 @@ public class RecycleWechatController extends BaseController {
             String sessionKey = parse.getString("session_key");
             if (StringUtils.isNotBlank(fromType) && Integer.valueOf(fromType) == 3) {
                 ActivityLogin login = new ActivityLogin();
-                String activityIdent = params.getString("activityIdent");
+                String activityIdent = params.getString("iden");
                 //保存该用户
                 login.setId(UUID.randomUUID().toString().replace("-", ""));
                 login.setOpenId(openId);

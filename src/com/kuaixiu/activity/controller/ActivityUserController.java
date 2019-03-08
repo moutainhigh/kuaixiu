@@ -435,13 +435,13 @@ public class ActivityUserController extends BaseController {
                 activityModel1.setId(UUID.randomUUID().toString().replace("-", ""));
                 activityModel1.setBrandId(jsonResult.getString("brandId"));
                 activityModel1.setBrandName(jsonResult.getString("brandName"));
-                activityModel1.setProductId(jsonResult.getString("productId"));
+                activityModel1.setProductId(productId);
                 activityModel1.setModelName(jsonResult.getString("modelName"));
                 activityModelService.add(activityModel1);
             } else {
                 activityModel.setBrandId(jsonResult.getString("brandId"));
                 activityModel.setBrandName(jsonResult.getString("brandName"));
-                activityModel.setProductId(jsonResult.getString("productId"));
+                activityModel.setProductId(productId);
                 activityModel.setModelName(jsonResult.getString("modelName"));
                 activityModelService.getDao().update(activityModel);
             }
