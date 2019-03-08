@@ -8,25 +8,21 @@
         <result column="id" property="id"/>
         <result column="openId" property="openId"/>
         <result column="activity_ident" property="activityIdent"/>
-        <result column="brand_id" property="brandId"/>
-        <result column="brand_name" property="brandName"/>
-        <result column="product_id" property="productId"/>
-        <result column="model_name" property="modelName"/>
         <result column="create_time" property="createTime"/>
         <result column="session_key" property="sessionKey"/>
     </resultMap>
     
     <!-- kx_activity_login table all fields -->
     <sql id="Base_Column_List" >
-        id,openId,activity_ident,brand_id,brand_name,product_id,model_name,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,session_key
+        id,openId,activity_ident,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,session_key
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_activity_login
-        (id,openId,activity_ident,brand_id,brand_name,product_id,model_name,create_time,session_key)
+        (id,openId,activity_ident,create_time,session_key)
         values
-        (#{id},#{openId},#{activityIdent},#{brandId},#{brandName},#{productId},#{modelName},now(),#{sessionKey})
+        (#{id},#{openId},#{activityIdent},now(),#{sessionKey})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -35,10 +31,6 @@
         set 
             id=#{id},
             openId=#{openId},
-            brand_id=#{brandId},
-            brand_name=#{brandName},
-            product_id=#{productId},
-            model_name=#{modelName},
             create_time=#{createTime},
             session_key=#{sessionKey}
         where id=#{id}
@@ -71,18 +63,6 @@
         <if test="openId != null and openId != ''" >
             and openId = #{openId}
         </if>
-        <if test="brandId != null and brandId != ''" >
-            and brand_id = #{brandId}
-        </if>
-        <if test="brandName != null and brandName != ''" >
-            and brand_name = #{brandName}
-        </if>
-        <if test="productId != null and productId != ''" >
-            and product_id = #{productId}
-        </if>
-        <if test="modelName != null and modelName != ''" >
-            and model_name = #{modelName}
-        </if>
         <if test="createTime != null and createTime != ''" >
             and create_time = #{createTime}
         </if>
@@ -102,18 +82,6 @@
         </if>
         <if test="openId != null and openId != ''" >
             and openId = #{openId}
-        </if>
-        <if test="brandId != null and brandId != ''" >
-            and brand_id = #{brandId}
-        </if>
-        <if test="brandName != null and brandName != ''" >
-            and brand_name = #{brandName}
-        </if>
-        <if test="productId != null and productId != ''" >
-            and product_id = #{productId}
-        </if>
-        <if test="modelName != null and modelName != ''" >
-            and model_name = #{modelName}
         </if>
         <if test="createTime != null and createTime != ''" >
             and create_time = #{createTime}

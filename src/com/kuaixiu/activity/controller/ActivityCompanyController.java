@@ -404,7 +404,7 @@ public class ActivityCompanyController extends BaseController {
 
             result.setSuccess(true);
             result.setResultMessage("成功");
-            result.setResult(activityCompany);
+            result.setResult(map);
             result.setResultCode("0");
         } catch (Exception e) {
             e.printStackTrace();
