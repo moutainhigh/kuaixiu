@@ -50,7 +50,40 @@ public class ActivityUserController extends BaseController {
      * 需要加密的数据名
      */
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
+    /**
+     * 根据活动标识登录
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/activityCompany/isBindingMobile")
+    @ResponseBody
+    public ResultData isBindingMobile(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String openId = params.getString("openId");
 
+            if (StringUtils.isBlank(openId) ) {
+                throw new SystemException("请求参数不完整");
+            }
+            List<ActivityUser> activityUsers = activityUserService.getDao().queryByOpenId(openId);
+            ActivityUser activityUser = activityUsers.get(0);
+
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("UserMobileNum",activityUser.getLoginNumber());
+            result.setResult(jsonObject);
+            result.setResultCode("0");
+            result.setSuccess(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
     /**
      * 列表查询
      *

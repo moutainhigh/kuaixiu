@@ -400,6 +400,7 @@ public class ActivityCompanyController extends BaseController {
                 activityCompany.setActivityImgUrl(imageUrl);
             }
 
+            Map<String,Object> map=activityCompanyService.objectToMap(activityCompany);
 
             result.setSuccess(true);
             result.setResultMessage("成功");
