@@ -432,6 +432,7 @@ public class ActivityUserController extends BaseController {
             ActivityModel activityModel = activityModelService.getDao().queryByOpenId(openId);
             if (activityModel == null) {
                 ActivityModel activityModel1 = new ActivityModel();
+                activityModel1.setOpenId(openId);
                 activityModel1.setId(UUID.randomUUID().toString().replace("-", ""));
                 activityModel1.setBrandId(jsonResult.getString("brandId"));
                 activityModel1.setBrandName(jsonResult.getString("brandName"));
@@ -439,6 +440,7 @@ public class ActivityUserController extends BaseController {
                 activityModel1.setModelName(jsonResult.getString("modelName"));
                 activityModelService.add(activityModel1);
             } else {
+                activityModel.setOpenId(openId);
                 activityModel.setBrandId(jsonResult.getString("brandId"));
                 activityModel.setBrandName(jsonResult.getString("brandName"));
                 activityModel.setProductId(productId);

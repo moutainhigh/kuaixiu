@@ -175,7 +175,7 @@
     <!-- 查询预约列表 带分页 -->
     <select id="queryEstimateForPage" resultType="Map" parameterType="Object">
         select
-        u.create_time saveTime,c.company_name companyName,
+        date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')saveTime,c.company_name companyName,
         u.person person,u.number number,u.login_number loginNumber,
         u.model recycleModel,u.project project,u.fault fault,
         c.start_time startTime,c.end_time endTime,u.project project
@@ -186,10 +186,10 @@
             and c.company_name LIKE CONCAT('%', #{companyName}, '%')
         </if>
         <if test="queryStartTime != null and queryStartTime != ''" >
-            and u.update_time &gt;= #{queryStartTime}
+            and u.create_time &gt;= #{queryStartTime}
         </if>
         <if test="queryEndTime != null and queryEndTime != ''" >
-            and u.update_time &lt;= #{queryEndTime}
+            and u.create_time &lt;= #{queryEndTime}
         </if>
         <if test="person != null and person != ''">
             and u.person LIKE CONCAT('%', #{person}, '%')
