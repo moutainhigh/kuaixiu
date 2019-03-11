@@ -32,7 +32,7 @@
                         <input type="text" id="startLoginTime" name="queryStartTime"
                                class="form-control am-datepicker-start" data-am-datepicker readonly>
                         <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-                        <input type="text" id="endLoginTime" name="queryStartTime"
+                        <input type="text" id="endLoginTime" name="queryEndTime"
                                class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </td>

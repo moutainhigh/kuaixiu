@@ -27,7 +27,7 @@
         insert into kx_activity_model
         (id,openId,activity_ident,login_mobile,brand_id,brand_name,product_id,model_name,create_time,update_time)
         values
-        (#{id},#{openId},#{activityIdent},#{loginMobile},#{brandId},#{brandName},#{productId},#{modelName},#{createTime},#{updateTime})
+        (#{id},#{openId},#{activityIdent},#{loginMobile},#{brandId},#{brandName},#{productId},#{modelName},now(),now())
     </insert>
 
     <!-- 根据id，修改记录-->
