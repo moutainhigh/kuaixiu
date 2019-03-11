@@ -144,12 +144,12 @@
                     //加载图片获取图片真实宽度和高度
                     var width = image.width;
                     var height = image.height;
-                    if (width < 300 && height < 600) {
+                    if (width < 751 && height < 493) {
                         var img = document.getElementById('imghead');
                         img.setAttribute('src', imgUrl); // 修改img标签src属性值
                         $("#preview").show();
                     } else {
-                        var msg = "文件尺寸应小于：300*600！,当前图片" + height + "*" + width;
+                        var msg = "文件尺寸应小于：750*492！,当前图片" + width + "*" + height;
                         AlertText.tips("d_alert", "提示", msg);
                         file.value = "";
                         return false;
