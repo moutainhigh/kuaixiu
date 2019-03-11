@@ -303,8 +303,8 @@ public class ActivityUserController extends BaseController {
             String productId = params.getString("productId");
             if (StringUtil.isBlank(openId) || StringUtil.isBlank(activityIdent)
                     || StringUtil.isBlank(person) || StringUtil.isBlank(number)
-                    || StringUtil.isBlank(project)|| StringUtil.isBlank(brandName)
-                    || StringUtil.isBlank(brandId)|| StringUtil.isBlank(modelName)
+                    || StringUtil.isBlank(project)|| StringUtil.isBlank(modelName)
+//                    || StringUtil.isBlank(brandId)|| StringUtil.isBlank(brandName)
                     || StringUtil.isBlank(productId)) {
                 throw new SystemException("参数不完整");
             }
