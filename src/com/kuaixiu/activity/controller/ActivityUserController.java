@@ -295,12 +295,17 @@ public class ActivityUserController extends BaseController {
             String activityIdent = params.getString("iden");
             String person = params.getString("userName");
             String number = params.getString("number");
-//            String model = params.getString("model");
             String project = params.getString("project");//1,5,9,6,3,4,
             String fault = params.getString("fault");//故障现象
+            String brandName = params.getString("brandName");
+            String brandId = params.getString("brandId");
+            String modelName = params.getString("modelName");
+            String productId = params.getString("productId");
             if (StringUtil.isBlank(openId) || StringUtil.isBlank(activityIdent)
                     || StringUtil.isBlank(person) || StringUtil.isBlank(number)
-                    || StringUtil.isBlank(project)) {
+                    || StringUtil.isBlank(project)|| StringUtil.isBlank(brandName)
+                    || StringUtil.isBlank(brandId)|| StringUtil.isBlank(modelName)
+                    || StringUtil.isBlank(productId)) {
                 throw new SystemException("参数不完整");
             }
             StringBuilder sb = new StringBuilder();
@@ -320,15 +325,14 @@ public class ActivityUserController extends BaseController {
             project = sb.toString();
 
             ActivityModel activityModel = activityModelService.getDao().queryByOpenId(openId);
-
             ActivityUser user = new ActivityUser();
             if (activityModel != null) {
-                user.setBrandId(activityModel.getBrandId());
-                user.setBrand(activityModel.getBrandName());
-                user.setProductId(activityModel.getProductId());
-                user.setModel(activityModel.getModelName());
                 user.setLoginNumber(activityModel.getLoginMobile());
             }
+            user.setBrandId(brandId);
+            user.setBrand(brandName);
+            user.setProductId(productId);
+            user.setModel(modelName);
             user.setId(UUID.randomUUID().toString().replace("-", ""));
             user.setOpenId(openId);
             user.setActivityIdent(activityIdent);
