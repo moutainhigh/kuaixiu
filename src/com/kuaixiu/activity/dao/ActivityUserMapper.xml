@@ -177,7 +177,7 @@
         select
         date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')saveTime,c.company_name companyName,
         u.person person,u.number number,u.login_number loginNumber,
-        u.model recycleModel,u.project project,u.fault fault,
+        u.brand,u.model,u.project project,u.fault fault,
         c.start_time startTime,c.end_time endTime,u.project project
         from kx_activity_kx_user u LEFT JOIN kx_activity_company c ON u.activity_ident=c.activity_identification
         where 1=1

@@ -76,7 +76,7 @@
                 <th class="fontWeight_normal tdwidth60 center">企业名称</th>
                 <th class="fontWeight_normal tdwidth90 center">联系人/手机号</th>
                 <th class="fontWeight_normal tdwidth60 center">微信绑定手机号</th>
-                <th class="fontWeight_normal tdwidth60 center">手机品牌机型</th>
+                <th class="fontWeight_normal tdwidth60 center">手机品牌/机型</th>
                 <th class="fontWeight_normal tdwidth60 center">预约业务类型</th>
                 <th class="fontWeight_normal tdwidth60 center">预约业务</th>
                 <th class="fontWeight_normal tdwidth60 center">故障现象</th>
@@ -119,7 +119,7 @@
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
         {"data": "loginNumber", "class": ""},
-        {"data": "recycleModel", "class": ""},
+        {"data": "model", "class": ""},
         {"data": "businessType", "class": ""},
         {"data": "project", "class": ""},
         {"data": "fault", "class": ""},
@@ -148,6 +148,12 @@
             targets: 3,
             render: function (data, type, row, meta) {
                 return row.person + "/<br/>" + row.number;
+            }
+        },
+        {//复选框
+            targets: 5,
+            render: function (data, type, row, meta) {
+                return row.brand + "/<br/>" + row.model;
             }
         },
         {//复选框
