@@ -1,0 +1,51 @@
+.tipinfo-box{
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+}
+.tipinfo-box .tipinfo-mask-panel,
+.tipinfo-box .tipinfo-dialog{
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+}
+.tipinfo-box .tipinfo-mask-panel{
+	background-color:rgba(0,0,0,0.8);
+}
+.tipinfo-box .tipinfo-dialog{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.tipinfo-box .tipinfo-dialog .ti-dialog-body{
+	position:relative;
+	top:-0.6rem;
+	width:60%;
+	text-align:center;
+}
+.tipinfo-box .tipinfo-dialog .ti-dialog-body>img{
+	width:100%;
+}
+.ti-close-btn{
+	position:absolute;
+	top:106%;
+	left:50%;
+	margin-left:-0.2rem;
+	display:inline-block;
+	text-align:center;
+	height:.4rem;
+	width:.4rem;
+	line-height:.36rem;
+	font-size:.2rem;
+	color:#FFFFFF;
+	border-radius:50%;
+	border:#FFFFFF 2px solid;
+}
+.tipinfo-box.hide{
+	display:none;
+}
