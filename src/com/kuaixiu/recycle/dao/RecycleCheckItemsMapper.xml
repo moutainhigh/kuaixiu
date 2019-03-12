@@ -144,4 +144,45 @@
         order by in_time desc
     </select>
 
+    <!-- 查询列表 带分页 -->
+    <select id="queryTestListForPage" resultMap="BaseResultMap"
+            parameterType="Object">
+        select
+        c.in_time,c.brand,c.recycle_model model,c.product_id,c.login_mobile,t.test_id,t.recycle_id
+        from kx_recycle_checkitems c
+        LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
+        where 1=1 and c.login_mobile is not null
+
+        where 1=1
+
+        <if test="mobile != null and mobile != ''">
+            and mobile =#{mobile}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and mobile =#{mobile}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_mobile =#{loginMobile}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isOrder == 1">
+            and t.recycle_id is null
+        </if>
+        <if test="isOrder == 0">
+            and t.recycle_id is not null
+        </if>
+        <if test="isVisit == 1">
+            and t.test_id is null
+        </if>
+        <if test="isVisit == 0">
+            and t.test_id is not null
+        </if>
+        order by in_time desc
+    </select>
+
 </mapper>
