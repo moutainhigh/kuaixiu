@@ -71,6 +71,26 @@ public class RecycleCheckItems extends BaseEntity{
 	 * 登录手机号
 	 */
 	private String loginMobile;
+	//是否成单    传参
+	private String isOrder;
+	//是否回访    传参
+	private String isVisit;
+
+	public String getIsOrder() {
+		return isOrder;
+	}
+
+	public void setIsOrder(String isOrder) {
+		this.isOrder = isOrder;
+	}
+
+	public String getIsVisit() {
+		return isVisit;
+	}
+
+	public void setIsVisit(String isVisit) {
+		this.isVisit = isVisit;
+	}
 
 	public String getLoginMobile() {
 		return loginMobile;
