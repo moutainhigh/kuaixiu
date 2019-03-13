@@ -27,11 +27,12 @@ public class TimeJunit extends JunitTest {
     @Test
     public void aaa() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-Long totalTime=180l;
+        Long totalTime = 180l;
 
         Long time = sdf.parse("2018-11-27 18:15:48").getTime() - sdf.parse("2019-01-22 18:15:48").getTime();
-        Long aa=totalTime + time / (1000 * 3600 * 24);
+        Long aa = totalTime + time / (1000 * 3600 * 24);
     }
+
     /**
      * 返回结果解析
      *

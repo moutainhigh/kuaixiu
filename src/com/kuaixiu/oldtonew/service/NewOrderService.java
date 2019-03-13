@@ -411,7 +411,7 @@ public class NewOrderService extends BaseService {
 			}
 			engineerService.checkDispatchState(oldEngineerId);
 		} else {
-			throw new SystemException("附近没有空闲的维修工程师！");
+			log.info("附近没有空闲的维修工程师!");
 		}
 	}
 

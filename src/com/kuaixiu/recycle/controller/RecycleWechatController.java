@@ -10,6 +10,10 @@ import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.aes.YouDaoUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.google.common.collect.Maps;
+import com.kuaixiu.activity.entity.ActivityLogin;
+import com.kuaixiu.activity.entity.ActivityUser;
+import com.kuaixiu.activity.service.ActivityLoginService;
+import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.kuaixiu.wechat.service.WechatUserService;
@@ -63,6 +67,8 @@ public class RecycleWechatController extends BaseController {
     private SingleLoginService singleLoginService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private ActivityLoginService activityLoginService;
 
     /**
      * 通过微信临时code获取openid和session_key
@@ -82,13 +88,15 @@ public class RecycleWechatController extends BaseController {
             if (StringUtils.isBlank(code)) {
                 throw new SystemException("请求参数不完整");
             }
-            String fromType=params.getString("fromType");
+            String fromType = params.getString("fromType");
             String url = "https://api.weixin.qq.com/sns/jscode2session?";
             //翼回收
-            if(StringUtils.isBlank(fromType)||"".equals(fromType)||Integer.valueOf(fromType)==0||Integer.valueOf(fromType)==1){
+            if (StringUtils.isBlank(fromType) || "".equals(fromType) || Integer.valueOf(fromType) == 0 || Integer.valueOf(fromType) == 1) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
-            }else {
+            } else if (Integer.valueOf(fromType) == 2) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_POSTMAN_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_POSTMAN_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
+            } else if (Integer.valueOf(fromType) == 3) {
+                url = url + "appid=" + SystemConstant.WECHAT_ACTIVITY_APPID + "&secret=" + SystemConstant.WECHAT_ACTIVITY_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
             }
             String httpGet = HttpClientUtil.httpGet(url);
             JSONObject parse = (JSONObject) JSONObject.parse(httpGet);
@@ -99,17 +107,31 @@ public class RecycleWechatController extends BaseController {
             String openId = parse.getString("openid");
             String unionid = parse.getString("unionid");
             String sessionKey = parse.getString("session_key");
-            //保存该用户
-            RecycleWechat wechat = new RecycleWechat();
-            wechat.setId(UUID.randomUUID().toString().replace("-", ""));
-            wechat.setOpenId(openId);
-            if (StringUtils.isNotBlank(unionid)) {
-                wechat.setUnionId(unionid);
+            if (StringUtils.isNotBlank(fromType) && Integer.valueOf(fromType) == 3) {
+                ActivityLogin login = new ActivityLogin();
+                String activityIdent = params.getString("iden");
+                if(StringUtils.isBlank(activityIdent)){
+                    return getResult(result,null,false,"2","iden不能为空");
+                }
+                //保存该用户
+                login.setId(UUID.randomUUID().toString().replace("-", ""));
+                login.setOpenId(openId);
+                login.setActivityIdent(activityIdent);
+                login.setSessionKey(sessionKey);
+                activityLoginService.getDao().add(login);
+            } else {
+                //保存该用户
+                RecycleWechat wechat = new RecycleWechat();
+                wechat.setId(UUID.randomUUID().toString().replace("-", ""));
+                wechat.setOpenId(openId);
+                if (StringUtils.isNotBlank(unionid)) {
+                    wechat.setUnionId(unionid);
+                }
+                wechat.setSessionKey(sessionKey);
+                recycleWechatService.addByOpenId(wechat);
+                //储存当前用户tokenId  后期下单确定用户
+                request.getSession().setAttribute("wechat_openId", openId);
             }
-            wechat.setSessionKey(sessionKey);
-            recycleWechatService.addByOpenId(wechat);
-            //储存当前用户tokenId  后期下单确定用户
-            request.getSession().setAttribute("wechat_openId", openId);
             jsonResult.put("openId", openId);
             result.setResult(jsonResult);
             result.setResultCode("0");

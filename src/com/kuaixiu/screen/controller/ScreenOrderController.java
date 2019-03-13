@@ -494,7 +494,7 @@ public class ScreenOrderController extends BaseController {
 				throw new SystemException("上传文件扩展名是不允许的扩展名：" + fileExt);
 			} else {
 				// 保存文件
-				path = saveFile(bfile, fileName, request);
+				path = saveFile(bfile, fileName, request,null);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

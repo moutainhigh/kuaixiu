@@ -369,6 +369,14 @@ public class SystemConstant {
      */
     public static final String WECHAT_APPLET_SECRET=SystemUtil.getSysCfgProperty("wechat.applet.secret");
     /**
+     * 企业活动微信小程序appid
+     */
+    public static final String WECHAT_ACTIVITY_APPID =SystemUtil.getSysCfgProperty("wechat.activity.appid");
+    /**
+     * 企业活动微信小程序secret
+     */
+    public static final String WECHAT_ACTIVITY_SECRET=SystemUtil.getSysCfgProperty("wechat.activity.secret");
+    /**
      * 超人回收微信小程序appid
      */
     public static final String WECHAT_APPLET_POSTMAN_APPID =SystemUtil.getSysCfgProperty("wechat.applet.postMan.appid");

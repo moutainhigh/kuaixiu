@@ -457,7 +457,7 @@ public class OrderPayService {
      */
     public OrderPayLog createPayLog(OrderPayLog payLog, Order o) {
         // 生成支付订单号
-        String payOrderNo = NOUtil.getNo("PN-");
+        String payOrderNo = NOUtil.getNo("PN-")+NOUtil.getRandomInteger(4);
         payLog.setPayOrderNo(payOrderNo);
 
         payLog.setOrderNo(o.getOrderNo());

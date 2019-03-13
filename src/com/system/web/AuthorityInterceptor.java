@@ -72,7 +72,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-
         if (sessionUser == null) {
             //验证cookie用户是否存在
             if (sessionUserService.checkCookieUser(request)) {

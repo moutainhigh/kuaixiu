@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.activity.dao.ActivityModelMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityModel" >
+        <result column="id" property="id"/>
+        <result column="openId" property="openId"/>
+        <result column="activity_ident" property="activityIdent"/>
+        <result column="login_mobile" property="loginMobile"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="product_id" property="productId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- kx_activity_model table all fields -->
+    <sql id="Base_Column_List" >
+        id,openId,activity_ident,login_mobile,brand_id,brand_name,product_id,model_name,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_activity_model
+        (id,openId,activity_ident,login_mobile,brand_id,brand_name,product_id,model_name,create_time,update_time)
+        values
+        (#{id},#{openId},#{activityIdent},#{loginMobile},#{brandId},#{brandName},#{productId},#{modelName},now(),now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_activity_model 
+        set 
+            id=#{id},
+            openId=#{openId},
+            activity_ident=#{activityIdent},
+            login_mobile=#{loginMobile},
+            brand_id=#{brandId},
+            brand_name=#{brandName},
+            product_id=#{productId},
+            model_name=#{modelName},
+            update_time=now()
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_activity_model where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_model where id = #{id}
+    </select>
+    <!-- 根据id查询  -->
+    <select id="queryByOpenId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_model where openId = #{openId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_model
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and openId = #{openId}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''" >
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="brandName != null and brandName != ''" >
+            and brand_name = #{brandName}
+        </if>
+        <if test="productId != null and productId != ''" >
+            and product_id = #{productId}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_model
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and openId = #{openId}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''" >
+            and login_mobile = #{loginMobile}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="brandName != null and brandName != ''" >
+            and brand_name = #{brandName}
+        </if>
+        <if test="productId != null and productId != ''" >
+            and product_id = #{productId}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+</mapper>   

@@ -380,7 +380,7 @@ public class BaseController {
     /**
      * 保存文件
      */
-    protected String getPath(HttpServletRequest request,String file){
+    protected String getPath(HttpServletRequest request,String file,String URLPath){
     	String fileName="";                   //上传的文件名
     	String path="";                       //存储路径
     	try {
@@ -403,7 +403,7 @@ public class BaseController {
 			    throw new SystemException("上传文件扩展名是不允许的扩展名：" + fileExt);
 			}else{
 			//保存文件
-			     path=saveFile(bfile,fileName,request);
+			     path=saveFile(bfile,fileName,request,URLPath);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -417,13 +417,15 @@ public class BaseController {
      * 保存图片文件到设定的文件夹  并得到保存文件的路径  此处指tomcat目录下和webapp同级的images文件夹
      * 返回字符串为网络访问url
      */
-    protected String saveFile(byte[] bfile,String fileName,HttpServletRequest request) {
+    protected String saveFile(byte[] bfile,String fileName,HttpServletRequest request,String upload) {
     	//定义文件输出流   保存图片等文件时应在tomcat server.xml配置文件中配置对应的静态路径
     	//这样才能访问项目外的资源  此处我们默认在apache目录下建一个images的文件夹用来存放图片
-    	 String path="/"+SystemConstant.IMAGE_PATH;
-    	 String savePath = request.getServletContext().getRealPath("");
-    	 String serverPath=serverPath(savePath);              //得到服务器位置
-    	 String upload=serverPath+path;                       //保存图片的位置
+        String path = "/" + SystemConstant.IMAGE_PATH;
+        if(StringUtils.isBlank(upload)) {
+            String savePath = request.getServletContext().getRealPath("");
+            String serverPath = serverPath(savePath);              //得到服务器位置
+            upload = serverPath + path;                       //保存图片的位置
+        }
          File saveFileDir = new File(upload);
          if (!saveFileDir.exists()) {
              // 创建目录
