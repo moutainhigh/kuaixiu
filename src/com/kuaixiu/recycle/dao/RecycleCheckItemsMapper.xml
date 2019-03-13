@@ -32,6 +32,13 @@
         from kx_recycle_checkitems where wechat_id=#{wechatId} ;
     </select>
 
+    <!-- 根据微信用户id查询记录 -->
+    <select id="queryByTestId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_checkitems where id=#{id} ;
+    </select>
+
 
     <insert id="add" parameterType="Object">
         insert into kx_recycle_checkitems
@@ -148,16 +155,17 @@
     <select id="queryTestListForPage" resultType="Map"
             parameterType="Object">
         select
-        c.in_time,c.brand,c.recycle_model model,c.product_id,c.items,c.login_mobile,t.test_id,t.recycle_id
+        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand,c.recycle_model model,
+        c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
         where 1=1
         and c.login_mobile is not null
-        <if test="mobile != null and mobile != ''">
-            and mobile =#{mobile}
+        <if test="brandId != null and brandId != ''">
+            and brand_id =#{brandId}
         </if>
-        <if test="mobile != null and mobile != ''">
-            and mobile =#{mobile}
+        <if test="productId != null and productId != ''">
+            and product_id =#{productId}
         </if>
         <if test="loginMobile != null and loginMobile != ''">
             and login_mobile =#{loginMobile}

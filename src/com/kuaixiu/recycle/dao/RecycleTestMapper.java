@@ -1,6 +1,7 @@
 package com.kuaixiu.recycle.dao;
 
 import com.common.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * RecycleTest Mapper
@@ -11,6 +12,8 @@ import com.common.base.dao.BaseDao;
  */
 public interface RecycleTestMapper<T> extends BaseDao<T> {
 
+    //用测评单号查询
+    T queryByCheckId(@Param("checkItemsId")String checkItemsId);
 }
 
 

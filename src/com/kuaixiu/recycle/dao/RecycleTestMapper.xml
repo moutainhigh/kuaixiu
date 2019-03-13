@@ -46,6 +46,12 @@
         from kx_recycle_test_record where id = #{id}
     </select>
 
+    <!-- 根据id查询  -->
+    <select id="queryByCheckId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_recycle_test_record where check_items_id=#{checkItemsId}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
