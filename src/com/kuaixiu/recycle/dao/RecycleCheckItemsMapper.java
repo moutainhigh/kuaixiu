@@ -3,6 +3,7 @@ package com.kuaixiu.recycle.dao;
 import com.common.base.dao.BaseDao;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RecycleCheckItemsMapper<T> extends BaseDao<T>{
    
@@ -16,5 +17,5 @@ public interface RecycleCheckItemsMapper<T> extends BaseDao<T>{
 	 */
 	int updateByWechatId(T t);
 
-	List<T> queryTestListForPage(T t);
+	List<Map> queryTestListForPage(T t);
 }
