@@ -436,13 +436,13 @@ public class ActivityCompanyController extends BaseController {
         String token = getToken();   // 得到token
 
         Map<String, Object> params = new HashMap<>();
-//        params.put("scene", imei);  //参数
-        params.put("path", "pages/index/index?iden="+imei); //位置
-        params.put("width", 280);
+        params.put("scene", imei);  //参数
+        params.put("path", "pages/index/index"); //位置
+        params.put("width", 430);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
-        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacode?access_token=" + token);  // 接口
+        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + token);  // 接口
         httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
         String body = JSON.toJSONString(params);           //必须是json模式的 post
         StringEntity entity;
