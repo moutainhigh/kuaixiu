@@ -156,8 +156,8 @@
                 pagesize:'50',
                 keyword:keyword
             },aData = [];
-            $.post("http://47.98.196.79/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
-            // $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
+            //$.post("http://47.98.196.79/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
+            $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
                 if (data.success){
                     var dataInfo = data.result.datainfo;
                     console.log(data.result)
