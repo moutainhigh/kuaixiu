@@ -437,7 +437,7 @@ public class ActivityCompanyController extends BaseController {
 
         Map<String, Object> params = new HashMap<>();
 //        params.put("scene", imei);  //参数
-        params.put("path", "pages/index/index?iden=055s73"); //位置
+        params.put("path", "pages/index/index?iden="+imei); //位置
         params.put("width", 280);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
