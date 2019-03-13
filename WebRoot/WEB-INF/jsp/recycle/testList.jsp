@@ -43,7 +43,7 @@
                 </td>
                 <td class="search_th"><label class="control-label">机  型 ：</label></td>
                 <td class="search_td">
-                    <select id="modelId" name="modelId" class="form-control-inline">
+                    <select id="modelId" name="productId" class="form-control-inline">
                         <option value="">--请选择--</option>
                     </select>
                 </td>
@@ -52,15 +52,15 @@
             <tr>
                 <td class="search_th"><label class="control-label">检测渠道 ：</label></td>
                 <td class="search_td">
-                    <select name="isOrder" class="form-control">
+                    <select name="channel" class="form-control">
                         <option value="">--请选择--</option>
                         <option value="">集团欢GO</option>
                     </select>
                 </td>
 
-                <td class="search_th"><label class="control-label">是否回访 ：</label></td>
+                <td class="search_th"><label class="control-label">是否成单 ：</label></td>
                 <td class="search_td">
-                    <select name="isVisit" class="form-control">
+                    <select name="isOrder" class="form-control">
                         <option value="">--请选择--</option>
                         <option value="0">是</option>
                         <option value="1">否</option>
@@ -319,120 +319,8 @@
         func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + id);
     }
 
-    /**
-     * 预支付
-     */
-    function preparePay(id) {
-        AlertText.tips("d_confirm", "温馨提示", "确定重新发起预支付转账吗？", function () {
-            $.ajax({
-                type: 'POST',
-                url: "${ctx}/recycle/preparePay.do",
-                dataType: 'json',
-                data: {
-                    id: id
-                },
-                success: function (data) {
-                    if (data.success) {
-                        //退款申请成功
-                        refreshPage();
-                        alert("操作成功");
-                    } else {
-                        alert(data.resultMessage);     //失败原因
-                    }
-                },
-                error: function (jqXHR) {
-                    alertTip('系统异常，请稍后再试！')
-                }
-            });
-        });
-    }
-
-    /**
-     * 支付尾款
-     */
-    function endPay(id) {
-        AlertText.tips("d_confirm", "温馨提示", "确定重新发起支付尾款吗？", function () {
-            $.ajax({
-                type: 'POST',
-                url: "${ctx}/screen/endPay.do",
-                dataType: 'json',
-                data: {
-                    id: id
-                },
-                success: function (data) {
-                    if (data.success) {
-                        //退款申请成功
-                        refreshPage();
-                        alert("操作成功");
-                    } else {
-                        alert(data.resultMessage);     //失败原因
-                    }
-                },
-                error: function (jqXHR) {
-                    alertTip('系统异常，请稍后再试！')
-                }
-            });
-        });
-    }
-
-
-    /**
-     * 发起扣款
-     */
-    function deductPay(id) {
-        AlertText.tips("d_confirm", "温馨提示", "确定重新发起扣款吗？", function () {
-            $.ajax({
-                type: 'POST',
-                url: "${ctx}/screen/deductPay.do",
-                dataType: 'json',
-                data: {
-                    id: id
-                },
-                success: function (data) {
-                    if (data.success) {
-                        //退款申请成功
-                        refreshPage();
-                        alert("操作成功");
-                    } else {
-                        alert(data.resultMessage);     //失败原因
-                    }
-                },
-                error: function (jqXHR) {
-                    alertTip('系统异常，请稍后再试！')
-                }
-            });
-        });
-    }
-
-    /**
-     * 发起转转拍卖 针对已成功回收未拍卖的订单
-     * @param id
-     */
-    function sale(id) {
-        AlertText.tips("d_confirm", "温馨提示", "确定发送到转转拍卖平台吗？", function () {
-            $.ajax({
-                type: 'POST',
-                url: "${ctx}/recycle/createSaleOrder.do",
-                dataType: 'json',
-                data: {
-                    id: id
-                },
-                success: function (data) {
-                    if (data.success) {
-                        //转转推送成功
-                        refreshPage();
-                        alert("操作成功");
-                    } else {
-                        alert(data.resultMessage);     //失败原因
-                    }
-                },
-                error: function (jqXHR) {
-                    alertTip('系统异常，请稍后再试！')
-                }
-            });
-        });
-
-
+    function ReturnVisit(id) {
+        func_reload_page("${ctx}/recycle/recycleTestRecord.do?id=" + id);
     }
 
 </script>

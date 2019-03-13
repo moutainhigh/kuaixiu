@@ -213,6 +213,28 @@ public class RecycleTestController extends BaseController {
     }
 
     /**
+     * 回访跳转
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "recycle/recycleTestRecord")
+    public ModelAndView recycleTestRecord(HttpServletRequest request,
+                                          HttpServletResponse response) throws Exception {
+        String id = request.getParameter("id");
+        String itemName = request.getParameter("itemName");//检测项
+        RecycleCheckItems checkItems=checkItemsService.getDao().queryByTestId(id);
+
+        itemName="选项";
+        request.setAttribute("itemName", itemName);
+        request.setAttribute("checkItems", checkItems);
+        String returnView = "recycle/testRecord";
+        return new ModelAndView(returnView);
+    }
+
+    /**
      * 返回结果解析
      *
      * @param originalString
