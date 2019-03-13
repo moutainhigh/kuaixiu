@@ -202,9 +202,9 @@ public class ActivityCompanyController extends BaseController {
             }
 
             //获取图片，保存图片到webapp同级inages/activityCompany目录
-            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + "hd_images";
             String logoPath = getPath(request, "file", savePath);             //图片路径
-            String imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            String imageUrl = getProjectUrl(request) + "/images/activityCompany/hd_images" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
 
             ActivityCompany company = new ActivityCompany();
@@ -276,7 +276,7 @@ public class ActivityCompanyController extends BaseController {
             }
             String imageUrl = "";
             //获取图片，保存图片到webapp同级inages/activityCompany目录
-            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + "hd_images";
             //转化request
             MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
             MultipartFile mfile = rm.getFile("file");                             //获得前端页面传来的文件
@@ -288,7 +288,7 @@ public class ActivityCompanyController extends BaseController {
                 imageUrl = fileURL;
             } else {
                 String logoPath = getPath(request, "file", savePath);             //图片路径
-                imageUrl = getProjectUrl(request) + "/images/activityCompany/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+                imageUrl = getProjectUrl(request) + "/images/activityCompany/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             }
             System.out.println("图片路径：" + savePath);
 
@@ -400,7 +400,7 @@ public class ActivityCompanyController extends BaseController {
                 activityCompany.setActivityImgUrl(imageUrl);
             }
 
-            Map<String,Object> map=activityCompanyService.objectToMap(activityCompany);
+            Map<String, Object> map = activityCompanyService.objectToMap(activityCompany);
 
             result.setSuccess(true);
             result.setResultMessage("成功");
@@ -425,24 +425,24 @@ public class ActivityCompanyController extends BaseController {
         JSONObject object = new JSONObject();
         String imei = request.getParameter("Identification");
         String name = imei + ".png";
-        String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany";
+        String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + "code_images";
         File f = new File(savePath + System.getProperty("file.separator") + name);
         if (f.exists()) {
             log.info("图片已存在");
-            object.put("path", getProjectUrl(request) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
+            object.put("path", getProjectUrl(request) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + "code_images" + System.getProperty("file.separator") + name);
             getResult(result, object, true, "0", "成功");
             return result;
         }
         String token = getToken();   // 得到token
 
         Map<String, Object> params = new HashMap<>();
-//        params.put("scene", imei);  //参数
-        params.put("path", "pages/index/index?iden="+imei); //位置
+        params.put("scene", imei);  //参数
+        params.put("page", "pages/index/index"); //位置
         params.put("width", 430);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
-        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacode?access_token=" + token);  // 接口
+        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + token);  // 接口
         httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
         String body = JSON.toJSONString(params);           //必须是json模式的 post
         StringEntity entity;
