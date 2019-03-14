@@ -34,7 +34,7 @@
                         <h4>检测项目：${itemName}</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>检测报价：${checkItems.price }</h4>
+                        <h4>检测报价：${checkItems.price }元</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
@@ -70,7 +70,7 @@
                     </div><!-- /.col -->
                     <c:if test="${recycleOrderNo!=null}">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>回收订单号：${recycleOrderNo}元</h4>
+                            <h4>回收订单号：<a href="javascript:void(0);" onclick="showOrderDetail('${recycleOrderId}')">${recycleOrderNo}</a></h4>
                         </div>
                         <!-- /.col -->
                     </c:if>
@@ -104,11 +104,6 @@
             </td>
         </tr>
 
-        <tr>
-            <td colspan="3" class="tr-space"></td>
-        </tr>
-        <tr>
-
     </table>
 </div>
 <!-- /am-g -->
@@ -117,6 +112,13 @@
 <script type="text/javascript">
     function toList() {
         func_reload_page("${ctx}/newOrder/list.do");
+    }
+
+    /**
+     * 查看订单详情
+     */
+    function showOrderDetail(id) {
+        func_reload_page("${ctx}/recycle/order/detail.do?id=" + id);
     }
 
 </script>

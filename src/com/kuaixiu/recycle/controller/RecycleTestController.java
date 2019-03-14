@@ -14,6 +14,7 @@ import com.kuaixiu.recycle.service.RecycleCheckItemsService;
 import com.kuaixiu.recycle.service.RecycleOrderService;
 import com.kuaixiu.recycle.service.RecycleTestService;
 import com.system.api.entity.ResultData;
+import com.system.basic.user.entity.SessionUser;
 import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: najy
@@ -77,7 +79,7 @@ public class RecycleTestController extends BaseController {
         String getResult = AES.post(url, requestNews);
         //对得到结果进行解密
         jsonResult = getResult(AES.Decrypt(getResult));
-        JSONArray jsonArray=jsonResult.getJSONArray("datainfo");
+        JSONArray jsonArray = jsonResult.getJSONArray("datainfo");
         request.setAttribute("brands", jsonArray);
         String returnView = "recycle/testList";
         return new ModelAndView(returnView);
@@ -115,10 +117,10 @@ public class RecycleTestController extends BaseController {
             String getResult = AES.post(url, requestNews);
             //对得到结果进行解密
             jsonResult = getResult(AES.Decrypt(getResult));
-            JSONArray jsonArray=jsonResult.getJSONArray("datainfo");
-            JSONObject jsonObject1=(JSONObject) jsonArray.get(0);
-            JSONArray jsonArray1=jsonObject1.getJSONArray("sublist");
-            getResult(result,jsonArray1,true,"0","成功");
+            JSONArray jsonArray = jsonResult.getJSONArray("datainfo");
+            JSONObject jsonObject1 = (JSONObject) jsonArray.get(0);
+            JSONArray jsonArray1 = jsonObject1.getJSONArray("sublist");
+            getResult(result, jsonArray1, true, "0", "成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -154,10 +156,10 @@ public class RecycleTestController extends BaseController {
         checkItem.setLoginMobile(mobile);
         checkItem.setBrandId(brandId);
         checkItem.setProductId(productId);
-        if(StringUtils.isNotBlank(isOrder)){
+        if (StringUtils.isNotBlank(isOrder)) {
             checkItem.setIsOrder(isOrder);
         }
-        if(StringUtils.isNotBlank(isVisit)){
+        if (StringUtils.isNotBlank(isVisit)) {
             checkItem.setIsVisit(isVisit);
         }
         checkItem.setPage(page);
@@ -176,8 +178,8 @@ public class RecycleTestController extends BaseController {
             String getResult = AES.post(url, requestNews);
             //对得到结果进行解密
             jsonResult = (JSONObject) JSONObject.parse(AES.Decrypt(getResult));
-            JSONObject jsonObject=jsonResult.getJSONObject("datainfo");
-            JSONArray jsonArray=jsonObject.getJSONArray("questions");
+            JSONObject jsonObject = jsonResult.getJSONObject("datainfo");
+            JSONArray jsonArray = jsonObject.getJSONArray("questions");
         }
 
         page.setData(checkItems);
@@ -194,17 +196,18 @@ public class RecycleTestController extends BaseController {
      */
     @RequestMapping(value = "recycle/recycleTestDetail")
     public ModelAndView recycleTestDetail(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+                                          HttpServletResponse response) throws Exception {
         String id = request.getParameter("id");
         String itemName = request.getParameter("itemName");//检测项
-        RecycleCheckItems checkItems=checkItemsService.getDao().queryByTestId(id);
+        RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(id);
 
-        RecycleTest recycleTest=testService.getDao().queryByCheckId(checkItems.getId());
-        if(StringUtils.isNotBlank(recycleTest.getRecycleId())){
-            RecycleOrder recycleOrder=orderService.queryById(recycleTest.getRecycleId());
+        RecycleTest recycleTest = testService.getDao().queryByCheckId(checkItems.getId());
+        if (StringUtils.isNotBlank(recycleTest.getRecycleId())) {
+            RecycleOrder recycleOrder = orderService.queryById(recycleTest.getRecycleId());
             request.setAttribute("recycleOrderNo", recycleOrder.getOrderNo());
+            request.setAttribute("recycleOrderId", recycleOrder.getId());
         }
-        itemName="选项";
+        itemName = "选项";
         request.setAttribute("itemName", itemName);
         request.setAttribute("recycleTest", recycleTest);
         request.setAttribute("checkItems", checkItems);
@@ -225,13 +228,47 @@ public class RecycleTestController extends BaseController {
                                           HttpServletResponse response) throws Exception {
         String id = request.getParameter("id");
         String itemName = request.getParameter("itemName");//检测项
-        RecycleCheckItems checkItems=checkItemsService.getDao().queryByTestId(id);
+        RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(id);
 
-        itemName="选项";
+        itemName = "选项";
         request.setAttribute("itemName", itemName);
         request.setAttribute("checkItems", checkItems);
         String returnView = "recycle/testRecord";
         return new ModelAndView(returnView);
+    }
+    @Autowired
+    private RecycleTestService recycleTestService;
+
+    /**
+     * 用于外部调用登录
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/recycle/saveTestNote")
+    @ResponseBody
+    public ResultData saveTestNote(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            String checkItemsId = request.getParameter("checkItemsId");
+            String note = request.getParameter("note");
+            SessionUser su=getCurrentUser(request);
+            if (StringUtils.isBlank(checkItemsId) || StringUtils.isBlank(note)) {
+                return getResult(result, null, false, "1", "参数为空");
+            }
+            RecycleTest recycleTest=new RecycleTest();
+            recycleTest.setCheckItemsId(checkItemsId);
+            recycleTest.setNote(note);
+            recycleTest.setRecordName(su.getUserId());
+            recycleTestService.add(recycleTest);
+
+            getResult(result, null, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
     }
 
     /**

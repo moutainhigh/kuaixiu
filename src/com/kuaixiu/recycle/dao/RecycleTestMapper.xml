@@ -8,20 +8,22 @@
         <result column="test_id" property="testId"/>
         <result column="check_items_id" property="checkItemsId"/>
         <result column="recycle_id" property="recycleId"/>
+        <result column="record_name" property="recordName"/>
         <result column="note" property="note"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
     
     <!-- kx_recycle_test_record table all fields -->
     <sql id="Base_Column_List" >
-        test_id,check_items_id,recycle_id,note
+        test_id,check_items_id,recycle_id,record_name,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_recycle_test_record
-        (test_id,check_items_id,recycle_id,note)
+        (test_id,check_items_id,recycle_id,record_name,note,create_time)
         values
-        (#{testId},#{checkItemsId},#{recycleId},#{note})
+        (#{testId},#{checkItemsId},#{recycleId},#{recordName},#{note},now())
     </insert>
 
     <!-- 根据id，修改记录-->

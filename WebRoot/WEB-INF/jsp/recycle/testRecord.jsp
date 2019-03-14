@@ -34,7 +34,7 @@
                         <h4>检测项目：${itemName}</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>检测报价：${checkItems.price }</h4>
+                        <h4>检测报价：${checkItems.price }元</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
@@ -56,7 +56,21 @@
                 </div><!-- /.row -->
             </td>
         </tr>
-    </table>
+
+
+    </table></br>
+    <div class="form-group">
+        <div class="am-u-sm-6 am-u-md-6 col-md-offset-4">
+            <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-sm m20">
+                    <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注
+                    </button>
+                    <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 创建订单
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- /am-g -->
 
