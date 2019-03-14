@@ -10,8 +10,10 @@ import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.aes.YouDaoUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.google.common.collect.Maps;
+import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.entity.ActivityLogin;
 import com.kuaixiu.activity.entity.ActivityUser;
+import com.kuaixiu.activity.service.ActivityCompanyService;
 import com.kuaixiu.activity.service.ActivityLoginService;
 import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.entity.*;
@@ -24,6 +26,7 @@ import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +72,8 @@ public class RecycleWechatController extends BaseController {
     private AddressService addressService;
     @Autowired
     private ActivityLoginService activityLoginService;
+    @Autowired
+    private ActivityCompanyService activityCompanyService;
 
     /**
      * 通过微信临时code获取openid和session_key
@@ -110,8 +115,17 @@ public class RecycleWechatController extends BaseController {
             if (StringUtils.isNotBlank(fromType) && Integer.valueOf(fromType) == 3) {
                 ActivityLogin login = new ActivityLogin();
                 String activityIdent = params.getString("iden");
-                if(StringUtils.isBlank(activityIdent)){
-                    return getResult(result,null,false,"2","iden不能为空");
+                if (StringUtils.isBlank(activityIdent)) {
+                    List<ActivityLogin> activityLogin = activityLoginService.getDao().queryByOpenId(openId);
+                    if (CollectionUtils.isEmpty(activityLogin)) {
+                        return getResult(result, null, false, "2", "请扫码打开活动");
+                    }
+                    ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityLogin.get(0).getActivityIdent());
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                    if (sdf.parse(activityCompany.getEndTime()).getTime()<sdf.parse(sdf.format(new Date())).getTime()) {
+                        return getResult(result, null, false, "2", "活动已过期");
+                    }
+                    activityIdent=activityCompany.getActivityIdentification();
                 }
                 //保存该用户
                 login.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -119,6 +133,7 @@ public class RecycleWechatController extends BaseController {
                 login.setActivityIdent(activityIdent);
                 login.setSessionKey(sessionKey);
                 activityLoginService.getDao().add(login);
+                jsonResult.put("iden", activityIdent);
             } else {
                 //保存该用户
                 RecycleWechat wechat = new RecycleWechat();
@@ -1370,10 +1385,10 @@ public class RecycleWechatController extends BaseController {
             String code = params.getString("code");
             if (!tip) {
                 if (StringUtils.isBlank(mobile) || StringUtils.isBlank(code)) {
-                    return getResult(result,null,false,"2","手机号或验证码为空");
+                    return getResult(result, null, false, "2", "手机号或验证码为空");
                 }
                 if (!checkRandomCode(request, mobile, code)) { // 验证手机号和验证码
-                    return getResult(result,null,false,"2","手机号或验证码输入错误");
+                    return getResult(result, null, false, "2", "手机号或验证码输入错误");
                 }
             }
             PrizeRecord r = new PrizeRecord();
@@ -1384,7 +1399,7 @@ public class RecycleWechatController extends BaseController {
             r.setIsGet(1);   //1表示中奖的记录  一个手机号只会有一条中奖记录
             List<PrizeRecord> list = prizeRecordService.queryList(r);
             if (list.isEmpty()) {
-                return getResult(result,null,false,"2","您当前没有中奖记录");
+                return getResult(result, null, false, "2", "您当前没有中奖记录");
             }
             for (PrizeRecord t : list) {
                 //活动的奖品信息  一个用户只会有一次中奖记录
@@ -1451,7 +1466,7 @@ public class RecycleWechatController extends BaseController {
             }
             List<PrizeRecord> list = prizeRecordService.queryList(r);
             if (list.isEmpty()) {
-                return getResult(result,null,false,"2","您当前没有中奖记录");
+                return getResult(result, null, false, "2", "您当前没有中奖记录");
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             for (PrizeRecord t : list) {
