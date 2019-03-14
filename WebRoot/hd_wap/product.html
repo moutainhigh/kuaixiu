@@ -170,8 +170,8 @@
            
             console.log(books)
             // $.post(linkUrl+"/recycleNew/getBrandList.do",function(data){
-                // $.post('https://m-super.com'+"/recycleNew/getBrandList.do",function(data){ 
-                     $.post('http://47.98.196.79'+"/recycleNew/getBrandList.do",function(data){
+                 $.post('https://m-super.com'+"/recycleNew/getBrandList.do",function(data){ 
+                 //$.post('http://47.98.196.79'+"/recycleNew/getBrandList.do",function(data){
                 if (data.success){
                     // console.log(data.result.datainfo)
                     var s = '',dataInfo = data.result.datainfo;
@@ -224,8 +224,8 @@
             //将品牌id储存
             // eCacheUtil.storage.cache(CacheKey.BrandId,bid); 
             // $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){ 
-                // $.post("https://m-super.com/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
-                     $.post("http://47.98.196.79/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){ 
+                 $.post("https://m-super.com/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
+                //$.post("http://47.98.196.79/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){ 
                 if (data.success){
                     var dataInfo = data.result.datainfo;
                     totalcount = data.result.totalcount;
