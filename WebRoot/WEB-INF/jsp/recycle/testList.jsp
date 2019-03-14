@@ -270,12 +270,6 @@
         myTable.ajax.reload(null, false);
     }
 
-    function agreedTime(id) {
-        $("#orderId").val(id);
-        $("#modal-insertView").modal("show");
-    }
-
-
     /**
      * 全选按钮
      */

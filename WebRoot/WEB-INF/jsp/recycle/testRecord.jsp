@@ -58,14 +58,15 @@
         </tr>
 
 
-    </table></br>
+    </table>
+    </br>
     <div class="form-group">
         <div class="am-u-sm-6 am-u-md-6 col-md-offset-4">
             <div class="am-btn-toolbar">
                 <div class="am-btn-group am-btn-group-sm m20">
-                    <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注
+                    <button onclick="addNote('${checkItems.id}');" class="am-btn am-btn-default search_btn" type="button"> 备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注
                     </button>
-                    <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 创建订单
+                    <button onclick="submitOrder();" class="am-btn am-btn-default search_btn" type="button"> 创建订单
                     </button>
                 </div>
             </div>
@@ -73,11 +74,25 @@
     </div>
 </div>
 <!-- /am-g -->
-
+<div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <%@ include file="testAddNote.jsp" %>
+</div>
+<div id="modal-submitOrder" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <%@ include file="testSubmitOrder.jsp" %>
+</div>
 
 <script type="text/javascript">
     function toList() {
         func_reload_page("${ctx}/newOrder/list.do");
     }
-
+    function addNote() {
+        $("#checkItemsId").val(id);
+        $("#modal-insertView").modal("show");
+    }
+    function submitOrder(id) {
+        $("#modal-submitOrder").html("");
+        $("#modal-submitOrder").load("${ctx}/shop/edit.do?id=" + id, function () {
+            func_after_model_load(this);
+        });
+    }
 </script>
