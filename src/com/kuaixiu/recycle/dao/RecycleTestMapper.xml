@@ -15,7 +15,7 @@
     
     <!-- kx_recycle_test_record table all fields -->
     <sql id="Base_Column_List" >
-        test_id,check_items_id,recycle_id,record_name,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
+        test_id,check_items_id,recycle_id,record_name,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->

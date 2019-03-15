@@ -13,9 +13,6 @@
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
             <tr>
-                <td class="search_th search_th_frist"><label class="control-label">&nbsp&nbsp&nbsp订 单 号 ：</label></td>
-                <td class="search_td"><input type="text" name="query_orderNo" class="form-control"></td>
-
                 <td class="search_th"><label class="control-label">创 建 时 间 ：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
@@ -34,7 +31,7 @@
             <tr>
                 <td class="search_th"><label class="control-label">品  牌 ：</label></td>
                 <td class="search_td">
-                    <select name="brandId" class="form-control-inline" onchange="brandChange(this.value);">
+                    <select name="brandId" class="form-control-inline" style="width: 420px;" onchange="brandChange(this.value);">
                         <option value="">--请选择--</option>
                         <c:forEach items="${brands}" var="item" varStatus="i">
                             <option value="${item.brandid }">${item.brandname}</option>
@@ -43,7 +40,7 @@
                 </td>
                 <td class="search_th"><label class="control-label">机  型 ：</label></td>
                 <td class="search_td">
-                    <select id="modelId" name="productId" class="form-control-inline">
+                    <select id="modelId" name="productId" style="width: 420px;" class="form-control-inline">
                         <option value="">--请选择--</option>
                     </select>
                 </td>
@@ -106,7 +103,7 @@
                 <th class="fontWeight_normal table-title">创建时间</th>
                 <th class="fontWeight_normal table-title">品牌</th>
                 <th class="fontWeight_normal table-title">机型</th>
-                <th class="fontWeight_normal table-title">检测项目</th>
+                <th class="fontWeight_normal tdwidth300">检测项目</th>
                 <th class="fontWeight_normal table-title">报价（元）</th>
                 <th class="fontWeight_normal table-title">检测手机号</th>
                 <th class="fontWeight_normal table-title">检测渠道</th>
@@ -235,7 +232,7 @@
                         func: [
                             {
                                 "name": "回访",
-                                "fn": "ReturnVisit(\'" + row.id + "\')",
+                                "fn": "ReturnVisit(\'" + row.id + "\',\'"+row.product_id+"\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -246,7 +243,7 @@
                         func: [
                             {
                                 "name": "查看",
-                                "fn": "showTestDetail(\'" + row.id + "\')",
+                                "fn": "showTestDetail(\'" + row.id + "\',\'"+row.product_id+"\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -309,12 +306,12 @@
     /**
      * 查看订单详情
      */
-    function showTestDetail(id) {
-        func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + id);
+    function showTestDetail(id,product) {
+        func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + id+"&product="+product);
     }
 
-    function ReturnVisit(id) {
-        func_reload_page("${ctx}/recycle/recycleTestRecord.do?id=" + id);
+    function ReturnVisit(id,product) {
+        func_reload_page("${ctx}/recycle/recycleTestRecord.do?id=" + id+"&product="+product);
     }
 
 </script>

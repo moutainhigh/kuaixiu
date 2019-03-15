@@ -12,7 +12,7 @@
                     <input type="hidden" id="checkItemsId" name="checkItemsId">
                     <label for="note" class="col-sm-3 control-label"><span style="color:red">*</span> 回访备注</label>
                     <div class="col-sm-9">
-                        <textarea id="note" name="note" placeholder="请写下回访备注！" maxlength="220"></textarea>
+                        <textarea name="note" id="note" cols="50" rows="10" placeholder="请写下回访备注"></textarea>
                     </div>
                 </div>
 
@@ -48,9 +48,12 @@
             success: function (result) {
                 if (result.success) {
                     //保存成功,关闭窗口，刷新列表
-                    refreshPage();
+                    //全部更新完后关闭弹窗
+                    func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + id);
+                    //重置表单数据
+                    document.getElementById("insertForm").reset();
                 } else {
-                    AlertText.tips("d_alert", "提示", result.msg);
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
                     return false;
                 }
                 //隐藏等待
@@ -58,6 +61,4 @@
             }
         });
     });
-    })
-    ;
 </script>

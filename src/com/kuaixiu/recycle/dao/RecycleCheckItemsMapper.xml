@@ -17,12 +17,13 @@
         <result column="model_id" jdbcType="VARCHAR" property="modelId"/>
         <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
         <result column="login_mobile" jdbcType="VARCHAR" property="loginMobile"/>
+        <result column="quote_id" jdbcType="VARCHAR" property="quoteId"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
     id, wechat_id, brand, wechat_model, recycle_model, product_id, items, in_time, last_price, 
-    price, update_time,brand_id,model_id,mobile,login_mobile
+    price, update_time,brand_id,model_id,mobile,login_mobile,quote_id
   </sql>
 
     <!-- 根据微信用户id查询记录 -->
@@ -45,7 +46,7 @@
         (
         id, wechat_id, brand,
         wechat_model, recycle_model, product_id,items,
-        in_time,last_price,brand_id,model_id,mobile,
+        in_time,last_price,brand_id,model_id,mobile,quote_id,
         <if test="loginMobile!=null and loginMobile!=''">
             login_mobile,
         </if>
@@ -55,7 +56,7 @@
         #{brand,jdbcType=VARCHAR},
         #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
         #{items,jdbcType=VARCHAR},now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},
-        #{modelId,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},
+        #{modelId,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{quoteId,jdbcType=VARCHAR},
         <if test="loginMobile!=null and loginMobile!=''">
             #{loginMobile,jdbcType=VARCHAR},
         </if>
@@ -75,6 +76,7 @@
             items = #{items,jdbcType=VARCHAR},
             last_price = #{lastPrice,jdbcType=DECIMAL},
             price = #{price,jdbcType=DECIMAL},
+            quote_id=#{quoteId,jdbcType=VARCHAR},
             <if test="loginMobile!=null and loginMobile!=''">
                 login_mobile=#{loginMobile,jdbcType=VARCHAR},
             </if>

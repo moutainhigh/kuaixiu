@@ -66,6 +66,8 @@ public class RecycleCheckItems extends BaseEntity{
 	 * 回收产品id
 	 */
     private String modelId;
+    //回收询价流水编号
+    private String quoteId;
 
 	/**
 	 * 登录手机号
@@ -75,6 +77,14 @@ public class RecycleCheckItems extends BaseEntity{
 	private String isOrder;
 	//是否回访    传参
 	private String isVisit;
+
+	public String getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(String quoteId) {
+		this.quoteId = quoteId;
+	}
 
 	public String getIsOrder() {
 		return isOrder;

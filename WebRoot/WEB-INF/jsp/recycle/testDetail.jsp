@@ -25,7 +25,18 @@
                         <h4>创建时间：<fmt:formatDate value="${checkItems.inTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>检测型号：${checkItems.recycleModel }</h4>
+                        <%--<h4>检测型号：${checkItems.recycleModel }</h4>--%>
+                            <h4>检测型号：
+                                <c:if test="${checkItems.brand==null&&checkItems.recycleModel!=null}">
+                                    ${checkItems.recycleModel }
+                                </c:if>
+                                <c:if test="${checkItems.brand!=null&&checkItems.recycleModel!=null}">
+                                    ${checkItems.brand }
+                                </c:if>
+                                <c:if test="${checkItems.brand!=null&&checkItems.recycleModel!=null}">
+                                    ${checkItems.brand }/ ${checkItems.recycleModel }
+                                </c:if>
+                            </h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
@@ -44,6 +55,12 @@
                         <h4>监测渠道：集团欢GO抽奖</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>手机号：${checkItems.loginMobile }</h4>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>成单：
                             <c:if test="${recycleTest!=null}">
                                 <c:if test="${recycleTest.recycleId!=null}">
@@ -55,9 +72,6 @@
                             </c:if>
                         </h4>
                     </div><!-- /.col -->
-                </div><!-- /.row -->
-
-                <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>是否回访：
                             <c:if test="${recycleTest!=null}">
@@ -68,6 +82,9 @@
                             </c:if>
                         </h4>
                     </div><!-- /.col -->
+
+                </div><!-- /.row -->
+                <div class="row">
                     <c:if test="${recycleOrderNo!=null}">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <h4>回收订单号：<a href="javascript:void(0);" onclick="showOrderDetail('${recycleOrderId}')">${recycleOrderNo}</a></h4>

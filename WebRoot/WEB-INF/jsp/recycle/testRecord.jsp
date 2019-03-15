@@ -25,7 +25,17 @@
                         <h4>创建时间：<fmt:formatDate value="${checkItems.inTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>检测型号：${checkItems.recycleModel }</h4>
+                        <h4>检测型号：
+                        <c:if test="${checkItems.brand==null&&checkItems.recycleModel!=null}">
+                            ${checkItems.recycleModel }
+                        </c:if>
+                            <c:if test="${checkItems.brand!=null&&checkItems.recycleModel!=null}">
+                                ${checkItems.brand }
+                            </c:if>
+                            <c:if test="${checkItems.brand!=null&&checkItems.recycleModel!=null}">
+                                ${checkItems.brand }/ ${checkItems.recycleModel }
+                            </c:if>
+                        </h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
@@ -44,6 +54,11 @@
                         <h4>监测渠道：集团欢GO抽奖</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>手机号：${checkItems.loginMobile }</h4>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>是否回访：
                             <c:if test="${recycleTest!=null}">
                                 是
@@ -56,15 +71,15 @@
                 </div><!-- /.row -->
             </td>
         </tr>
-
-
+        <input type="hidden" id="checkId" value="${checkItems.id}"/>
+        <input type="hidden" id="itemName" value="${itemName}"/>
     </table>
     </br>
     <div class="form-group">
         <div class="am-u-sm-6 am-u-md-6 col-md-offset-4">
             <div class="am-btn-toolbar">
                 <div class="am-btn-group am-btn-group-sm m20">
-                    <button onclick="addNote('${checkItems.id}');" class="am-btn am-btn-default search_btn" type="button"> 备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注
+                    <button onclick="addNotes();" class="am-btn am-btn-default search_btn" type="button"> 备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注
                     </button>
                     <button onclick="submitOrder();" class="am-btn am-btn-default search_btn" type="button"> 创建订单
                     </button>
@@ -85,13 +100,15 @@
     function toList() {
         func_reload_page("${ctx}/newOrder/list.do");
     }
-    function addNote() {
+    function addNotes() {
+        var id = $("#checkId").val();
         $("#checkItemsId").val(id);
         $("#modal-insertView").modal("show");
     }
-    function submitOrder(id) {
+    function submitOrder() {
+        var id = $("#checkId").val();
         $("#modal-submitOrder").html("");
-        $("#modal-submitOrder").load("${ctx}/shop/edit.do?id=" + id, function () {
+        $("#modal-submitOrder").load("${ctx}/recycle/goTestSubmit.do?id=" + id, function () {
             func_after_model_load(this);
         });
     }
