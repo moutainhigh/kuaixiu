@@ -429,6 +429,46 @@ public class RecycleTestController extends BaseController {
                 checkItems.setRecycleModel(checkItems.getBrand() + "/" + checkItems.getRecycleModel());
             }
 
+            JSONObject requestNews2 = new JSONObject();
+            //调用接口需要加密的数据
+            JSONObject code2 = new JSONObject();
+            code2.put("pageindex", 1);
+            code2.put("pagesize", 500);
+            code2.put("categoryid", 1);
+            code2.put("brandid", checkItems.getBrandId());
+            code2.put("keyword", checkItems.getBrand());
+            String realCode2 = AES.Encrypt(code2.toString());  //加密
+            requestNews2.put(cipherdata, realCode2);
+            //发起请求
+            url = baseNewUrl + "getmodellist";
+            String getResult2 = AES.post(url, requestNews2);
+            //对得到结果进行解密
+            JSONObject jsonResult2 = getResult(AES.Decrypt(getResult2));
+            //将结果中的产品id转为string类型  json解析 long类型精度会丢失
+            //防止返回机型信息为空
+            if (StringUtil.isNotBlank(jsonResult2.getString("datainfo")) && !(jsonResult2.getJSONArray("datainfo")).isEmpty()) {
+                JSONArray jq = jsonResult2.getJSONArray("datainfo");
+                JSONObject jqs = (JSONObject) jq.get(0);
+                JSONArray j = jqs.getJSONArray("sublist");
+                for (int i = 0; i < j.size(); i++) {
+                    JSONObject js = j.getJSONObject(i);
+                    if(productId1.equals(js.getString("productid"))){
+                        String imgaePath = js.getString("modellogo");
+                        if (StringUtil.isBlank(imgaePath)) {
+                            String realUrl = request.getRequestURL().toString();
+                            String domain = realUrl.replace(request.getRequestURI(), "");
+                            String path = domain + "/" + SystemConstant.DEFAULTIMAGE;
+                            imgaePath = path;
+                        }
+                        request.setAttribute("imagePath", imgaePath);
+                        break;
+                    }
+                    //如果该机型的图片地址为空 则使用默认图片地址
+
+                }
+
+            }
+
             request.setAttribute("itemName", sb.toString());
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("checkItems", checkItems);
