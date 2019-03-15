@@ -5,7 +5,7 @@
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">回收订单管理</a></strong>
         /
-        <small>订单详情</small>
+        <small>回收检测详情</small>
         <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_to_back();">返回</a></strong>
     </div>
 </div>
@@ -98,7 +98,7 @@
 
 <script type="text/javascript">
     function toList() {
-        func_reload_page("${ctx}/newOrder/list.do");
+        func_reload_page("${ctx}/recycle/testList.do");
     }
     function addNotes() {
         var id = $("#checkId").val();
