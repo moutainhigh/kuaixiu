@@ -194,18 +194,23 @@ public class RecycleTestController extends BaseController {
             JSONObject jsonResult = new JSONObject();
             String productId1 = map.get("product_id").toString();
             String items = map.get("items").toString();
-            List<String> list = Arrays.asList(items.split("\\|"));
             List<Map<String, String>> lists = new ArrayList<>();
             List<String> list1 = new ArrayList();
-            for (int q = 0; q < list.size(); q++) {
-                String[] a = list.get(q).split(",");
-                Map<String, String> maps = new HashMap<>();
-                if ("".equals(a[0])) {
-                    list1.add(a[1]);
-                } else {
-                    maps.put(a[0], a[1]);
-                    lists.add(maps);
+            List<String> lists2 = new ArrayList<>();
+            if(items.contains("|")){
+                List<String> list = Arrays.asList(items.split("\\|"));
+                for (int q = 0; q < list.size(); q++) {
+                    String[] a = list.get(q).split(",");
+                    Map<String, String> maps = new HashMap<>();
+                    if ("".equals(a[0])) {
+                        list1.add(a[1]);
+                    } else {
+                        maps.put(a[0], a[1]);
+                        lists.add(maps);
+                    }
                 }
+            }else{
+                lists2 = Arrays.asList(items.split(","));
             }
             JSONObject requestNews = new JSONObject();
             //调用接口需要加密的数据
@@ -222,36 +227,65 @@ public class RecycleTestController extends BaseController {
             StringBuilder sb = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             for (int i = 0; i < questions.size(); i++) {
-                if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
-                    JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                    for (int j = 0; j < answers.size(); j++) {
-                        for (String str : list1) {
-                            if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                sb2.append(" 、 ");
+                if(items.contains("|")) {
+                    if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
+                        JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
+                        for (int j = 0; j < answers.size(); j++) {
+                            for (String str : list1) {
+                                if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                    sb2.append(((JSONObject) answers.get(j)).getString("name"));
+                                    sb2.append(" 、 ");
+                                }
+                            }
+
+                        }
+                    }else {
+                        for (Map<String, String> map1 : lists) {
+                            Set<String> set = map1.keySet();
+                            for (String key : set) {
+                                if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
+                                    JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
+                                    for (int j = 0; j < answers.size(); j++) {
+                                        if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                            sb.append(((JSONObject) answers.get(j)).getString("name"));
+                                            sb.append(" 、 ");
+                                        }
+                                    }
+                                }
                             }
                         }
-
                     }
-                }
-                for (Map<String, String> map1 : lists) {
-                    Set<String> set = map1.keySet();
-                    for (String key : set) {
-                        if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
+                }else{
+                    int sum=questions.size();
+                    if(i<sum-1){
                             JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
                             for (int j = 0; j < answers.size(); j++) {
-                                if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                if (lists2.get(i).equals(((JSONObject) answers.get(j)).getString("id"))) {
                                     sb.append(((JSONObject) answers.get(j)).getString("name"));
                                     sb.append(" 、 ");
                                 }
+                            }
+                    }else{
+                        for(int a=lists2.size();a>sum-2;a--){
+                            JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
+                            for (int j = 0; j < answers.size(); j++) {
+                                    if (lists2.get(a-1).equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                        sb2.append(((JSONObject) answers.get(j)).getString("name"));
+                                        sb2.append(" 、 ");
+                                    }
                             }
                         }
                     }
                 }
             }
             sb.append(sb2.toString());
-            sb.deleteCharAt(sb.length() - 1);
-            map.put("product_id", sb.toString());
+            if(sb.length()>1){
+                sb.deleteCharAt(sb.length() - 1);
+                map.put("product_id", sb.toString());
+            }else{
+                map.put("product_id", "");
+            }
+
         }
         page.setData(checkItems);
         this.renderJson(response, page);
@@ -359,18 +393,23 @@ public class RecycleTestController extends BaseController {
             String url = baseNewUrl + "getchecklist";
             String productId1 = checkItems.getProductId();
             String items = checkItems.getItems();
-            List<String> list = Arrays.asList(items.split("\\|"));
             List<Map<String, String>> lists = new ArrayList<>();
             List<String> list1 = new ArrayList();
-            for (int q = 0; q < list.size(); q++) {
-                String[] a = list.get(q).split(",");
-                Map<String, String> maps = new HashMap<>();
-                if ("".equals(a[0])) {
-                    list1.add(a[1]);
-                } else {
-                    maps.put(a[0], a[1]);
-                    lists.add(maps);
+            List<String> lists2 = new ArrayList<>();
+            if(items.contains("|")){
+                List<String> list = Arrays.asList(items.split("\\|"));
+                for (int q = 0; q < list.size(); q++) {
+                    String[] a = list.get(q).split(",");
+                    Map<String, String> maps = new HashMap<>();
+                    if ("".equals(a[0])) {
+                        list1.add(a[1]);
+                    } else {
+                        maps.put(a[0], a[1]);
+                        lists.add(maps);
+                    }
                 }
+            }else{
+                lists2 = Arrays.asList(items.split(","));
             }
             JSONObject requestNews = new JSONObject();
             //调用接口需要加密的数据
@@ -387,27 +426,51 @@ public class RecycleTestController extends BaseController {
             StringBuilder sb = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             for (int i = 0; i < questions.size(); i++) {
-                if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
-                    JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                    for (int j = 0; j < answers.size(); j++) {
-                        for (String str : list1) {
-                            if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                sb2.append(" 、 ");
+                if(items.contains("|")) {
+                    if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
+                        JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
+                        for (int j = 0; j < answers.size(); j++) {
+                            for (String str : list1) {
+                                if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                    sb2.append(((JSONObject) answers.get(j)).getString("name"));
+                                    sb2.append(" 、 ");
+                                }
+                            }
+
+                        }
+                    }else {
+                        for (Map<String, String> map1 : lists) {
+                            Set<String> set = map1.keySet();
+                            for (String key : set) {
+                                if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
+                                    JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
+                                    for (int j = 0; j < answers.size(); j++) {
+                                        if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                            sb.append(((JSONObject) answers.get(j)).getString("name"));
+                                            sb.append(" 、 ");
+                                        }
+                                    }
+                                }
                             }
                         }
-
                     }
-                }
-                for (Map<String, String> map1 : lists) {
-                    Set<String> set = map1.keySet();
-                    for (String key : set) {
-                        if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
+                }else{
+                    int sum=questions.size();
+                    if(i<sum-1){
+                        JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
+                        for (int j = 0; j < answers.size(); j++) {
+                            if (lists2.get(i).equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                sb.append(((JSONObject) answers.get(j)).getString("name"));
+                                sb.append(" 、 ");
+                            }
+                        }
+                    }else{
+                        for(int a=lists2.size();a>sum-2;a--){
                             JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
                             for (int j = 0; j < answers.size(); j++) {
-                                if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                    sb.append(((JSONObject) answers.get(j)).getString("name"));
-                                    sb.append(" 、 ");
+                                if (lists2.get(a-1).equals(((JSONObject) answers.get(j)).getString("id"))) {
+                                    sb2.append(((JSONObject) answers.get(j)).getString("name"));
+                                    sb2.append(" 、 ");
                                 }
                             }
                         }

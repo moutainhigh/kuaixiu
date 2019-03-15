@@ -99,9 +99,10 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-2">
-                        <div class="am-datepicker-date">
-                            <input type="text" id="takeTime" name="takeTime"
-                                   class="form-control am-datepicker-start" data-am-datepicker readonly>
+                        <div class="takeTime">
+                            <%--<input type="text" id="takeTime" name="takeTime"--%>
+                                   <%--class="form-control am-datepicker-start" data-am-datepicker readonly>--%>
+                            <input type="text" id="takeTime" name="takeTime" class="form-control" placeholder="请选择预约时间">
                         </div>
                     </div>
                 </div>
@@ -149,7 +150,7 @@
 
 <script type="text/javascript">
     $("#takeTime").datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "yyyy-mm-dd HH:ii",
         language: "zh-CN",
         autoclose: true,//选中关闭
 //        minView: "month"//设置只显示到月份
