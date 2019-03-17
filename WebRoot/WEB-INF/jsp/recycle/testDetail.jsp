@@ -128,7 +128,7 @@
 
 <script type="text/javascript">
     function toList() {
-        func_reload_page("${ctx}/recycle/testList.do");
+        func_reload_page("${ctx}/recycle/recycleTestList.do");
     }
 
     /**

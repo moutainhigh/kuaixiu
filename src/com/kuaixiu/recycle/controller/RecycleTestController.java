@@ -189,7 +189,7 @@ public class RecycleTestController extends BaseController {
         }
         checkItem.setPage(page);
         List<Map> checkItems = checkItemsService.getDao().queryTestListForPage(checkItem);
-        String url = baseNewUrl + "getchecklist";
+        String url = "";
         for (Map map : checkItems) {
             JSONObject jsonResult = new JSONObject();
             String productId1 = map.get("product_id").toString();
@@ -198,6 +198,7 @@ public class RecycleTestController extends BaseController {
             List<String> list1 = new ArrayList();
             List<String> lists2 = new ArrayList<>();
             if(items.contains("|")){
+                url = baseUrl + "getchecklist";
                 List<String> list = Arrays.asList(items.split("\\|"));
                 for (int q = 0; q < list.size(); q++) {
                     String[] a = list.get(q).split(",");
@@ -210,6 +211,7 @@ public class RecycleTestController extends BaseController {
                     }
                 }
             }else{
+                url = baseNewUrl + "getchecklist";
                 lists2 = Arrays.asList(items.split(","));
             }
             JSONObject requestNews = new JSONObject();
@@ -397,6 +399,7 @@ public class RecycleTestController extends BaseController {
             List<String> list1 = new ArrayList();
             List<String> lists2 = new ArrayList<>();
             if(items.contains("|")){
+                url = baseUrl + "getchecklist";
                 List<String> list = Arrays.asList(items.split("\\|"));
                 for (int q = 0; q < list.size(); q++) {
                     String[] a = list.get(q).split(",");
@@ -409,6 +412,7 @@ public class RecycleTestController extends BaseController {
                     }
                 }
             }else{
+                url = baseNewUrl + "getchecklist";
                 lists2 = Arrays.asList(items.split(","));
             }
             JSONObject requestNews = new JSONObject();
@@ -688,7 +692,12 @@ public class RecycleTestController extends BaseController {
                 order.setSourceType(1);        //订单来源  默认微信公众号来源
             }
             //通过quoteid获取机型信息
-            JSONObject postNews = postNews(quoteid);
+            JSONObject postNews = new JSONObject();
+            if(checkItems.getItems().contains("|")){
+                postNews = post(quoteid);
+            }else {
+                postNews = postNews(quoteid);
+            }
             order.setProductName(postNews.getString("modelname"));
             order.setPrice(new BigDecimal(postNews.getString("price")));
             //判断该订单是否来源于微信小程序
@@ -843,7 +852,24 @@ public class RecycleTestController extends BaseController {
         }
         return mailNo;
     }
-
+    /**
+     * 通过quoteid查询 订单信息
+     */
+    public JSONObject post(String quoteId) throws Exception {
+        JSONObject requestNews = new JSONObject();
+        //调用接口需要加密的数据
+        String url = baseUrl + "getquotedetail";
+        JSONObject code = new JSONObject();
+        code.put("quoteid", quoteId);
+        String realCode = AES.Encrypt(code.toString());  //加密
+        requestNews.put(cipherdata, realCode);
+        //发起请求
+        String getResult = AES.post(url, requestNews);
+        //对得到结果进行解密
+        JSONObject jsonResult = getResult(AES.Decrypt(getResult));
+        JSONObject j = (JSONObject) jsonResult.get("datainfo");
+        return j;
+    }
     /**
      * 通过quoteid查询 订单信息
      */
