@@ -176,7 +176,7 @@
         {"data": "createTime", "class": ""},
         {"data": "brand", "class": ""},
         {"data": "model", "class": ""},
-        {"data": "product_id", "class": ""},
+        {"data": "product_name", "class": ""},
         {"data": "price", "class": ""},
         {"data": "login_mobile", "class": ""},
         {"data": "login_mobile", "class": ""},
@@ -232,7 +232,7 @@
                         func: [
                             {
                                 "name": "回访",
-                                "fn": "ReturnVisit(\'" + row.id + "\',\'"+row.product_id+"\')",
+                                "fn": "ReturnVisit(\'" + row.id + "\',\'"+row.product_name+"\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -243,7 +243,7 @@
                         func: [
                             {
                                 "name": "查看",
-                                "fn": "showTestDetail(\'" + row.id + "\',\'"+row.product_id+"\')",
+                                "fn": "showTestDetail(\'" + row.id + "\',\'"+row.product_name+"\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }

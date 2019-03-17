@@ -254,8 +254,9 @@
                         $("#submitMissBtn").click();
                         //重置表单数据
                         document.getElementById("submitInsertForm").reset();
-                        var submitCheckId = $("#submitCheckId").val();
-                        func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + submitCheckId);
+                        var submitCheckId = $("#submitCheckId").val();itemName
+                        var itemName = $("#itemName").val();
+                        func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + submitCheckId+"&product="+itemName);
                     } else {
                         //保存失败
                         alert(data.resultMessage);

@@ -3,10 +3,10 @@
 <link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">回收订单管理</a></strong>
+        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="backList();">回收订单管理</a></strong>
         /
         <small>回收检测详情</small>
-        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="toList();">返回</a></strong>
+        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="backList();">返回</a></strong>
     </div>
 </div>
 
@@ -97,7 +97,7 @@
 </div>
 
 <script type="text/javascript">
-    function toList() {
+    function backList() {
         func_reload_page("${ctx}/recycle/recycleTestList.do");
     }
     function addNotes() {
