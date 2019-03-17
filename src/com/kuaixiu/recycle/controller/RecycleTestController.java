@@ -499,7 +499,7 @@ public class RecycleTestController extends BaseController {
             code2.put("pagesize", 500);
             code2.put("categoryid", 1);
             code2.put("brandid", checkItems.getBrandId());
-            code2.put("keyword", checkItems.getBrand());
+            code2.put("keyword", null);
             String realCode2 = AES.Encrypt(code2.toString());  //加密
             requestNews2.put(cipherdata, realCode2);
             //发起请求
@@ -527,9 +527,7 @@ public class RecycleTestController extends BaseController {
                         break;
                     }
                     //如果该机型的图片地址为空 则使用默认图片地址
-
                 }
-
             }
 
             request.setAttribute("itemName", sb.toString());
@@ -576,11 +574,39 @@ public class RecycleTestController extends BaseController {
             RecycleOrder order = new RecycleOrder();
             if (StringUtil.isBlank(checkItemsId) || StringUtil.isBlank(name) || StringUtil.isBlank(mobile) ||
                     StringUtil.isBlank(province) || StringUtil.isBlank(city) || StringUtil.isBlank(area) ||
-                    StringUtil.isBlank(address) || StringUtil.isBlank(recycleType) || StringUtil.isBlank(payMobile)) {
+                    StringUtil.isBlank(address) || StringUtil.isBlank(recycleType)|| StringUtil.isBlank(payMobile)) {
                 return getResult(result, null, false, "2", "请填写完整信息");
             }
             RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(checkItemsId);
             String quoteid = checkItems.getQuoteId();
+            if(StringUtils.isBlank(quoteid)){
+                JSONObject requestNews = new JSONObject();
+                JSONObject quoteidjsonResult = new JSONObject();
+                String quoteidurl = "";
+                //调用接口需要加密的数据
+                JSONObject code = new JSONObject();
+                code.put("productid", checkItems.getProductId());
+                String items=checkItems.getItems();
+                if(items.contains("|")){
+                    quoteidurl = baseUrl + "getprice";
+                }else{
+                    quoteidurl = baseNewUrl + "getprice";
+                }
+                code.put("items", items);
+                String realCode = AES.Encrypt(code.toString());  //加密
+                requestNews.put(cipherdata, realCode);
+                //发起请求
+                String getResult = AES.post(quoteidurl, requestNews);
+                //对得到结果进行解密
+                quoteidjsonResult = getResult(AES.Decrypt(getResult));
+                //将quoteid转为string
+                if (StringUtil.isNotBlank(quoteidjsonResult.getString("datainfo"))) {
+                    JSONObject j = (JSONObject) quoteidjsonResult.get("datainfo");
+                    quoteid=j.getString("quoteid");
+                    checkItems.setQuoteId(quoteid);
+                    checkItemsService.saveUpdate(checkItems);
+                }
+            }
             String openId = checkItems.getWechatId();
             //对重要信息作详细判断
             if (Integer.valueOf(recycleType) == 2) {
@@ -781,11 +807,11 @@ public class RecycleTestController extends BaseController {
         } catch (SystemException e) {
             e.printStackTrace();
             log.error(e.getMessage());
-            getResult(result, null, false, "2", e.getMessage());
+            getResult(result, null, false, "2", "系统异常");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
-            getResult(result, null, false, "2", e.getMessage());
+            getResult(result, null, false, "2", "系统异常");
         }
         return result;
     }
@@ -798,7 +824,7 @@ public class RecycleTestController extends BaseController {
      */
     public String postSfOrder(RecycleOrder order) throws Exception {
         String mailNo = null;
-        String sfUrl = baseUrl + "pushsforder";
+        String sfUrl = baseNewUrl + "pushsforder";
         JSONObject requestNews = new JSONObject();
         JSONObject code = new JSONObject();
         code.put("orderid", order.getOrderNo());
@@ -824,7 +850,7 @@ public class RecycleTestController extends BaseController {
     public JSONObject postNews(String quoteId) throws Exception {
         JSONObject requestNews = new JSONObject();
         //调用接口需要加密的数据
-        String url = baseUrl + "getquotedetail";
+        String url = baseNewUrl + "getquotedetail";
         JSONObject code = new JSONObject();
         code.put("quoteid", quoteId);
         String realCode = AES.Encrypt(code.toString());  //加密

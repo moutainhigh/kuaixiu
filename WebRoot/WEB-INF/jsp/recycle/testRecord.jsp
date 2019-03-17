@@ -6,7 +6,7 @@
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">回收订单管理</a></strong>
         /
         <small>回收检测详情</small>
-        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_to_back();">返回</a></strong>
+        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="toList();">返回</a></strong>
     </div>
 </div>
 

@@ -91,13 +91,13 @@
                     <label for="mailType" class="col-sm-2 control-label"><span style="color:red"></span>快递方式：</label>
                     <div class="col-sm-9">
                         <div class="oldToNew">
-                            <input name="mailType" type="radio" value="1"/>顺丰上门回收
+                            <input name="mailType" id="mailType1" type="radio" value="1"/>顺丰上门回收
                             &nbsp&nbsp&nbsp&nbsp
-                            <input name="mailType" type="radio" value="2"/>自行邮寄
+                            <input name="mailType" id="mailType2" type="radio" value="2"/>自行邮寄
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="pushTime">
                     <div class="col-sm-9 col-sm-offset-2">
                         <div class="takeTime">
                             <%--<input type="text" id="takeTime" name="takeTime"--%>
@@ -110,9 +110,9 @@
                     <label for="payType" class="col-sm-2 control-label">回收方式：</label>
                     <div class="col-sm-9">
                         <div class="payType">
-                            <input name="payType" type="radio" value="2"/>话费充值
+                            <input name="payType" id="payType1" type="radio" value="2"/>话费充值
                             &nbsp&nbsp&nbsp&nbsp
-                            <input name="payType" type="radio" value="1"/>支付宝付款
+                            <input name="payType" id="payType2" type="radio" value="1"/>支付宝付款
                         </div>
                     </div>
                 </div>
@@ -154,6 +154,25 @@
         language: "zh-CN",
         autoclose: true,//选中关闭
 //        minView: "month"//设置只显示到月份
+    });
+    $("#mailType1").attr("checked","checked");
+    $("#payType1").attr("checked","checked");
+    $("input[name='mailType']").change(function () {
+        if($("#mailType1").is(":checked")) {
+            $("#pushTime").show();
+        }
+        if($("#mailType2").is(":checked")){
+            $("#pushTime").hide();
+        }
+    });
+    $("input[name='payType']").change(function () {
+        var payType=$("input[name='payType']").val();
+        if($("#payType2").is(":checked")) {
+            $("#payMobile").attr('placeholder',"请输入支付宝账号");
+        }
+        if($("#payType1").is(":checked")) {
+            $("#payMobile").attr('placeholder',"请输入手机充值号码");
+        }
     });
     //表单验证
     $(document).ready(function () {
