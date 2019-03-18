@@ -307,6 +307,7 @@ public class RecycleNewController extends BaseController {
                         RecycleCheckItems checkItems = list.get(0);
                         checkItems.setItems(items);
                         checkItems.setLastPrice(checkItems.getPrice());
+                        checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 
@@ -331,6 +332,7 @@ public class RecycleNewController extends BaseController {
                         t.setBrand(selectBrandName);
                         t.setBrandId(selectBrandId);
                         t.setRecycleModel(selectModelName);
+                        t.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.add(t);
                     } else {
                         RecycleCheckItems checkItems = recycleCheckItems.get(0);
@@ -342,6 +344,7 @@ public class RecycleNewController extends BaseController {
                         checkItems.setBrand(selectBrandName);
                         checkItems.setBrandId(selectBrandId);
                         checkItems.setRecycleModel(selectModelName);
+                        checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 

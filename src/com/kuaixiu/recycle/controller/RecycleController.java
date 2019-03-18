@@ -353,6 +353,7 @@ public class RecycleController extends BaseController {
                         RecycleCheckItems checkItems = list.get(0);
                         checkItems.setItems(items);
                         checkItems.setLastPrice(checkItems.getPrice());
+                        checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 
@@ -377,6 +378,7 @@ public class RecycleController extends BaseController {
                         t.setBrand(selectBrandName);
                         t.setBrandId(selectBrandId);
                         t.setRecycleModel(selectModelName);
+                        t.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.add(t);
                     } else {
                         RecycleCheckItems checkItems = recycleCheckItems.get(0);
@@ -388,6 +390,7 @@ public class RecycleController extends BaseController {
                         checkItems.setBrand(selectBrandName);
                         checkItems.setBrandId(selectBrandId);
                         checkItems.setRecycleModel(selectModelName);
+                        checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 
@@ -730,10 +733,10 @@ public class RecycleController extends BaseController {
             Address provinceName = addressService.queryByAreaId(province);
             Address cityName = addressService.queryByAreaId(city);
             Address areaName = addressService.queryByAreaId(area);
-            if (provinceName == null || cityName == null || areaName == null) {
-                throw new SystemException("请确认地址信息是否无误");
-            }
-            String areaname = getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
+//            if (provinceName == null || cityName == null || areaName == null) {
+//                throw new SystemException("请确认地址信息是否无误");
+//            }
+            String areaname = "";//getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
 
 
             //先保存订单到超人平台再调用回收平台下单接口  返回成功则更新订单状态
