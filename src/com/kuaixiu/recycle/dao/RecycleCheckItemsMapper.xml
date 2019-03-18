@@ -163,6 +163,7 @@
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
         where 1=1
         and c.login_mobile is not null
+        and CHAR_LENGTH(c.product_id) &lt;= 10
         <if test="brandId != null and brandId != ''">
             and brand_id =#{brandId}
         </if>
