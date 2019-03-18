@@ -38,7 +38,7 @@ public class RecycleTestService extends BaseService<RecycleTest> {
     //**********自定义方法***********
     private static final String baseNewUrl = SystemConstant.RECYCLE_NEW_URL;
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
-
+    private static final String baseUrl = SystemConstant.RECYCLE_URL;
     public Map getBrandAndModel(String brandId,String productId)throws Exception{
         Map map=new HashMap();
         JSONObject requestNews2 = new JSONObject();
@@ -181,7 +181,7 @@ public class RecycleTestService extends BaseService<RecycleTest> {
         JSONObject code2 = new JSONObject();
         code2.put("pageindex", 1);
         code2.put("pagesize", 500);
-        code2.put("categoryid", 1);
+        code2.put("categoryid", null);
         code2.put("brandid", brandId);
         code2.put("keyword", null);
         String realCode2 = AES.Encrypt(code2.toString());  //加密

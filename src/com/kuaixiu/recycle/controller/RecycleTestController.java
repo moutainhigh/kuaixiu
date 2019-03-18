@@ -191,10 +191,16 @@ public class RecycleTestController extends BaseController {
         List<Map> checkItems = checkItemsService.getDao().queryTestListForPage(checkItem);
         for (Map map : checkItems) {
             String productId1 = map.get("product_id").toString();
-            String brandId1 = map.get("brand_id").toString();
-            Map brandAndModel = recycleTestService.getBrandAndModel(brandId1, productId1);
-            map.put("brand", brandAndModel.get("brandname"));
-            map.put("model", brandAndModel.get("modelname"));
+            String brandId1 = null;
+            if (map.get("brand_id") != null) {
+                brandId1 = map.get("brand_id").toString();
+                Map brandAndModel = recycleTestService.getBrandAndModel(brandId1, productId1);
+                map.put("brand", brandAndModel.get("brandname"));
+                map.put("model", brandAndModel.get("modelname"));
+            } else {
+                map.put("brand", "");
+                map.put("model", "");
+            }
             String items = map.get("items").toString();
             Map productName = recycleTestService.getProductName(items, productId1);
             map.put("product_name", productName.get("product_name"));
