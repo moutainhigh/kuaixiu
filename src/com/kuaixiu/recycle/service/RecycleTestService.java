@@ -46,7 +46,7 @@ public class RecycleTestService extends BaseService<RecycleTest> {
         JSONObject code2 = new JSONObject();
         code2.put("pageindex", 1);
         code2.put("pagesize", 500);
-        code2.put("categoryid", 1);
+        code2.put("categoryid", null);
         code2.put("brandid", brandId);
         code2.put("keyword", null);
         String realCode2 = AES.Encrypt(code2.toString());  //加密
@@ -108,7 +108,8 @@ public class RecycleTestService extends BaseService<RecycleTest> {
         //对得到结果进行解密
         jsonResult = (JSONObject) JSONObject.parse(AES.Decrypt(getResult));
         if (StringUtil.isBlank(jsonResult.getString("datainfo"))) {
-            return null;
+            map.put("product_name", "");
+            return map;
         }
         JSONObject jsonObject = jsonResult.getJSONObject("datainfo");
         JSONArray questions = jsonObject.getJSONArray("questions");
