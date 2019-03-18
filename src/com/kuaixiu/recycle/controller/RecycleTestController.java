@@ -189,110 +189,20 @@ public class RecycleTestController extends BaseController {
         }
         checkItem.setPage(page);
         List<Map> checkItems = checkItemsService.getDao().queryTestListForPage(checkItem);
-        String url = baseNewUrl + "getchecklist";
         for (Map map : checkItems) {
-            JSONObject jsonResult = new JSONObject();
             String productId1 = map.get("product_id").toString();
+            String brandId1 = map.get("brand_id").toString();
+            Map brandAndModel = recycleTestService.getBrandAndModel(brandId1, productId1);
+            map.put("brand", brandAndModel.get("brandname"));
+            map.put("model", brandAndModel.get("modelname"));
             String items = map.get("items").toString();
-            List<Map<String, String>> lists = new ArrayList<>();
-            List<String> list1 = new ArrayList();
-            List<String> lists2 = new ArrayList<>();
-            if(items.contains("|")){
-                List<String> list = Arrays.asList(items.split("\\|"));
-                for (int q = 0; q < list.size(); q++) {
-                    String[] a = list.get(q).split(",");
-                    Map<String, String> maps = new HashMap<>();
-                    if ("".equals(a[0])) {
-                        list1.add(a[1]);
-                    } else {
-                        maps.put(a[0], a[1]);
-                        lists.add(maps);
-                    }
-                }
-            }else{
-                lists2 = Arrays.asList(items.split(","));
-            }
-            JSONObject requestNews = new JSONObject();
-            //调用接口需要加密的数据
-            JSONObject code = new JSONObject();
-            code.put("productid", productId1);
-            String realCode = AES.Encrypt(code.toString());  //加密
-            requestNews.put(cipherdata, realCode);
-            //发起请求
-            String getResult = AES.post(url, requestNews);
-            //对得到结果进行解密
-            jsonResult = (JSONObject) JSONObject.parse(AES.Decrypt(getResult));
-            if (StringUtil.isBlank(jsonResult.getString("datainfo"))) {
-                continue;
-            }
-            JSONObject jsonObject = jsonResult.getJSONObject("datainfo");
-            JSONArray questions = jsonObject.getJSONArray("questions");
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sb2 = new StringBuilder();
-            for (int i = 0; i < questions.size(); i++) {
-                if(items.contains("|")) {
-                    if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
-                        JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                        for (int j = 0; j < answers.size(); j++) {
-                            for (String str : list1) {
-                                if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                    sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                    sb2.append(" 、 ");
-                                }
-                            }
-
-                        }
-                    }else {
-                        for (Map<String, String> map1 : lists) {
-                            Set<String> set = map1.keySet();
-                            for (String key : set) {
-                                if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
-                                    JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                                    for (int j = 0; j < answers.size(); j++) {
-                                        if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                            sb.append(((JSONObject) answers.get(j)).getString("name"));
-                                            sb.append(" 、 ");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }else{
-                    int sum=questions.size();
-                    if(i<sum-1){
-                            JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                            for (int j = 0; j < answers.size(); j++) {
-                                if (lists2.get(i).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                    sb.append(((JSONObject) answers.get(j)).getString("name"));
-                                    sb.append(" 、 ");
-                                }
-                            }
-                    }else{
-                        for(int a=lists2.size();a>sum-2;a--){
-                            JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                            for (int j = 0; j < answers.size(); j++) {
-                                    if (lists2.get(a-1).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                        sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                        sb2.append(" 、 ");
-                                    }
-                            }
-                        }
-                    }
-                }
-            }
-            sb.append(sb2.toString());
-            if(sb.length()>1){
-                sb.deleteCharAt(sb.length() - 1);
-                map.put("product_name", sb.toString());
-            }else{
-                map.put("product_name", "");
-            }
-
+            Map productName = recycleTestService.getProductName(items, productId1);
+            map.put("product_name", productName.get("product_name"));
         }
         page.setData(checkItems);
         this.renderJson(response, page);
     }
+
 
     /**
      * 查看
@@ -308,7 +218,9 @@ public class RecycleTestController extends BaseController {
         String id = request.getParameter("id");
         String itemName = request.getParameter("product");//检测项
         RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(id);
-
+        Map map = recycleTestService.getBrandAndModel(checkItems.getBrandId(), checkItems.getProductId());
+        checkItems.setBrand(map.get("brandname").toString());
+        checkItems.setRecycleModel(map.get("modelname").toString());
         RecycleTest recycleTest = testService.getDao().queryByCheckId(checkItems.getId());
         if (StringUtils.isNotBlank(recycleTest.getRecycleId())) {
             RecycleOrder recycleOrder = orderService.queryById(recycleTest.getRecycleId());
@@ -336,7 +248,9 @@ public class RecycleTestController extends BaseController {
         String id = request.getParameter("id");
         String itemName = request.getParameter("product");//检测项
         RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(id);
-
+        Map map = recycleTestService.getBrandAndModel(checkItems.getBrandId(), checkItems.getProductId());
+        checkItems.setBrand(map.get("brandname").toString());
+        checkItems.setRecycleModel(map.get("modelname").toString());
         request.setAttribute("itemName", itemName);
         request.setAttribute("checkItems", checkItems);
         String returnView = "recycle/testRecord";
@@ -392,98 +306,9 @@ public class RecycleTestController extends BaseController {
             String id = request.getParameter("id");
 
             RecycleCheckItems checkItems = recycleCheckItemsService.getDao().queryByTestId(id);
-            JSONObject jsonResult = new JSONObject();
-            String url = baseNewUrl + "getchecklist";
             String productId1 = checkItems.getProductId();
             String items = checkItems.getItems();
-            List<Map<String, String>> lists = new ArrayList<>();
-            List<String> list1 = new ArrayList();
-            List<String> lists2 = new ArrayList<>();
-            if(items.contains("|")){
-                List<String> list = Arrays.asList(items.split("\\|"));
-                for (int q = 0; q < list.size(); q++) {
-                    String[] a = list.get(q).split(",");
-                    Map<String, String> maps = new HashMap<>();
-                    if ("".equals(a[0])) {
-                        list1.add(a[1]);
-                    } else {
-                        maps.put(a[0], a[1]);
-                        lists.add(maps);
-                    }
-                }
-            }else{
-                lists2 = Arrays.asList(items.split(","));
-            }
-            JSONObject requestNews = new JSONObject();
-            //调用接口需要加密的数据
-            JSONObject code = new JSONObject();
-            code.put("productid", productId1);
-            String realCode = AES.Encrypt(code.toString());  //加密
-            requestNews.put(cipherdata, realCode);
-            //发起请求
-            String getResult = AES.post(url, requestNews);
-            //对得到结果进行解密
-            jsonResult = (JSONObject) JSONObject.parse(AES.Decrypt(getResult));
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sb2 = new StringBuilder();
-            if (StringUtil.isNotBlank(jsonResult.getString("datainfo"))) {
-                JSONObject jsonObject = jsonResult.getJSONObject("datainfo");
-                JSONArray questions = jsonObject.getJSONArray("questions");
-                for (int i = 0; i < questions.size(); i++) {
-                    if (items.contains("|")) {
-                        if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
-                            JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                            for (int j = 0; j < answers.size(); j++) {
-                                for (String str : list1) {
-                                    if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                        sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                        sb2.append(" 、 ");
-                                    }
-                                }
-
-                            }
-                        } else {
-                            for (Map<String, String> map1 : lists) {
-                                Set<String> set = map1.keySet();
-                                for (String key : set) {
-                                    if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
-                                        JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                                        for (int j = 0; j < answers.size(); j++) {
-                                            if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                                sb.append(((JSONObject) answers.get(j)).getString("name"));
-                                                sb.append(" 、 ");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        int sum = questions.size();
-                        if (i < sum - 1) {
-                            JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                            for (int j = 0; j < answers.size(); j++) {
-                                if (lists2.get(i).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                    sb.append(((JSONObject) answers.get(j)).getString("name"));
-                                    sb.append(" 、 ");
-                                }
-                            }
-                        } else {
-                            for (int a = lists2.size(); a > sum - 2; a--) {
-                                JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                                for (int j = 0; j < answers.size(); j++) {
-                                    if (lists2.get(a - 1).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                        sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                        sb2.append(" 、 ");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                sb.append(sb2.toString());
-                sb.deleteCharAt(sb.length() - 1);
-            }
+            Map map = recycleTestService.getProductName(items, productId1);
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -497,47 +322,11 @@ public class RecycleTestController extends BaseController {
                 checkItems.setRecycleModel(checkItems.getBrand() + "/" + checkItems.getRecycleModel());
             }
 
-            JSONObject requestNews2 = new JSONObject();
-            //调用接口需要加密的数据
-            JSONObject code2 = new JSONObject();
-            code2.put("pageindex", 1);
-            code2.put("pagesize", 500);
-            code2.put("categoryid", 1);
-            code2.put("brandid", checkItems.getBrandId());
-            code2.put("keyword", null);
-            String realCode2 = AES.Encrypt(code2.toString());  //加密
-            requestNews2.put(cipherdata, realCode2);
-            //发起请求
-            url = baseNewUrl + "getmodellist";
-            String getResult2 = AES.post(url, requestNews2);
-            //对得到结果进行解密
-            JSONObject jsonResult2 = getResult(AES.Decrypt(getResult2));
-            //将结果中的产品id转为string类型  json解析 long类型精度会丢失
-            //防止返回机型信息为空
-            if (StringUtil.isNotBlank(jsonResult2.getString("datainfo")) && !(jsonResult2.getJSONArray("datainfo")).isEmpty()) {
-                JSONArray jq = jsonResult2.getJSONArray("datainfo");
-                JSONObject jqs = (JSONObject) jq.get(0);
-                JSONArray j = jqs.getJSONArray("sublist");
-                for (int i = 0; i < j.size(); i++) {
-                    JSONObject js = j.getJSONObject(i);
-                    if(productId1.equals(js.getString("productid"))){
-                        String imgaePath = js.getString("modellogo");
-                        if (StringUtil.isBlank(imgaePath)) {
-                            String realUrl = request.getRequestURL().toString();
-                            String domain = realUrl.replace(request.getRequestURI(), "");
-                            String path = domain + "/" + SystemConstant.DEFAULTIMAGE;
-                            imgaePath = path;
-                        }
-                        request.setAttribute("imagePath", imgaePath);
-                        break;
-                    }
-                    //如果该机型的图片地址为空 则使用默认图片地址
-                }
-            }
-
-            request.setAttribute("itemName", sb.toString());
+            request.setAttribute("itemName", map.get("product_name"));
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("checkItems", checkItems);
+
+            recycleTestService.getImgaePath(checkItems.getBrandId(), productId1, request);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -579,20 +368,20 @@ public class RecycleTestController extends BaseController {
             RecycleOrder order = new RecycleOrder();
             if (StringUtil.isBlank(checkItemsId) || StringUtil.isBlank(name) || StringUtil.isBlank(mobile) ||
                     StringUtil.isBlank(province) || StringUtil.isBlank(city) || StringUtil.isBlank(area) ||
-                    StringUtil.isBlank(address) || StringUtil.isBlank(recycleType)|| StringUtil.isBlank(payMobile)) {
+                    StringUtil.isBlank(address) || StringUtil.isBlank(recycleType) || StringUtil.isBlank(payMobile)) {
                 return getResult(result, null, false, "2", "请填写完整信息");
             }
             RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(checkItemsId);
             String quoteid = checkItems.getQuoteId();
-            if(StringUtils.isBlank(quoteid)){
+            if (StringUtils.isBlank(quoteid)) {
                 JSONObject requestNews = new JSONObject();
                 JSONObject quoteidjsonResult = new JSONObject();
                 String quoteidurl = baseNewUrl + "getprice";
                 //调用接口需要加密的数据
                 JSONObject code = new JSONObject();
                 code.put("productid", checkItems.getProductId());
-                String items=checkItems.getItems();
-                if(items.contains("|")){
+                String items = checkItems.getItems();
+                if (items.contains("|")) {
                     //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
                     StringBuilder sb = new StringBuilder();
                     String[] itemses = items.split("\\|");
@@ -615,7 +404,7 @@ public class RecycleTestController extends BaseController {
                 //将quoteid转为string
                 if (StringUtil.isNotBlank(quoteidjsonResult.getString("datainfo"))) {
                     JSONObject j = (JSONObject) quoteidjsonResult.get("datainfo");
-                    quoteid=j.getString("quoteid");
+                    quoteid = j.getString("quoteid");
                     checkItems.setQuoteId(quoteid);
                     checkItemsService.saveUpdate(checkItems);
                 }
@@ -666,7 +455,6 @@ public class RecycleTestController extends BaseController {
             }
             String areaname = RecycleController.getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
 
-
             //先保存订单到超人平台再调用回收平台下单接口  返回成功则更新订单状态
             String id = UUID.randomUUID().toString().replace("-", "");
             String customerId = UUID.randomUUID().toString().replace("-", "");
@@ -701,8 +489,7 @@ public class RecycleTestController extends BaseController {
                 order.setSourceType(1);        //订单来源  默认微信公众号来源
             }
             //通过quoteid获取机型信息
-            JSONObject postNews = new JSONObject();
-            postNews = postNews(quoteid);
+            JSONObject postNews = postNews(quoteid);
             order.setProductName(postNews.getString("modelname"));
             order.setPrice(new BigDecimal(postNews.getString("price")));
             //判断该订单是否来源于微信小程序
@@ -805,7 +592,6 @@ public class RecycleTestController extends BaseController {
                         return getResult(result, null, false, "2", "推送顺丰快递失败，请检查收件地址是否正确");
                     }
                 }
-
             } else {
                 order.setIsDel(1);
             }

@@ -29,7 +29,7 @@
                         <c:if test="${checkItems.brand==null&&checkItems.recycleModel!=null}">
                             ${checkItems.recycleModel }
                         </c:if>
-                            <c:if test="${checkItems.brand!=null&&checkItems.recycleModel!=null}">
+                            <c:if test="${checkItems.brand!=null&&checkItems.recycleModel==null}">
                                 ${checkItems.brand }
                             </c:if>
                             <c:if test="${checkItems.brand!=null&&checkItems.recycleModel!=null}">
