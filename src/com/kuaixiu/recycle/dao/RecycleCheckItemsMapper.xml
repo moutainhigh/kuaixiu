@@ -157,7 +157,7 @@
     <select id="queryTestListForPage" resultType="Map"
             parameterType="Object">
         select
-        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand,c.recycle_model model,
+        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
         c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
