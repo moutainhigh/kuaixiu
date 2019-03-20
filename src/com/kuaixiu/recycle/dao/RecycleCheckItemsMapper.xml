@@ -156,14 +156,28 @@
     <!-- 查询列表 带分页 -->
     <select id="queryTestListForPage" resultType="Map"
             parameterType="Object">
-        select
+        select id,createTime,brand_id,product_id,items,price,login_mobile,test_id,recycle_id from
+        (select
         c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
         c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
+        LEFT JOIN kx_recycle_order o ON o.mobile=c.login_mobile
         where 1=1
         and c.login_mobile is not null
-        and CHAR_LENGTH(c.product_id) &lt;= 10
+        and o.mobile is null
+        UNION
+        select
+        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
+        c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id
+        from kx_recycle_checkitems c LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
+        LEFT JOIN kx_recycle_order o ON o.mobile=c.login_mobile
+        where 1=1
+        and c.login_mobile is not null
+        and c.in_time>o.in_time
+        )t
+        where 1=1
+        and CHAR_LENGTH(product_id) &lt;= 10
         <if test="brandId != null and brandId != ''">
             and brand_id =#{brandId}
         </if>
@@ -191,7 +205,7 @@
         <if test="isVisit == 0">
             and t.test_id is not null
         </if>
-        order by in_time desc
+        order by createTime desc
     </select>
 
 </mapper>
