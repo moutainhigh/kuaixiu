@@ -9,9 +9,20 @@
         <div class="modal-body">
             <form id="insertForm" method="post" class="form-horizontal">
                 <div class="form-group">
+                    <label for="note" class="col-sm-3 control-label"><span style="color:red">*</span> 回访结果</label>
+                    <div class="col-sm-6">
+                        <select id="recordResult" name="recordResult" class="form-control">
+                            <option value="">--请选择--</option>
+                            <option value="1">电话未接</option>
+                            <option value="2">考虑一下</option>
+                            <option value="3">明确拒绝</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <input type="hidden" id="checkItemsId" name="checkItemsId">
                     <label for="note" class="col-sm-3 control-label"><span style="color:red">*</span> 回访备注</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-6">
                         <textarea name="note" id="note" cols="50" rows="10" placeholder="请写下回访备注"></textarea>
                     </div>
                 </div>
@@ -37,9 +48,10 @@
     $("#addNoteSaveBtn").click(function () {
         var id = $("#checkItemsId").val();
         var note = $("#note").val();
+        var recordResult = $("#recordResult").val();
         //加载等待
         var url_ = AppConfig.ctx + "/recycle/saveTestNote.do";
-        var data_ = {id: id, note: note};
+        var data_ = {id: id, note: note,recordResult:recordResult};
         $.ajax({
             url: url_,
             data: data_,

@@ -310,45 +310,26 @@ public class RecycleNewController extends BaseController {
                         checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
-
                 }
-
 
                 //查询该手机号是否有存储过
                 if (StringUtils.isNotBlank(loginMobile)) {
-                    RecycleCheckItems t = new RecycleCheckItems();
-                    t.setLoginMobile(loginMobile);
-                    List<RecycleCheckItems> recycleCheckItems = recycleCheckItemsService.queryList(t);
                     // 得到当前session中品牌名称  品牌id  机型名称
                     String selectBrandId = (String) request.getSession().getAttribute("selectBrandId");
                     String selectBrandName = (String) request.getSession().getAttribute("selectBrandName");
                     String selectModelName = (String) request.getSession().getAttribute("selectModelName");
 
-                    if (recycleCheckItems.isEmpty()) {
-                        //新增
-                        t.setItems(items);
-                        t.setPrice(new BigDecimal(price));
-                        t.setProductId(productId);
-                        t.setBrand(selectBrandName);
-                        t.setBrandId(selectBrandId);
-                        t.setRecycleModel(selectModelName);
-                        t.setQuoteId(j.getString("quoteid"));
-                        recycleCheckItemsService.add(t);
-                    } else {
-                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
-                        //修改
-                        checkItems.setItems(items);
-                        checkItems.setPrice(new BigDecimal(price));
-                        checkItems.setLastPrice(checkItems.getPrice());
-                        checkItems.setProductId(productId);
-                        checkItems.setBrand(selectBrandName);
-                        checkItems.setBrandId(selectBrandId);
-                        checkItems.setRecycleModel(selectModelName);
-                        checkItems.setQuoteId(j.getString("quoteid"));
-                        recycleCheckItemsService.saveUpdate(checkItems);
-                    }
-
-
+                    //新增
+                    RecycleCheckItems t = new RecycleCheckItems();
+                    t.setLoginMobile(loginMobile);
+                    t.setItems(items);
+                    t.setPrice(new BigDecimal(price));
+                    t.setProductId(productId);
+                    t.setBrand(selectBrandName);
+                    t.setBrandId(selectBrandId);
+                    t.setRecycleModel(selectModelName);
+                    t.setQuoteId(j.getString("quoteid"));
+                    recycleCheckItemsService.add(t);
                 }
             }
 
@@ -965,7 +946,7 @@ public class RecycleNewController extends BaseController {
                                     json.put("couponCode", recycleCoupon.getCouponCode());
                                     json.put("couponName", recycleCoupon.getCouponName());
                                     json.put("pricingType", recycleCoupon.getPricingType());
-                                    String orderPrice=quote.getString("orderprice");
+                                    String orderPrice = quote.getString("orderprice");
                                     if (recycleCoupon.getPricingType() == 1) {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                         Integer addCouponPrice = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
@@ -1070,7 +1051,7 @@ public class RecycleNewController extends BaseController {
                             json.put("couponCode", recycleCoupon.getCouponCode());
                             json.put("couponName", recycleCoupon.getCouponName());
                             json.put("pricingType", recycleCoupon.getPricingType());
-                            String orderPrice=info.getString("orderprice");
+                            String orderPrice = info.getString("orderprice");
                             if (recycleCoupon.getPricingType() == 1) {
                                 json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                 Integer addCouponPrice = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
@@ -1080,7 +1061,8 @@ public class RecycleNewController extends BaseController {
                                 } else {
                                     info.put("addCouponPrice", String.valueOf(addCouponPrice));
                                     info.put("orderprice", (new BigDecimal(orderPrice).add((new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())))).toString());
-                                }                              } else {
+                                }
+                            } else {
                                 json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                 info.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
                                 info.put("orderprice", (new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice())).toString());
@@ -1260,7 +1242,7 @@ public class RecycleNewController extends BaseController {
 //            }
 
             //返回数据
-            jsonResult.put("brandName",o.get("brandname"));
+            jsonResult.put("brandName", o.get("brandname"));
             jsonResult.put("brandId", o.get("brandid"));
             jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
             jsonResult.put("productId", productId);

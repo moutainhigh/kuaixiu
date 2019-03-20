@@ -364,13 +364,13 @@ public class RecycleController extends BaseController {
                 if (StringUtils.isNotBlank(loginMobile)) {
                     RecycleCheckItems t = new RecycleCheckItems();
                     t.setLoginMobile(loginMobile);
-                    List<RecycleCheckItems> recycleCheckItems = recycleCheckItemsService.queryList(t);
+//                    List<RecycleCheckItems> recycleCheckItems = recycleCheckItemsService.queryList(t);
                     // 得到当前session中品牌名称  品牌id  机型名称
                     String selectBrandId = (String) request.getSession().getAttribute("selectBrandId");
                     String selectBrandName = (String) request.getSession().getAttribute("selectBrandName");
                     String selectModelName = (String) request.getSession().getAttribute("selectModelName");
 
-                    if (recycleCheckItems.isEmpty()) {
+//                    if (recycleCheckItems.isEmpty()) {
                         //新增
                         t.setItems(items);
                         t.setPrice(new BigDecimal(price));
@@ -380,19 +380,19 @@ public class RecycleController extends BaseController {
                         t.setRecycleModel(selectModelName);
                         t.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.add(t);
-                    } else {
-                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
-                        //修改
-                        checkItems.setItems(items);
-                        checkItems.setPrice(new BigDecimal(price));
-                        checkItems.setLastPrice(checkItems.getPrice());
-                        checkItems.setProductId(productId);
-                        checkItems.setBrand(selectBrandName);
-                        checkItems.setBrandId(selectBrandId);
-                        checkItems.setRecycleModel(selectModelName);
-                        checkItems.setQuoteId(j.getString("quoteid"));
-                        recycleCheckItemsService.saveUpdate(checkItems);
-                    }
+//                    } else {
+//                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
+//                        //修改
+//                        checkItems.setItems(items);
+//                        checkItems.setPrice(new BigDecimal(price));
+//                        checkItems.setLastPrice(checkItems.getPrice());
+//                        checkItems.setProductId(productId);
+//                        checkItems.setBrand(selectBrandName);
+//                        checkItems.setBrandId(selectBrandId);
+//                        checkItems.setRecycleModel(selectModelName);
+//                        checkItems.setQuoteId(j.getString("quoteid"));
+//                        recycleCheckItemsService.saveUpdate(checkItems);
+//                    }
 
 
                 }

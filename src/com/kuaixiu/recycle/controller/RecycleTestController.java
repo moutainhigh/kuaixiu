@@ -254,9 +254,11 @@ public class RecycleTestController extends BaseController {
         String id = request.getParameter("id");
         String itemName = request.getParameter("product");//检测项
         RecycleCheckItems checkItems = checkItemsService.getDao().queryByTestId(id);
+        RecycleTest recycleTest = testService.getDao().queryByCheckId(checkItems.getId());
         Map map = recycleTestService.getBrandAndModel(checkItems.getBrandId(), checkItems.getProductId());
         checkItems.setBrand(map.get("brandname").toString());
         checkItems.setRecycleModel(map.get("modelname").toString());
+        request.setAttribute("recycleTest", recycleTest);
         request.setAttribute("itemName", itemName);
         request.setAttribute("checkItems", checkItems);
         String returnView = "recycle/testRecord";
@@ -277,16 +279,32 @@ public class RecycleTestController extends BaseController {
         ResultData result = new ResultData();
         try {
             String checkItemsId = request.getParameter("id");
+            String recordResult = request.getParameter("recordResult");
             String note = request.getParameter("note");
             SessionUser su = getCurrentUser(request);
-            if (StringUtils.isBlank(checkItemsId) || StringUtils.isBlank(note)) {
-                return getResult(result, null, false, "1", "参数为空");
+            if (StringUtils.isBlank(checkItemsId)) {
+                return getResult(result, null, false, "1", "测评记录不存在");
             }
-            RecycleTest recycleTest = new RecycleTest();
-            recycleTest.setCheckItemsId(checkItemsId);
-            recycleTest.setNote(note);
-            recycleTest.setRecordName(su.getUserId());
-            recycleTestService.add(recycleTest);
+            if (StringUtils.isBlank(recordResult)) {
+                return getResult(result, null, false, "1", "请选择回访结果");
+            }
+            if (StringUtils.isBlank(note)) {
+                return getResult(result, null, false, "1", "请填写回访备注");
+            }
+            RecycleTest recycleTest = recycleTestService.getDao().queryByCheckId(checkItemsId);
+            if (recycleTest != null) {
+                recycleTest.setNote(note);
+                recycleTest.setRecordResult(Integer.valueOf(recordResult));
+                recycleTest.setRecordName(su.getUserId());
+                recycleTestService.saveUpdate(recycleTest);
+            } else {
+                RecycleTest recycleTest1 =new RecycleTest();
+                recycleTest1.setCheckItemsId(checkItemsId);
+                recycleTest1.setNote(note);
+                recycleTest1.setRecordResult(Integer.valueOf(recordResult));
+                recycleTest1.setRecordName(su.getUserId());
+                recycleTestService.add(recycleTest1);
+            }
 
             getResult(result, null, true, "0", "成功");
         } catch (Exception e) {
@@ -320,6 +338,9 @@ public class RecycleTestController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             checkItems.setIsVisit(sdf.format(checkItems.getInTime()));
 
+            Map map1 = recycleTestService.getBrandAndModel(checkItems.getBrandId(), checkItems.getProductId());
+            checkItems.setBrand(map1.get("brandname").toString());
+            checkItems.setRecycleModel(map1.get("modelname").toString());
             if (StringUtils.isBlank(checkItems.getBrand()) && StringUtils.isNotBlank(checkItems.getRecycleModel())) {
                 checkItems.setRecycleModel(checkItems.getRecycleModel());
             } else if (StringUtils.isNotBlank(checkItems.getBrand()) && StringUtils.isBlank(checkItems.getRecycleModel())) {

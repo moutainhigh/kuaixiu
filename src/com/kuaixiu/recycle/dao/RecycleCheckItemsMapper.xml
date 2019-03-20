@@ -158,7 +158,7 @@
             parameterType="Object">
         select
         c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
-        c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id
+        c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id,t.record_result
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
         where 1=1
@@ -191,7 +191,7 @@
         <if test="isVisit == 0">
             and t.test_id is not null
         </if>
-        order by in_time desc
+        order by createTime desc
     </select>
 
 </mapper>

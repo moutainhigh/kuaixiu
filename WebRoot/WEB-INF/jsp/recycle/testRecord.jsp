@@ -3,7 +3,8 @@
 <link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="backList();">回收订单管理</a></strong>
+        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);"
+                                                      onclick="backList();">回收订单管理</a></strong>
         /
         <small>回收检测详情</small>
         <strong class="am-text-primary"><a href="javascript:void(0);" onclick="backList();">返回</a></strong>
@@ -26,9 +27,9 @@
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>检测型号：
-                        <c:if test="${checkItems.brand==null&&checkItems.recycleModel!=null}">
-                            ${checkItems.recycleModel }
-                        </c:if>
+                            <c:if test="${checkItems.brand==null&&checkItems.recycleModel!=null}">
+                                ${checkItems.recycleModel }
+                            </c:if>
                             <c:if test="${checkItems.brand!=null&&checkItems.recycleModel==null}">
                                 ${checkItems.brand }
                             </c:if>
@@ -71,6 +72,47 @@
                 </div><!-- /.row -->
             </td>
         </tr>
+        <c:if test="${recycleTest!=null}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>回访信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访人：${recycleTest.recordName }</h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访时间：<fmt:formatDate value="${recycleTest.createTime }"
+                                                     pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访备注：${recycleTest.note} </h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访备注：
+                                <c:if test="${recycleTest.recordResult==1}">
+                                    电话未接
+                                </c:if>
+                                <c:if test="${recycleTest.recordResult==2}">
+                                    考虑一下
+                                </c:if>
+                                <c:if test="${recycleTest.recordResult==3}">
+                                    明确拒绝
+                                </c:if>
+                            </h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+        </c:if>
         <input type="hidden" id="checkId" value="${checkItems.id}"/>
         <input type="hidden" id="itemName" value="${itemName}"/>
     </table>
