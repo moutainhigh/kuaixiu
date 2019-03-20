@@ -117,6 +117,19 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>回访备注：${recycleTest.note} </h4>
                     </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>回访备注：
+                            <c:if test="${recycleTest.recordResult==1}">
+                                电话未接
+                            </c:if>
+                            <c:if test="${recycleTest.recordResult==2}">
+                                考虑一下
+                            </c:if>
+                            <c:if test="${recycleTest.recordResult==3}">
+                                明确拒绝
+                            </c:if>
+                        </h4>
+                    </div><!-- /.col -->
                 </div><!-- /.row -->
             </td>
         </tr>

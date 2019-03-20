@@ -10,20 +10,22 @@
         <result column="recycle_id" property="recycleId"/>
         <result column="record_name" property="recordName"/>
         <result column="note" property="note"/>
+        <result column="record_result" property="recordResult"/>
         <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
     
     <!-- kx_recycle_test_record table all fields -->
     <sql id="Base_Column_List" >
-        test_id,check_items_id,recycle_id,record_name,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+        test_id,check_items_id,recycle_id,record_name,note,record_result,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_recycle_test_record
-        (test_id,check_items_id,recycle_id,record_name,note,create_time)
+        (test_id,check_items_id,recycle_id,record_name,note,record_result,create_time,update_time)
         values
-        (#{testId},#{checkItemsId},#{recycleId},#{recordName},#{note},now())
+        (#{testId},#{checkItemsId},#{recycleId},#{recordName},#{note},#{recordResult},now(),now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -33,8 +35,10 @@
             test_id=#{testId},
             check_items_id=#{checkItemsId},
             recycle_id=#{recycleId},
-            note=#{note}
-        where id=#{id}
+            note=#{note},
+            record_result=#{recordResult},
+            update_time=now()
+        where check_items_id=#{checkItemsId}
     </update>
 
     <!-- 删除记录 -->
