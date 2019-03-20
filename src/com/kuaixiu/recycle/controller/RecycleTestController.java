@@ -282,11 +282,17 @@ public class RecycleTestController extends BaseController {
             if (StringUtils.isBlank(checkItemsId) || StringUtils.isBlank(note)) {
                 return getResult(result, null, false, "1", "参数为空");
             }
-            RecycleTest recycleTest = new RecycleTest();
-            recycleTest.setCheckItemsId(checkItemsId);
-            recycleTest.setNote(note);
-            recycleTest.setRecordName(su.getUserId());
-            recycleTestService.add(recycleTest);
+            RecycleTest recycleTest = recycleTestService.getDao().queryByCheckId(checkItemsId);
+            if (recycleTest != null) {
+                recycleTest.setNote(note);
+                recycleTest.setRecordName(su.getUserId());
+                recycleTestService.saveUpdate(recycleTest);
+            } else {
+                recycleTest.setCheckItemsId(checkItemsId);
+                recycleTest.setNote(note);
+                recycleTest.setRecordName(su.getUserId());
+                recycleTestService.add(recycleTest);
+            }
 
             getResult(result, null, true, "0", "成功");
         } catch (Exception e) {
@@ -320,6 +326,9 @@ public class RecycleTestController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             checkItems.setIsVisit(sdf.format(checkItems.getInTime()));
 
+            Map map1 = recycleTestService.getBrandAndModel(checkItems.getBrandId(), checkItems.getProductId());
+            checkItems.setBrand(map1.get("brandname").toString());
+            checkItems.setRecycleModel(map1.get("modelname").toString());
             if (StringUtils.isBlank(checkItems.getBrand()) && StringUtils.isNotBlank(checkItems.getRecycleModel())) {
                 checkItems.setRecycleModel(checkItems.getRecycleModel());
             } else if (StringUtils.isNotBlank(checkItems.getBrand()) && StringUtils.isBlank(checkItems.getRecycleModel())) {

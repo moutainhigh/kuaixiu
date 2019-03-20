@@ -227,7 +227,7 @@
         {
             targets: -1,
             render: function (data, type, row, meta) {
-                if(row.test_id==null||row.test_id==""){
+                if(row.recycle_id==null||row.recycle_id==""){
                     var context = {
                         func: [
                             {
