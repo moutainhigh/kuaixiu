@@ -39,38 +39,27 @@ public class RecycleTestService extends BaseService<RecycleTest> {
     private static final String baseNewUrl = SystemConstant.RECYCLE_NEW_URL;
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
     private static final String baseUrl = SystemConstant.RECYCLE_URL;
-    public Map getBrandAndModel(String brandId,String productId)throws Exception{
+
+    public Map getBrandAndModelByProductId(String productId)throws Exception{
         Map map=new HashMap();
         JSONObject requestNews2 = new JSONObject();
         //调用接口需要加密的数据
         JSONObject code2 = new JSONObject();
-        code2.put("pageindex", 1);
-        code2.put("pagesize", 500);
-        code2.put("categoryid", null);
-        code2.put("brandid", brandId);
-        code2.put("keyword", null);
+        code2.put("productid", productId);
         String realCode2 = AES.Encrypt(code2.toString());  //加密
         requestNews2.put(cipherdata, realCode2);
         //发起请求
-        String url = baseNewUrl + "getmodellist";
+        String url = baseNewUrl + "getmodelbyid";
         String getResult2 = AES.post(url, requestNews2);
         //对得到结果进行解密
         JSONObject jsonResult2 = getResult(AES.Decrypt(getResult2));
         //将结果中的产品id转为string类型  json解析 long类型精度会丢失
         //防止返回机型信息为空
-        if (StringUtil.isNotBlank(jsonResult2.getString("datainfo")) && !(jsonResult2.getJSONArray("datainfo")).isEmpty()) {
-            JSONArray jq = jsonResult2.getJSONArray("datainfo");
-            JSONObject jqs = (JSONObject) jq.get(0);
-            map.put("brandname",jqs.getString("brandname"));
-            JSONArray j = jqs.getJSONArray("sublist");
-            for (int i = 0; i < j.size(); i++) {
-                JSONObject js = j.getJSONObject(i);
-                if(productId.equals(js.getString("productid"))){
-                    map.put("modelname",js.getString("modelname"));
-                    break;
-                }
-                //如果该机型的图片地址为空 则使用默认图片地址
-            }
+        if (StringUtil.isNotBlank(jsonResult2.getString("datainfo")) && !(jsonResult2.getJSONObject("datainfo")).isEmpty()) {
+            JSONObject jq = jsonResult2.getJSONObject("datainfo");
+            map.put("brandname",jq.getString("brandname"));
+            map.put("modelname",jq.getString("modelname"));
+            map.put("modellogo",jq.getString("modellogo"));
         }
         return map;
     }
@@ -78,29 +67,24 @@ public class RecycleTestService extends BaseService<RecycleTest> {
     public Map getProductName(String items,String productId1)throws Exception{
         Map map=new HashMap();
         JSONObject jsonResult = new JSONObject();
-        String url = baseNewUrl + "getchecklist";
+        String url = baseNewUrl + "getcheckitems";
         List<Map<String, String>> lists = new ArrayList<>();
-        List<String> list1 = new ArrayList();
-        List<String> lists2 = new ArrayList<>();
-        if(items.contains("|")){
-            List<String> list = Arrays.asList(items.split("\\|"));
-            for (int q = 0; q < list.size(); q++) {
-                String[] a = list.get(q).split(",");
-                Map<String, String> maps = new HashMap<>();
-                if ("".equals(a[0])) {
-                    list1.add(a[1]);
-                } else {
-                    maps.put(a[0], a[1]);
-                    lists.add(maps);
-                }
+        //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
+        StringBuilder sb = new StringBuilder();
+        String[] itemses = items.split("\\|");
+        for (int i = 0; i < itemses.length; i++) {
+            String[] item = itemses[i].split(",");
+            sb.append(item[1]);
+            if (itemses.length - 1 != i) {
+                sb.append(",");
             }
-        }else{
-            lists2 = Arrays.asList(items.split(","));
         }
+        items = sb.toString();
         JSONObject requestNews = new JSONObject();
         //调用接口需要加密的数据
         JSONObject code = new JSONObject();
         code.put("productid", productId1);
+        code.put("items", items);
         String realCode = AES.Encrypt(code.toString());  //加密
         requestNews.put(cipherdata, realCode);
         //发起请求
@@ -111,64 +95,16 @@ public class RecycleTestService extends BaseService<RecycleTest> {
             map.put("product_name", "");
             return map;
         }
-        JSONObject jsonObject = jsonResult.getJSONObject("datainfo");
-        JSONArray questions = jsonObject.getJSONArray("questions");
-        StringBuilder sb = new StringBuilder();
-        StringBuilder sb2 = new StringBuilder();
-        for (int i = 0; i < questions.size(); i++) {
-            if(items.contains("|")) {
-                if ("9999".equals(((JSONObject) questions.get(i)).getString("id")) && list1 != null) {
-                    JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                    for (int j = 0; j < answers.size(); j++) {
-                        for (String str : list1) {
-                            if (str.equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                sb2.append(" 、 ");
-                            }
-                        }
-
-                    }
-                }else {
-                    for (Map<String, String> map1 : lists) {
-                        Set<String> set = map1.keySet();
-                        for (String key : set) {
-                            if (key.equals(((JSONObject) questions.get(i)).getString("id"))) {
-                                JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                                for (int j = 0; j < answers.size(); j++) {
-                                    if (map1.get(key).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                        sb.append(((JSONObject) answers.get(j)).getString("name"));
-                                        sb.append(" 、 ");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }else{
-                JSONArray answers = ((JSONObject) questions.get(i)).getJSONArray("answers");
-                if(i<questions.size()-1){
-                    for (int j = 0; j < answers.size(); j++) {
-                        if (lists2.get(i).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                            sb.append(((JSONObject) answers.get(j)).getString("name"));
-                            sb.append(" 、 ");
-                        }
-                    }
-                }else{
-                    for(int a=questions.size()-1;a<lists2.size();a++){
-                        for (int j = 0; j < answers.size(); j++) {
-                            if (lists2.get(a).equals(((JSONObject) answers.get(j)).getString("id"))) {
-                                sb2.append(((JSONObject) answers.get(j)).getString("name"));
-                                sb2.append(" 、 ");
-                            }
-                        }
-                    }
-                }
-            }
+        StringBuilder sb1=new StringBuilder();
+        JSONArray jsonArray = jsonResult.getJSONArray("datainfo");
+        for(int i=0;i<jsonArray.size();i++){
+            JSONObject jqs = (JSONObject) jsonArray.get(i);
+            sb1.append(jqs.getString("itemname"));
+            sb1.append("、");
         }
-        sb.append(sb2.toString());
-        if(sb.length()>1){
-            sb.deleteCharAt(sb.length() - 1);
-            map.put("product_name", sb.toString());
+        if(sb1.length()>1){
+            sb1.deleteCharAt(sb1.length() - 1);
+            map.put("product_name", sb1.toString());
         }else{
             map.put("product_name", "");
         }
