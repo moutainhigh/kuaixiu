@@ -161,8 +161,12 @@
         c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id,t.record_result
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
-        where 1=1
-        and c.login_mobile is not null
+        where c.login_mobile not in(
+        select o.mobile from kx_recycle_order o
+        where EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile)
+        and EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile and in_time &lt;= o.in_time)
+        and not EXISTS(select 1 from kx_recycle_test_record where recycle_id=o.id)
+        )
         and CHAR_LENGTH(c.product_id) &lt;= 10
         <if test="brandId != null and brandId != ''">
             and brand_id =#{brandId}
