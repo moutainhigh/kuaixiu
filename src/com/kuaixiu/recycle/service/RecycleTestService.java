@@ -70,16 +70,18 @@ public class RecycleTestService extends BaseService<RecycleTest> {
         String url = baseNewUrl + "getcheckitems";
         List<Map<String, String>> lists = new ArrayList<>();
         //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
-        StringBuilder sb = new StringBuilder();
-        String[] itemses = items.split("\\|");
-        for (int i = 0; i < itemses.length; i++) {
-            String[] item = itemses[i].split(",");
-            sb.append(item[1]);
-            if (itemses.length - 1 != i) {
-                sb.append(",");
+        if(items.contains("|")){
+            StringBuilder sb = new StringBuilder();
+            String[] itemses = items.split("\\|");
+            for (int i = 0; i < itemses.length; i++) {
+                String[] item = itemses[i].split(",");
+                sb.append(item[1]);
+                if (itemses.length - 1 != i) {
+                    sb.append(",");
+                }
             }
+            items = sb.toString();
         }
-        items = sb.toString();
         JSONObject requestNews = new JSONObject();
         //调用接口需要加密的数据
         JSONObject code = new JSONObject();

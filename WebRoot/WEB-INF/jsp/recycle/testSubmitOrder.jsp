@@ -11,7 +11,7 @@
                 <input type="hidden" id="submitCheckId" name="submitCheckId" value="${checkItems.id}"/>
                 <input type="hidden" id="itemName" name="itemName" value="${itemName}"/>
                 <input type="hidden" id="imagePath" name="imagePath" value="${imagePath}"/>
-                <input type="hidden" id="source" name="source" value="2"/>
+                <input type="hidden" id="source" name="source" value="14"/>
                 <div class="form-group">
                     <label for="time" class="col-sm-2 control-label">检测时间：</label>
                     <div class="col-sm-4">
