@@ -187,9 +187,9 @@
                 <th class="fontWeight_normal table-title center">所属本地网</th>
                 <th class="fontWeight_normal table-title center">分配</th>
                 <th class="fontWeight_normal table-title center">寄出</th>
-                <th class="fontWeight_normal table-title center">寄出时间</th>
-                <th class="fontWeight_normal table-date tdwidth130  center">寄出物流号</th>
-                <th class="fontWeight_normal table-set tdwidth130">操作</th>
+                <th class="fontWeight_normal table-title center">发送时间</th>
+                <th class="fontWeight_normal table-title center">发送城市</th>
+                <th class="fontWeight_normal table-title center">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -284,8 +284,8 @@
         {"data": "province", "class": ""},
         {"data": "isDistribution", "class": ""},
         {"data": "isUse", "class": ""},
-        {"data": "distributionTime", "class": ""},
-        {"data": "stationExpressNumber", "class": ""},
+        {"data": "sendTime", "class": ""},
+        {"data": "sendCity", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
@@ -364,6 +364,16 @@
                 }
                 else {
                     return '否';
+                }
+            }
+        },
+        {//寄出
+            targets: -3,
+            render: function (data, type, row, meta) {
+                if (row.sendTime != null && row.sendTime != "") {
+                    return row.sendTime.substr(0, 10);
+                } else {
+                    return "";
                 }
             }
         },
