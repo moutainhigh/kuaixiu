@@ -77,11 +77,11 @@
                     </select>
                 </td>
                 <td class="search_th"><label class="control-label">工程师工号：</label></td>
-                <td class="search_td"><input type="text" name="query_engNumber" class="form-control" ></td>
+                <td class="search_td"><input type="text" name="query_engNumber" class="form-control"></td>
             </tr>
             <tr>
                 <td class="search_th "><label class="control-label">工程师姓名：</label></td>
-                <td class="search_td"><input type="text" name="query_engName" class="form-control" ></td>
+                <td class="search_td"><input type="text" name="query_engName" class="form-control"></td>
                 <td class="search_th"><label class="control-label">完 成 时 间 ：</label></td>
                 <td class="search_td">
                     <div class="am-datepicker-date">
@@ -181,16 +181,23 @@
 <div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <%@ include file="agreedTime.jsp" %>
 </div>
-<div id="modal-updatePriceView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div id="modal-updatePriceView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     style="display: none;">
     <%@ include file="updatePrice.jsp" %>
 </div>
-<div id="modal-createReworkView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div id="modal-createReworkView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     style="display: none;">
     <%@ include file="addRewordOrder.jsp" %>
+</div>
+<div id="modal-recordView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <%@ include file="orderRecord.jsp" %>
 </div>
 <!-- 新增弹窗 end -->
 
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+
+
     $("#query_startTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
@@ -384,32 +391,52 @@
                     html += template_btn(context);
                 }
                 if (row.orderStatus == 50) {
-                    context = {
-                        func: [
-                            {
-                                "name": "售后",
-                                "fn": "rewordOrder(\'" + row.orderNo + "\')",
-                                "icon": "am-icon-pencil-square-o",
-                                "class": "am-text-secondary"
-                            }
-                        ]
-                    };
+                    if (row.isRecord == 1) {
+                        context = {
+                            func: [
+                                {
+                                    "name": "售后",
+                                    "fn": "rewordOrder(\'" + row.orderNo + "\')",
+                                    "icon": "am-icon-pencil-square-o",
+                                    "class": "am-text-secondary"
+                                }
+                            ]
+                        };
+                    }else{
+                        context = {
+                            func: [
+                                {
+                                    "name": "售后",
+                                    "fn": "rewordOrder(\'" + row.orderNo + "\')",
+                                    "icon": "am-icon-pencil-square-o",
+                                    "class": "am-text-secondary"
+                                },
+                                {
+                                    "name": "回访",
+                                    "fn": "addRecordNotes(\'" + row.id + "\')",
+                                    "icon": "am-icon-pencil-square-o",
+                                    "class": "am-text-secondary"
+                                }
+                            ]
+                        };
+                    }
                     html += template_btn(context);
                 }
-                var sessionUser=$("#sessionUserType").val();
+
+                var sessionUser = $("#sessionUserType").val();
                 if (row.orderStatus < 50) {
-                    if (sessionUser == 7 || sessionUser==2) {
-                    context = {
-                        func: [
-                            {
-                                "name": "修改金额",
-                                "fn": "updatePrice(\'" + row.id + "\')",
-                                "icon": "am-icon-pencil-square-o",
-                                "class": "am-text-secondary"
-                            }
-                        ]
-                    };
-                    html += template_btn(context);
+                    if (sessionUser == 7 || sessionUser == 2) {
+                        context = {
+                            func: [
+                                {
+                                    "name": "修改金额",
+                                    "fn": "updatePrice(\'" + row.id + "\')",
+                                    "icon": "am-icon-pencil-square-o",
+                                    "class": "am-text-secondary"
+                                }
+                            ]
+                        };
+                        html += template_btn(context);
                     }
                 }
 
@@ -426,6 +453,11 @@
     function refreshPage() {
         $("#pageStatus").val(1);
         myTable.ajax.reload(null, false);
+    }
+
+    function addRecordNotes(id) {
+        $("#recordOrderId").val(id);
+        $("#modal-recordView").modal("show");
     }
 
     function agreedTime(id) {

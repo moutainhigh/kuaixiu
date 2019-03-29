@@ -2,6 +2,7 @@ package com.kuaixiu.wechat.service;
 
 import com.common.base.service.BaseService;
 import com.common.util.NOUtil;
+import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.service.BrandService;
 import com.kuaixiu.coupon.entity.Coupon;
@@ -55,10 +56,16 @@ public class WechatUserService extends BaseService<WechatUser>{
 	 * 生成一张维修通用优惠券
 	 * @return
 	 */
-	public String createCoupon(String batchId,String price) {
+	public String createCoupon(String batchId,String price,String projectName,String couponName) {
 		String code="";
 		List<Brand> brands = brandService.queryList(null);
-		List<Project> projects = projectService.queryList(null);
+		List<Project> projects=new ArrayList<>();
+		if(StringUtils.isNotBlank(projectName)){
+			projects=projectService.getDao().queryByLikeName(projectName);
+		}else{
+			projects = projectService.queryList(null);
+		}
+
 		// 支持品牌
 		List<String> addBrands =new ArrayList<String>();
 		if (!brands.isEmpty()) {
@@ -78,7 +85,11 @@ public class WechatUserService extends BaseService<WechatUser>{
 			// 生成批次ID
 			t.setBatchId(batchId);
 			t.setCouponPrice(new BigDecimal(price));
-			t.setCouponName(SystemConstant.WECHAT_COMMON_NAME);
+			if(StringUtils.isNotBlank(couponName)){
+				t.setCouponName(couponName);
+			}else{
+				t.setCouponName(SystemConstant.WECHAT_COMMON_NAME);
+			}
 			Date date = new Date();
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String time = format.format(date);
@@ -110,7 +121,6 @@ public class WechatUserService extends BaseService<WechatUser>{
 
 	/**
 	 * 生成一张贴膜优惠券
-	 * @param t
 	 * @return
 	 */
 	public String getScreenCode(){

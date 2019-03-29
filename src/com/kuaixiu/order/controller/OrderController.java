@@ -925,6 +925,8 @@ public class OrderController extends BaseController {
         renderJson(response, resultMap);
     }
 
+    @Autowired
+    private OrderRecordService orderRecordService;
 
     /**
      * 列表查询
@@ -951,6 +953,8 @@ public class OrderController extends BaseController {
         List<CancelReason> reasonList = cancelReasonService.queryListForPage(new CancelReason());
         //用户评价信息
         OrderComment comm = commentService.queryByOrderNo(o.getOrderNo());
+        //用户回访信息
+        OrderRecord orderRecord=orderRecordService.getDao().queryByOrderNo(o.getOrderNo());
         //修改金额记录
         List<UpdateOrderPrice> upOrderPrice = updateOrderPriceService.getDao().queryByUpOrderNo(o.getOrderNo());
         UpdateOrderPrice updateOrderPrice = new UpdateOrderPrice();
@@ -972,6 +976,7 @@ public class OrderController extends BaseController {
         request.setAttribute("order", o);
         request.setAttribute("details", details);
         request.setAttribute("reworks", reworkOrders);
+        request.setAttribute("orderRecord", orderRecord);
         String returnView = "order/detail";
         return new ModelAndView(returnView);
     }

@@ -323,8 +323,28 @@ public class SystemConstant {
      * 微信关注发送的维修通用优惠卷价格
      */
     public static final String WECHAT_COMMON_PRICE =SystemUtil.getSysCfgProperty("wechat.common.price");
-    
-    
+    /**
+     * 回访的维修通用优惠卷批次号
+     */
+    public static final String RECORD_COMMON_BATCHID =SystemUtil.getSysCfgProperty("record.common.batchId");
+    /**
+     * 回访的20屏幕维修通用优惠卷批次号
+     */
+    public static final String RECORD_SCREEN20_BATCHID =SystemUtil.getSysCfgProperty("record.screen20.batchId");
+    /**
+     * 回访的50屏幕维修通用优惠卷批次号
+     */
+    public static final String RECORD_SCREEN50_BATCHID =SystemUtil.getSysCfgProperty("record.screen50.batchId");
+    /**
+     * 回访的维修通用优惠卷价格
+     */
+    public static final String RECORD_COMMON_PRICE =SystemUtil.getSysCfgProperty("record.common.price");
+    /**
+     * 回访的50屏幕维修通用优惠卷价格
+     */
+    public static final String RECORD_SCREEN50_PRICE =SystemUtil.getSysCfgProperty("record.screen50.price");
+
+
     /**
      * 微信关注发送的贴膜优惠卷批次号 
      */

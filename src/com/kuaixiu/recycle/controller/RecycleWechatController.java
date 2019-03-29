@@ -1304,7 +1304,7 @@ public class RecycleWechatController extends BaseController {
                         if (tip) {
                             if (prize == 3) {
                                 String commonCode = wechatUserService.createCoupon(SystemConstant.NOW_PRIZE_BATCH
-                                        , SystemConstant.NOW_PRIZE_PRICE);
+                                        , SystemConstant.NOW_PRIZE_PRICE,null,null);
                                 record.setCouponCode(commonCode);
                                 SmsSendUtil.prizeSendToUser(rw.getLotteryMobile(), commonCode);
                                 j.put("couponCode", commonCode);

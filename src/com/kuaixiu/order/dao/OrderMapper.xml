@@ -84,7 +84,8 @@
         <result column="is_show" property="isShow"/>
         <result column="cancel_reason" property="cancelReason"/>
         <result column="send_agreed_news" property="sendAgreedNews"/>
-        <result column="isRework" property="isRework"/>
+        <result column="is_rework" property="isRework"/>
+        <result column="is_record" property="isRecord"/>
         <result column="order_type" property="orderType"/>
         <association property="shop" column="shop_code" resultMap="ShopMap"></association>
     </resultMap>
@@ -126,6 +127,7 @@
         ,date_format(t.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
         ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
         ,t.from_system,t.agreed_time,t.clerk_id,t.is_show ,t.send_agreed_news,t.cancel_reason
+        ,t.is_record
         ,eng_note
     </sql>
 
@@ -263,6 +265,7 @@
             update_userid=#{updateUserid},
             end_time=#{endTime},
             send_agreed_news=#{sendAgreedNews},
+            is_record=#{isRecord},
             cancel_reason=#{cancelReason}
         where id=#{id}
     </update>
