@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.materiel.dao.ProcessMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.materiel.entity.Process">
+        <result column="process_no" property="processNo"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_state" property="processState"/>
+        <result column="apply_person" property="applyPerson"/>
+        <result column="apply_no" property="applyNo"/>
+        <result column="deal_person" property="dealPerson"/>
+        <result column="deal_no" property="dealNo"/>
+        <result column="recevie_time" property="recevieTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- lc_process table all fields -->
+    <sql id="Base_Column_List">
+        process_no,process_type,process_state,apply_person,apply_no,deal_person,deal_no,date_format(`recevie_time`,'%Y-%m-%d %H:%i:%s')recevie_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into lc_process
+        (process_no,process_type,process_state,apply_person,apply_no,deal_person,deal_no,recevie_time,create_time,update_time)
+        values
+        (#{processNo},#{processType},#{processState},#{applyPerson},#{applyNo},#{dealPerson},#{dealNo},#{recevieTime},now(),now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update lc_process 
+        set 
+            process_no=#{processNo},
+            process_type=#{processType},
+            process_state=#{processState},
+            apply_person=#{applyPerson},
+            apply_no=#{applyNo},
+            deal_person=#{dealPerson},
+            deal_no=#{dealNo},
+            recevie_time=#{recevieTime},
+            create_time=#{createTime},
+            update_time=now()
+        where process_no=#{processNo}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from lc_process where process_no=#{processNo}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process where process_no=#{processNo}
+    </select>
+
+    <select id="queryCountByEngineerNo" resultMap="BaseResultMap" parameterType="Object">
+        select count(1)
+        from lc_process where apply_no = #{applyNo}
+    </select>
+    <!-- 查询列表无分页 -->
+    <select id="queryApprovalList" resultType="Map" parameterType="Object">
+        select
+        process_no processNo,process_type processType,process_state processState,
+        create_time time,deal_person dealPerson
+        from lc_process
+        where 1=1
+        <if test="type == 1">
+            and process_state &lt; 60
+        </if>
+        <if test="type == 2">
+            and process_state = 60
+        </if>
+    </select>
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process
+        where 1=1
+        <if test="processNo != null and processNo != ''">
+            and process_no = #{processNo}
+        </if>
+        <if test="processType != null and processType != ''">
+            and process_type = #{processType}
+        </if>
+        <if test="processState != null and processState != ''">
+            and process_state = #{processState}
+        </if>
+        <if test="applyPerson != null and applyPerson != ''">
+            and apply_person = #{applyPerson}
+        </if>
+        <if test="applyNo != null and applyNo != ''">
+            and apply_no = #{applyNo}
+        </if>
+        <if test="dealPerson != null and dealPerson != ''">
+            and deal_person = #{dealPerson}
+        </if>
+        <if test="dealNo != null and dealNo != ''">
+            and deal_no = #{dealNo}
+        </if>
+        <if test="recevieTime != null and recevieTime != ''">
+            and recevie_time = #{recevieTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process
+        where 1=1
+        <if test="processNo != null and processNo != ''">
+            and process_no = #{processNo}
+        </if>
+        <if test="processType != null and processType != ''">
+            and process_type = #{processType}
+        </if>
+        <if test="processState != null and processState != ''">
+            and process_state = #{processState}
+        </if>
+        <if test="applyPerson != null and applyPerson != ''">
+            and apply_person = #{applyPerson}
+        </if>
+        <if test="applyNo != null and applyNo != ''">
+            and apply_no = #{applyNo}
+        </if>
+        <if test="dealPerson != null and dealPerson != ''">
+            and deal_person = #{dealPerson}
+        </if>
+        <if test="dealNo != null and dealNo != ''">
+            and deal_no = #{dealNo}
+        </if>
+        <if test="recevieTime != null and recevieTime != ''">
+            and recevie_time = #{recevieTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+</mapper>   

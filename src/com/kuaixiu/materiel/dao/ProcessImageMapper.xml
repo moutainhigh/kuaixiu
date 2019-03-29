@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.materiel.dao.ProcessImageMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.materiel.entity.ProcessImage" >
+        <result column="id" property="id"/>
+        <result column="process_no" property="processNo"/>
+        <result column="repair_id" property="repairId"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- lc_process_image table all fields -->
+    <sql id="Base_Column_List" >
+        id,process_no,repair_id,image_url,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into lc_process_image
+        (id,process_no,repair_id,image_url,create_time)
+        values
+        (#{id},#{processNo},#{repairId},#{imageUrl},#{createTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update lc_process_image 
+        set 
+            id=#{id},
+            process_no=#{processNo},
+            repair_id=#{repairId},
+            image_url=#{imageUrl},
+            create_time=#{createTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from lc_process_image where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from lc_process_image where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process_image
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="processNo != null and processNo != ''" >
+            and process_no = #{processNo}
+        </if>
+        <if test="repairId != null and repairId != ''" >
+            and repair_id = #{repairId}
+        </if>
+        <if test="imageUrl != null and imageUrl != ''" >
+            and image_url = #{imageUrl}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process_image
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="processNo != null and processNo != ''" >
+            and process_no = #{processNo}
+        </if>
+        <if test="repairId != null and repairId != ''" >
+            and repair_id = #{repairId}
+        </if>
+        <if test="imageUrl != null and imageUrl != ''" >
+            and image_url = #{imageUrl}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+
+</mapper>   

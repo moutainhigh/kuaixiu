@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.materiel.dao.ProcessMaterielMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.materiel.entity.ProcessMateriel" >
+        <result column="id" property="id"/>
+        <result column="process_no" property="processNo"/>
+        <result column="repair_id" property="repairId"/>
+        <result column="materiel_id" property="materielId"/>
+        <result column="is_repair" property="isRepair"/>
+        <result column="apple_num" property="appleNum"/>
+        <result column="receive_num" property="receiveNum"/>
+        <result column="price" property="price"/>
+    </resultMap>
+    
+    <!-- lc_process_materiel table all fields -->
+    <sql id="Base_Column_List" >
+        id,process_no,repair_id,materiel_id,is_repair,apple_num,receive_num,price
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into lc_process_materiel
+        (id,process_no,repair_id,materiel_id,is_repair,apple_num,receive_num,price)
+        values
+        (#{id},#{processNo},#{repairId},#{materielId},#{isRepair},#{appleNum},#{receiveNum},#{price})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update lc_process_materiel 
+        set 
+            id=#{id},
+            process_no=#{processNo},
+            repair_id=#{repairId},
+            materiel_id=#{materielId},
+            is_repair=#{isRepair},
+            apple_num=#{appleNum},
+            receive_num=#{receiveNum},
+            price=#{price}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from lc_process_materiel where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="querySumByProcessNo"  resultType="Integer" parameterType="Object">
+        select SUM(apple_num)
+        from lc_process_materiel where process_no=#{processNo}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from lc_process_materiel where id = #{id}
+    </select>
+
+    <select id="queryModelByProcessNo"  resultType="Map" parameterType="Object">
+        select m.brand_id brandId,m.brand_name brandName,m.model_id modelId,m.model_name modelName
+        from lc_process_materiel p
+        LEFT JOIN lc_materiel_type m on p.materiel_id=m.id
+        where process_no=#{processNo}
+        GROUP BY m.brand_id,m.brand_name,m.model_id,m.model_name
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process_materiel
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="processNo != null and processNo != ''" >
+            and process_no = #{processNo}
+        </if>
+        <if test="repairId != null and repairId != ''" >
+            and repair_id = #{repairId}
+        </if>
+        <if test="materielId != null and materielId != ''" >
+            and materiel_id = #{materielId}
+        </if>
+        <if test="isRepair != null and isRepair != ''" >
+            and is_repair = #{isRepair}
+        </if>
+        <if test="appleNum != null and appleNum != ''" >
+            and apple_num = #{appleNum}
+        </if>
+        <if test="receiveNum != null and receiveNum != ''" >
+            and receive_num = #{receiveNum}
+        </if>
+        <if test="price != null and price != ''" >
+            and price = #{price}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from lc_process_materiel
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="processNo != null and processNo != ''" >
+            and process_no = #{processNo}
+        </if>
+        <if test="repairId != null and repairId != ''" >
+            and repair_id = #{repairId}
+        </if>
+        <if test="materielId != null and materielId != ''" >
+            and materiel_id = #{materielId}
+        </if>
+        <if test="isRepair != null and isRepair != ''" >
+            and is_repair = #{isRepair}
+        </if>
+        <if test="appleNum != null and appleNum != ''" >
+            and apple_num = #{appleNum}
+        </if>
+        <if test="receiveNum != null and receiveNum != ''" >
+            and receive_num = #{receiveNum}
+        </if>
+        <if test="price != null and price != ''" >
+            and price = #{price}
+        </if>
+    </select>
+
+</mapper>   
