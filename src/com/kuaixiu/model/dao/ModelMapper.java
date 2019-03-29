@@ -25,8 +25,6 @@ public interface ModelMapper<T> extends BaseDao<T> {
      */
     List<Map<String, Object>> queryModelPriceGroupByProject(Map<String, Object> params);
 
-
-    List<T> queryByBrandId(@Param("brandId")String brandId);
     /**
      * 根据机型name修改
      * @param t
