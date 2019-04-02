@@ -17,7 +17,7 @@
     
     <!-- kx_order_record table all fields -->
     <sql id="Base_Column_List" >
-        id,order_no,record_name,coupon_type,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        id,order_no,record_name,coupon_type,coupon_code,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
