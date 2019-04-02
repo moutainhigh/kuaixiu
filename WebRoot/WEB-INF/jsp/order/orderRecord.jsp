@@ -13,9 +13,9 @@
                     <div class="col-sm-6">
                         <select id="couponType" name="couponType" class="form-control">
                             <option value="">--请选择--</option>
-                            <option value="1">通用加价券</option>
-                            <option value="2">20元屏幕加价券</option>
-                            <option value="3">50元屏幕加价券</option>
+                            <option value="1">20元通用优惠券</option>
+                            <option value="2">30元屏幕优惠券</option>
+                            <option value="3">50元屏幕优惠券</option>
                         </select>
                     </div>
                 </div>

@@ -293,6 +293,11 @@
                             </h4>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>优惠券编码：${orderRecord.couponCode }</h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
                 </td>
             </tr>
         </c:if>

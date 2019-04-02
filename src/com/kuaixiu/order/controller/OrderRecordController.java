@@ -66,7 +66,7 @@ public class OrderRecordController extends BaseController {
                 return getResult(resultData, null, false, "2", "参数错误");
             }
             //发送优惠券
-            sendCoupon(Integer.valueOf(couponType), order.getMobile());
+            String code=sendCoupon(Integer.valueOf(couponType), order.getMobile());
 
             //创建订单回访
             SessionUser su = getCurrentUser(request);
@@ -75,6 +75,7 @@ public class OrderRecordController extends BaseController {
             orderRecord.setRecordName(su.getUserId());
             orderRecord.setCouponType(Integer.valueOf(couponType));
             orderRecord.setNote(note);
+            orderRecord.setCouponCode(code);
             orderRecordService.add(orderRecord);
             order.setIsRecord(1);
             orderService.saveUpdate(order);
@@ -87,7 +88,7 @@ public class OrderRecordController extends BaseController {
         return resultData;
     }
 
-    private void sendCoupon(Integer couponType, String mobile) throws Exception {
+    private String sendCoupon(Integer couponType, String mobile) throws Exception {
         String batchId = "";
         String price = "";
         String projectName = "";
@@ -96,12 +97,12 @@ public class OrderRecordController extends BaseController {
             batchId = SystemConstant.RECORD_COMMON_BATCHID;
             price = SystemConstant.RECORD_COMMON_PRICE;
             projectName = null;
-            couponName = null;
+            couponName = "20元通用优惠券";
         } else if (2 == couponType) {
-            batchId = SystemConstant.RECORD_SCREEN20_BATCHID;
-            price = SystemConstant.RECORD_COMMON_PRICE;
+            batchId = SystemConstant.RECORD_SCREEN30_BATCHID;
+            price = SystemConstant.RECORD_SCREEN30_PRICE;
             projectName = "屏幕";
-            couponName = "20元屏幕优惠券";
+            couponName = "30元屏幕优惠券";
         } else if (3 == couponType) {
             batchId = SystemConstant.RECORD_SCREEN50_BATCHID;
             price = SystemConstant.RECORD_SCREEN50_PRICE;
@@ -114,5 +115,6 @@ public class OrderRecordController extends BaseController {
         coupon.setIsReceive(1);
         couponService.getDao().update(coupon);
         couponService.receiveSendSms(coupon);
+        return commonCode;
     }
 }

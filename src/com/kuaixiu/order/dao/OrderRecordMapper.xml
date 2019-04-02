@@ -9,6 +9,7 @@
         <result column="order_no" property="orderNo"/>
         <result column="record_name" property="recordName"/>
         <result column="coupon_type" property="couponType"/>
+        <result column="coupon_code" property="couponCode"/>
         <result column="note" property="note"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -22,9 +23,9 @@
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_order_record
-        (id,order_no,record_name,coupon_type,note,create_time,update_time)
+        (id,order_no,record_name,coupon_type,coupon_code,note,create_time,update_time)
         values
-        (#{id},#{orderNo},#{recordName},#{couponType},#{note},now(),now())
+        (#{id},#{orderNo},#{recordName},#{couponType},#{couponCode},#{note},now(),now())
     </insert>
 
     <!-- 根据id，修改记录-->

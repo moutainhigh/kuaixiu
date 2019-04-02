@@ -330,7 +330,7 @@ public class SystemConstant {
     /**
      * 回访的20屏幕维修通用优惠卷批次号
      */
-    public static final String RECORD_SCREEN20_BATCHID =SystemUtil.getSysCfgProperty("record.screen20.batchId");
+    public static final String RECORD_SCREEN30_BATCHID =SystemUtil.getSysCfgProperty("record.screen30.batchId");
     /**
      * 回访的50屏幕维修通用优惠卷批次号
      */
@@ -339,6 +339,11 @@ public class SystemConstant {
      * 回访的维修通用优惠卷价格
      */
     public static final String RECORD_COMMON_PRICE =SystemUtil.getSysCfgProperty("record.common.price");
+    /**
+     * 回访的50屏幕维修通用优惠卷价格
+     */
+    public static final String RECORD_SCREEN30_PRICE =SystemUtil.getSysCfgProperty("record.screen30.price");
+
     /**
      * 回访的50屏幕维修通用优惠卷价格
      */
