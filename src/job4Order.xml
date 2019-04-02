@@ -120,26 +120,26 @@
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
           <list>
-              <!--&lt;!&ndash; 定时处理派单&ndash;&gt;-->
-              <!--<ref local="dealAutoDispatchTrigger"/>-->
+              <!-- 定时处理派单-->
+              <ref local="dealAutoDispatchTrigger"/>
 
-              <!--&lt;!&ndash; 定时对门店商超过15分钟没有派单的订单自动重新派单&ndash;&gt;-->
-              <!--<ref local="dealReDispatchTrigger"/>-->
+              <!-- 定时对门店商超过15分钟没有派单的订单自动重新派单-->
+              <ref local="dealReDispatchTrigger"/>
 
-              <!--&lt;!&ndash; 提醒预约信息&ndash;&gt;-->
-              <!--<ref local="dealAgreedNewsTrigger"/>-->
+              <!-- 提醒预约信息-->
+              <ref local="dealAgreedNewsTrigger"/>
 
-              <!--&lt;!&ndash; 定时刷新微信access_token&ndash;&gt;-->
-              <!--<ref local="dealAccessTokenTrigger"/>-->
+              <!-- 定时刷新微信access_token-->
+              <ref local="dealAccessTokenTrigger"/>
 
-              <!--&lt;!&ndash;定时推送号卡给电渠&ndash;&gt;-->
-              <!--<ref local="dealPushTrigger"/>-->
+              <!--定时推送号卡给电渠-->
+              <ref local="dealPushTrigger"/>
 
-              <!--&lt;!&ndash;定时计算外部测评手机总金额&ndash;&gt;-->
-              <!--<ref local="dealPushTotalprice"/>-->
+              <!--定时计算外部测评手机总金额-->
+              <ref local="dealPushTotalprice"/>
 
-              <!--&lt;!&ndash;定时查询15分钟前后微信已提交订单&ndash;&gt;-->
-              <!--<ref local="dealPayLogOrderTrigger"/>-->
+              <!--定时查询15分钟前后微信已提交订单-->
+              <ref local="dealPayLogOrderTrigger"/>
           </list>
         </property>
     </bean>

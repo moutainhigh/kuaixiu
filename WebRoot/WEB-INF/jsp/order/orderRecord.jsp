@@ -46,6 +46,7 @@
 
     //点击保存按钮,提交form表单，触发校验
     $("#addNoteSaveBtn").click(function () {
+        $("#addNoteSaveBtn").attr("disabled", true);
         var orderId = $("#recordOrderId").val();
         var note = $("#note").val();
         var couponType = $("#couponType").val();
@@ -61,6 +62,7 @@
                 if (result.success) {
                     //重置表单数据
                     document.getElementById("recordForm").reset();
+                    $("#addNoteSaveBtn").attr("disabled", false);
                     showOrderDetail(orderId);
                 } else {
                     AlertText.tips("d_alert", "提示", result.resultMessage);
