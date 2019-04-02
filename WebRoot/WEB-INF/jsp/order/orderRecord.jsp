@@ -7,7 +7,7 @@
             <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
         </div>
         <div class="modal-body">
-            <form id="insertForm" method="post" class="form-horizontal">
+            <form id="recordForm" method="post" class="form-horizontal">
                 <div class="form-group">
                     <label for="note" class="col-sm-3 control-label"><span style="color:red">*</span> 加价券类型</label>
                     <div class="col-sm-6">
@@ -60,7 +60,7 @@
             success: function (result) {
                 if (result.success) {
                     //重置表单数据
-                    document.getElementById("insertForm").reset();
+                    document.getElementById("recordForm").reset();
                     showOrderDetail(orderId);
                 } else {
                     AlertText.tips("d_alert", "提示", result.resultMessage);
