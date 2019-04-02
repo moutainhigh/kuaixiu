@@ -285,7 +285,7 @@
                                     20元通用优惠券
                                 </c:if>
                                 <c:if test="${orderRecord.couponType==2}">
-                                    20元屏幕优惠券
+                                    30元屏幕优惠券
                                 </c:if>
                                 <c:if test="${orderRecord.couponType==3}">
                                     50元屏幕优惠券

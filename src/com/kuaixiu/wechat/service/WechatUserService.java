@@ -14,6 +14,7 @@ import com.kuaixiu.project.service.ProjectService;
 import com.kuaixiu.wechat.dao.WechatUserMapper;
 import com.kuaixiu.wechat.entity.WechatUser;
 import com.system.constant.SystemConstant;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,21 +51,72 @@ public class WechatUserService extends BaseService<WechatUser>{
 		return mapper;
 	}
 
+	/**
+	 * 生成一张维修通用优惠券
+	 * @return
+	 */
+	public String kxCreateCoupon(String batchId,String price,String projectName,String couponName) {
+		String code="";
+		List<Project> projects=new ArrayList<>();
+		if(StringUtils.isNotBlank(projectName)){
+			projects=projectService.getDao().queryByLikeName(projectName);
+		}else{
+			projects = null;
+		}
 
+		// 支持品牌
+		List<String> addBrands =new ArrayList<String>();
+		// 支持故障
+		List<String> addProjects =new ArrayList<String>();
+		if (!CollectionUtils.isEmpty(projects)) {
+			for(Project p : projects){
+				addProjects.add(p.getId());
+			}
+		}
+		try {
+			Coupon t = new Coupon();
+			// 生成批次ID
+			t.setBatchId(batchId);
+			t.setCouponPrice(new BigDecimal(price));
+			t.setCouponName(couponName);
+			Date date = new Date();
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String time = format.format(date);
+			t.setBeginTime(time);
+
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.YEAR, 1);
+			t.setEndTime(format.format(c.getTime()));
+
+			t.setBrands(addBrands);
+			t.setProjects(addProjects);
+			t.setNote("");
+			t.setCreateUserid("admin");
+			t.setIsDel(0);
+			t.setStatus(1);
+			t.setIsUse(0);
+			t.setIsReceive(1);
+			t.setType(0);// 0表示维修优惠卷
+			t.setIsBrandCurrency(1);
+			if(StringUtils.isBlank(projectName)) {
+				t.setIsProjectCurrency(1);
+			}
+			// 生成优惠码
+			code=saveByNewCode(t);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return code;
+	}
 
 	/**
 	 * 生成一张维修通用优惠券
 	 * @return
 	 */
-	public String createCoupon(String batchId,String price,String projectName,String couponName) {
+	public String createCoupon(String batchId,String price) {
 		String code="";
 		List<Brand> brands = brandService.queryList(null);
-		List<Project> projects=new ArrayList<>();
-		if(StringUtils.isNotBlank(projectName)){
-			projects=projectService.getDao().queryByLikeName(projectName);
-		}else{
-			projects = projectService.queryList(null);
-		}
+		List<Project> projects = projectService.queryList(null);
 
 		// 支持品牌
 		List<String> addBrands =new ArrayList<String>();
@@ -85,11 +137,7 @@ public class WechatUserService extends BaseService<WechatUser>{
 			// 生成批次ID
 			t.setBatchId(batchId);
 			t.setCouponPrice(new BigDecimal(price));
-			if(StringUtils.isNotBlank(couponName)){
-				t.setCouponName(couponName);
-			}else{
-				t.setCouponName(SystemConstant.WECHAT_COMMON_NAME);
-			}
+			t.setCouponName(SystemConstant.WECHAT_COMMON_NAME);
 			Date date = new Date();
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String time = format.format(date);

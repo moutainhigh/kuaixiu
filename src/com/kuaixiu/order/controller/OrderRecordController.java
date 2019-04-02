@@ -109,12 +109,12 @@ public class OrderRecordController extends BaseController {
             projectName = "屏幕";
             couponName = "50元屏幕优惠券";
         }
-        String commonCode = wechatUserService.createCoupon(batchId, price, projectName, couponName);
+        String commonCode = wechatUserService.kxCreateCoupon(batchId, price, projectName, couponName);
         Coupon coupon = couponService.getDao().queryByCode(commonCode);
         coupon.setReceiveMobile(mobile);
         coupon.setIsReceive(1);
         couponService.getDao().update(coupon);
-        couponService.receiveSendSms(coupon);
+        couponService.kxReceiveSendSms(coupon);
         return commonCode;
     }
 }
