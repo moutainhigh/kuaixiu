@@ -65,11 +65,11 @@ public class OrderRecordController extends BaseController {
             if (order == null) {
                 return getResult(resultData, null, false, "2", "参数错误");
             }
+            SessionUser su = getCurrentUser(request);
             //发送优惠券
-            String code=sendCoupon(Integer.valueOf(couponType), order.getMobile());
+            String code = sendCoupon(Integer.valueOf(couponType), order.getMobile(), su.getUserId());
 
             //创建订单回访
-            SessionUser su = getCurrentUser(request);
             OrderRecord orderRecord = new OrderRecord();
             orderRecord.setOrderNo(order.getOrderNo());
             orderRecord.setRecordName(su.getUserId());
@@ -88,32 +88,33 @@ public class OrderRecordController extends BaseController {
         return resultData;
     }
 
-    private String sendCoupon(Integer couponType, String mobile) throws Exception {
+    private String sendCoupon(Integer couponType, String mobile, String userId) throws Exception {
         String batchId = "";
         String price = "";
         String projectName = "";
         String couponName = "";
-        if (1 == couponType) {
-            batchId = SystemConstant.RECORD_COMMON_BATCHID;
-            price = SystemConstant.RECORD_COMMON_PRICE;
-            projectName = null;
-            couponName = "20元通用优惠券";
-        } else if (2 == couponType) {
-            batchId = SystemConstant.RECORD_SCREEN30_BATCHID;
-            price = SystemConstant.RECORD_SCREEN30_PRICE;
-            projectName = "屏幕";
-            couponName = "30元屏幕优惠券";
-        } else if (3 == couponType) {
-            batchId = SystemConstant.RECORD_SCREEN50_BATCHID;
-            price = SystemConstant.RECORD_SCREEN50_PRICE;
-            projectName = "屏幕";
-            couponName = "50元屏幕优惠券";
+        switch (couponType){
+            case 1:
+                batchId = SystemConstant.RECORD_COMMON_BATCHID;
+                price = SystemConstant.RECORD_COMMON_PRICE;
+                projectName = null;
+                couponName = "20元通用优惠券";
+                break;
+            case 2:
+                batchId = SystemConstant.RECORD_SCREEN30_BATCHID;
+                price = SystemConstant.RECORD_SCREEN30_PRICE;
+                projectName = "屏幕";
+                couponName = "30元屏幕优惠券";
+                break;
+            case 3:
+                batchId = SystemConstant.RECORD_SCREEN50_BATCHID;
+                price = SystemConstant.RECORD_SCREEN50_PRICE;
+                projectName = "屏幕";
+                couponName = "50元屏幕优惠券";
+                break;
         }
-        String commonCode = wechatUserService.kxCreateCoupon(batchId, price, projectName, couponName);
+        String commonCode = wechatUserService.kxCreateCoupon(batchId, price, projectName, couponName, mobile, userId);
         Coupon coupon = couponService.getDao().queryByCode(commonCode);
-        coupon.setReceiveMobile(mobile);
-        coupon.setIsReceive(1);
-        couponService.getDao().update(coupon);
         couponService.kxReceiveSendSms(coupon);
         return commonCode;
     }

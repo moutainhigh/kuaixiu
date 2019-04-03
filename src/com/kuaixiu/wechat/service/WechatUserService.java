@@ -55,7 +55,7 @@ public class WechatUserService extends BaseService<WechatUser>{
 	 * 生成一张维修通用优惠券
 	 * @return
 	 */
-	public String kxCreateCoupon(String batchId,String price,String projectName,String couponName) {
+	public String kxCreateCoupon(String batchId,String price,String projectName,String couponName,String mobile,String userId) {
 		String code="";
 		List<Project> projects=new ArrayList<>();
 		if(StringUtils.isNotBlank(projectName)){
@@ -63,9 +63,6 @@ public class WechatUserService extends BaseService<WechatUser>{
 		}else{
 			projects = null;
 		}
-
-		// 支持品牌
-		List<String> addBrands =new ArrayList<String>();
 		// 支持故障
 		List<String> addProjects =new ArrayList<String>();
 		if (!CollectionUtils.isEmpty(projects)) {
@@ -83,15 +80,14 @@ public class WechatUserService extends BaseService<WechatUser>{
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String time = format.format(date);
 			t.setBeginTime(time);
-
 			Calendar c = Calendar.getInstance();
 			c.add(Calendar.YEAR, 1);
 			t.setEndTime(format.format(c.getTime()));
-
-			t.setBrands(addBrands);
+			t.setBrands(null);
+			t.setReceiveMobile(mobile);
 			t.setProjects(addProjects);
 			t.setNote("");
-			t.setCreateUserid("admin");
+			t.setCreateUserid(userId);
 			t.setIsDel(0);
 			t.setStatus(1);
 			t.setIsUse(0);
@@ -100,6 +96,8 @@ public class WechatUserService extends BaseService<WechatUser>{
 			t.setIsBrandCurrency(1);
 			if(StringUtils.isBlank(projectName)) {
 				t.setIsProjectCurrency(1);
+			}else{
+				t.setIsProjectCurrency(0);
 			}
 			// 生成优惠码
 			code=saveByNewCode(t);

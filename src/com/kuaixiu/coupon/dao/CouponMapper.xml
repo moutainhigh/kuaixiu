@@ -40,9 +40,9 @@
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into kx_coupon
-        (id,batch_id,coupon_code,coupon_name,type,coupon_price,begin_time,end_time,status,is_use,is_del,is_brand_currency,note,is_project_currency,use_time,create_time,create_userid,is_receive)
+        (id,batch_id,coupon_code,coupon_name,type,coupon_price,receive_mobile,begin_time,end_time,status,is_use,is_del,is_brand_currency,note,is_project_currency,use_time,create_time,create_userid,is_receive)
         values
-        (#{id},#{batchId},#{couponCode},#{couponName},#{type},#{couponPrice},#{beginTime},#{endTime},#{status},#{isUse},#{isDel},#{isBrandCurrency},#{note},#{isProjectCurrency},#{useTime},now(),#{createUserid},#{isReceive})
+        (#{id},#{batchId},#{couponCode},#{couponName},#{type},#{couponPrice},#{receiveMobile},#{beginTime},#{endTime},#{status},#{isUse},#{isDel},#{isBrandCurrency},#{note},#{isProjectCurrency},#{useTime},now(),#{createUserid},#{isReceive})
     </insert>
 
     <!-- 插入记录 -->
