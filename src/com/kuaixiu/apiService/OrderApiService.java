@@ -96,7 +96,7 @@ public class OrderApiService implements ApiServiceInf {
             order.setPage(page1);
             //查找该工程师下所有维修订单
             List<Order> orderList = orderService.getDao().queryListApiForPage(order);
-            jsonArray = getJsonArray(jsonArray, orderList);
+            getJsonArray(jsonArray, orderList);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -150,12 +150,12 @@ public class OrderApiService implements ApiServiceInf {
                 json.put("is_rework", o.getIsRework());
                 //查询订单明细
                 List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
-                if (0 == o.getIsRework() || o.getIsRework() == null) {
+//                if (o.getIsRework() == null || 0 == o.getIsRework()) {
                     orderDetails = detailService.queryByOrderNo(o.getOrderNo());
-                } else if (1 == o.getIsRework()) {
-                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
-                    orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
-                }
+//                } else if (1 == o.getIsRework()) {
+//                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
+//                    orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
+//                }
                 JSONArray jsonDetails = new JSONArray();
                 for (OrderDetail od : orderDetails) {
                     JSONObject item = new JSONObject();

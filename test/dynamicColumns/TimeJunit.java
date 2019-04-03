@@ -3,10 +3,12 @@ package dynamicColumns;
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.SystemException;
 import com.common.util.AES;
+import com.kuaixiu.apiService.OrderApiService;
 import com.kuaixiu.order.entity.OrderPayLog;
 import com.kuaixiu.order.service.OrderPayLogService;
 import com.kuaixiu.order.service.OrderPayService;
 import com.system.constant.SystemConstant;
+import org.apache.commons.collections.map.HashedMap;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,17 +22,20 @@ import java.util.Map;
  */
 public class TimeJunit extends JunitTest {
 
-    //回收订单状态变化时调用，更改状态  参数签名
-    private static final String autograph = "HZYNKJ@SUPER2017";
-    private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
+    @Autowired
+    private OrderApiService apiService;
 
     @Test
     public void aaa() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Long totalTime = 180l;
+        Map<String,String> map=new HashedMap();
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("pageIndex",1);
+        jsonObject.put("pageSize",10);
+        jsonObject.put("status",50);
+        jsonObject.put("newStatus",1);
+        map.put("params",jsonObject.toJSONString());
+        map.put("pmClientId","hbwhe002");apiService.process(map);
 
-        Long time = sdf.parse("2018-11-27 18:15:48").getTime() - sdf.parse("2019-01-22 18:15:48").getTime();
-        Long aa = totalTime + time / (1000 * 3600 * 24);
     }
 
     /**
