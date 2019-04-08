@@ -172,6 +172,7 @@
             </thead>
             <tbody>
             <input id="sessionUserType" hidden="hidden" type="text" value="${sessionScope.session_user_key_.type}"/>
+            <input id="sessionUserUserId" hidden="hidden" type="text" value="${sessionScope.session_user_key_.userId}"/>
             </tbody>
         </table>
     </div>
@@ -389,28 +390,12 @@
                         ]
                     };
                     html += template_btn(context);
-                }
+                };
+                var sessionUserUserId = $("#sessionUserUserId").val();
                 if (row.orderStatus == 50) {
-                    if (row.isRecord == 1) {
+                    if (row.isRecord == 0 && row.realPriceSubCoupon != 0) {
                         context = {
                             func: [
-                                {
-                                    "name": "售后",
-                                    "fn": "rewordOrder(\'" + row.orderNo + "\')",
-                                    "icon": "am-icon-pencil-square-o",
-                                    "class": "am-text-secondary"
-                                }
-                            ]
-                        };
-                    }else{
-                        context = {
-                            func: [
-                                {
-                                    "name": "售后",
-                                    "fn": "rewordOrder(\'" + row.orderNo + "\')",
-                                    "icon": "am-icon-pencil-square-o",
-                                    "class": "am-text-secondary"
-                                },
                                 {
                                     "name": "回访",
                                     "fn": "addRecordNotes(\'" + row.id + "\')",
@@ -419,8 +404,21 @@
                                 }
                             ]
                         };
+                        html += template_btn(context);
                     }
-                    html += template_btn(context);
+                    if(sessionUserUserId=='admin'||sessionUserUserId=='kf012') {
+                        context = {
+                            func: [
+                                {
+                                    "name": "售后",
+                                    "fn": "rewordOrder(\'" + row.orderNo + "\')",
+                                    "icon": "am-icon-pencil-square-o",
+                                    "class": "am-text-secondary"
+                                }
+                            ]
+                        };
+                        html += template_btn(context);
+                    }
                 }
 
                 var sessionUser = $("#sessionUserType").val();

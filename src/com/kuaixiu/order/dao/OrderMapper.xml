@@ -127,7 +127,7 @@
         ,date_format(t.`end_time`,'%Y-%m-%d %H:%i:%s')end_time
         ,t.is_use_coupon,t.coupon_id,t.coupon_code,t.coupon_name,t.coupon_type,t.coupon_price
         ,t.from_system,t.agreed_time,t.clerk_id,t.is_show ,t.send_agreed_news,t.cancel_reason
-        ,t.is_record
+        ,t.is_record,is_rework
         ,eng_note
     </sql>
 
@@ -265,6 +265,7 @@
             update_userid=#{updateUserid},
             end_time=#{endTime},
             send_agreed_news=#{sendAgreedNews},
+            is_rework=#{isRework},
             is_record=#{isRecord},
             cancel_reason=#{cancelReason}
         where id=#{id}

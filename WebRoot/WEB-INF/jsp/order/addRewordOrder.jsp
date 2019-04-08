@@ -108,7 +108,11 @@
                     } else {
                         addFormReset();
                         //保存失败
-                        AlertText.tips("d_alert", "提示", data.resultMessage);
+                        if(result.resultMessage==null){
+                            AlertText.tips("d_alert", "提示", result.msg);
+                        }else{
+                            AlertText.tips("d_alert", "提示", result.resultMessage);
+                        }
                     }
                 },
                 error: function () {

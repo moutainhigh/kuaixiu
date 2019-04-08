@@ -211,12 +211,6 @@
             render: function (data, type, row, meta) {
                 var context = {
                     func: [
-//                        {
-//                            "name": "取消",
-//                            "fn": "showtail(\'" + row.reworkNo + "\')",
-//                            "icon": "am-icon-pencil-square-o",
-//                            "class": "am-text-secondary"
-//                        },
                         {
                             "name": "查看",
                             "fn": "showOrderDetail(\'" + row.reworkNo + "\')",

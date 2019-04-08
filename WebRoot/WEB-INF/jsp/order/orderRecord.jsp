@@ -65,7 +65,11 @@
                     $("#addNoteSaveBtn").attr("disabled", false);
                     showOrderDetail(orderId);
                 } else {
-                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                    if(result.resultMessage==null){
+                        AlertText.tips("d_alert", "提示", result.msg);
+                    }else{
+                        AlertText.tips("d_alert", "提示", result.resultMessage);
+                    }
                     return false;
                 }
                 //隐藏等待
