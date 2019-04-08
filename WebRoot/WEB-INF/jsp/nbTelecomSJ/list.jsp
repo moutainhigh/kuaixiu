@@ -147,6 +147,7 @@
                 <th class="fontWeight_normal tdwidth80">单位名称</th>
                 <th class="fontWeight_normal tdwidth80">固定电话</th>
                 <th class="fontWeight_normal tdwidth80">宽带</th>
+                <th class="fontWeight_normal tdwidth100">已有业务</th>
                 <th class="fontWeight_normal tdwidth80">地址属性</th>
                 <th class="fontWeight_normal tdwidth80 ">详细地址</th>
                 <th class="fontWeight_normal tdwidth80 ">通信需求</th>
@@ -202,6 +203,7 @@
         {"data": "company_name", "class": ""},
         {"data": "landline", "class": ""},
         {"data": "broadband", "class": ""},
+        {"data": "existence", "class": ""},
         {"data": "address_type", "class": ""},
         {"data": "address", "class": ""},
         {"data": "demand", "class": ""},

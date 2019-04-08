@@ -48,6 +48,36 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         return nbBusinesses.get(0);
     }
 
+
+    public void exchange(Map<String, Object> map, String field) {
+        String string1 = map.get(field).toString();
+        if (string1.contains(",")) {
+            String[] strings = string1.split(",");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < strings.length; i++) {
+                sb.append(getlandlines(strings[i]) + ",");
+            }
+            map.put(field, sb.toString());
+        } else {
+            map.put(field, getlandlines(string1));
+        }
+    }
+
+    public void existenceExchange(Map<String, Object> map, String field) {
+        String string1 = map.get(field).toString();
+        if (string1.contains(",")) {
+            String[] strings = string1.split(",");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < strings.length; i++) {
+                sb.append(getExistence(strings[i]) + ",");
+            }
+            map.put(field, sb.toString());
+        } else {
+            map.put(field, getlandlines(string1));
+        }
+    }
+
+
     /**
      * 已Excel形式导出列表数据
      *
@@ -121,7 +151,7 @@ public class NBBusinessService extends BaseService<NBBusiness> {
 
         //excel标题
         String[] header = new String[]{"创建时间", "县分", "支局", "包区", "单位名称",
-                "固定电话", "宽带", "地址属性", "详细地址", "通信需求", "备注",
+                "固定电话", "宽带", "已有业务", "地址属性", "详细地址", "通信需求", "备注",
                 "联系人/手机号", "走访人/手机号", "包区人/手机号"};
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
@@ -211,40 +241,45 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         } else {
             row.createCell(6).setCellValue(map.get("broadband").toString());
         }
-        if (map.get("address_type") == null) {
+        if (map.get("existence") == null) {
             row.createCell(7).setCellValue("");
         } else {
-            row.createCell(7).setCellValue(map.get("address_type").toString());
+            row.createCell(7).setCellValue(map.get("existence").toString());
         }
-        if (map.get("address") == null) {
+        if (map.get("address_type") == null) {
             row.createCell(8).setCellValue("");
         } else {
-            row.createCell(8).setCellValue(map.get("address").toString());
+            row.createCell(8).setCellValue(map.get("address_type").toString());
         }
-        if (map.get("demand") == null) {
+        if (map.get("address") == null) {
             row.createCell(9).setCellValue("");
         } else {
-            row.createCell(9).setCellValue(map.get("demand").toString());
+            row.createCell(9).setCellValue(map.get("address").toString());
         }
-        if (map.get("remarks") == null) {
+        if (map.get("demand") == null) {
             row.createCell(10).setCellValue("");
         } else {
-            row.createCell(10).setCellValue(map.get("remarks").toString());
+            row.createCell(10).setCellValue(map.get("demand").toString());
         }
-        if (map.get("coutomer_name") == null) {
+        if (map.get("remarks") == null) {
             row.createCell(11).setCellValue("");
         } else {
-            row.createCell(11).setCellValue(map.get("coutomer_name").toString());
+            row.createCell(11).setCellValue(map.get("remarks").toString());
         }
-        if (map.get("manager_name") == null) {
+        if (map.get("coutomer_name") == null) {
             row.createCell(12).setCellValue("");
         } else {
-            row.createCell(12).setCellValue(map.get("manager_name").toString());
+            row.createCell(12).setCellValue(map.get("coutomer_name").toString());
         }
-        if (map.get("area_person") == null) {
+        if (map.get("manager_name") == null) {
             row.createCell(13).setCellValue("");
         } else {
-            row.createCell(13).setCellValue(map.get("area_person").toString());
+            row.createCell(13).setCellValue(map.get("manager_name").toString());
+        }
+        if (map.get("area_person") == null) {
+            row.createCell(14).setCellValue("");
+        } else {
+            row.createCell(14).setCellValue(map.get("area_person").toString());
         }
         return row;
     }
@@ -294,28 +329,9 @@ public class NBBusinessService extends BaseService<NBBusiness> {
         map.put("address_type", address_type);
         String getDemand = getDemand(map.get("demand").toString());
         map.put("demand", getDemand);
-        String landline1 = map.get("landline").toString();
-        if (landline1.contains(",")) {
-            String[] landlines = landline1.split(",");
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < landlines.length; i++) {
-                sb.append(getlandlines(landlines[i]) + ",");
-            }
-            map.put("landline", sb.toString());
-        } else {
-            map.put("landline", getlandlines(landline1));
-        }
-        String broadband1 = map.get("broadband").toString();
-        if (broadband1.contains(",")) {
-            String[] broadbands = broadband1.split(",");
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < broadbands.length; i++) {
-                sb.append(getlandlines(broadbands[i]) + ",");
-            }
-            map.put("broadband", sb.toString());
-        } else {
-            map.put("broadband", getlandlines(broadband1));
-        }
+        exchange(map, "landline");
+        exchange(map, "broadband");
+        existenceExchange(map, "existence");
     }
 
     private String getDemand(String demand) {
@@ -385,5 +401,32 @@ public class NBBusinessService extends BaseService<NBBusiness> {
                 landline1 = "";
         }
         return landline1;
+    }
+
+    private String getExistence(String existence) {
+        String state = "";
+        switch (existence) {
+            case "1":
+                state = "wifi自用";
+                break;
+            case "2":
+                state = "wifi经营";
+                break;
+            case "3":
+                state = "监控";
+                break;
+            case "4":
+                state = "烟感";
+                break;
+            case "5":
+                state = "门禁";
+                break;
+            case "6":
+                state = "固话广告宣传";
+                break;
+            default:
+                state = "";
+        }
+        return state;
     }
 }

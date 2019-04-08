@@ -14,6 +14,7 @@
         <result column="company_name" property="companyName"/>
         <result column="landline" property="landline"/>
         <result column="broadband" property="broadband"/>
+        <result column="existence" property="existence"/>
         <result column="address" property="address"/>
         <result column="address_type" property="addressType"/>
         <result column="demand" property="demand"/>
@@ -25,15 +26,15 @@
     
     <!-- nb_business table all fields -->
     <sql id="Base_Column_List" >
-        business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+        business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,existence,address,address_type,demand,remarks,coutomer_name,telephone,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into nb_business
-        (business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,address,address_type,demand,remarks,coutomer_name,telephone,create_time)
+        (business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,existence,address,address_type,demand,remarks,coutomer_name,telephone,create_time)
         values
-        (#{businessId},#{openId},#{managerId},#{countyId},#{officeId},#{areaId},#{companyName},#{landline},#{broadband},#{address},#{addressType},#{demand},#{remarks},#{coutomerName},#{telephone},now())
+        (#{businessId},#{openId},#{managerId},#{countyId},#{officeId},#{areaId},#{companyName},#{landline},#{broadband},#{existence},#{address},#{addressType},#{demand},#{remarks},#{coutomerName},#{telephone},now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -48,6 +49,7 @@
             company_name=#{companyName},
             landline=#{landline},
             broadband=#{broadband},
+            existence=#{existence},
             address=#{address},
             address_type=#{addressType},
             demand=#{demand},
@@ -187,7 +189,7 @@
         SELECT
         b.business_id,date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
         c.county,a.branch_office,a.area_name,b.company_name,
-        b.landline,b.broadband,b.address_type,b.address,b.demand,b.remarks,
+        b.landline,b.broadband,b.existence,b.address_type,b.address,b.demand,b.remarks,
         b.coutomer_name,b.telephone,m.manager_name,m.manager_tel,
         a.area_person,a.person_tel
         from nb_business b
@@ -239,7 +241,7 @@
         SELECT
         b.business_id,date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
         c.county,a.branch_office,a.area_name,b.company_name,
-        b.landline,b.broadband,b.address_type,b.address,b.demand,b.remarks,
+        b.landline,b.broadband,b.existence,b.address_type,b.address,b.demand,b.remarks,
         b.coutomer_name,b.telephone,m.manager_name,m.manager_tel
         from nb_business b
         LEFT JOIN nb_county c ON c.county_id=b.county_id
