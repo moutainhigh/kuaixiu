@@ -64,16 +64,20 @@ public class NBBusinessService extends BaseService<NBBusiness> {
     }
 
     public void existenceExchange(Map<String, Object> map, String field) {
-        String string1 = map.get(field).toString();
-        if (string1.contains(",")) {
-            String[] strings = string1.split(",");
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < strings.length; i++) {
-                sb.append(getExistence(strings[i]) + ",");
-            }
-            map.put(field, sb.toString());
+        if (map.get(field) == null) {
+            map.put(field, "");
         } else {
-            map.put(field, getlandlines(string1));
+            String string1 = map.get(field).toString();
+            if (string1.contains(",")) {
+                String[] strings = string1.split(",");
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < strings.length; i++) {
+                    sb.append(getExistence(strings[i]) + ",");
+                }
+                map.put(field, sb.toString());
+            } else {
+                map.put(field, getlandlines(string1));
+            }
         }
     }
 

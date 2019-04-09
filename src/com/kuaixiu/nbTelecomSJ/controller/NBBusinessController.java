@@ -184,7 +184,7 @@ public class NBBusinessController extends BaseController {
         Page page = getPageByRequest(request);
         nbBusiness.setPage(page);
         List<Map<String, Object>> list = nBBusinessService.getDao().queryListMapForPage(nbBusiness);
-        for (Map map : list) {
+        for (Map<String, Object> map : list) {
             nBBusinessService.exchange(map,"landline");
             nBBusinessService.exchange(map,"broadband");
             nBBusinessService.existenceExchange(map,"existence");
@@ -300,7 +300,7 @@ public class NBBusinessController extends BaseController {
             if (StringUtils.isBlank(countyId) || StringUtils.isBlank(manager) || StringUtils.isBlank(managerTel)
                     || StringUtils.isBlank(officeId) || StringUtils.isBlank(areaId) || StringUtils.isBlank(address)
                     || StringUtils.isBlank(addressType) || StringUtils.isBlank(broadband) || StringUtils.isBlank(landline)
-                    || StringUtils.isBlank(demand) || StringUtils.isBlank(companyName) || StringUtils.isBlank(existence)) {
+                    || StringUtils.isBlank(demand) || StringUtils.isBlank(companyName)) {
                 return getResult(result, null, false, "2", "参数为空");
             }
             if (!"1".equals(demand)) {

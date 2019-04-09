@@ -456,7 +456,7 @@ public class ActivityCompanyController extends BaseController {
 
         Integer stateInt = saveToImgByInputStream(inputStream, savePath, name);  //保存图片
         if (stateInt == 1) {
-            object.put("path", getProjectUrl(request) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + name);
+            object.put("path", getProjectUrl(request) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + "code_images" + System.getProperty("file.separator") + name);
             getResult(result, object, true, "0", "成功");
         } else {
             getResult(result, object, false, "2", "失败");
