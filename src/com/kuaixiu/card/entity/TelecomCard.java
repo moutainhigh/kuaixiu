@@ -1,6 +1,7 @@
 package com.kuaixiu.card.entity;
 
 import com.common.base.entity.BaseEntity;
+import com.common.util.DateUtil;
 import com.common.wechat.common.util.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -128,6 +129,8 @@ public class TelecomCard extends BaseEntity{
      * 更新时间
      */
     private Date updateTime;
+
+    private String strUpdateTime;
 
 
     public String getIccid() {
@@ -387,5 +390,13 @@ public class TelecomCard extends BaseEntity{
 
     public void setQueryTelecomEndTime(String queryTelecomEndTime) {
         this.queryTelecomEndTime = queryTelecomEndTime;
+    }
+
+    public String getStrUpdateTime() {
+        return DateUtil.getDateyyyyMMddHHmmss(updateTime);
+    }
+
+    public void setStrUpdateTime(String strUpdateTime) {
+        this.strUpdateTime = strUpdateTime;
     }
 }
