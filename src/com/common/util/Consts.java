@@ -13,4 +13,7 @@ public interface Consts {
 
     public static final int COOKIE_LOGIN_USER_EXPIRES_IN = 604800;//用户信息Cookie有效期,604800=一周
     public static final String AUTO_LOGIN_CHECKED = "1";//自动登录被勾选
+
+    //H5回收列表查询手机号免登录，cookie 的key
+    public static final String COOKIE_H5_PHONE = "cookie_h5_phone";
 }

@@ -24,10 +24,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -1023,7 +1026,7 @@ public class RecycleController extends BaseController {
      * 获取订单列表
      */
     @RequestMapping(value = "recycle/getOrderList")
-    public void getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ResultData getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
         String url = baseUrl + "getorderlist";
@@ -1036,6 +1039,18 @@ public class RecycleController extends BaseController {
             String starttime = params.getString("starttime");
             String endtime = params.getString("endtime");
             String processstatus = params.getString("processstatus");
+
+            if (StringUtils.isBlank(contactphone)) {
+                Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_H5_PHONE);
+                if (cookie == null || StringUtils.isBlank(cookie.getValue())) {
+                    return getResult(result, null, false, "2", "请输入手机号");
+                }
+                String cookiePhone = cookie.getValue();
+                contactphone = URLDecoder.decode(cookiePhone, "UTF-8");
+            } else {
+                String[] dname = request.getServerName().split("\\.");
+                CookiesUtil.setCookie(response, Consts.COOKIE_H5_PHONE, contactphone, CookiesUtil.prepare(dname), -1);
+            }
 
             JSONObject requestNews = new JSONObject();
             //调用接口需要加密的数据
@@ -1113,13 +1128,16 @@ public class RecycleController extends BaseController {
             result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
             e.printStackTrace();
             sessionUserService.getException(result);
         }
-        renderJson(response, result);
+        return result;
+//        renderJson(response, result);
     }
 
 
