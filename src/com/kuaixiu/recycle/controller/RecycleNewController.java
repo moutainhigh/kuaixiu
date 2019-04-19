@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -885,6 +886,7 @@ public class RecycleNewController extends BaseController {
      * 获取订单列表
      */
     @RequestMapping(value = "recycleNew/getOrderList")
+    @ResponseBody
     public ResultData getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
