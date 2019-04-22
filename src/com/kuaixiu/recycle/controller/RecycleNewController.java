@@ -650,6 +650,7 @@ public class RecycleNewController extends BaseController {
                 Date endTime = sdf.parse("2019-04-22 23:59:59");
                 if (new Date().getTime() < endTime.getTime()) {
                     recycleCoupon = receviceCoupon(mobile);
+                    couponCode = recycleCoupon.getCouponCode();
                 }
             } else {
                 if (StringUtils.isNotBlank(couponCode)) {
@@ -689,7 +690,7 @@ public class RecycleNewController extends BaseController {
             code.put("contactphone", mobile);                                  //联系电话
             code.put("areaname", areaname);                                     //省市区
             code.put("address", address);                                      //详细地址
-            if (recycleCoupon != null) {
+            if (StringUtils.isNotBlank(couponCode)) {
                 JSONArray jsonArray = new JSONArray();
                 JSONObject json = new JSONObject();
                 json.put("couponId", recycleCoupon.getCouponCode());
