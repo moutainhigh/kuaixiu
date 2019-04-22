@@ -33,14 +33,15 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
     <script>
         $(function(){
-        	var tip=GetQueryString('tip');
-			var fm = GetQueryString( 'fm' ) ;
-			eCacheUtil.storage.cache( CacheKey.source, fm );
-        	if(tip==1){
-        		 eCacheUtil.storage.cache(CacheKey.happyGo,true);
-        	}
+        	//var tip=GetQueryString('tip');
+			//var fm = GetQueryString( 'fm' ) ;
+			//eCacheUtil.storage.cache( CacheKey.source, fm );
+        	//if(tip==1){
+        	//	 eCacheUtil.storage.cache(CacheKey.happyGo,true);
+        	//}
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
             document.title = 'M超人回收';
             $('input').focus(function(){

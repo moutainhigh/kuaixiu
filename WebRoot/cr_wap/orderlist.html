@@ -72,6 +72,7 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
     <script>
         var pIndex = 1,
             off_on = false;//分页开关;
@@ -80,7 +81,7 @@
 	    var raiseOrderNo='';  
 		
         $(function(){
-            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            //var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
             document.title = 'M超人回收';
             searchOrderList(pIndex,"");
             // $('.navbar a').click(function(){
@@ -128,7 +129,7 @@
                 pagesize:"3",
                 processstatus:orderStatus
             }
-            $.post(linkUrl+'/recycle/getOrderList.do',{params:JSON.stringify(params)},function (data) {
+            $.post(linkUrl+'/recycleNew/getOrderList.do',{params:JSON.stringify(params)},function (data) {
             	if (data.success){
                     var dataInfo = data.result.datainfo;
                     if (dataInfo.length == 0){
@@ -144,6 +145,7 @@
                 }else {
                     loading_hide();
                     alertTip(data.resultMessage);
+					location.href = 'login.html';
                 }
             });
         }

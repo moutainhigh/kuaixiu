@@ -14,7 +14,7 @@
         <div class="main">
             <div class="header index1">
                 <a href="javascript:;"><img src="img/logo-go.png" alt=""><span>M超人回收</span></a>
-                <a href="login.html"><img src="img/icon_order.png" alt="">我的订单</a>
+                <a href="orderlist.html"><img src="img/icon_order.png" alt="">我的订单</a>
             </div>
             <div class="swiper-container">
                 <div class="banner">
@@ -106,26 +106,26 @@
                         <a href="product.html">查看全部 &gt;</a>
                     </div>
                 </div>
-                 <div class="modelCont">
-                    <div class="item" data-mid="20180108121045534">
+                <div class="modelCont">
+                    <div class="item" data-mid="636105728405345559">
                         <img src="http://114.215.210.238/resources/Mobile/iPhoneX.png" alt="">
                         <p>iPhone X</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
-                    <div class="item" data-mid="20171220141338338">
+                    <div class="item" data-mid="636272407102742310">
                         <img src="http://114.215.210.238/resources/Mobile/iPhone8.png" alt="">
                         <p>iPhone 8 Plus</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
-                    <div class="item" data-mid="20180105130224777">
+                    <div class="item" data-mid="636177401271291496">
                         <img src="http://114.215.210.238/resources/Mobile/SX-N9500.png" alt="">
                         <p>三星GALAXY note 8 (N9500/全网通)</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
-                    <div class="item" data-mid="20171220141244874">
+                    <div class="item" data-mid="20171119123832602">
                         <img src="http://114.215.210.238/resources/Mobile/iPhone8.png" alt="">
                         <p>iPhone 8</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
@@ -197,19 +197,7 @@
 
 			var fm = GetQueryString( 'fm' ) ;
 			
-			//2. 根据ticket获得手机号码
-			//a 记录抽奖号码
-			if( fm == '10' ){
-				eCacheUtil.storage.cache( CacheKey.source, fm );
-				
-				//从欢Go客户端加载当前页面
-				if( ticket && ticket != '' ){
-					getMobileByTicket( ticket );
-				}
-				else{
-					alert( '请先用欢Go账号登录再操作' );
-				}	
-			}else{
+			else{
 				//良品价检测
 				eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
 			}

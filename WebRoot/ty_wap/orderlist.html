@@ -66,6 +66,7 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
     <script>
         var pIndex = 1,
             off_on = false;//分页开关;
@@ -122,6 +123,7 @@
                 }else {
                     loading_hide();
                     alertTip(data.resultMessage);
+					 location.href = 'login.html';
                 }
             });
         }
