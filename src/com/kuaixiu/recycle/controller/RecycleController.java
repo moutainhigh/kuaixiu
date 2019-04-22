@@ -374,15 +374,15 @@ public class RecycleController extends BaseController {
                     String selectModelName = (String) request.getSession().getAttribute("selectModelName");
 
 //                    if (recycleCheckItems.isEmpty()) {
-                        //新增
-                        t.setItems(items);
-                        t.setPrice(new BigDecimal(price));
-                        t.setProductId(productId);
-                        t.setBrand(selectBrandName);
-                        t.setBrandId(selectBrandId);
-                        t.setRecycleModel(selectModelName);
-                        t.setQuoteId(j.getString("quoteid"));
-                        recycleCheckItemsService.add(t);
+                    //新增
+                    t.setItems(items);
+                    t.setPrice(new BigDecimal(price));
+                    t.setProductId(productId);
+                    t.setBrand(selectBrandName);
+                    t.setBrandId(selectBrandId);
+                    t.setRecycleModel(selectModelName);
+                    t.setQuoteId(j.getString("quoteid"));
+                    recycleCheckItemsService.add(t);
 //                    } else {
 //                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
 //                        //修改
@@ -707,7 +707,7 @@ public class RecycleController extends BaseController {
                 throw new SystemException("部分信息长度过长");
             }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
-            if (StringUtils.isNotBlank(couponCode)) {
+            if (StringUtils.isNotBlank(couponCode) && !"9".equals(source) && !"10".equals(source)) {
                 recycleCoupon = recycleCouponService.queryByCode(couponCode);
                 if (recycleCoupon == null) {
                     throw new SystemException("加价码输入错误");
@@ -783,23 +783,22 @@ public class RecycleController extends BaseController {
             if (StringUtils.isNotBlank(openId)) {
                 order.setWechatOpenId(openId);
             }
-            if (StringUtils.isNotBlank(couponCode)) {
-                if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()) {
-                    throw new SystemException("加价券的使用不满足条件");
+            if ("9".equals(source) || "10".equals(source)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date endTime = sdf.parse("2019-04-22 23:59:59");
+                if (new Date().getTime() < endTime.getTime()) {
+                    recycleCoupon = receviceCoupon(mobile);
                 }
-                order.setCouponId(recycleCoupon.getId());
-                recycleCouponService.updateForUse(recycleCoupon);
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date endTime = sdf.parse("2019-04-22 23:59:59");
-            if (new Date().getTime() < endTime.getTime()) {
-                if ("9".equals(source) || "10".equals(source)) {
-                    RecycleCoupon recycleCoupon1 = receviceCoupon(mobile);
-                    if (recycleCoupon1 != null) {
-                        order.setCouponId(recycleCoupon1.getId());
-                        recycleCouponService.updateForUse(recycleCoupon1);
+            } else {
+                if (StringUtils.isNotBlank(couponCode)) {
+                    if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()) {
+                        throw new SystemException("加价券的使用不满足条件");
                     }
                 }
+            }
+            if (recycleCoupon != null) {
+                order.setCouponId(recycleCoupon.getId());
+                recycleCouponService.updateForUse(recycleCoupon);
             }
             recycleOrderService.add(order);     //添加预付订单记录
 
@@ -828,7 +827,7 @@ public class RecycleController extends BaseController {
             code.put("contactphone", mobile);                                  //联系电话
             code.put("areaname", areaname);                                     //省市区
             code.put("address", address);                                      //详细地址
-            if (StringUtils.isNotBlank(couponCode)) {
+            if (recycleCoupon != null) {
                 JSONArray jsonArray = new JSONArray();
                 JSONObject json = new JSONObject();
                 json.put("couponId", recycleCoupon.getCouponCode());
