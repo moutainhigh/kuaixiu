@@ -736,10 +736,10 @@ public class RecycleController extends BaseController {
             Address provinceName = addressService.queryByAreaId(province);
             Address cityName = addressService.queryByAreaId(city);
             Address areaName = addressService.queryByAreaId(area);
-//            if (provinceName == null || cityName == null || areaName == null) {
-//                throw new SystemException("请确认地址信息是否无误");
-//            }
-            String areaname = "";//getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
+            if (provinceName == null || cityName == null || areaName == null) {
+                throw new SystemException("请确认地址信息是否无误");
+            }
+            String areaname = getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
 
 
             //先保存订单到超人平台再调用回收平台下单接口  返回成功则更新订单状态
@@ -791,7 +791,7 @@ public class RecycleController extends BaseController {
                 recycleCouponService.updateForUse(recycleCoupon);
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date endTime = sdf.parse("2019-02-28 23:59:59");
+            Date endTime = sdf.parse("2019-04-22 23:59:59");
             if (new Date().getTime() < endTime.getTime()) {
                 if ("9".equals(source) || "10".equals(source)) {
                     RecycleCoupon recycleCoupon1 = receviceCoupon(mobile);

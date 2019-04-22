@@ -652,7 +652,7 @@ public class RecycleNewController extends BaseController {
                 recycleCouponService.updateForUse(recycleCoupon);
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date endTime = sdf.parse("2019-02-28 23:59:59");
+            Date endTime = sdf.parse("2019-04-22 23:59:59");
             if (new Date().getTime() < endTime.getTime()) {
                 if ("9".equals(source) || "10".equals(source)) {
                     RecycleCoupon recycleCoupon1 = receviceCoupon(mobile);
