@@ -154,7 +154,12 @@
         {
             targets: 2,
             render: function (data, type, row, meta) {
-                var html = "<a href='javascript:void(0);' onclick=\"showOrderDetail('" + row.id + "')\" >" + row.order_no + "</a>";
+            var html;
+            if(row.is_rework == 1){
+                 html = "<a href='javascript:void(0);' onclick=\"showReworkOrderDetail('" + row.order_no + "')\" >" + row.order_no + "</a>";
+            }else{
+                 html = "<a href='javascript:void(0);' onclick=\"showOrderDetail('" + row.id + "')\" >" + row.order_no + "</a>";
+            }
                 var state = row.orderStatusName;
                 switch (row.order_status) {
                     case 11:
@@ -221,15 +226,16 @@
         {//复选框
             targets: -4,
             render: function (data, type, row, meta) {
-                if (row.shop_manager_name == null && row.shop_manager_mobile != null) {
-                    return "" + "/<br/>" + row.shop_manager_mobile;
-                } else if (row.shop_manager_name != null && row.shop_manager_mobile == null) {
-                    return row.shop_manager_name + "/<br/>" + "";
-                } else if (row.shop_manager_name == null && row.shop_manager_mobile == null) {
-                    return "";
-                } else {
-                    return row.shop_manager_name + "/<br/>" + row.shop_manager_mobile;
-                }
+//                if (row.shop_manager_name == null && row.shop_manager_mobile != null) {
+//                    return "" + "/<br/>" + row.shop_manager_mobile;
+//                } else if (row.shop_manager_name != null && row.shop_manager_mobile == null) {
+//                    return row.shop_manager_name + "/<br/>" + "";
+//                } else if (row.shop_manager_name == null && row.shop_manager_mobile == null) {
+//                    return "";
+//                } else {
+//                    return row.shop_manager_name + "/<br/>" + row.shop_manager_mobile;
+//                }
+                return row.shop_manager_mobile;
             }
         },
         {//复选框
@@ -344,7 +350,12 @@
     function showOrderDetail(id) {
         func_reload_page("${ctx}/order/detail.do?id=" + id);
     }
-
+    /**
+     * 查看订单详情
+     */
+    function showReworkOrderDetail(id) {
+        func_reload_page("${ctx}/order/reworkOrderDetail.do?reworkNo=" + id);
+    }
     function toShopDetail(code) {
         func_reload_page("${ctx}/shop/detail.do?code=" + code);
     }

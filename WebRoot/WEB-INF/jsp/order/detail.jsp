@@ -197,7 +197,8 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>返修订单号：
                             <c:forEach items="${reworks}" var="reworks" varStatus="i">
-                                <a href="javascript:void(0);" onclick="showReworkOrderDetail('${reworks.orderReworkNo}')"> ${reworks.orderReworkNo}</a>，
+                                <a href="javascript:void(0);"
+                                   onclick="showReworkOrderDetail('${reworks.orderReworkNo}')"> ${reworks.orderReworkNo}</a>，
                             </c:forEach>
                         </h4>
                     </div><!-- /.col -->
@@ -254,6 +255,52 @@
 
             </td>
         </tr>
+        <c:if test="${orderRecord!=null}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>回访信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访人：${orderRecord.recordName }</h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访时间：<fmt:formatDate value="${orderRecord.createTime }"
+                                                     pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>回访备注：${orderRecord.note} </h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>优惠券类型：
+                                <c:if test="${orderRecord.couponType==1}">
+                                    20元通用优惠券
+                                </c:if>
+                                <c:if test="${orderRecord.couponType==2}">
+                                    30元屏幕优惠券
+                                </c:if>
+                                <c:if test="${orderRecord.couponType==3}">
+                                    50元屏幕优惠券
+                                </c:if>
+                            </h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>优惠券编码：${orderRecord.couponCode }</h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+        </c:if>
     </table>
 </div>
 <!-- /am-g -->

@@ -174,6 +174,9 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>发货城市：${card.sendCity}</h4>
                     </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>推送时间：${card.strUpdateTime}</h4>
+                    </div><!-- /.col -->
                 </div><!-- /.row -->
         </tr>
     </table>

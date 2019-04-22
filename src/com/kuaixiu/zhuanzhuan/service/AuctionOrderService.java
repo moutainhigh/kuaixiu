@@ -312,6 +312,10 @@ public class AuctionOrderService extends BaseService<AuctionOrder>{
         if (telecomCard == null) {
             throw new SystemException("该号卡不存在");
         }
+        //如果号卡转转已成功推送，则不予再次推送
+        if (telecomCard.getIsUse() == 1) {
+            throw new SystemException("该号卡转转已成功推送，请勿重复推送");
+        }
         //如果号卡已成功推送给电渠则不予再次推送
         if(telecomCard.getIsPush()==2){
             throw new SystemException(allyId+"该号卡已成功推送，请勿重复推送！");

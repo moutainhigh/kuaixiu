@@ -100,13 +100,13 @@
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
-        from kx_provider where id = #{id}
+        from kx_provider where id = #{id} AND is_del = 0
     </select>
     
     <!-- 根据code查询  -->
     <select id="queryByCode"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
-        from kx_provider where code = #{code}
+        from kx_provider where code = #{code} AND is_del = 0
     </select>
 
     <!-- 查询列表无分页 -->

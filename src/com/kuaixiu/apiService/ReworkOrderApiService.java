@@ -68,6 +68,8 @@ public class ReworkOrderApiService implements ApiServiceInf {
             reworkOrder.setReasonsDetail(reasonDetail);
             //创建保存返修订单
             reworkOrderService.save(order, reworkOrder);
+            order.setIsRework(1);
+            orderService.saveUpdate(order);
             //给工程师派单
             reworkOrderService.dispatch(order, reworkOrder);
         } catch (Exception e) {

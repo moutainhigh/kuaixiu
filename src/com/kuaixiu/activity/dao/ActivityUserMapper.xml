@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.activity.dao.ActivityUserMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityUser" >
+        <result column="id" property="id"/>
+        <result column="activity_ident" property="activityIdent"/>
+        <result column="openId" property="openId"/>
+        <result column="person" property="person"/>
+        <result column="number" property="number"/>
+        <result column="project" property="project"/>
+        <result column="fault" property="fault"/>
+        <result column="login_number" property="loginNumber"/>
+        <result column="productId" property="productId"/>
+        <result column="model" property="model"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand" property="brand"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- kx_activity_kx_user table all fields -->
+    <sql id="Base_Column_List" >
+        id,activity_ident,openId,person,number,model,project,fault,login_number,brand_id,productId,brand,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_activity_kx_user
+        (id,activity_ident,openId,person,number,model,project,fault,login_number,brand_id,productId,brand,create_time,update_time)
+        values
+        (#{id},#{activityIdent},#{openId},#{person},#{number},#{model},#{project},#{fault},#{loginNumber},#{brandId},#{productId},#{brand},now(),#{updateTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_activity_kx_user 
+        set 
+            id=#{id},
+            activity_ident=#{activityIdent},
+            openId=#{openId},
+            person=#{person},
+            number=#{number},
+            model=#{model},
+            project=#{project},
+            fault=#{fault},
+            login_number=#{loginNumber},
+            brand_id=#{brandId},
+            productId=#{productId},
+            brand=#{brand},
+            update_time=now()
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_activity_kx_user where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_kx_user where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_kx_user
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityIdent != null and activityIdent != ''" >
+            and activity_ident = #{activityIdent}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and openId = #{openId}
+        </if>
+        <if test="person != null and person != ''" >
+            and person = #{person}
+        </if>
+        <if test="number != null and number != ''" >
+            and number = #{number}
+        </if>
+        <if test="model != null and model != ''" >
+            and model = #{model}
+        </if>
+        <if test="project != null and project != ''" >
+            and project = #{project}
+        </if>
+        <if test="fault != null and fault != ''" >
+            and fault = #{fault}
+        </if>
+        <if test="loginNumber != null and loginNumber != ''" >
+            and login_number = #{loginNumber}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="productId != null and productId != ''" >
+            and productId = #{productId}
+        </if>
+        <if test="brand != null and brand != ''" >
+            and brand = #{brand}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_kx_user
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityIdent != null and activityIdent != ''" >
+            and activity_ident = #{activityIdent}
+        </if>
+        <if test="openId != null and openId != ''" >
+            and openId = #{openId}
+        </if>
+        <if test="person != null and person != ''" >
+            and person = #{person}
+        </if>
+        <if test="number != null and number != ''" >
+            and number = #{number}
+        </if>
+        <if test="model != null and model != ''" >
+            and model = #{model}
+        </if>
+        <if test="project != null and project != ''" >
+            and project = #{project}
+        </if>
+        <if test="fault != null and fault != ''" >
+            and fault = #{fault}
+        </if>
+        <if test="loginNumber != null and loginNumber != ''" >
+            and login_number = #{loginNumber}
+        </if>
+        <if test="brandId != null and brandId != ''" >
+            and brand_id = #{brandId}
+        </if>
+        <if test="productId != null and productId != ''" >
+            and productId = #{productId}
+        </if>
+        <if test="brand != null and brand != ''" >
+            and brand = #{brand}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+    <!-- 根据openId查询  -->
+    <select id="queryByOpenId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_kx_user where openId=#{openId}
+        ORDER BY create_time DESC
+    </select>
+    <!-- 查询预约列表 带分页 -->
+    <select id="queryEstimateForPage" resultType="Map" parameterType="Object">
+        select
+        date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')saveTime,c.company_name companyName,
+        u.person person,u.number number,u.login_number loginNumber,
+        u.brand,u.model,u.project project,u.fault fault,
+        c.start_time startTime,c.end_time endTime,u.project project
+        from kx_activity_kx_user u LEFT JOIN kx_activity_company c ON u.activity_ident=c.activity_identification
+        where 1=1
+        and u.create_time is NOT NULL
+        <if test="companyName != null and companyName != ''">
+            and c.company_name LIKE CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''" >
+            and u.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''" >
+            and u.create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="person != null and person != ''">
+            and u.person LIKE CONCAT('%', #{person}, '%')
+        </if>
+        ORDER BY u.create_time DESC
+    </select>
+
+</mapper>   

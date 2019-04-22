@@ -10,6 +10,12 @@ import com.common.wechat.aes.AesCbcUtil;
 import com.common.wechat.aes.YouDaoUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.google.common.collect.Maps;
+import com.kuaixiu.activity.entity.ActivityCompany;
+import com.kuaixiu.activity.entity.ActivityLogin;
+import com.kuaixiu.activity.entity.ActivityUser;
+import com.kuaixiu.activity.service.ActivityCompanyService;
+import com.kuaixiu.activity.service.ActivityLoginService;
+import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.kuaixiu.wechat.service.WechatUserService;
@@ -20,6 +26,7 @@ import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +70,10 @@ public class RecycleWechatController extends BaseController {
     private SingleLoginService singleLoginService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private ActivityLoginService activityLoginService;
+    @Autowired
+    private ActivityCompanyService activityCompanyService;
 
     /**
      * 通过微信临时code获取openid和session_key
@@ -82,13 +93,15 @@ public class RecycleWechatController extends BaseController {
             if (StringUtils.isBlank(code)) {
                 throw new SystemException("请求参数不完整");
             }
-            String fromType=params.getString("fromType");
+            String fromType = params.getString("fromType");
             String url = "https://api.weixin.qq.com/sns/jscode2session?";
             //翼回收
-            if(StringUtils.isBlank(fromType)||"".equals(fromType)||Integer.valueOf(fromType)==0||Integer.valueOf(fromType)==1){
+            if (StringUtils.isBlank(fromType) || "".equals(fromType) || Integer.valueOf(fromType) == 0 || Integer.valueOf(fromType) == 1) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
-            }else {
+            } else if (Integer.valueOf(fromType) == 2) {
                 url = url + "appid=" + SystemConstant.WECHAT_APPLET_POSTMAN_APPID + "&secret=" + SystemConstant.WECHAT_APPLET_POSTMAN_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
+            } else if (Integer.valueOf(fromType) == 3) {
+                url = url + "appid=" + SystemConstant.WECHAT_ACTIVITY_APPID + "&secret=" + SystemConstant.WECHAT_ACTIVITY_SECRET + "&js_code=" + code + "&grant_type=authorization_code";
             }
             String httpGet = HttpClientUtil.httpGet(url);
             JSONObject parse = (JSONObject) JSONObject.parse(httpGet);
@@ -99,17 +112,41 @@ public class RecycleWechatController extends BaseController {
             String openId = parse.getString("openid");
             String unionid = parse.getString("unionid");
             String sessionKey = parse.getString("session_key");
-            //保存该用户
-            RecycleWechat wechat = new RecycleWechat();
-            wechat.setId(UUID.randomUUID().toString().replace("-", ""));
-            wechat.setOpenId(openId);
-            if (StringUtils.isNotBlank(unionid)) {
-                wechat.setUnionId(unionid);
+            if (StringUtils.isNotBlank(fromType) && Integer.valueOf(fromType) == 3) {
+                ActivityLogin login = new ActivityLogin();
+                String activityIdent = params.getString("iden");
+                if (StringUtils.isBlank(activityIdent)) {
+                    List<ActivityLogin> activityLogin = activityLoginService.getDao().queryByOpenId(openId);
+                    if (CollectionUtils.isEmpty(activityLogin)) {
+                        return getResult(result, null, false, "2", "请扫码打开活动");
+                    }
+                    ActivityCompany activityCompany = activityCompanyService.getDao().queryByIdentification(activityLogin.get(0).getActivityIdent());
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                    if (sdf.parse(activityCompany.getEndTime()).getTime()<sdf.parse(sdf.format(new Date())).getTime()) {
+                        return getResult(result, null, false, "2", "活动已过期");
+                    }
+                    activityIdent=activityCompany.getActivityIdentification();
+                }
+                //保存该用户
+                login.setId(UUID.randomUUID().toString().replace("-", ""));
+                login.setOpenId(openId);
+                login.setActivityIdent(activityIdent);
+                login.setSessionKey(sessionKey);
+                activityLoginService.getDao().add(login);
+                jsonResult.put("iden", activityIdent);
+            } else {
+                //保存该用户
+                RecycleWechat wechat = new RecycleWechat();
+                wechat.setId(UUID.randomUUID().toString().replace("-", ""));
+                wechat.setOpenId(openId);
+                if (StringUtils.isNotBlank(unionid)) {
+                    wechat.setUnionId(unionid);
+                }
+                wechat.setSessionKey(sessionKey);
+                recycleWechatService.addByOpenId(wechat);
+                //储存当前用户tokenId  后期下单确定用户
+                request.getSession().setAttribute("wechat_openId", openId);
             }
-            wechat.setSessionKey(sessionKey);
-            recycleWechatService.addByOpenId(wechat);
-            //储存当前用户tokenId  后期下单确定用户
-            request.getSession().setAttribute("wechat_openId", openId);
             jsonResult.put("openId", openId);
             result.setResult(jsonResult);
             result.setResultCode("0");
@@ -1348,10 +1385,10 @@ public class RecycleWechatController extends BaseController {
             String code = params.getString("code");
             if (!tip) {
                 if (StringUtils.isBlank(mobile) || StringUtils.isBlank(code)) {
-                    return getResult(result,null,false,"2","手机号或验证码为空");
+                    return getResult(result, null, false, "2", "手机号或验证码为空");
                 }
                 if (!checkRandomCode(request, mobile, code)) { // 验证手机号和验证码
-                    return getResult(result,null,false,"2","手机号或验证码输入错误");
+                    return getResult(result, null, false, "2", "手机号或验证码输入错误");
                 }
             }
             PrizeRecord r = new PrizeRecord();
@@ -1362,7 +1399,7 @@ public class RecycleWechatController extends BaseController {
             r.setIsGet(1);   //1表示中奖的记录  一个手机号只会有一条中奖记录
             List<PrizeRecord> list = prizeRecordService.queryList(r);
             if (list.isEmpty()) {
-                return getResult(result,null,false,"2","您当前没有中奖记录");
+                return getResult(result, null, false, "2", "您当前没有中奖记录");
             }
             for (PrizeRecord t : list) {
                 //活动的奖品信息  一个用户只会有一次中奖记录
@@ -1429,7 +1466,7 @@ public class RecycleWechatController extends BaseController {
             }
             List<PrizeRecord> list = prizeRecordService.queryList(r);
             if (list.isEmpty()) {
-                return getResult(result,null,false,"2","您当前没有中奖记录");
+                return getResult(result, null, false, "2", "您当前没有中奖记录");
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             for (PrizeRecord t : list) {

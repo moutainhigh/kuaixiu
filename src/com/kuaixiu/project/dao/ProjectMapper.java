@@ -25,6 +25,13 @@ public interface ProjectMapper<T> extends BaseDao<T> {
      * @CreateDate: 2016-9-29 下午7:55:09
      */
     List<T> queryByName(String name);
+    /**
+     * 根据名称模糊查询项目
+     * @param name
+     * @return
+     * @CreateDate: 2016-9-29 下午7:55:09
+     */
+    List<T> queryByLikeName (String name);
 }
 
 

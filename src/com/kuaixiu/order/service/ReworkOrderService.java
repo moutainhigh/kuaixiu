@@ -75,7 +75,11 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         reworkOrder.setOrderStatus(OrderConstant.ORDER_STATUS_DEPOSITED);
         reworkOrder.setInTime(new Date());
         Long time = order.getEndTime().getTime() - reworkOrder.getInTime().getTime();
-        reworkOrder.setSurplusDay(totalTime + time / (1000 * 3600 * 24));
+        if (totalTime + time / (1000 * 3600 * 24) <= 0) {
+            reworkOrder.setSurplusDay(Long.valueOf(0));
+        } else {
+            reworkOrder.setSurplusDay(totalTime + time / (1000 * 3600 * 24));
+        }
         reworkOrder.setTotalDay(totalTime);
         reworkOrder.setOrderPrice(new BigDecimal(getProject(order.getOrderNo()).get("orderPrice")));
         reworkOrder.setRealPrice(new BigDecimal(0));
@@ -170,7 +174,7 @@ public class ReworkOrderService extends BaseService<ReworkOrder> {
         if (reworkOrder.getOrderStatus() == OrderConstant.ORDER_STATUS_FINISHED) {
             throw new SystemException("该订单已完成，不能取消！");
         }
-        Order o=orderService.queryByOrderNo(reworkOrder.getParentOrder());
+        Order o = orderService.queryByOrderNo(reworkOrder.getParentOrder());
         //执行取消订单
         //保存修改前订单状态
         reworkOrder.setCancelStatus(reworkOrder.getOrderStatus());

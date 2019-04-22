@@ -72,7 +72,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-
         if (sessionUser == null) {
             //验证cookie用户是否存在
             if (sessionUserService.checkCookieUser(request)) {
@@ -101,11 +100,11 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
             }
 
         }
-//        throw new SessionInvalidateException("对不起，您没有访问权限！");
+        throw new SessionInvalidateException("对不起，您没有访问权限！");
 //        log.info("对不起，您没有访问权限！");
 //        result.setResultMessage("对不起，您没有访问权限！");
 //        renderJson(response, result);
-        return true;
+//        return true;
     }
     /**
      * 以Json格式输出

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.RecycleTestMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.RecycleTest" >
+        <result column="test_id" property="testId"/>
+        <result column="check_items_id" property="checkItemsId"/>
+        <result column="recycle_id" property="recycleId"/>
+        <result column="record_name" property="recordName"/>
+        <result column="note" property="note"/>
+        <result column="record_result" property="recordResult"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- kx_recycle_test_record table all fields -->
+    <sql id="Base_Column_List" >
+        test_id,check_items_id,recycle_id,record_name,note,record_result,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_recycle_test_record
+        (test_id,check_items_id,recycle_id,record_name,note,record_result,create_time,update_time)
+        values
+        (#{testId},#{checkItemsId},#{recycleId},#{recordName},#{note},#{recordResult},now(),now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_recycle_test_record 
+        set 
+            test_id=#{testId},
+            check_items_id=#{checkItemsId},
+            recycle_id=#{recycleId},
+            note=#{note},
+            record_result=#{recordResult},
+            update_time=now()
+        where check_items_id=#{checkItemsId}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_recycle_test_record where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_recycle_test_record where id = #{id}
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryByCheckId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_recycle_test_record where check_items_id=#{checkItemsId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_test_record
+        where 1=1
+        <if test="testId != null and testId != ''" >
+            and test_id = #{testId}
+        </if>
+        <if test="checkItemsId != null and checkItemsId != ''" >
+            and check_items_id = #{checkItemsId}
+        </if>
+        <if test="recycleId != null and recycleId != ''" >
+            and recycle_id = #{recycleId}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_test_record
+        where 1=1
+        <if test="testId != null and testId != ''" >
+            and test_id = #{testId}
+        </if>
+        <if test="checkItemsId != null and checkItemsId != ''" >
+            and check_items_id = #{checkItemsId}
+        </if>
+        <if test="recycleId != null and recycleId != ''" >
+            and recycle_id = #{recycleId}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+    </select>
+
+</mapper>   

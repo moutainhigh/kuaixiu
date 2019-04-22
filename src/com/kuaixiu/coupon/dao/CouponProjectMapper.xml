@@ -90,7 +90,6 @@
         </if>
     </select>
 
-
     <!-- 查询列表无分页 -->
     <select id="queryList2" resultMap="BaseResultMap"  parameterType="Object">
         select
@@ -101,7 +100,6 @@
             and t.coupon_id = #{couponId}
         </if>
     </select>
-
 
     <!-- 查询列表 带分页 -->
     <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">

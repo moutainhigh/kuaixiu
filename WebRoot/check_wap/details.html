@@ -128,7 +128,7 @@
             });
         });
         function loadDate(param){
-            $.post(linkUrl+'/recycle/getOrderDetail.do',{params:JSON.stringify(param)},function (data) {
+            $.post(linkUrl+'/recycleNew/getOrderDetail.do',{params:JSON.stringify(param)},function (data) {
                 if (data.success){
                     var dataInfo = data.result.datainfo;
                     if (dataInfo.alert == 1){//需要

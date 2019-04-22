@@ -355,7 +355,8 @@ public class RecycleController extends BaseController {
                     if (!list.isEmpty()) {
                         RecycleCheckItems checkItems = list.get(0);
                         checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
+                        checkItems.setLastPrice(checkItems.getPrice());
+                        checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
 
@@ -366,32 +367,35 @@ public class RecycleController extends BaseController {
                 if (StringUtils.isNotBlank(loginMobile)) {
                     RecycleCheckItems t = new RecycleCheckItems();
                     t.setLoginMobile(loginMobile);
-                    List<RecycleCheckItems> recycleCheckItems = recycleCheckItemsService.queryList(t);
+//                    List<RecycleCheckItems> recycleCheckItems = recycleCheckItemsService.queryList(t);
                     // 得到当前session中品牌名称  品牌id  机型名称
                     String selectBrandId = (String) request.getSession().getAttribute("selectBrandId");
                     String selectBrandName = (String) request.getSession().getAttribute("selectBrandName");
                     String selectModelName = (String) request.getSession().getAttribute("selectModelName");
 
-                    if (recycleCheckItems.isEmpty()) {
+//                    if (recycleCheckItems.isEmpty()) {
                         //新增
                         t.setItems(items);
-                        t.setLastPrice(new BigDecimal(price));
+                        t.setPrice(new BigDecimal(price));
                         t.setProductId(productId);
                         t.setBrand(selectBrandName);
                         t.setBrandId(selectBrandId);
                         t.setRecycleModel(selectModelName);
+                        t.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.add(t);
-                    } else {
-                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
-                        //修改
-                        checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
-                        checkItems.setProductId(productId);
-                        checkItems.setBrand(selectBrandName);
-                        checkItems.setBrandId(selectBrandId);
-                        checkItems.setRecycleModel(selectModelName);
-                        recycleCheckItemsService.saveUpdate(checkItems);
-                    }
+//                    } else {
+//                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
+//                        //修改
+//                        checkItems.setItems(items);
+//                        checkItems.setPrice(new BigDecimal(price));
+//                        checkItems.setLastPrice(checkItems.getPrice());
+//                        checkItems.setProductId(productId);
+//                        checkItems.setBrand(selectBrandName);
+//                        checkItems.setBrandId(selectBrandId);
+//                        checkItems.setRecycleModel(selectModelName);
+//                        checkItems.setQuoteId(j.getString("quoteid"));
+//                        recycleCheckItemsService.saveUpdate(checkItems);
+//                    }
 
 
                 }
@@ -732,10 +736,10 @@ public class RecycleController extends BaseController {
             Address provinceName = addressService.queryByAreaId(province);
             Address cityName = addressService.queryByAreaId(city);
             Address areaName = addressService.queryByAreaId(area);
-            if (provinceName == null || cityName == null || areaName == null) {
-                throw new SystemException("请确认地址信息是否无误");
-            }
-            String areaname = getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
+//            if (provinceName == null || cityName == null || areaName == null) {
+//                throw new SystemException("请确认地址信息是否无误");
+//            }
+            String areaname = "";//getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
 
 
             //先保存订单到超人平台再调用回收平台下单接口  返回成功则更新订单状态

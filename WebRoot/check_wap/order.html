@@ -105,11 +105,7 @@
             if(isEmpty(fm)){
                 eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
             }
-            if(isGo == 'true'||tip == 1){
-                document.title = '天翼回收';
-            }else{
-                document.title = '超人回收';
-            }
+
             init();
             var num = 0;
             $('#pickTime').click(function () {
@@ -157,7 +153,7 @@
             });
 
             var checkSubmitFlg = false;
-            $('#submit').click(function(){		
+            $('#submit').click(function(){
                 if (isEmpty($('#connect').val())){
                     alertTip('请输入联系人');
                     return false;
@@ -212,12 +208,7 @@
 							//   location.href = 'success.html';
 							//}
 							*/
-							
-							// location.href = 'success.html';
-							
-							
-							location.href = 'http://test.wenboweb.cn:20001/';
-							
+							 location.href = 'success.html';
                         }else{
                             checkSubmitFlg = false;
                             alertTip(data.resultMessage);
@@ -225,22 +216,7 @@
                     })
             })
         })
-		
-		//创建抬价订单
-		function createIncreaseOrder(orderNo){
-		  var params = {
-                orderNo:orderNo
-            }
-			$.post(linkUrl+'/recycle/createIncreaseOrder.do',{params:JSON.stringify(params)},function (data) {
-            	if ( data.success){
-					eCacheUtil.storage.cache(CacheKey.raiseOrderNo,data.result.increaseOrderNo);
-					location.href = 'success.html';
-				}else{
-					alert(data.resultMessage);
-				}
-            });
-		}
-		
+				
         function fn_close(ele){
             $('#'+ele).hide().find('.layerCont').css({top:'100%'});
         }

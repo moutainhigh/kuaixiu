@@ -323,8 +323,33 @@ public class SystemConstant {
      * 微信关注发送的维修通用优惠卷价格
      */
     public static final String WECHAT_COMMON_PRICE =SystemUtil.getSysCfgProperty("wechat.common.price");
-    
-    
+    /**
+     * 回访的维修通用优惠卷批次号
+     */
+    public static final String RECORD_COMMON_BATCHID =SystemUtil.getSysCfgProperty("record.common.batchId");
+    /**
+     * 回访的20屏幕维修通用优惠卷批次号
+     */
+    public static final String RECORD_SCREEN30_BATCHID =SystemUtil.getSysCfgProperty("record.screen30.batchId");
+    /**
+     * 回访的50屏幕维修通用优惠卷批次号
+     */
+    public static final String RECORD_SCREEN50_BATCHID =SystemUtil.getSysCfgProperty("record.screen50.batchId");
+    /**
+     * 回访的维修通用优惠卷价格
+     */
+    public static final String RECORD_COMMON_PRICE =SystemUtil.getSysCfgProperty("record.common.price");
+    /**
+     * 回访的50屏幕维修通用优惠卷价格
+     */
+    public static final String RECORD_SCREEN30_PRICE =SystemUtil.getSysCfgProperty("record.screen30.price");
+
+    /**
+     * 回访的50屏幕维修通用优惠卷价格
+     */
+    public static final String RECORD_SCREEN50_PRICE =SystemUtil.getSysCfgProperty("record.screen50.price");
+
+
     /**
      * 微信关注发送的贴膜优惠卷批次号 
      */
@@ -368,6 +393,14 @@ public class SystemConstant {
      * 翼回收微信小程序secret
      */
     public static final String WECHAT_APPLET_SECRET=SystemUtil.getSysCfgProperty("wechat.applet.secret");
+    /**
+     * 企业活动微信小程序appid
+     */
+    public static final String WECHAT_ACTIVITY_APPID =SystemUtil.getSysCfgProperty("wechat.activity.appid");
+    /**
+     * 企业活动微信小程序secret
+     */
+    public static final String WECHAT_ACTIVITY_SECRET=SystemUtil.getSysCfgProperty("wechat.activity.secret");
     /**
      * 超人回收微信小程序appid
      */

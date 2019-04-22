@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.activity.dao.ActivityCompanyMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.activity.entity.ActivityCompany" >
+        <result column="id" property="id"/>
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="activity_identification" property="activityIdentification"/>
+        <result column="activity_img_url" property="activityImgUrl"/>
+        <result column="kx_business_id" property="kxBusinessId"/>
+        <result column="kx_business_title" property="kxBusinessTitle"/>
+        <result column="kx_business" property="kxBusiness"/>
+        <result column="kx_business_detail" property="kxBusinessDetail"/>
+        <result column="dx_increment_business_id" property="dxIncrementBusinessId"/>
+        <result column="dx_increment_business_title" property="dxIncrementBusinessTitle"/>
+        <result column="dx_increment_business" property="dxIncrementBusiness"/>
+        <result column="dx_increment_business_detail" property="dxIncrementBusinessDetail"/>
+        <result column="dx_business_person_number" property="dxBusinessPersonNumber"/>
+        <result column="dx_business_person" property="dxBusinessPerson"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="activity_time" property="activityTime"/>
+    </resultMap>
+    
+    <!-- kx_activity_company table all fields -->
+    <sql id="Base_Column_List" >
+        id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_user,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,activity_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into kx_activity_company
+        (id,company_id,company_name,activity_identification,activity_img_url,kx_business_id,kx_business_title,kx_business,kx_business_detail,dx_increment_business_id,dx_increment_business_title,dx_increment_business,dx_increment_business_detail,dx_business_person_number,dx_business_person,start_time,end_time,create_time,create_user,update_time,activity_time)
+        values
+        (#{id},#{companyId},#{companyName},#{activityIdentification},#{activityImgUrl},#{kxBusinessId},#{kxBusinessTitle},#{kxBusiness},#{kxBusinessDetail},#{dxIncrementBusinessId},#{dxIncrementBusinessTitle},#{dxIncrementBusiness},#{dxIncrementBusinessDetail},#{dxBusinessPersonNumber},#{dxBusinessPerson},#{startTime},#{endTime},now(),#{createUser},#{updateTime},#{activityTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update kx_activity_company 
+        set 
+            id=#{id},
+            company_id=#{companyId},
+            company_name=#{companyName},
+            activity_identification=#{activityIdentification},
+            activity_img_url=#{activityImgUrl},
+            kx_business_id=#{kxBusinessId},
+            kx_business_title=#{kxBusinessTitle},
+            kx_business=#{kxBusiness},
+            kx_business_detail=#{kxBusinessDetail},
+            dx_increment_business_id=#{dxIncrementBusinessId},
+            dx_increment_business_title=#{dxIncrementBusinessTitle},
+            dx_increment_business=#{dxIncrementBusiness},
+            dx_increment_business_detail=#{dxIncrementBusinessDetail},
+            dx_business_person_number=#{dxBusinessPersonNumber},
+            dx_business_person=#{dxBusinessPerson},
+            start_time=#{startTime},
+            end_time=#{endTime},
+            create_time=#{createTime},
+            create_user=#{createUser},
+            update_time=#{updateTime},
+            activity_time=#{activityTime}
+        where id=#{id}
+    </update>
+
+    <!-- 根据id，修改记录-->
+    <update id="updateByIdentification" parameterType="Object" >
+        update kx_activity_company
+        set
+        id=#{id},
+        company_id=#{companyId},
+        company_name=#{companyName},
+        activity_img_url=#{activityImgUrl},
+        kx_business_id=#{kxBusinessId},
+        kx_business_title=#{kxBusinessTitle},
+        kx_business=#{kxBusiness},
+        kx_business_detail=#{kxBusinessDetail},
+        dx_increment_business_id=#{dxIncrementBusinessId},
+        dx_increment_business_title=#{dxIncrementBusinessTitle},
+        dx_increment_business=#{dxIncrementBusiness},
+        dx_increment_business_detail=#{dxIncrementBusinessDetail},
+        dx_business_person_number=#{dxBusinessPersonNumber},
+        dx_business_person=#{dxBusinessPerson},
+        start_time=#{startTime},
+        end_time=#{endTime},
+        create_time=#{createTime},
+        create_user=#{createUser},
+        update_time=#{updateTime},
+        activity_time=#{activityTime}
+        where activity_identification=#{activityIdentification}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from kx_activity_company where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_company where id = #{id}
+    </select>
+    <!-- 根据活动标识查询  -->
+    <select id="queryByIdentification"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from kx_activity_company where activity_identification = #{activityIdentification}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_company
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="companyId != null and companyId != ''" >
+            and company_id = #{companyId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="activityIdentification != null and activityIdentification != ''" >
+            and activity_identification = #{activityIdentification}
+        </if>
+        <if test="activityImgUrl != null and activityImgUrl != ''" >
+            and activity_img_url = #{activityImgUrl}
+        </if>
+        <if test="kxBusinessId != null and kxBusinessId != ''" >
+            and kx_business_id = #{kxBusinessId}
+        </if>
+        <if test="kxBusinessTitle != null and kxBusinessTitle != ''" >
+            and kx_business_title = #{kxBusinessTitle}
+        </if>
+        <if test="kxBusiness != null and kxBusiness != ''" >
+            and kx_business = #{kxBusiness}
+        </if>
+        <if test="kxBusinessDetail != null and kxBusinessDetail != ''" >
+            and kx_business_detail = #{kxBusinessDetail}
+        </if>
+        <if test="dxIncrementBusinessId != null and dxIncrementBusinessId != ''" >
+            and dx_increment_business_id = #{dxIncrementBusinessId}
+        </if>
+        <if test="dxIncrementBusinessTitle != null and dxIncrementBusinessTitle != ''" >
+            and dx_increment_business_title = #{dxIncrementBusinessTitle}
+        </if>
+        <if test="dxIncrementBusiness != null and dxIncrementBusiness != ''" >
+            and dx_increment_business = #{dxIncrementBusiness}
+        </if>
+        <if test="dxIncrementBusinessDetail != null and dxIncrementBusinessDetail != ''" >
+            and dx_increment_business_detail = #{dxIncrementBusinessDetail}
+        </if>
+        <if test="dxBusinessPersonNumber != null and dxBusinessPersonNumber != ''" >
+            and dx_business_person_number = #{dxBusinessPersonNumber}
+        </if>
+        <if test="dxBusinessPerson != null and dxBusinessPerson != ''" >
+            and dx_business_person = #{dxBusinessPerson}
+        </if>
+        <if test="startTime != null and startTime != ''" >
+            and start_time = #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUser != null and createUser != ''" >
+            and create_user = #{createUser}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="activityTime != null and activityTime != ''" >
+            and activity_time=#{activityTime}
+        </if>
+
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_activity_company
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="companyId != null and companyId != ''" >
+            and company_id = #{companyId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name LIKE CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="activityIdentification != null and activityIdentification != ''" >
+            and activity_identification LIKE CONCAT('%', #{activityIdentification}, '%')
+        </if>
+        <if test="activityImgUrl != null and activityImgUrl != ''" >
+            and activity_img_url = #{activityImgUrl}
+        </if>
+        <if test="kxBusinessId != null and kxBusinessId != ''" >
+            and kx_business_id = #{kxBusinessId}
+        </if>
+        <if test="kxBusinessTitle != null and kxBusinessTitle != ''" >
+            and kx_business_title = #{kxBusinessTitle}
+        </if>
+        <if test="kxBusiness != null and kxBusiness != ''" >
+            and kx_business = #{kxBusiness}
+        </if>
+        <if test="kxBusinessDetail != null and kxBusinessDetail != ''" >
+            and kx_business_detail = #{kxBusinessDetail}
+        </if>
+        <if test="dxIncrementBusinessId != null and dxIncrementBusinessId != ''" >
+            and dx_increment_business_id = #{dxIncrementBusinessId}
+        </if>
+        <if test="dxIncrementBusinessTitle != null and dxIncrementBusinessTitle != ''" >
+            and dx_increment_business_title = #{dxIncrementBusinessTitle}
+        </if>
+        <if test="dxIncrementBusiness != null and dxIncrementBusiness != ''" >
+            and dx_increment_business = #{dxIncrementBusiness}
+        </if>
+        <if test="dxIncrementBusinessDetail != null and dxIncrementBusinessDetail != ''" >
+            and dx_increment_business_detail = #{dxIncrementBusinessDetail}
+        </if>
+        <if test="dxBusinessPersonNumber != null and dxBusinessPersonNumber != ''" >
+            and dx_business_person_number = #{dxBusinessPersonNumber}
+        </if>
+        <if test="dxBusinessPerson != null and dxBusinessPerson != ''" >
+            and dx_business_person = #{dxBusinessPerson}
+        </if>
+        <if test="startTime != null and startTime != ''" >
+            and end_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and start_time &lt;= #{endTime}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUser != null and createUser != ''" >
+            and create_user = #{createUser}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="activityTime != null and activityTime != ''" >
+            and activity_time=#{activityTime}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>   

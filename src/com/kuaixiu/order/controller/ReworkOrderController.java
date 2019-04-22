@@ -270,6 +270,8 @@ public class ReworkOrderController extends BaseController {
             reworkOrder.setReasonsDetail(reasonDetail);
             //创建保存返修订单
             ReworkOrder reworkOrder1 = reworkOrderService.save(order, reworkOrder);
+            order.setIsRework(1);
+            orderService.saveUpdate(order);
             //给工程师派单
             reworkOrderService.dispatch(order, reworkOrder);
 

@@ -703,6 +703,14 @@ public class OrderController extends BaseController {
             o.setPage(page);
             o.setIsDel(0);
             List<Map<String, Object>> list = orderService.getDao().queryUnCheckForPage(o);
+            for(Map map:list){
+                Shop shop=new Shop();
+                shop.setCode(map.get("shop_code").toString());
+                shopService.shopShopCode(shop);
+                map.put("shop_tel",shop.getTel());
+                map.put("shop_manager_mobile",shop.getManagerMobile());
+                map.put("shop_manager_name",shop.getManagerName());
+            }
             page.setData(list);
             resultData.setResult(page);
         } catch (SystemException e) {
@@ -917,6 +925,8 @@ public class OrderController extends BaseController {
         renderJson(response, resultMap);
     }
 
+    @Autowired
+    private OrderRecordService orderRecordService;
 
     /**
      * 列表查询
@@ -943,6 +953,8 @@ public class OrderController extends BaseController {
         List<CancelReason> reasonList = cancelReasonService.queryListForPage(new CancelReason());
         //用户评价信息
         OrderComment comm = commentService.queryByOrderNo(o.getOrderNo());
+        //用户回访信息
+        OrderRecord orderRecord=orderRecordService.getDao().queryByOrderNo(o.getOrderNo());
         //修改金额记录
         List<UpdateOrderPrice> upOrderPrice = updateOrderPriceService.getDao().queryByUpOrderNo(o.getOrderNo());
         UpdateOrderPrice updateOrderPrice = new UpdateOrderPrice();
@@ -964,6 +976,7 @@ public class OrderController extends BaseController {
         request.setAttribute("order", o);
         request.setAttribute("details", details);
         request.setAttribute("reworks", reworkOrders);
+        request.setAttribute("orderRecord", orderRecord);
         String returnView = "order/detail";
         return new ModelAndView(returnView);
     }

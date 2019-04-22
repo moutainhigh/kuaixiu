@@ -246,7 +246,7 @@
         <textarea class="reason" name="" id="reason" placeholder="请写下您取消的原因吧！" maxlength="220"></textarea>
         <div class="index_but">
             <a href="javascript:void(0);" class="btn-cancel">取消</a>
-            <a href="javascript:void (0);" onclick="orderCancel('${rework.id}',${rework.orderReworkNo});"
+            <a href="javascript:void (0);" onclick="orderCancel('${rework.id}','${rework.orderReworkNo}');"
                class="btn-confirm">确认取消订单</a>
         </div>
     </div>

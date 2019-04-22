@@ -79,6 +79,13 @@
         where t.id = #{id}
     </select>
 
+    <select id="queryByBrandId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_model t
+        where t.brand_id = #{brandId}
+    </select>
+
     <!-- 根据名称查询 -->
     <select id="queryByName" resultMap="BaseResultMap" parameterType="Object">
         select

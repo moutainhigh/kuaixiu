@@ -391,6 +391,23 @@ public class CouponService extends BaseService<Coupon> {
     }
 
     /**
+     * 快修完成订单回访优惠券发送短信
+     *
+     * @param c
+     * @return
+     */
+    public void kxReceiveSendSms(Coupon c) {
+        try {
+            CouponProject t = new CouponProject();
+            t.setCouponId(c.getId());
+            List<CouponProject> couProjects = projectService.queryList(t);
+            SmsSendUtil.sendSmsForkxCoupon(c, couProjects);
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 删除连接商
      *
      * @param s

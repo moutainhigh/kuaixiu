@@ -17,12 +17,13 @@
         <result column="model_id" jdbcType="VARCHAR" property="modelId"/>
         <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
         <result column="login_mobile" jdbcType="VARCHAR" property="loginMobile"/>
+        <result column="quote_id" jdbcType="VARCHAR" property="quoteId"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
     id, wechat_id, brand, wechat_model, recycle_model, product_id, items, in_time, last_price, 
-    price, update_time,brand_id,model_id,mobile,login_mobile
+    price, update_time,brand_id,model_id,mobile,login_mobile,quote_id
   </sql>
 
     <!-- 根据微信用户id查询记录 -->
@@ -32,27 +33,35 @@
         from kx_recycle_checkitems where wechat_id=#{wechatId} ;
     </select>
 
+    <!-- 根据微信用户id查询记录 -->
+    <select id="queryByTestId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from kx_recycle_checkitems where id=#{id} ;
+    </select>
+
 
     <insert id="add" parameterType="Object">
         insert into kx_recycle_checkitems
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            id, wechat_id, brand,
-            wechat_model, recycle_model, product_id,
-            in_time,last_price,brand_id,model_id,mobile
-            <if test="loginMobile!=null and loginMobile!=''">
-                ,login_mobile
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            uuid(), #{wechatId,jdbcType=VARCHAR},
-            #{brand,jdbcType=VARCHAR},
-            #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
-            now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},#{modelId,jdbcType=VARCHAR},
-            #{mobile,jdbcType=VARCHAR}
-            <if test="loginMobile!=null and loginMobile!=''">
-                ,#{loginMobile,jdbcType=VARCHAR}
-            </if>
-        </trim>
+        (
+        id, wechat_id, brand,
+        wechat_model, recycle_model, product_id,items,
+        in_time,last_price,brand_id,model_id,mobile,quote_id,
+        <if test="loginMobile!=null and loginMobile!=''">
+            login_mobile,
+        </if>
+        price
+        )VALUES (
+        uuid(), #{wechatId,jdbcType=VARCHAR},
+        #{brand,jdbcType=VARCHAR},
+        #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
+        #{items,jdbcType=VARCHAR},now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},
+        #{modelId,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{quoteId,jdbcType=VARCHAR},
+        <if test="loginMobile!=null and loginMobile!=''">
+            #{loginMobile,jdbcType=VARCHAR},
+        </if>
+        #{price,jdbcType=DECIMAL}
+        )
     </insert>
 
 
@@ -67,8 +76,9 @@
             items = #{items,jdbcType=VARCHAR},
             last_price = #{lastPrice,jdbcType=DECIMAL},
             price = #{price,jdbcType=DECIMAL},
+            quote_id=#{quoteId,jdbcType=VARCHAR},
             <if test="loginMobile!=null and loginMobile!=''">
-                #{loginMobile,jdbcType=VARCHAR},
+                login_mobile=#{loginMobile,jdbcType=VARCHAR},
             </if>
             update_time=now()
         </set>
@@ -141,6 +151,51 @@
             and mobile =#{mobile}
         </if>
         order by in_time desc
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryTestListForPage" resultType="Map"
+            parameterType="Object">
+        select
+        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
+        c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id,t.record_result
+        from kx_recycle_checkitems c
+        LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
+        where c.login_mobile not in(
+        select o.mobile from kx_recycle_order o
+        where EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile)
+        and EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile and in_time &lt;= o.in_time)
+        and not EXISTS(select 1 from kx_recycle_test_record where recycle_id=o.id)
+        )
+        and CHAR_LENGTH(c.product_id) &lt;= 10
+        <if test="brandId != null and brandId != ''">
+            and brand_id =#{brandId}
+        </if>
+        <if test="productId != null and productId != ''">
+            and product_id =#{productId}
+        </if>
+        <if test="loginMobile != null and loginMobile != ''">
+            and login_mobile =#{loginMobile}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="isOrder == 1">
+            and t.recycle_id is null
+        </if>
+        <if test="isOrder == 0">
+            and t.recycle_id is not null
+        </if>
+        <if test="isVisit == 1">
+            and t.test_id is null
+        </if>
+        <if test="isVisit == 0">
+            and t.test_id is not null
+        </if>
+        order by createTime desc
     </select>
 
 </mapper>

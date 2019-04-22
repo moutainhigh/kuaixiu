@@ -39,4 +39,7 @@ public class SysRoleService extends BaseService<SysRole> {
     public List<SysRole> queryRolesByUserId(String uid){
         return getDao().queryRolesByUserId(uid);
     }
+    public List<SysRole> queryRoles1ByUserId(String uid){
+        return getDao().queryRoles1ByUserId(uid);
+    }
 }

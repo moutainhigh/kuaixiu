@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.nbTelecomSJ.dao.NBBusinessMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.nbTelecomSJ.entity.NBBusiness" >
+        <result column="business_id" property="businessId"/>
+        <result column="open_id" property="openId"/>
+        <result column="manager_id" property="managerId"/>
+        <result column="county_id" property="countyId"/>
+        <result column="office_id" property="officeId"/>
+        <result column="area_id" property="areaId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="landline" property="landline"/>
+        <result column="broadband" property="broadband"/>
+        <result column="existence" property="existence"/>
+        <result column="address" property="address"/>
+        <result column="address_type" property="addressType"/>
+        <result column="demand" property="demand"/>
+        <result column="remarks" property="remarks"/>
+        <result column="coutomer_name" property="coutomerName"/>
+        <result column="telephone" property="telephone"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- nb_business table all fields -->
+    <sql id="Base_Column_List" >
+        business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,existence,address,address_type,demand,remarks,coutomer_name,telephone,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into nb_business
+        (business_id,open_id,manager_id,county_id,office_id,area_id,company_name,landline,broadband,existence,address,address_type,demand,remarks,coutomer_name,telephone,create_time)
+        values
+        (#{businessId},#{openId},#{managerId},#{countyId},#{officeId},#{areaId},#{companyName},#{landline},#{broadband},#{existence},#{address},#{addressType},#{demand},#{remarks},#{coutomerName},#{telephone},now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update nb_business 
+        set 
+            business_id=#{businessId},
+            manager_id=#{managerId},
+            county_id=#{countyId},
+            office_id=#{officeId},
+            area_id=#{areaId},
+            company_name=#{companyName},
+            landline=#{landline},
+            broadband=#{broadband},
+            existence=#{existence},
+            address=#{address},
+            address_type=#{addressType},
+            demand=#{demand},
+            remarks=#{remarks},
+            coutomer_name=#{coutomerName},
+            telephone=#{telephone},
+            create_time=#{createTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from nb_business where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_business where id = #{id}
+    </select>
+
+    <!-- 根据openId查询  -->
+    <select id="queryByOpenId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from nb_business where open_id = #{openId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_business
+        where 1=1
+        <if test="businessId != null and businessId != ''" >
+            and business_id = #{businessId}
+        </if>
+        <if test="managerId != null and managerId != ''" >
+            and manager_id = #{managerId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="landline != null and landline != ''" >
+            and landline = #{landline}
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and broadband = #{broadband}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and demand = #{demand}
+        </if>
+        <if test="remarks != null and remarks != ''" >
+            and remarks = #{remarks}
+        </if>
+        <if test="coutomerName != null and coutomerName != ''" >
+            and coutomer_name = #{coutomerName}
+        </if>
+        <if test="telephone != null and telephone != ''" >
+            and telephone = #{telephone}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from nb_business
+        where 1=1
+        <if test="businessId != null and businessId != ''" >
+            and business_id = #{businessId}
+        </if>
+        <if test="managerId != null and managerId != ''" >
+            and manager_id = #{managerId}
+        </if>
+        <if test="countyId != null and countyId != ''" >
+            and county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and area_id = #{areaId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="landline != null and landline != ''" >
+            and landline = #{landline}
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and broadband = #{broadband}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and demand = #{demand}
+        </if>
+        <if test="remarks != null and remarks != ''" >
+            and remarks = #{remarks}
+        </if>
+        <if test="coutomerName != null and coutomerName != ''" >
+            and coutomer_name = #{coutomerName}
+        </if>
+        <if test="telephone != null and telephone != ''" >
+            and telephone = #{telephone}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListMap" resultType="Map"  parameterType="Object">
+        SELECT
+        b.business_id,date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
+        c.county,a.branch_office,a.area_name,b.company_name,
+        b.landline,b.broadband,b.existence,b.address_type,b.address,b.demand,b.remarks,
+        b.coutomer_name,b.telephone,m.manager_name,m.manager_tel,
+        a.area_person,a.person_tel
+        from nb_business b
+        LEFT JOIN nb_county c ON c.county_id=b.county_id
+        LEFT JOIN nb_area a ON a.area_id=b.area_id
+        LEFT JOIN nb_manager m ON m.manager_id=b.manager_id
+        where 1=1
+        <if test="countyId != null and countyId != ''" >
+            and b.county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and b.office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and b.area_id = #{areaId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and b.company_name = #{companyName}
+        </if>
+        <if test="landline != null and landline != ''" >
+            and b.landline like CONCAT('%', #{landline}, '%')
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and b.broadband like CONCAT('%', #{broadband}, '%')
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and b.address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and b.demand = #{demand}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and b.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and b.create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0">
+            and b.business_id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY b.create_time DESC
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListMapForPage" resultType="Map"  parameterType="Object">
+        SELECT
+        b.business_id,date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
+        c.county,a.branch_office,a.area_name,b.company_name,
+        b.landline,b.broadband,b.existence,b.address_type,b.address,b.demand,b.remarks,
+        b.coutomer_name,b.telephone,m.manager_name,m.manager_tel
+        from nb_business b
+        LEFT JOIN nb_county c ON c.county_id=b.county_id
+        LEFT JOIN nb_area a ON a.area_id=b.area_id
+        LEFT JOIN nb_manager m ON m.manager_id=b.manager_id
+        where 1=1
+        <if test="countyId != null and countyId != ''" >
+            and b.county_id = #{countyId}
+        </if>
+        <if test="officeId != null and officeId != ''" >
+            and b.office_id = #{officeId}
+        </if>
+        <if test="areaId != null and areaId != ''" >
+            and b.area_id = #{areaId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and b.company_name = #{companyName}
+        </if>
+        <if test="landline != null and landline != ''" >
+            and b.landline like CONCAT('%', #{landline}, '%')
+        </if>
+        <if test="broadband != null and broadband != ''" >
+            and b.broadband like CONCAT('%', #{broadband}, '%')
+        </if>
+        <if test="addressType != null and addressType != ''" >
+            and b.address_type = #{addressType}
+        </if>
+        <if test="demand != null and demand != ''" >
+            and b.demand = #{demand}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and b.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and b.create_time &lt;= #{queryEndTime}
+        </if>
+        ORDER BY b.create_time DESC
+    </select>
+
+</mapper>   

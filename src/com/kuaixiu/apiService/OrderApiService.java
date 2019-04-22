@@ -20,10 +20,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.exception.ApiServiceException;
 import com.common.paginate.Page;
 import com.kuaixiu.coupon.entity.Coupon;
-import com.kuaixiu.coupon.entity.CouponModel;
-import com.kuaixiu.coupon.entity.CouponProject;
-import com.kuaixiu.coupon.service.CouponModelService;
-import com.kuaixiu.coupon.service.CouponProjectService;
 import com.kuaixiu.coupon.service.CouponService;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
@@ -41,6 +37,7 @@ import com.system.constant.ApiResultConstant;
  */
 @Service("orderApiService")
 public class OrderApiService implements ApiServiceInf {
+    private static final Logger log = Logger.getLogger(OrderApiService.class);
 
     @Autowired
     private OrderService orderService;
@@ -73,34 +70,42 @@ public class OrderApiService implements ApiServiceInf {
                 ) {
             throw new ApiServiceException(ApiResultConstant.resultCode_1001, ApiResultConstant.resultCode_str_1001);
         }
-
-        Engineer eng = engService.queryByEngineerNumber(number);
-
-        Order order = new Order();
-        order.setEngineerId(eng.getId());
-
-        List<Object> statusL = new ArrayList<Object>();
-        //查询状态 0 待维修（新派单未处理） 1 进行中（开始检修未结束）  2 已完成 3 已取消 4 所有订单
-        String status = pmJson.getString("status");
-        if (StringUtils.isNotBlank(status)) {
-            String[] statusArray = status.split(",");
-            for (String s : statusArray) {
-                statusL.add(s);
-            }
-        }
-        order.setQueryStatusArray(statusL);
-        Page page1 = new Page();
-        Integer pageIndex = pmJson.getInteger("pageIndex");
-        Integer pageSize = pmJson.getInteger("pageSize");
-        //将值转化为绝对值
-        pageIndex = Math.abs(pageIndex);
-        pageSize = Math.abs(pageSize);
-        page1.setCurrentPage(pageIndex);
-        page1.setPageSize(pageSize);
-        order.setPage(page1);
-        //查找该工程师下所有维修订单
-        List<Order> orderList = orderService.getDao().queryListApiForPage(order);
         JSONArray jsonArray = new JSONArray();
+        try {
+            Engineer eng = engService.queryByEngineerNumber(number);
+            Order order = new Order();
+            order.setEngineerId(eng.getId());
+            List<Object> statusL = new ArrayList<Object>();
+            //查询状态 0 待维修（新派单未处理） 1 进行中（开始检修未结束）  2 已完成 3 已取消 4 所有订单
+            String status = pmJson.getString("status");
+            if (StringUtils.isNotBlank(status)) {
+                String[] statusArray = status.split(",");
+                for (String s : statusArray) {
+                    statusL.add(s);
+                }
+            }
+            order.setQueryStatusArray(statusL);
+            Page page1 = new Page();
+            Integer pageIndex = pmJson.getInteger("pageIndex");
+            Integer pageSize = pmJson.getInteger("pageSize");
+            //将值转化为绝对值
+            pageIndex = Math.abs(pageIndex);
+            pageSize = Math.abs(pageSize);
+            page1.setCurrentPage(pageIndex);
+            page1.setPageSize(pageSize);
+            order.setPage(page1);
+            //查找该工程师下所有维修订单
+            List<Order> orderList = orderService.getDao().queryListApiForPage(order);
+            getJsonArray(jsonArray, orderList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return jsonArray;
+
+    }
+
+    private JSONArray getJsonArray(JSONArray jsonArray, List<Order> orderList) throws Exception {
         if (orderList != null) {
             for (Order o : orderList) {
                 JSONObject json = new JSONObject();
@@ -133,28 +138,6 @@ public class OrderApiService implements ApiServiceInf {
                         cpDetail.put("begin_time", c.getBeginTime());
                         cpDetail.put("end_time", c.getEndTime());
                         cpDetail.put("note", c.getNote());
-//                        JSONArray modelDetails = new JSONArray();
-//                        List<CouponModel> couModels = modelService.queryListByCouponId(c.getId());
-//                        if (couModels != null && couModels.size() > 0) {
-//                            for (CouponModel cm : couModels) {
-//                                JSONObject item = new JSONObject();
-//                                item.put("brand_id", cm.getBrandId());
-//                                item.put("brand_name", cm.getBrandName());
-//                                modelDetails.add(item);
-//                            }
-//                        }
-//                        cpDetail.put("brands", modelDetails);
-//                        JSONArray projectDetails = new JSONArray();
-//                        List<CouponProject> couProjects = couponProjectService.queryListByCouponId(c.getId());
-//                        if (couProjects != null && couProjects.size() > 0) {
-//                            for (CouponProject cp : couProjects) {
-//                                JSONObject item = new JSONObject();
-//                                item.put("brand_id", cp.getProjectId());
-//                                item.put("brand_name", cp.getProjectName());
-//                                projectDetails.add(item);
-//                            }
-//                        }
-//                        cpDetail.put("projects", projectDetails);
                         json.put("coupon_info", cpDetail);
                     }
                 }
@@ -167,12 +150,12 @@ public class OrderApiService implements ApiServiceInf {
                 json.put("is_rework", o.getIsRework());
                 //查询订单明细
                 List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
-                if (0==o.getIsRework()) {
+//                if (o.getIsRework() == null || 0 == o.getIsRework()) {
                     orderDetails = detailService.queryByOrderNo(o.getOrderNo());
-                } else if (1==o.getIsRework()) {
-                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
-                    orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
-                }
+//                } else if (1 == o.getIsRework()) {
+//                    ReworkOrder reworkOrder = reworkOrderService.getDao().queryByReworkNo(o.getOrderNo());
+//                    orderDetails = detailService.queryByOrderNo(reworkOrder.getParentOrder());
+//                }
                 JSONArray jsonDetails = new JSONArray();
                 for (OrderDetail od : orderDetails) {
                     JSONObject item = new JSONObject();
@@ -187,7 +170,6 @@ public class OrderApiService implements ApiServiceInf {
             }
         }
         return jsonArray;
-
     }
 
 

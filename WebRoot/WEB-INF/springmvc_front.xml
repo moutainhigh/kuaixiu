@@ -121,6 +121,7 @@
                 <value>^//recycle/.*</value>
                 <value>^/recycleNew/.*</value>
                 <value>^/join/.*</value>
+                <value>^/activityCompany/.*</value>
                 <!-- 接口 -->
                 <value>^/open/.*</value>
                 <value>^/swagger/.*</value>
@@ -131,6 +132,9 @@
                 <value>^/wap/clerk/.*</value>
                 <value>^/wap/integral/.*</value>
                 <value>^/ty_wap/</value>
+
+                <!--商机记录-->
+                <value>^/NBTelecomSJ/.*</value>
             </list>
         </property>
     </bean>

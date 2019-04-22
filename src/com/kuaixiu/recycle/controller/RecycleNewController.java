@@ -309,45 +309,30 @@ public class RecycleNewController extends BaseController {
                     if (!list.isEmpty()) {
                         RecycleCheckItems checkItems = list.get(0);
                         checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
+                        checkItems.setLastPrice(checkItems.getPrice());
+                        checkItems.setQuoteId(j.getString("quoteid"));
                         recycleCheckItemsService.saveUpdate(checkItems);
                     }
-
                 }
-
 
                 //查询该手机号是否有存储过
                 if (StringUtils.isNotBlank(loginMobile)) {
-                    RecycleCheckItems t = new RecycleCheckItems();
-                    t.setLoginMobile(loginMobile);
-                    List<RecycleCheckItems> recycleCheckItems = recycleCheckItemsService.queryList(t);
                     // 得到当前session中品牌名称  品牌id  机型名称
                     String selectBrandId = (String) request.getSession().getAttribute("selectBrandId");
                     String selectBrandName = (String) request.getSession().getAttribute("selectBrandName");
                     String selectModelName = (String) request.getSession().getAttribute("selectModelName");
 
-                    if (recycleCheckItems.isEmpty()) {
-                        //新增
-                        t.setItems(items);
-                        t.setLastPrice(new BigDecimal(price));
-                        t.setProductId(productId);
-                        t.setBrand(selectBrandName);
-                        t.setBrandId(selectBrandId);
-                        t.setRecycleModel(selectModelName);
-                        recycleCheckItemsService.add(t);
-                    } else {
-                        RecycleCheckItems checkItems = recycleCheckItems.get(0);
-                        //修改
-                        checkItems.setItems(items);
-                        checkItems.setLastPrice(new BigDecimal(price));
-                        checkItems.setProductId(productId);
-                        checkItems.setBrand(selectBrandName);
-                        checkItems.setBrandId(selectBrandId);
-                        checkItems.setRecycleModel(selectModelName);
-                        recycleCheckItemsService.saveUpdate(checkItems);
-                    }
-
-
+                    //新增
+                    RecycleCheckItems t = new RecycleCheckItems();
+                    t.setLoginMobile(loginMobile);
+                    t.setItems(items);
+                    t.setPrice(new BigDecimal(price));
+                    t.setProductId(productId);
+                    t.setBrand(selectBrandName);
+                    t.setBrandId(selectBrandId);
+                    t.setRecycleModel(selectModelName);
+                    t.setQuoteId(j.getString("quoteid"));
+                    recycleCheckItemsService.add(t);
                 }
             }
 
@@ -1252,10 +1237,11 @@ public class RecycleNewController extends BaseController {
             String getResult = AES.post(baseNewUrl + "getmodelbycode", requestNews);
             //对得到结果进行解密
             code = getResult(AES.Decrypt(getResult));
-            JSONArray product = code.getJSONArray("datainfo");
-            if (product.isEmpty()) {
+            if (StringUtils.isBlank(code.getString("datainfo"))) {
                 throw new SystemException("对应机型不存在");
             }
+            JSONArray product = code.getJSONArray("datainfo");
+
             JSONObject o = (JSONObject) product.get(0);
             JSONArray sublist = o.getJSONArray("sublist");
             String productId = ((JSONObject) sublist.get(0)).getString("productid");
