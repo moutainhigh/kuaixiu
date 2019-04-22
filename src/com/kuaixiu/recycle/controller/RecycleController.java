@@ -1049,7 +1049,7 @@ public class RecycleController extends BaseController {
                 contactphone = URLDecoder.decode(cookiePhone, "UTF-8");
             } else {
                 String[] dname = request.getServerName().split("\\.");
-                CookiesUtil.setCookie(response, Consts.COOKIE_H5_PHONE, contactphone, CookiesUtil.prepare(dname), -1);
+                CookiesUtil.setCookie(response, Consts.COOKIE_H5_PHONE, contactphone, CookiesUtil.prepare(dname), 999999999);
             }
 
             JSONObject requestNews = new JSONObject();
