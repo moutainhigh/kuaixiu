@@ -35,7 +35,7 @@ public class CookiesUtil {
         value=URLEncoder.encode(value,"UTF-8");
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
-        if (StringUtils.isNotBlank(domainName)){
+        if (StringUtils.isBlank(domainName)){
             cookie.setDomain(domainName);
         }
         if (maxAge >= 0){
