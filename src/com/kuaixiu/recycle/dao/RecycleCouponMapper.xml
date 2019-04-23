@@ -41,9 +41,9 @@
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object">
         insert into hs_coupon
-        (id,batch_id,coupon_code,coupon_name,pricing_Type,rule_description,upper_limit,subtraction_price,coupon_price,begin_time,end_time,note,use_time,create_time,create_userid)
+        (id,batch_id,coupon_code,coupon_name,receive_mobile,pricing_Type,rule_description,upper_limit,subtraction_price,coupon_price,begin_time,end_time,note,use_time,create_time,create_userid)
         values
-        (#{id},#{batchId},#{couponCode},#{couponName},#{pricingType},#{ruleDescription},#{upperLimit},#{Subtraction_price},#{strCouponPrice},#{beginTime},#{endTime},#{note},#{useTime},now(),#{createUserid})
+        (#{id},#{batchId},#{couponCode},#{couponName},#{receiveMobile},#{pricingType},#{ruleDescription},#{upperLimit},#{Subtraction_price},#{strCouponPrice},#{beginTime},#{endTime},#{note},#{useTime},now(),#{createUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
