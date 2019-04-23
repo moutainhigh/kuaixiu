@@ -1186,7 +1186,7 @@ public class RecycleNewController extends BaseController {
                 for (int i = 0; i < j.size(); i++) {
                     JSONObject js = j.getJSONObject(i);
                     if (js.getString("productid").equals(productId)) {
-                        maxPrice = (int) (js.getInteger("productprice") * 0.9);
+                        maxPrice = (int) (js.getInteger("productprice"));
                         imgUrl = js.getString("modellogo");
                         map.put("maxPrice", maxPrice);
                         map.put("imgUrl", imgUrl);
