@@ -470,7 +470,7 @@ public class RecycleTestController extends BaseController {
 
             //转化时间格式
             if (StringUtil.isNotBlank(takeTime)) {
-                takeTime = RecycleController.getDate(takeTime);
+                takeTime = recycleOrderService.getDate(takeTime);
             }
             //转化地址
             Address provinceName = addressService.queryByAreaId(province);
@@ -479,7 +479,7 @@ public class RecycleTestController extends BaseController {
             if (provinceName == null || cityName == null || areaName == null) {
                 return getResult(result, null, false, "2", "请确认地址信息是否无误");
             }
-            String areaname = RecycleController.getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
+            String areaname = getProvince(provinceName.getArea()) + cityName.getArea() + " " + areaName.getArea();
 
             //先保存订单到超人平台再调用回收平台下单接口  返回成功则更新订单状态
             String id = UUID.randomUUID().toString().replace("-", "");
@@ -652,6 +652,32 @@ public class RecycleTestController extends BaseController {
     }
 
     /**
+     * 超人系统地址为 上海市 黄浦区 城区    -----  浙江 杭州市 江干区
+     * 回收地址规范     上海市 黄浦区            ------ 浙江省 杭州市 江干区
+     * 省份区别  西藏 宁夏 新疆 广西 内蒙古
+     * 北京市  天津市 上海市  重庆市 其他省后面都加省
+     *
+     * @param code
+     * @return 超人地址转化回收地址规范
+     */
+    public static String getProvince(String code) {
+        List<String> s = new ArrayList<String>();
+        List<String> p = new ArrayList<String>();
+        String[] plist = {"西藏", "宁夏", "新疆", "广西", "内蒙古"};
+        String[] slist = {"北京", "天津", "上海", "重庆"};
+        s.addAll(Arrays.asList(plist));
+        p.addAll(Arrays.asList(slist));
+        if (s.contains(code)) {
+            //不用更改
+        } else if (p.contains(code)) {
+            code += "市";
+        } else {
+            code += "省";
+        }
+        return code;
+    }
+
+    /**
      * 发起订单物流请求
      *
      * @param order
@@ -682,7 +708,7 @@ public class RecycleTestController extends BaseController {
     /**
      * 通过quoteid查询 订单信息
      */
-    public JSONObject postNews(String quoteId) throws Exception {
+    private JSONObject postNews(String quoteId) throws Exception {
         JSONObject requestNews = new JSONObject();
         //调用接口需要加密的数据
         String url = baseNewUrl + "getquotedetail";
