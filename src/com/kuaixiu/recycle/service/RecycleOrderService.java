@@ -141,6 +141,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder>{
 		recycleCoupon.setBatchId(addValue.getBatchId());
 		if(su != null){
 			recycleCoupon.setCreateUserid(su.getUserId());
+			recycleCoupon.setUpdateUserid(su.getUserId());
 		}
 		recycleCoupon.setId(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 16));
 		recycleCoupon.setCouponName(addValue.getCouponName());
@@ -201,7 +202,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder>{
 			String mailNo = postSfOrder(order);
 			order.setSfOrderNo(mailNo);
 			order.setOrderStatus(2);
-			this.saveUpdate(order);
+//			this.saveUpdate(order);
 //			log.info("顺丰推送成功");
 		} catch (Exception e) {
 			//记录顺丰推送异常信息

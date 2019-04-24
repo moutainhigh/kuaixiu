@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.CouponAddValue" >
         <result column="id" property="id"/>
         <result column="coupon_name" property="couponName"/>
+        <result column="activity_batch" property="activityBatch"/>
         <result column="batch_id" property="batchId"/>
         <result column="type" property="type"/>
         <result column="pricing_Type" property="pricingType"/>
@@ -22,7 +23,7 @@
     
     <!-- hs_coupon_add_value table all fields -->
     <sql id="Base_Column_List" >
-        id,coupon_name,batch_id,type,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,begin_time,end_time,activity_end_time,note
+        id,coupon_name,activity_batch,batch_id,type,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,begin_time,end_time,activity_end_time,note
     </sql>
 
     <!-- 插入记录 -->
@@ -64,6 +65,7 @@
     <select id="queryByType"  resultMap="BaseResultMap" parameterType="Integer">
         select <include refid="Base_Column_List" />
         from hs_coupon_add_value where type = #{type}
+        and activity_batch=(SELECT MAX(activity_batch) from hs_coupon_add_value)
     </select>
 
     <!-- 查询列表无分页 -->

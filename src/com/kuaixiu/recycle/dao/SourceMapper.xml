@@ -6,13 +6,14 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.Source">
         <result column="id" property="id"/>
+        <result column="activity_batch" property="activityBatch"/>
         <result column="source" property="source"/>
         <result column="type" property="type"/>
     </resultMap>
 
     <!-- hs_source table all fields -->
     <sql id="Base_Column_List">
-        id,source,type
+        id,activity_batch,source,type
     </sql>
 
     <!-- 插入记录 -->
@@ -53,6 +54,7 @@
         <if test="type != null and type != ''">
             and type = #{type}
         </if>
+        and activity_batch=(SELECT MAX(activity_batch) from hs_source)
     </select>
 
     <!-- 查询列表无分页 -->

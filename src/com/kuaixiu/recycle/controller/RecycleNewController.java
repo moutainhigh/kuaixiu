@@ -556,10 +556,13 @@ public class RecycleNewController extends BaseController {
             }
             //确定来源，没有则默认微信公众号来源
             source = recycleOrderService.isHaveSource(order, source);
-
             List<String> sources = sourceService.getDao().queryByType(1);
+            Boolean isSend10Coupon=false;
+            if(sources.contains(source)){
+                isSend10Coupon=true;
+            }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
-            if (StringUtils.isNotBlank(couponCode) && !sources.contains(source)) {
+            if (StringUtils.isNotBlank(couponCode) && !isSend10Coupon) {
                 recycleCoupon = recycleCouponService.queryByCode(couponCode);
                 if (recycleCoupon == null) {
                     throw new SystemException("加价码输入错误");
@@ -620,7 +623,7 @@ public class RecycleNewController extends BaseController {
                 order.setWechatOpenId(openId);
             }
             //判断该订单来源确定是否使用加价券
-            if (sources.contains(source)) {
+            if (isSend10Coupon) {
                 recycleCoupon = recycleOrderService.getCouponCode(mobile, request);
                 if (recycleCoupon != null) {
                     couponCode = recycleCoupon.getCouponCode();
@@ -632,7 +635,7 @@ public class RecycleNewController extends BaseController {
                     }
                 }
             }
-            if (StringUtils.isNotBlank(couponCode)) {
+            if (StringUtils.isNotBlank(recycleCoupon.getId())) {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
             }
@@ -681,8 +684,8 @@ public class RecycleNewController extends BaseController {
                 //订单提交回收平台成功 更新订单状态
                 order = recycleOrderService.queryById(id);
                 order.setOrderNo(j.getString("orderid"));
-                //更新回收订单：订单号
-                recycleOrderService.saveUpdate(order);
+//                //更新回收订单：订单号
+//                recycleOrderService.saveUpdate(order);
                 //订单提交成功 当用户选择超人系统推送时  调用顺丰取件接口
                 if (mailType.equals("1")) {
                     recycleOrderService.getPostSF(order, time, request);//调用顺丰取件接口
