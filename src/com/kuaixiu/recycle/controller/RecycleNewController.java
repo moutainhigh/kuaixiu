@@ -190,6 +190,58 @@ public class RecycleNewController extends BaseController {
         renderJson(response, result);
     }
 
+    /**
+     * 获取机型名字图片
+     */
+    @RequestMapping(value = "recycleNew/getModelName")
+    @ResponseBody
+    public ResultData getModelNameImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        JSONObject jsonResult = new JSONObject();
+        String url = baseNewUrl + "getmodellist";
+        try {
+            //获取请求数据
+            JSONObject params = getPrarms(request);
+            String productId = params.getString("productId");
+            String brandId = params.getString("brandId");
+
+            JSONObject requestNews = new JSONObject();
+            //调用接口需要加密的数据
+            JSONObject code = new JSONObject();
+            code.put("pageindex", 1);
+            code.put("pagesize", 500);
+            code.put("categoryid", null);
+            code.put("brandid", brandId);
+            String realCode = AES.Encrypt(code.toString());  //加密
+            requestNews.put(cipherdata, realCode);
+            //发起请求
+            String getResult = AES.post(url, requestNews);
+            //对得到结果进行解密
+            jsonResult = getResult(AES.Decrypt(getResult));
+            //将结果中的产品id转为string类型  json解析 long类型精度会丢失
+            //防止返回机型信息为空
+            JSONObject jsonObject=new JSONObject();
+            if (StringUtil.isNotBlank(jsonResult.getString("datainfo")) && !(jsonResult.getJSONArray("datainfo")).isEmpty()) {
+                JSONArray jq = jsonResult.getJSONArray("datainfo");
+                JSONObject jqs = (JSONObject) jq.get(0);
+                JSONArray j = jqs.getJSONArray("sublist");
+                for (int i = 0; i < j.size(); i++) {
+                    JSONObject js = j.getJSONObject(i);
+                    if(productId.equals(js.getString("productid"))){
+                        jsonObject.put("modelLogo",js.getString("modellogo"));
+                        jsonObject.put("modelName",js.getString("modelname"));
+                        break;
+                    }
+                }
+            }
+            getResult(result,jsonObject,true,"0","成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
 
     /**
      * 获取指定机型的检测选项：
