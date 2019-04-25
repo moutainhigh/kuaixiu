@@ -10,26 +10,26 @@
       <form id="insertForm" method="post" class="form-horizontal">
         <input type="hidden" name="id" value="${coupon.id }" />
         <div class="form-group">
-          <label for="addBatchId" class="col-sm-2 control-label"> 优惠券批次</label>
+          <label for="batchId" class="col-sm-2 control-label"> 优惠券批次</label>
           <div class="col-sm-9">
             <p class="form-control-static">${batchId}</p>
             <input type="hidden" name="batchId" value="${batchId }" />
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerName" class="col-sm-2 control-label"><span style="color:red">*</span> 优惠券名称</label>
+          <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 优惠券名称</label>
           <div class="col-sm-9">
             <input type="text" id="couponName" name="name" value="${coupon.couponName }" class="form-control" placeholder="请输入优惠券名称">
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
+          <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
           <div class="col-sm-9">
             <input type="text" id="subtractionPrice" name="subtractionPrice" value="${coupon.subtraction_price }" class="form-control" placeholder="请输入负责人手机号">
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券类型  1：百分比 2:：固定加价</label>
+          <label for="pricingType" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券类型  1：百分比 2:：固定加价</label>
           <div class="col-sm-9">
             <input type="text" id="pricingType" name="pricingType" value="${coupon.pricingType }" class="form-control" placeholder="请输入负责人手机号">
           </div>
@@ -37,13 +37,13 @@
         <div class="form-group" id="upperLimits">
           <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券订单额度上限</label>
           <div class="col-sm-9">
-            <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入加价券订单额度上限">
+            <input type="text" id="upperLimit" name="upperLimit" value="${coupon.upperLimit }" class="form-control" placeholder="请输入加价券订单额度上限">
           </div>
         </div>
         <div class="form-group" id="addPriceUppers">
           <label for="addPriceUpper" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券加价额度上限</label>
           <div class="col-sm-9">
-            <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="请输入加价券加价额度上限">
+            <input type="text" id="addPriceUpper" name="addPriceUpper" value="${coupon.addPriceUpper }" class="form-control" placeholder="请输入加价券加价额度上限">
           </div>
         </div>
         <div class="form-group" id="prices">
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 优惠券金额</label>
+          <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 优惠券金额</label>
           <div class="col-sm-9">
             <input type="text" id="couponPrice" name="price" value="${coupon.couponPrice }" class="form-control" placeholder="请输入优惠券金额">
           </div>
@@ -66,7 +66,7 @@
             <input type="text" id="validTime" value="${coupon.beginTime}-${coupon.endTime}" class="form-control" placeholder="请选择优惠券有效时间" readonly="readonly">
           </div>
         </div>
-        <div class="form-group" id="projects">
+        <div class="form-group" id="notes">
           <label for="note" class="col-sm-2 control-label"> 备注</label>
           <div class="col-sm-9">
             <input type="text" id="note" name="note" value="${coupon.note }" class="form-control" placeholder="请输入备注信息">
