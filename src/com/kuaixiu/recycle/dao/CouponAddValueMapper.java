@@ -3,6 +3,8 @@ package com.kuaixiu.recycle.dao;
 import com.common.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * CouponAddValue Mapper
  *
@@ -12,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface CouponAddValueMapper<T> extends BaseDao<T> {
 
-    T queryByType(@Param("type")Integer type);
+    List<T> queryByType(@Param("type")Integer type);
 }
 
 

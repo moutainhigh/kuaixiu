@@ -9,7 +9,6 @@ import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.system.api.entity.ResultData;
-import com.system.basic.address.service.AddressService;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;
@@ -53,6 +52,8 @@ public class RecycleNewController extends BaseController {
     private SearchModelService searchModelService;
     @Autowired
     private SourceService sourceService;
+    @Autowired
+    private CouponAddValueService couponAddValueService;
 
     /**
      * 基础访问接口地址
@@ -625,9 +626,11 @@ public class RecycleNewController extends BaseController {
             if (StringUtils.isNotBlank(openId)) {
                 order.setWechatOpenId(openId);
             }
+            //查询回收下单所有加价规则
+            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
             //判断该订单来源确定是否使用加价券
             if (isSend10Coupon) {
-                recycleCoupon = recycleOrderService.getCouponCode(mobile, request);
+                recycleCoupon = recycleOrderService.getCouponCode(mobile, request,addValues);
                 if (recycleCoupon != null) {
                     couponCode = recycleCoupon.getCouponCode();
                 }
@@ -671,7 +674,7 @@ public class RecycleNewController extends BaseController {
             code.put("address", address);                                      //详细地址
             if (StringUtils.isNotBlank(couponCode)) {
                 //发送给回收平台加价券
-                recycleOrderService.sendRecycleCoupon(code, recycleCoupon);
+                recycleOrderService.sendRecycleCoupon(code, recycleCoupon,addValues);
             }
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
@@ -936,7 +939,7 @@ public class RecycleNewController extends BaseController {
                                 json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                 Integer addCouponPrice = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
                                 if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
-                                    info.put("addCouponPrice", recycleCoupon.getAddPriceUpper().toString());
+                                    info.put("addCouponPrice", Integer.valueOf(recycleCoupon.getAddPriceUpper().toString()));
                                     info.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()).toString());
                                 } else {
                                     info.put("addCouponPrice", String.valueOf(addCouponPrice));
