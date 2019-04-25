@@ -233,9 +233,6 @@ public class EngineerController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    @Autowired
-    private OrderDetailService detailService;
-
     /**
      * 计算订单总价
      *

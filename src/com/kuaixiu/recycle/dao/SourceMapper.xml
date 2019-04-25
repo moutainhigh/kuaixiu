@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.SourceMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.Source">
+        <result column="id" property="id"/>
+        <result column="activity_batch" property="activityBatch"/>
+        <result column="source" property="source"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <!-- hs_source table all fields -->
+    <sql id="Base_Column_List">
+        id,activity_batch,source,type
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into hs_source
+        (id,source,type)
+        values
+        (#{id},#{source},#{type})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update hs_source 
+        set 
+            id=#{id},
+            source=#{source},
+            type=#{type}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_source where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_source where id = #{id}
+    </select>
+
+    <select id="queryByType" resultType="String" parameterType="Object">
+        select
+        source
+        from hs_source
+        where 1=1
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        and activity_batch=(SELECT MAX(activity_batch) from hs_source)
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_source
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="source != null and source != ''">
+            and source = #{source}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_source
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="source != null and source != ''">
+            and source = #{source}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+    </select>
+
+</mapper>   

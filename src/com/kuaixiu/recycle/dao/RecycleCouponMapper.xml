@@ -12,6 +12,7 @@
         <result column="pricing_Type" property="pricingType"/>
         <result column="rule_description" property="ruleDescription"/>
         <result column="upper_limit" property="upperLimit"/>
+        <result column="add_price_upper" property="addPriceUpper"/>
         <result column="subtraction_price" property="Subtraction_price"/>
         <result column="coupon_price" property="strCouponPrice"/>
         <result column="begin_time" property="beginTime"/>
@@ -31,7 +32,8 @@
 
     <!-- kx_coupon table all fields -->
     <sql id="Base_Column_List">
-        t.id,t.batch_id,t.coupon_code,t.coupon_name,t.pricing_Type,t.rule_description,t.upper_limit,t.subtraction_price,t.coupon_price,
+        t.id,t.batch_id,t.coupon_code,t.coupon_name,t.pricing_Type,t.rule_description,t.upper_limit,
+        t.add_price_upper,t.subtraction_price,t.coupon_price,
         t.begin_time,t.end_time,t.status,t.is_use,date_format(t.`use_time`,'%Y-%m-%d %H:%i:%s')use_time,
         t.is_del,t.note,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
         t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,
@@ -41,9 +43,9 @@
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object">
         insert into hs_coupon
-        (id,batch_id,coupon_code,coupon_name,pricing_Type,rule_description,upper_limit,subtraction_price,coupon_price,begin_time,end_time,note,use_time,create_time,create_userid)
+        (id,batch_id,coupon_code,coupon_name,is_receive,receive_mobile,pricing_Type,rule_description,upper_limit,add_price_upper,subtraction_price,coupon_price,begin_time,end_time,note,use_time,create_time,create_userid,update_time,update_userid)
         values
-        (#{id},#{batchId},#{couponCode},#{couponName},#{pricingType},#{ruleDescription},#{upperLimit},#{Subtraction_price},#{strCouponPrice},#{beginTime},#{endTime},#{note},#{useTime},now(),#{createUserid})
+        (#{id},#{batchId},#{couponCode},#{couponName},#{isReceive},#{receiveMobile},#{pricingType},#{ruleDescription},#{upperLimit},#{addPriceUpper},#{Subtraction_price},#{strCouponPrice},#{beginTime},#{endTime},#{note},#{useTime},now(),#{createUserid},now(),#{updateUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -56,6 +58,7 @@
             rule_description=#{ruleDescription},
             subtraction_price=#{Subtraction_price},
             coupon_price=#{strCouponPrice},
+            add_price_upper=#{addPriceUpper},
             begin_time=#{beginTime},
             end_time=#{endTime},
             status=#{status},

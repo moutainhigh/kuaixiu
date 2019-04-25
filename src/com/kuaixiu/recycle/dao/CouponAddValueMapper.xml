@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycle.dao.CouponAddValueMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycle.entity.CouponAddValue" >
+        <result column="id" property="id"/>
+        <result column="coupon_name" property="couponName"/>
+        <result column="activity_batch" property="activityBatch"/>
+        <result column="batch_id" property="batchId"/>
+        <result column="type" property="type"/>
+        <result column="pricing_Type" property="pricingType"/>
+        <result column="coupon_price" property="couponPrice"/>
+        <result column="upper_limit" property="upperLimit"/>
+        <result column="add_price_upper" property="addPriceUpper"/>
+        <result column="subtraction_price" property="subtractionPrice"/>
+        <result column="rule_description" property="ruleDescription"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="activity_end_time" property="activityEndTime"/>
+        <result column="note" property="note"/>
+    </resultMap>
+    
+    <!-- hs_coupon_add_value table all fields -->
+    <sql id="Base_Column_List" >
+        id,coupon_name,activity_batch,batch_id,type,pricing_Type,coupon_price,upper_limit,add_price_upper,subtraction_price,rule_description,begin_time,end_time,activity_end_time,note
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_coupon_add_value
+        (id,coupon_name,pricing_Type,coupon_price,upper_limit,add_price_upper,subtraction_price,rule_description,begin_time,end_time,note)
+        values
+        (#{id},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{addPriceUpper},#{subtractionPrice},#{ruleDescription},#{beginTime},#{endTime},#{note})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_coupon_add_value 
+        set 
+            id=#{id},
+            coupon_name=#{couponName},
+            pricing_Type=#{pricingType},
+            coupon_price=#{couponPrice},
+            upper_limit=#{upperLimit},
+            add_price_upper=#{addPriceUpper},
+            subtraction_price=#{subtractionPrice},
+            rule_description=#{ruleDescription},
+            begin_time=#{beginTime},
+            end_time=#{endTime},
+            note=#{note}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_coupon_add_value where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_coupon_add_value where id = #{id}
+    </select>
+
+    <select id="queryByType"  resultMap="BaseResultMap" parameterType="Integer">
+        select <include refid="Base_Column_List" />
+        from hs_coupon_add_value where type = #{type}
+        and activity_batch=(SELECT MAX(activity_batch) from hs_coupon_add_value)
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_coupon_add_value
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and coupon_name = #{couponName}
+        </if>
+        <if test="pricingType != null and pricingType != ''" >
+            and pricing_Type = #{pricingType}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and coupon_price = #{couponPrice}
+        </if>
+        <if test="upperLimit != null and upperLimit != ''" >
+            and upper_limit = #{upperLimit}
+        </if>
+        <if test="subtractionPrice != null and subtractionPrice != ''" >
+            and subtraction_price = #{subtractionPrice}
+        </if>
+        <if test="ruleDescription != null and ruleDescription != ''" >
+            and rule_description = #{ruleDescription}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_coupon_add_value
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and coupon_name = #{couponName}
+        </if>
+        <if test="pricingType != null and pricingType != ''" >
+            and pricing_Type = #{pricingType}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and coupon_price = #{couponPrice}
+        </if>
+        <if test="upperLimit != null and upperLimit != ''" >
+            and upper_limit = #{upperLimit}
+        </if>
+        <if test="subtractionPrice != null and subtractionPrice != ''" >
+            and subtraction_price = #{subtractionPrice}
+        </if>
+        <if test="ruleDescription != null and ruleDescription != ''" >
+            and rule_description = #{ruleDescription}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+    </select>
+
+</mapper>   
