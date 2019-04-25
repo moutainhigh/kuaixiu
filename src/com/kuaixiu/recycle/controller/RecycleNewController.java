@@ -838,7 +838,7 @@ public class RecycleNewController extends BaseController {
                                             quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()).toString());
                                         } else {
                                             BigDecimal orderPriceTotal=new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString()));
-                                            quote.put("addCouponPrice", recycleOrderService.getAddCouponPrice(orderPriceTotal).toString());
+                                            quote.put("addCouponPrice", new BigDecimal(addCouponPrice.toString()).multiply(new BigDecimal("2")).toString());
                                             quote.put("orderprice", (orderPriceTotal).toString());
                                         }
                                     } else {
@@ -946,7 +946,7 @@ public class RecycleNewController extends BaseController {
                                     info.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()).toString());
                                 } else {
                                     BigDecimal orderPriceTotal=new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString()));
-                                    info.put("addCouponPrice", recycleOrderService.getAddCouponPrice(orderPriceTotal).intValue());
+                                    info.put("addCouponPrice", new BigDecimal(addCouponPrice.toString()).multiply(new BigDecimal("2")).toString());
                                     info.put("orderprice", orderPriceTotal.toString());
                                 }
                             } else {
