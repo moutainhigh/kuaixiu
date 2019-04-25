@@ -835,16 +835,16 @@ public class RecycleNewController extends BaseController {
                                         Integer addCouponPriceFalse = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(new BigDecimal("10"))).intValue();
                                         if (recycleCoupon.getAddPriceUpper() != null && addCouponPriceFalse > recycleCoupon.getAddPriceUpper().intValue()) {
                                             quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper().toString());
-                                            quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()).toString());
+                                            quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
                                         } else {
                                             BigDecimal orderPriceTotal=new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString()));
                                             quote.put("addCouponPrice", new BigDecimal(addCouponPrice.toString()).multiply(new BigDecimal("2")).toString());
-                                            quote.put("orderprice", (orderPriceTotal).toString());
+                                            quote.put("orderprice", orderPriceTotal);
                                         }
                                     } else {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                         quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
-                                        quote.put("orderprice", (new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice())).toString());
+                                        quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice()));
                                     }
                                     json.put("beginTime", recycleCoupon.getBeginTime());
                                     json.put("endTime", recycleCoupon.getEndTime());
@@ -943,16 +943,16 @@ public class RecycleNewController extends BaseController {
                                 Integer addCouponPriceFalse = (new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(new BigDecimal("10"))).intValue();
                                 if (recycleCoupon.getAddPriceUpper() != null && addCouponPriceFalse > recycleCoupon.getAddPriceUpper().intValue()) {
                                     info.put("addCouponPrice", Integer.valueOf(recycleCoupon.getAddPriceUpper().toString()));
-                                    info.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()).toString());
+                                    info.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
                                 } else {
                                     BigDecimal orderPriceTotal=new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString()));
                                     info.put("addCouponPrice", new BigDecimal(addCouponPrice.toString()).multiply(new BigDecimal("2")).toString());
-                                    info.put("orderprice", orderPriceTotal.toString());
+                                    info.put("orderprice", orderPriceTotal);
                                 }
                             } else {
                                 json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                 info.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
-                                info.put("orderprice", (new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice())).toString());
+                                info.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice()));
                             }
                             json.put("beginTime", recycleCoupon.getBeginTime());
                             json.put("endTime", recycleCoupon.getEndTime());

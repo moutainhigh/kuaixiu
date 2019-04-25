@@ -1468,6 +1468,9 @@ public class RecycleController extends BaseController {
             } else {
                 recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString() + "元");
             }
+            if(recycleCoupon.getStrCouponPrice().intValue()==5){
+                recycleCoupon.setCouponPrice(new BigDecimal(recycleCoupon.getCouponPrice()).multiply(new BigDecimal("2")).toString());
+            }
         }
         RecycleCustomer cust = recycleCustomerService.queryById(o.getCustomerId());
         RecycleSystem fm = recycleSystemService.queryById(o.getSourceType());
