@@ -62,11 +62,10 @@
 
                 <td class="search_th"><label class="control-label">客户手机号：</label></td>
                 <td class="search_td"><input type="text" name="query_customerMobile" class="form-control"></td>
-                <td></td>
 
-                <td class="search_th"><label class="control-label">使用加价券 ：</label></td>
+                <td class="search_th"><label class="control-label">使用加价券：</label></td>
                 <td class="search_td">
-                    <select name="query_orderStates" class="form-control">
+                    <select name="isCoupon" class="form-control">
                         <option value="">--请选择--</option>
                         <option value="0">否</option>
                         <option value="1">是</option>

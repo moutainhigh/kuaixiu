@@ -312,7 +312,7 @@ public class RecycleOrder extends BaseEntity{
 	}
 
 	public String getStrPrice() {
-		return price.toString();
+		return price.setScale(2).toString();
 	}
 
 	public void setStrPrice(String strPrice) {
