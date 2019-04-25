@@ -1456,6 +1456,16 @@ public class RecycleController extends BaseController {
             } else if (recycleCoupon.getPricingType() == 2) {
                 recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString() + "元");
             }
+            if (recycleCoupon.getPricingType() == 1) {
+                Integer addCouponPrice = (o.getPrice().divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
+                if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
+                    recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString() + "元");
+                } else {
+                    recycleCoupon.setCouponPrice(String.valueOf(addCouponPrice));
+                }
+            } else {
+                recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString() + "元");
+            }
         }
         RecycleCustomer cust = recycleCustomerService.queryById(o.getCustomerId());
         RecycleSystem fm = recycleSystemService.queryById(o.getSourceType());

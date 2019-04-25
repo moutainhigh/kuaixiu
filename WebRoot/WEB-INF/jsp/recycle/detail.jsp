@@ -101,7 +101,7 @@
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>预估总金额：${order.price}元</h4>
+                        <h4>预估总金额：${order.strPrice}元</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <c:choose>

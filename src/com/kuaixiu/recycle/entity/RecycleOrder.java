@@ -91,6 +91,8 @@ public class RecycleOrder extends BaseEntity{
     /** 预支付总金额*/
     private BigDecimal price;
 
+    private String strPrice;
+
     /** 议价后金额*/
     private BigDecimal negotiationPrice;
 
@@ -295,6 +297,14 @@ public class RecycleOrder extends BaseEntity{
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public String getStrPrice() {
+		return price.toString();
+	}
+
+	public void setStrPrice(String strPrice) {
+		this.strPrice = strPrice;
 	}
 
 	public Integer getSourceType() {
