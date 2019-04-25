@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="css/success.css?version=1.6">
 	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.0.js"></script>
     <title></title>
+    <style>
+    	.txt-red {
+    		color: red;
+    	}
+    </style>
 </head>
 <body>
     <div id="wrap" class="successWrap">
@@ -16,6 +21,7 @@
             <div class="success">
                 <img src="img/success.png" alt="">
                 <p>订单提交成功</p>
+                <p class="pre-price">订单预计<span class="pre-price-o"></span>元 <span class="txt-red">含限时加价<span class="pre-price-t"></span>元</span></p>
                 <p>最终价格以商家之间价格为准</p>
                 <p>多退少补</p>
             </div>
@@ -49,20 +55,35 @@
 	<!--end of 提示框-->
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
     <script>
         $(function(){
-            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo),
-                mailType = eCacheUtil.storage.getCache(CacheKey.mailType);
-            if(isGo == 'true'){
-                document.title = '天翼回收';
-            }else{
-                document.title = '超人回收';
-            }
-            if(mailType == 2){
-                $('.tip').hide();
-            }else{
-                $('#pickTime').html(eCacheUtil.storage.getCache(CacheKey.pickTime));
-            }
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+			var tip = GetQueryString('tip');
+			var fm = eCacheUtil.storage.getCache(CacheKey.source);
+			var PrePrice = eCacheUtil.storage.getCache(CacheKey.PrePrice);
+
+			if( PrePrice ){
+				
+				if(PrePrice*0.1>=200){
+					$('.pre-price-o').text( Number(PrePrice) + 200 )
+					$('.pre-price-t').text( 200 )
+				}else {
+					$('.pre-price-o').text( Number(PrePrice) + PrePrice*0.1 )
+					$('.pre-price-t').text( PrePrice*0.1 )
+				}
+			}
+			
+
+			if(isEmpty(fm)){
+				eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+			}
+			if(fm == 2 || fm == 9 || fm == 10){
+				document.title = '天翼回收';
+			}else{
+				document.title = '翼回收';
+			}
+            $('#pickTime').html(eCacheUtil.storage.getCache(CacheKey.pickTime));
 			
 			//判断是否是小程序
 		    var fm=eCacheUtil.storage.getCache( CacheKey.source );

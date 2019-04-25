@@ -68,15 +68,24 @@
     <script src="js/common.js"></script>
 	<script src="js/util.js"></script>
     <script>
+	
+    	var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+		var tip = GetQueryString('tip');
+		var fm = eCacheUtil.storage.getCache(CacheKey.source);
+
+		if(isEmpty(fm)){
+			eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+		}
+		if(fm == 2 || fm == 9 || fm == 10){
+			document.title = '天翼回收';
+		}else{
+			document.title = '翼回收';
+		}
         var pIndex = 1,
             off_on = false;//分页开关;
         $(function(){
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-            if(isGo == 'true'){
-                document.title = '天翼回收';
-            }else{
-                document.title = '超人回收';
-            }
+
             searchOrderList(pIndex,"");
             // $('.navbar a').click(function(){
             //     var index=$(this).index();

@@ -153,17 +153,12 @@
                     $('.proInfor .text').html('<p class="fb">'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p><a class="pull_down"><img src="img/icon_arrow_down.png" /></a>');
                     $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
 					//判断是否有Coupon元素
-					if( dataInfo.Coupon ){
-					   if(dataInfo.Coupon.couponPrice.indexOf("%") > 0){
-					     $('.tickets').attr( 'style' , 'display:block' ).html( '(含加价￥'+
-						 parseFloat( dataInfo.orderprice.toFixed(2) )* parseFloat( dataInfo.Coupon.couponPrice )* 0.01 +')' );
-					   }else{
-					     $('.tickets').attr( 'style' , 'display:block' ).html( '(含加价￥'+dataInfo.Coupon.couponPrice+')' );	
-					   }
-					}
-					else{
-						$('.tickets').attr( 'style' , 'display:none' ).html( '' );
-					}
+                    if(dataInfo.addCouponPrice){
+                        $('.tickets').show().html( '(含加价￥'+dataInfo.addCouponPrice+')' );
+                    }else{
+                        $('.tickets').hide().html('')
+                    }
+					
 					
                     if (dataInfo.recycle_type == 1){
                         $('#recycleType').html('支付宝收款');

@@ -6,11 +6,9 @@ $(function(){
     }
     if(fm == 2 || fm == 9 || fm == 10){
         document.title = '天翼回收';
-    }else if(fm == 7){
-        document.title = '翼回收';
     }else{
-		document.title = '超人回收';
-	}
+        document.title = '翼回收';
+    }
     $('h3').html(eCacheUtil.storage.getCache(CacheKey.ModelName));
     //如果产品id为空则跳转到product页面
     if(isEmpty(eCacheUtil.storage.getCache(CacheKey.ProjectId))){

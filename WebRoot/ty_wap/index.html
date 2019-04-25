@@ -8,9 +8,78 @@
     <script src="js/flexible.js"></script>
     <link rel="stylesheet" href="css/main.css?version=1.6">
     <title>超人回收</title>
+    <style>
+        .dialog-active {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+        }
+
+        .mask-hide {
+            position: absolute;
+            background: rgba(0,0,0,.7);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .img-active-wrap {
+            font-size: 0;
+            position: relative;
+            width: 70%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .img-active {
+            position: relative;
+            width: 100%;
+            display: block;
+        }
+
+        .close-active-btn {
+            position: absolute;
+            top: -0.45rem;
+            right: -0.16rem;
+            display: block;
+            width: .35rem;
+            height: .35rem;
+            background: url(./img/icon_close.png) no-repeat center;
+            background-size: contain;
+        }
+
+        .join-active-btn {
+            display: block;
+            width: 100%;
+            height: .32rem;
+            line-height: .32rem;
+            font-size: .16rem;
+            text-align: center;
+            background: #fff;
+            color: red;
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div id="wrap" class="indexWrap">
+        
+        <!-- start of 首页弹窗 -->
+        <div class="dialog-active">
+            <div class="mask-hide"></div>
+            <div class="img-active-wrap">
+                <i class="close-active-btn js-close-active"></i>
+                <img class="img-active" src="./img/51_image.png" alt="">
+                <a class="join-active-btn" href="./product.html">立即参加</a>
+            </div>
+        </div>
+        <!-- end of 首页弹窗 -->
+
         <div class="main">
             <div class="header">
                 <a href="javascript:;"><img src="img/mlogo.png" alt=""><span>超人回收</span></a>
@@ -18,6 +87,9 @@
             </div>
             <div class="swiper-container">
                 <div class="banner">
+				    <div class="slide-item">
+                        <a href="product.html"><img src="img/banner6.png" alt=""></a>
+                    </div>
                     <div class="slide-item">
                         <a href="product.html"><img src="img/banner3.png" alt=""></a>
                     </div>
@@ -213,6 +285,11 @@
             $('.brandCont .item').click(function(){
                 location.href = 'product.html?bid='+$(this).attr('data-bid');
             });
+
+            // 点击取消按钮隐藏活动
+            $('.js-close-active').on('click',function(){
+                $('.dialog-active').hide()
+            })
         })
     </script>
 <!--站长统计-->

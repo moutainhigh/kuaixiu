@@ -188,10 +188,24 @@ public class RecycleOrderService extends BaseService<RecycleOrder>{
 			json.put("percent", 0);
 			json.put("addFee", recycleCoupon.getStrCouponPrice().intValue());
 		}
-		json.put("up", recycleCoupon.getUpperLimit());
-		json.put("low", recycleCoupon.getSubtraction_price());
+		json.put("up", new BigDecimal("2000"));
+		json.put("low", new BigDecimal("10"));
 		json.put("desc", recycleCoupon.getRuleDescription());
 		jsonArray.add(json);
+		JSONObject json2 = new JSONObject();
+		json2.put("couponId", recycleCoupon.getCouponCode());
+		json2.put("actType", recycleCoupon.getPricingType());
+		if (1 == (recycleCoupon.getPricingType())) {
+			json2.put("percent", recycleCoupon.getStrCouponPrice().divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN));
+			json2.put("addFee", 0);
+		} else if (2 == (recycleCoupon.getPricingType())) {
+			json2.put("percent", 0);
+			json2.put("addFee", recycleCoupon.getStrCouponPrice().intValue());
+		}
+		json2.put("up", new BigDecimal("10000"));
+		json2.put("low", new BigDecimal("2000"));
+		json2.put("desc", recycleCoupon.getRuleDescription());
+		jsonArray.add(json2);
 		code.put("coupon_rule", jsonArray.toJSONString());
 	}
 
