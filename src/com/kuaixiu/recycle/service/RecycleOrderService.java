@@ -249,6 +249,15 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         return mailNo;
     }
 
+    //根据订单价计算加价金额
+    public BigDecimal getAddCouponPrice(BigDecimal orderPrice){
+        //计算计价10%之前的原价
+        BigDecimal price=orderPrice.divide(new BigDecimal("110")).multiply(new BigDecimal("100"));
+        //计算原价的10%额度
+        BigDecimal addCouponPrice=price.divide(new BigDecimal("100")).multiply(new BigDecimal("10"));
+        return addCouponPrice;
+    }
+
     /**
      * 返回结果解析
      */
