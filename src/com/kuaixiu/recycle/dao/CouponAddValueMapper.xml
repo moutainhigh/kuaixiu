@@ -13,6 +13,7 @@
         <result column="pricing_Type" property="pricingType"/>
         <result column="coupon_price" property="couponPrice"/>
         <result column="upper_limit" property="upperLimit"/>
+        <result column="add_price_upper" property="addPriceUpper"/>
         <result column="subtraction_price" property="subtractionPrice"/>
         <result column="rule_description" property="ruleDescription"/>
         <result column="begin_time" property="beginTime"/>
@@ -23,15 +24,15 @@
     
     <!-- hs_coupon_add_value table all fields -->
     <sql id="Base_Column_List" >
-        id,coupon_name,activity_batch,batch_id,type,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,begin_time,end_time,activity_end_time,note
+        id,coupon_name,activity_batch,batch_id,type,pricing_Type,coupon_price,upper_limit,add_price_upper,subtraction_price,rule_description,begin_time,end_time,activity_end_time,note
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_coupon_add_value
-        (id,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,begin_time,end_time,note)
+        (id,coupon_name,pricing_Type,coupon_price,upper_limit,add_price_upper,subtraction_price,rule_description,begin_time,end_time,note)
         values
-        (#{id},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{beginTime},#{endTime},#{note})
+        (#{id},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{addPriceUpper},#{subtractionPrice},#{ruleDescription},#{beginTime},#{endTime},#{note})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -43,6 +44,7 @@
             pricing_Type=#{pricingType},
             coupon_price=#{couponPrice},
             upper_limit=#{upperLimit},
+            add_price_upper=#{addPriceUpper},
             subtraction_price=#{subtractionPrice},
             rule_description=#{ruleDescription},
             begin_time=#{beginTime},
