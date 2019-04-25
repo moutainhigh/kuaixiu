@@ -1406,6 +1406,7 @@ public class RecycleController extends BaseController {
         String queryStartTime = request.getParameter("query_startTime");
         String queryEndTime = request.getParameter("query_endTime");
         String fromSystem = request.getParameter("fromSystem");
+        String isCoupon = request.getParameter("isCoupon");
         RecycleOrder r = new RecycleOrder();
         r.setOrderNo(orderNo);
         if (StringUtils.isNotBlank(fromSystem)) {
@@ -1417,6 +1418,7 @@ public class RecycleController extends BaseController {
         r.setMobile(mobile);
         r.setQueryStartTime(queryStartTime);
         r.setQueryEndTime(queryEndTime);
+        r.setIsCoupon(isCoupon);
         Page page = getPageByRequest(request);
         r.setPage(page);
         List<RecycleOrder> list = recycleOrderService.queryListForPage(r);

@@ -186,6 +186,18 @@ public class RecycleOrder extends BaseEntity{
 	 * 加价券id
 	 */
 	private String couponId;
+	/**
+	 * 是否使用加价券
+	 */
+	private String isCoupon;
+
+	public String getIsCoupon() {
+		return isCoupon;
+	}
+
+	public void setIsCoupon(String isCoupon) {
+		this.isCoupon = isCoupon;
+	}
 
 	public String getCouponId() {
 		return couponId;
