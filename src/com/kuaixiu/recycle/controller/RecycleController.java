@@ -11,7 +11,6 @@ import com.google.common.collect.Maps;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.system.api.entity.ResultData;
-import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
@@ -21,7 +20,6 @@ import jodd.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,7 +31,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -53,8 +50,6 @@ public class RecycleController extends BaseController {
     @Autowired
     private RecycleOrderService recycleOrderService;
     @Autowired
-    private AddressService addressService;
-    @Autowired
     private RecycleCustomerService recycleCustomerService;
     @Autowired
     private AlipayService alipayService;
@@ -69,11 +64,11 @@ public class RecycleController extends BaseController {
     @Autowired
     private RecycleCouponService recycleCouponService;
     @Autowired
-    private PushsfExceptionService pushsfExceptionService;
-    @Autowired
     private SearchModelService searchModelService;
     @Autowired
     private SourceService sourceService;
+    @Autowired
+    private CouponAddValueService couponAddValueService;
 
     /**
      * 基础访问接口地址
@@ -713,9 +708,15 @@ public class RecycleController extends BaseController {
             if (name.length() > 12 || address.length() > 64) {
                 throw new SystemException("部分信息长度过长");
             }
+            //确定来源，没有则默认微信公众号来源
+            source = recycleOrderService.isHaveSource(order, source);
             List<String> sources = sourceService.getDao().queryByType(1);
+            Boolean isSend10Coupon = false;
+            if (sources.contains(source)) {
+                isSend10Coupon = true;
+            }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
-            if (StringUtils.isNotBlank(couponCode) && !sources.contains(source)) {
+            if (StringUtils.isNotBlank(couponCode) && !isSend10Coupon) {
                 recycleCoupon = recycleCouponService.queryByCode(couponCode);
                 if (recycleCoupon == null) {
                     throw new SystemException("加价码输入错误");
@@ -726,9 +727,9 @@ public class RecycleController extends BaseController {
 
             //设置下单间隔时间,最少3秒
             Long time = System.currentTimeMillis();
-            Object requestTimes = request.getSession().getAttribute("times");
+            Object requestTimes = request.getSession().getAttribute("newTimes");
             if (requestTimes == null) {
-                request.getSession().setAttribute("times", time);
+                request.getSession().setAttribute("newTimes", time);
             } else {
                 long realTime = (long) (requestTimes);
                 if ((time - realTime) < 5000) {
@@ -767,8 +768,6 @@ public class RecycleController extends BaseController {
             } else {
                 order.setMailType(1);        //快递类型   1超人系统推送
             }
-            //确定来源，没有则默认微信公众号来源
-            source=recycleOrderService.isHaveSource(order, source);
             //通过quoteid获取机型信息
             JSONObject postNews = recycleOrderService.postNews(quoteid);
             order.setProductName(postNews.getString("modelname"));
@@ -777,9 +776,11 @@ public class RecycleController extends BaseController {
             if (StringUtils.isNotBlank(openId)) {
                 order.setWechatOpenId(openId);
             }
+            //查询回收下单所有加价规则
+            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
             //判断该订单来源确定是否使用加价券
-            if (sources.contains(source)) {
-                recycleCoupon = recycleOrderService.getCouponCode(mobile, request);
+            if (isSend10Coupon) {
+                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues);
                 if (recycleCoupon != null) {
                     couponCode = recycleCoupon.getCouponCode();
                 }
@@ -790,7 +791,7 @@ public class RecycleController extends BaseController {
                     }
                 }
             }
-            if (StringUtils.isNotBlank(couponCode)) {
+            if (StringUtils.isNotBlank(recycleCoupon.getId())) {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
             }
@@ -821,9 +822,9 @@ public class RecycleController extends BaseController {
             code.put("contactphone", mobile);                                  //联系电话
             code.put("areaname", areaname);                                     //省市区
             code.put("address", address);                                      //详细地址
-            if (recycleCoupon != null) {
+            if (StringUtils.isNotBlank(couponCode)) {
                 //发送给回收平台加价券
-                recycleOrderService.sendRecycleCoupon(code, recycleCoupon);
+                recycleOrderService.sendRecycleCoupon(code, recycleCoupon, addValues);
             }
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
@@ -839,13 +840,12 @@ public class RecycleController extends BaseController {
                 //订单提交回收平台成功 更新订单状态
                 order = recycleOrderService.queryById(id);
                 order.setOrderNo(j.getString("orderid"));
-                //更新回收订单：订单号
-                recycleOrderService.saveUpdate(order);
+//                //更新回收订单：订单号
+//                recycleOrderService.saveUpdate(order);
                 //订单提交成功 当用户选择超人系统推送时  调用顺丰取件接口
                 if (mailType.equals("1")) {
                     recycleOrderService.getPostSF(order, time, request);//调用顺丰取件接口
                 }
-
             } else {
                 order.setIsDel(1);
             }
@@ -1005,7 +1005,7 @@ public class RecycleController extends BaseController {
             result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
-        }catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);

@@ -39,6 +39,12 @@
             <input type="text" id="upperLimit" name="upperLimit" value="${coupon.upperLimit }" class="form-control" placeholder="请输入负责人手机号">
           </div>
         </div>
+        <div class="form-group" id="addPriceUppers">
+          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券加价额度上限</label>
+          <div class="col-sm-9">
+            <input type="text" id="addPriceUpper" name="addPriceUpper" value="${coupon.addPriceUpper }" class="form-control" placeholder="请输入负责人手机号">
+          </div>
+        </div>
           <div class="form-group" id="prices">
               <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券规则描述</label>
               <div class="col-sm-9">
