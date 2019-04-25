@@ -1826,7 +1826,7 @@ textarea:-moz-placeholder {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  height: 35%;
+  height: 2.33rem;
   background: url("../img/resultBg.jpg") no-repeat;
   background-size: 100% 100%;
   text-align: center;
@@ -1836,25 +1836,26 @@ textarea:-moz-placeholder {
 }
 #wrap.resultWrap .main .estimatePrice p.price {
   color: #ffffff;
-  font-size: .72rem;
-  line-height: 1.2;
+  font-size: .48rem;
+  line-height: 0.48rem;
 }
 #wrap.resultWrap .main .estimatePrice p.price-tip{
-    font-size: 12px;
+    font-size: 0.14rem;
     color: #ffffff;
     margin-bottom: .05rem;
     background-size: 20%;
 }
 #wrap.resultWrap .main .estimatePrice p.price-tip .price-txt {
   position: relative;
+  color: #ece06d;
 }
 #wrap.resultWrap .main .estimatePrice p.price-tip .icon{
     display: block;
-     position: absolute;
-    left: -0.16rem;
-    top: -0.02rem;
-    width: 20px;
-    height: 20px;
+    position: absolute;
+    left: -0.2rem;
+    top: .02rem;
+    width: 0.16rem;
+    height: 0.16rem;
     background: url(../img/icon-price-2.png) no-repeat;
     background-size: 100%;
 }
@@ -1895,7 +1896,7 @@ textarea:-moz-placeholder {
   height: .235rem;
   background: url('../img/ping.png') no-repeat;
   background-size: cover;
-  font-size: .11rem;
+  font-size: .15rem;
   color: #fff;
 }
 #wrap.resultWrap .main .estimatePrice p.ping2 a img {

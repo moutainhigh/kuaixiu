@@ -104,6 +104,7 @@
                 <th class="fontWeight_normal tdwidth70">支付类型</th>
                 <th class="fontWeight_normal tdwidth70">回收价格</th>
                 <th class="fontWeight_normal tdwidth70">订单来源</th>
+                <th class="fontWeight_normal tdwidth70">使用加价券</th>
                 <th class="fontWeight_normal tdwidth70">下单时间</th>
                 <th class="fontWeight_normal tdwidth50">操作</th>
             </tr>
@@ -154,6 +155,7 @@
         {"data": "exchangeType", "class": ""},
         {"data": "price", "class": ""},
         {"data": "fm", "class": ""},
+        {"data": "couponId", "class": ""},
         {"data": "inTime", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
@@ -234,10 +236,20 @@
             }
         },
         {
-            targets: -4,
+            targets: -5,
             render: function (data, type, row, meta) {
                 var price = row.price + '元';
                 return price;
+            }
+        },
+        {
+            targets: -3,
+            render: function (data, type, row, meta) {
+                if (row.couponId != null) {
+                    return "是";
+                } else {
+                    return "否";
+                }
             }
         },
         {

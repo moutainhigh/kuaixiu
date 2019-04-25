@@ -40,9 +40,9 @@
                 <p>您的宝贝预估可卖</p>
                 <p class="price"><img src="img/loadings.gif" alt=""></p>
                 <p class="price-tip">
-                    <i class="price-txt">（含限时加价 <span></span>元）<i class="icon"></i></i>
+                    <i class="price-txt">含限时 <span></span>+10%<i class="icon"></i></i>
                 </p>
-                <p class="ping1"><a href="javascript:;" onclick="Reassess();">重新评估</a></p>
+              <!--  <p class="ping1"><a href="javascript:;" onclick="Reassess();">重新评估</a></p>   -->
                 <p class="ping2">
                     <span>下周约降<i class="sale"></i>元</span>
                 </p>
@@ -271,14 +271,22 @@
                     if (data.success){
                         var dataInfo = data.result.datainfo;
                         prePrice = dataInfo.price;
+						
+						if( prePrice * 0.05 >= 200){
+						   // $('.price-tip span').text(200);
+                            $('.price').html(prePrice + 200);
+						}else{
+						    //$('.price-tip span').text(prePrice*0.1);
+                            $('.price').html(prePrice + prePrice*0.05);
+						}
 
-                        if(  prePrice*0.1 >= 200 ){
+                      /*  if(  prePrice * 0.1 >= 200 ){
                             $('.price-tip span').text(200);
                             $('.price').html(prePrice + 200);
                         }else{
                             $('.price-tip span').text(prePrice*0.1);
                              $('.price').html(prePrice + prePrice*0.1);
-                        }
+                        }  */
                         $('.ping2 .sale').text( Math.round(prePrice*0.055) );
                         eCacheUtil.storage.cache(CacheKey.PrePrice, prePrice);
                         quote = base.encode(dataInfo.quoteid);
@@ -380,9 +388,6 @@
             eCacheUtil.storage.removeCache(CacheKey.prePrice);
             location.href = 'test.html';
         }
-        $('.ping2').click(function(){
-        	location.href = 'https://m-super.com/screen/list.html?r=RJ1WZFV5HB5XEWAA3P57';
-        });
 		
 
 		function go_view(){
