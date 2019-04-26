@@ -14,12 +14,12 @@
             <input type="text" id="addName" name="addName" class="form-control" placeholder="请输入来源系统名称">
           </div>
         </div>
-        <div class="form-group">
-          <label for="addSort" class="col-sm-3 control-label">排序</label>
-          <div class="col-sm-8">
-            <input type="text" id="addSort" name="addSort" class="form-control" placeholder="请输入显示序号" value="99">
-          </div>
-        </div>
+        <%--<div class="form-group">--%>
+          <%--<label for="addSort" class="col-sm-3 control-label">排序</label>--%>
+          <%--<div class="col-sm-8">--%>
+            <%--<input type="text" id="addSort" name="addSort" class="form-control" placeholder="请输入显示序号" value="99">--%>
+          <%--</div>--%>
+        <%--</div>--%>
         <button type="submit" class="hide" id="addSubmitBtn"></button>
       </form>
     </div>
@@ -54,15 +54,15 @@ function insertValidatorForm() {
                             message : "不能为空"
                         }
                     }
-                },
-                addSort: {
-                    validators : {
-                    	regexp: {
-                            regexp: /^\d+$/,
-                            message: '请输入正确数字'
-                        }
-                    }
                 }
+//                addSort: {
+//                    validators : {
+//                    	regexp: {
+//                            regexp: /^\d+$/,
+//                            message: '请输入正确数字'
+//                        }
+//                    }
+//                }
             }// end fields
         }).on("success.form.bv", function(e) {
             // 阻止表单提交
@@ -79,12 +79,12 @@ function insertValidatorForm() {
                 dataType : "JSON",
                 success : function(data) {
                     if(data.success){
-                        //保存成功,关闭窗口，刷新列表
-                        refreshPage();
+//                        //重置表单数据
+//                        document.getElementById("insertForm").reset();
                         //全部更新完后关闭弹窗
                         $("#addMissBtn").click();
-                        //重置表单数据
-                        document.getElementById("insertForm").reset();
+                        //保存成功,关闭窗口，刷新列表
+                        refreshPage();
                     }else{
                         //保存失败
                         alert(data.msg);

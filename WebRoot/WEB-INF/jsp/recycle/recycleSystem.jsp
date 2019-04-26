@@ -40,12 +40,12 @@
             <table id="dt" class="table table-striped table-bordered table-radius table-hover">
               <thead>
 	            <tr>
-	              <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)" type="checkbox" />序号</th>
-	              <th class="fontWeight_normal tdwidth80 center">系统标识</th>
+	              <th class="fontWeight_normal table-title"><input id="check_all_btn" onclick="checkAll(this)" type="checkbox" />序号</th>
+	              <th class="fontWeight_normal table-title center">系统标识</th>
 	              <th class="fontWeight_normal table-title center">系统名称</th>
-	              <th class="fontWeight_normal table-title center">排序</th>
-	              <th class="fontWeight_normal tdwidth140  center">添加时间</th>
-	              <th class="fontWeight_normal tdwidth140">操作</th>
+	              <%--<th class="fontWeight_normal table-title center">排序</th>--%>
+	              <th class="fontWeight_normal table-title  center">添加时间</th>
+	              <th class="fontWeight_normal table-title">操作</th>
 	            </tr>
               </thead>
               <tbody>
@@ -84,7 +84,7 @@ dto.setColumns([
     {"data": "id","class":" center"},
     {"data": "id","class":" center"},
     {"data": "name","class":""},
-    {"data": "sort","class":""},
+//    {"data": "sort","class":""},
     {"data": "createTime","class":"am-hide-sm-only"},
     {"defaultContent": "操作","class":""}   
 ]);
@@ -123,7 +123,7 @@ var myTable = $("#dt").DataTable(dto);
  * 刷新列表
  */
 function refreshPage(){
-	$("#pageStatus").val(1);
+//	$("#pageStatus").val(1);
 	myTable.ajax.reload(null, false);
 }
 
