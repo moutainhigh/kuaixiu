@@ -190,9 +190,9 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             json.put("actType", addValue.getPricingType());
             if (addValue.getPricingType() == 1) {
                 json.put("addFee", 0);
-                json.put("percent", recycleCoupon.getStrCouponPrice().divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN));
+                json.put("percent", addValue.getCouponPrice().divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN));
             } else {
-                json.put("addFee", recycleCoupon.getStrCouponPrice().intValue());
+                json.put("addFee", addValue.getCouponPrice().intValue());
                 json.put("percent", 0);
             }
             json.put("up", addValue.getUpperLimit());
