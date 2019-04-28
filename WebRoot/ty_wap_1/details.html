@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="format-detection" content="telephone=yes"/>
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="detailsWrap">
+        <div class="main">
+            <div class="status">
+                <p class="fb">订单状态</p>
+                <div class="waitShip">
+                    <p class="fb">待您发货</p>
+                    <p>请及时寄出物品并填写快递单号哦</p>
+                </div>
+                <div class="waitReceive" style="display: none">
+                    <p class="fb">待商家收货</p>
+                    <!-- <p class="express">2017-05-20/周六14:07:25您的快件【438700035403】已从杭州转运中心发出。</p> -->
+                </div>
+            </div>
+
+            <div class="pickInfor pickText">
+                <p class="fb">回收方式-<span class="color-blue" id="pickType">上门取件</span></p>
+                <p class="pickTime">取件时间：<span></span></p>
+                <p>联系人：<span class="contact"></span></p>
+                <p>取件地址：<span class="address"></span></p>
+            </div>
+            <div class="pickInfor pickInput">
+                <p class="fb">超人回收方式-<span class="color-blue">自行邮寄</span></p>
+                <a href="javascript:;" class="btn-large" onclick="showLayer()">点击填写快递单号</a>
+            </div>
+
+            <div class="assessState">
+                <p class="fb">评估情况</p>
+                <section class="proRelated">
+                    <div class="proInfor">
+                        <div class="image">
+                            <img src="img/temp1.jpg" alt="">
+                        </div>
+                        <div class="text">
+                           
+                        </div>
+                    </div>
+                    <div class="priceBox">
+                        <p>预估价 <span class="prePrice fb">¥0.00</span><span class="tickets">(含加价￥300)</span></p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="orderInfor">
+                <div>
+                    收款方式：<span id="recycleType">支付宝收款</span>
+                    <a href="tel:4008110299" target="_blank">联系客服</a>
+                </div>
+                <p id="alipay">
+                    <!-- 支付宝账号： -->
+                </p>
+                <p>订单编号：<span id="orderid"></span></p>
+                <p>交易时间：<span id="time"></span></p>
+                
+            </div>
+            <div class="noteDiv">
+                <p>备注：<span id="note"></span></p>
+            </div>
+        </div>
+        <div class="footer">
+            <a href="product.html" class="btn-large">继续卖宝贝</a>
+        </div>
+
+        <div class="pickLayer">
+            <div class="pickInBox">
+                <div class="pickAlert">
+                    <img src="img/pic_trans.png" alt="">
+                    <input type="text" id="trackId" placeholder="输入快递单号">
+                    <div class="btnBox">
+                        <a href="javascript:;" class="btn-large" onclick="sendTrack()">确定</a>
+                    </div>
+                </div>
+                <a href="javascript:;" onclick="hideLayer()"><img src="img/icon_close_white.png" alt=""></a>
+            </div>
+        </div>
+
+        <!--错误提示-->
+        <!-- <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div> -->
+        <!--错误提示end-->
+        <!--遮盖层-->
+        <!-- <div id="mask_boxs">
+            <div id="mcon">
+                <img src="img/loadings.gif"/>
+            </div>
+        </div> -->
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
+    <script>
+        $(function(){
+            var fm=eCacheUtil.storage.getCache(CacheKey.source);
+            if(fm == 2 || fm == 9 || fm == 10){
+				document.title = '天翼回收';
+			}else{
+				document.title = '翼回收';
+			}
+            var param = {
+                orderid:GetQueryString("orderid")
+            };
+            loadDate(param);
+
+            $('.waitReceive').on('click','.express',function () {
+                window.location.href = 'express.html';
+            });
+            $('.proInfor').on('click','.pull_down',function(){
+                if ($(this).hasClass('active')){
+                    $(this).prev('p').removeClass('overflow');
+                    $(this).removeClass('active');
+                }else{
+                    $(this).prev('p').addClass('overflow');
+                    $(this).addClass('active');
+                }
+            });
+        });
+        function loadDate(param){
+            $.post(linkUrl+'/recycleNew/getOrderDetail.do',{params:JSON.stringify(param)},function (data) {
+                if (data.success){
+                    var dataInfo = data.result.datainfo;
+                    if (dataInfo.alert == 1){//需要
+                        $('.pickInput').show();
+                        $('.pickText').hide();
+                    }else{
+                        if (dataInfo.mail_type == 2){//自行邮寄
+                            $('#pickType').html('自行邮寄');
+                            $('.pickTime').html('快递单号：<span>'+dataInfo.mail_order_no+'</span>');
+                            $('.waitShip').hide();
+                            $('.waitReceive').show();
+                            $('.pickInput').hide();
+                        }else{
+                            $('#pickType').html('上门取件');
+                            $('.pickTime').html('取件时间：<span>'+dataInfo.take_time+'（顺丰快递）</span>');
+                        }
+                        $('.contact').html(dataInfo.name+' '+dataInfo.mobile);
+                        $('.address').html(dataInfo.address);
+                        $('.pickText').show();
+                    }
+                    $('.image img').attr('src',dataInfo.modelpic);
+                    $('.proInfor .text').html('<p class="fb">'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p><a class="pull_down"><img src="img/icon_arrow_down.png" /></a>');
+                    $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
+					//判断是否有Coupon元素
+                    if(dataInfo.addCouponPrice){
+                        $('.tickets').show().html( '(含加价￥'+dataInfo.addCouponPrice+')' );
+                    }else{
+                        $('.tickets').hide().html('')
+                    }
+					
+					
+                    if (dataInfo.recycle_type == 1){
+                        $('#recycleType').html('支付宝收款');
+                        $('#alipay').html('支付宝账号：<span>'+dataInfo.pay_mobile+'</span>');
+                    }else{
+                        $('#recycleType').html('话费充值');
+                        $('#alipay').html('充值手机号：<span>'+dataInfo.pay_mobile+'</span>');
+                    }
+                    
+                    $('#orderid').html('po-'+dataInfo.orderid);
+                    var str = dataInfo.createtime,
+                        result = Number((/\((\d+)\)/.exec(str))[1]);
+                    $('#time').html(new Date(result).format("yyyy-MM-dd hh:mm:ss"));
+                    $('#note').html(dataInfo.note);
+                    loading_hide();
+                }else {
+                    loading_hide();
+                    alertTip(data.resultMessage);
+                }
+            });
+        }
+        var checkSubmitFlg = false;
+        function sendTrack(){
+            if (checkSubmitFlg == true){
+                return false;
+            }
+            checkSubmitFlg = true;
+            var param = {
+                orderNo:GetQueryString("orderid"),
+                mailOrderNo:$('#trackId').val()
+            }
+            $.post(linkUrl+'/recycle/mailOrderNo.do',{params:JSON.stringify(param)},function(data){
+                if (data.success){
+                    var info = {
+                        orderid:GetQueryString("orderid")
+                    };
+                    loadDate({
+                        orderid:param.orderNo
+                    });
+                    $('.pickLayer').hide();
+                    $('.pickInBox').removeClass('active');
+                }else{
+                    alertTip(data.resultMessage);
+                    checkSubmitFlg = false;
+                }
+            })
+        }
+        function showLayer(){
+            $('.pickLayer').show();
+            $('.pickInBox').addClass('active');
+        }
+        function hideLayer(){
+            $('.pickLayer').hide();
+            $('.pickInBox').removeClass('active');
+        }
+       
+    </script>
+    <!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

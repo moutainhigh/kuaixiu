@@ -1,0 +1,218 @@
+/**加价优惠券列表页面**/
+.hide{
+	display:none;
+}
+
+.add-price-ticket{
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	font-size:14px;
+	padding:20px;
+	background-color:#FFF;
+	
+	z-index:9999;
+}
+.add-price-ticket .list-title{
+	position:relative;
+	line-height:2.em;
+	font-size:1.2em;
+	color:#666666;
+}
+
+.can-use-ticket{
+	position:relative;
+	padding-bottom:1em;
+}
+
+.add-price-ticket .ticket-item{
+	position:relative;
+	padding:.8em 1.2em;
+	margin-bottom:.8em;
+	background:url('../img/add-price-disable.png') no-repeat center center;
+	background-size:100% 100%;
+	color:#FFF;
+}
+.add-price-ticket .ticket-item.can-use{
+	background-image:url('../img/add-price-canuse.png');
+}
+
+/**优惠券的样式**/
+.ticket-item .ticket-info{
+	position:relative;
+	padding-bottom:5px;
+}
+.ticket-item .ticket-info:after{
+	content:'';
+	clear:both;
+	display:table;
+}
+.ticket-item .ticket-info .ticket-value{
+	float:left;
+	position:relative;
+	padding-left:.2em;
+	font-size:4em;
+}
+.ticket-item .ticket-info .ticket-value:before{
+	content:'￥';
+	font-size:.5em;
+}
+.ticket-item .ticket-info .ticket-value>.percent-label{
+	font-size:.5em;
+}
+.ticket-item .ticket-info .ticket-desc{
+	float:left;
+	position:relative;
+	padding-left:.5em;
+}
+.ticket-item .ticket-info .ticket-desc>label{
+	display:block;
+	line-height:2.4em;
+}
+
+.ticket-item .ticket-date{
+	position:relative;
+	padding-top:10px;
+	font-size:.8em;
+	background:url('../img/add-price-space.png') no-repeat center 0;
+	background-size:100% auto;
+}
+.ticket-item .ticket-date>.start-date{
+	margin-right:8px;
+}
+.ticket-item .ticket-date>.end-date{
+	margin-left:8px;
+}
+
+/**默认的优惠券**/
+.ticket-item.default:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	width:50%;
+	height:45%;
+	background:url('../img/add-price-default-label.png') no-repeat 100% 0;
+	background-size:auto 100%;
+}
+.ticket-item.used:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:8%;
+	width:50%;
+	height:50%;
+	background:url('../img/add-price-used-label.png') no-repeat 100% -5px;
+	background-size:auto 100%;
+}
+
+
+/**翼回收--优惠券查询页面**/
+.hide{
+	display:none;
+}
+.add-price-ticket .query-box{
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	background:#13105A url('../img/result-query-bg.png') no-repeat center 100%;
+	background-size:100% auto;
+}
+
+.add-price-ticket .my-ticket-box{
+	position:relative;
+	margin:1rem;
+	background-color:#FFF;
+	border-radius:10px;
+	padding:.8rem;
+	
+}
+.add-price-ticket .my-ticket-box .tipinfo-box{
+	position:relative;
+	line-height:3.6rem;
+	text-align:center;
+}
+.add-price-ticket .my-ticket-box .tipinfo-box:before{
+	content:'';
+	position:absolute;
+	top:1.8rem;
+	right:2rem;
+	left:2rem;
+	height:2px;
+	background-color:#D9D9D9;
+}
+.add-price-ticket .my-ticket-box .tipinfo-box span{
+	display:inline-block;
+	position:relative;
+	background-color:#FFF;
+	padding:0 30px;
+}
+
+.add-price-ticket .query-box .input-item{
+	position:relative;
+	margin-top:.4rem;
+}
+.add-price-ticket .query-box  .input-item input{
+	position:relative;
+	width:100%;
+	line-height:2.4rem;
+    padding:0 .4rem;
+    border: 2px solid #d4d8ff;
+    border-radius: .2rem;
+    background-color: #f5f6fa;
+    color: #36414c;
+	box-sizing:border-box;
+}
+.add-price-ticket .query-box  .getCodeBtn input.short-input{
+	padding-right:7rem;
+}
+.add-price-ticket .query-box  .input-item .input-label{
+	position:absolute;
+	top:1px;
+	right:1px;
+	bottom:2px;
+	width:7rem;
+	line-height:2.4rem;
+	border-radius: .2rem;
+	text-align:center;
+}
+.add-price-ticket .query-box  .input-item .input-label.active-btn{
+	font-size:0.9em;
+	color:#FFF;
+	background-color:#4762EB;
+}
+.add-price-ticket .query-box  .input-item .input-label.info-box{
+	display:none;
+	color:#ffffff;
+	background-color:#9db5eb;
+}
+
+.add-price-ticket .query-box  .input-item .query-btn{
+	display:block;
+	position:relative;
+	margin:20px 0px;
+	line-height:2.8rem;
+	text-align:center;
+	border-radius:4px;
+	color:#FFF;
+	background:#395BF9;
+	background: -webkit-linear-gradient(left,  #395BF9 0%,#523CF3 100%); /* Chrome10-25,Safari5.1-6 */
+}
+
+/**发送验证码的状态.sending-code**/
+.add-price-ticket .my-ticket-box.sending-code .input-item .input-label.active-btn{
+	display:none;
+}
+.add-price-ticket .my-ticket-box.sending-code .input-item .input-label.info-box{
+	display:block;
+}
+
+
+
+
+
+

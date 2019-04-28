@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+    <div id="wrap" class="searchWrap">
+        <div class="pageTitle">
+            <a href="javascript:window.history.back();">
+                <img src="img/icon_arrow.png" alt="">
+            </a>
+            <div>
+                <input type="input" name="" id="search" placeholder="输入手机型号" autofocus>
+                <a href="javascript:;" class="close"></a>
+            </div>
+            <span onclick="SiteSearch()">搜索</span>
+        </div>
+        <div class="main">
+            <!-- 搜索历史 -->
+            <div class="history">
+                <div class="title">
+                    <p>搜索历史</p>
+                    <a href="javascript:;" class="delete"></a>
+                </div>
+                <div class="cont">
+                    
+                </div>
+            </div>
+            <!-- 热搜 -->
+            <div class="hotSearch">
+                <div class="title">
+                    <p>大家热搜</p>
+                </div>
+                <div class="cont">
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhoneX.png" data-mid="11564">iPhone X</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhone8.png" data-mid="11529">iPhone 8 Plus</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/SX-N9500.png" data-mid="11530">三星GALAXY note 8</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhone8.png" data-mid="11528">iPhone 8</a>
+                    <a href="javascript:;" data-img="http://39.108.6.107/resource/brandLogo/default.png" data-mid="11592">华为Mate 10 Pro</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜索列表 -->
+        <div id="gov_search_suggest" class="searchList">
+            <ul>
+                
+            </ul>
+        </div>
+        <ul id="template" style="display:none;">
+            <li>
+                <P class="searchName"></P>
+            </li>
+        </ul>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
+    <script>
+        var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+		var tip = GetQueryString('tip');
+		var fm = eCacheUtil.storage.getCache(CacheKey.source);
+
+		if(isEmpty(fm)){
+			eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+		}
+		if(fm == 2 || fm == 9 || fm == 10){
+			document.title = '天翼回收';
+		}else{
+			document.title = '翼回收';
+		}
+        function oSearchSuggest(searchFuc){
+            var input = $('#search');
+            var suggestWrap = $('#gov_search_suggest');
+            var key = "";
+
+            var hideSuggest = function(){
+                suggestWrap.hide();
+            };
+            //发送请求，根据关键字到后台查询
+            var sendKeyWord = function(event){
+                //键盘选择下拉项
+                if(suggestWrap.css('display')=='block'&&event.keyCode == 38||event.keyCode == 40) {
+                    var current = suggestWrap.find('.hover');
+                    if(event.keyCode == 38){//up
+                        if(current.length>0){
+                            var prevLi = current.removeClass('hover').prev();
+                            if(prevLi.length>0){
+                                prevLi.addClass('hover');
+                                input.val(prevLi.html());
+                            }
+                        }else{
+                            var last = suggestWrap.find('li:last');
+                            last.addClass('hover');
+                            input.val(last.html());
+                        }
+                    }else if(event.keyCode == 40){//down
+                        if(current.length>0){
+                            var nextLi = current.removeClass('hover').next();
+                            if(nextLi.length>0){
+                                nextLi.addClass('hover');
+                                input.val(nextLi.html());
+                            }
+                        }else{
+                            var first = suggestWrap.find('li:first');
+                            first.addClass('hover');
+                            input.val(first.html());
+                        }
+                    }
+                    //输入字符
+                }else {
+                    var valText = $.trim(input.val());
+                    if(valText ==''||valText==key){
+                        suggestWrap.hide();
+                        return;
+                    }
+                    searchFuc(valText);
+                    key = valText;
+                }
+            };
+            //请求返回后，执行数据展示
+            this.dataDisplay = function(data){
+                if(data.length<=0){
+                    suggestWrap.hide();
+                    return;
+                }
+                // $('#gov_search_suggest ul').empty();
+                $.each(data, function (i, n) {
+                    var tmp = $("#template").clone();
+                    tmp.removeAttr("id");
+                    tmp.show();
+                    $("li",tmp).attr('data-mid',n.productid).attr('data-img',n.modellogo).html('<p>'+n.modelname+'</p>');
+                    //追加到对应区块
+                    $(".searchList ul").append(tmp.html());
+                });
+                suggestWrap.show();
+                //为下拉选项绑定鼠标事件
+                suggestWrap.find('li').hover(function(){
+                    suggestWrap.find('li').removeClass('hover');
+                    $(this).addClass('hover');
+                },function(){
+                    $(this).removeClass('hover');
+                });
+            };
+        }
+        //实例化输入提示的JS,参数为进行查询操作时要调用的函数名
+        var searchSuggest = new oSearchSuggest(sendKeyWordToBack);
+        var pIndex = 1,
+            off_on = false,//分页开关;
+            keyword = '';
+        //参数为一个字符串，是搜索输入框中当前的内容
+        function sendKeyWordToBack(keyword){
+            var param = {
+                pageindex:pIndex,
+                pagesize:'50',
+                keyword:keyword
+            },aData = [];
+            $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
+                if (data.success){
+                    var dataInfo = data.result.datainfo;
+                    for (var j = 0;j < dataInfo.length;j++){
+                        //将返回的数据传递给实现搜索输入框的输入提示js类
+                        searchSuggest.dataDisplay(dataInfo[j].sublist);
+                        off_on = true;
+                    }
+                }else {
+                    alert(data.resultMessage);
+                }
+            });
+        }
+
+        //产品搜索
+        function SiteSearch(){
+            $('#gov_search_suggest ul').empty();
+            keyword = $("#search").val();
+            sendKeyWordToBack(keyword);
+            $('#gov_search_suggest').show();
+        }
+
+    //取值写入页面
+    $(function(){
+        var str=localStorage.historyItems;
+        if(str!==undefined){
+            var strs = new Array();
+            strs = str.split("|");
+            $.each(strs, function (i, n) {
+                if (!isEmpty(n)){
+                    var index = n.split(','),
+                        tmp = '<a href="javascript:;" data-mid="'+index[1]+'">'+index[0]+'</a>';
+                    //追加到对应区块
+                    $(".history .cont").append(tmp);
+                    $(".history .cont a").eq(i).click(function () {
+                        eCacheUtil.storage.cache(CacheKey.ModelName,index[0]);
+                        eCacheUtil.storage.cache(CacheKey.ProjectId,index[1]);
+                        eCacheUtil.storage.cache(CacheKey.imgHref,index[2]);
+                        setHistoryItems(index[0],index[1],index[2]);
+                        location.href = 'test.html';
+                    });
+                }
+            });
+        }else {
+            // $( "#lssslb").empty();
+            $('.delete').hide();
+            $('.history .cont').html('<p>暂无搜索历史</p>');
+        }
+        $('#search').on('keyup',function(){
+            $('.close').show();
+        }).blur(function(){
+            $('.close').hide();
+        });
+        $('.close').click(function(){
+            $('#search').attr('value','');
+            $(this).hide();
+        })
+    });
+
+    //清除值
+    function clearHistory() {
+        localStorage.removeItem('historyItems');
+        var div = document.getElementById("lssslb");
+        $('#lssslb').empty();
+        $('.history').hide();
+    }
+    $(function(){
+        $('.delete').click(function(){
+            $('.history .cont').remove();
+            $('.history').hide();
+            localStorage.removeItem('historyItems');
+        });
+        $('.hotSearch a').click(function(){
+            var mid = $(this).attr('data-mid'),
+                mname = $(this).html(),
+                imgHref = $(this).attr('data-img');
+                eCacheUtil.storage.cache(CacheKey.ProjectId,mid);
+                eCacheUtil.storage.cache(CacheKey.ModelName,mname);
+                eCacheUtil.storage.cache(CacheKey.imgHref,imgHref);
+                setHistoryItems(mname,mid,imgHref);
+                location.href = 'test.html';
+        });
+        $('.searchList').delegate('li','click',function(){
+            eCacheUtil.storage.cache(CacheKey.ProjectId,$(this).attr('data-mid'));
+            eCacheUtil.storage.cache(CacheKey.ModelName,$(this).find('p').html());
+            eCacheUtil.storage.cache(CacheKey.imgHref,$(this).attr('data-img'));
+            setHistoryItems($(this).find('p').html(),$(this).attr('data-mid'),$(this).attr('data-img'));
+            location.href = 'test.html';
+        });
+        //滚动加载
+        $('.searchList').scroll(function() {
+            //当时滚动条离底部10px时开始加载下一页的内容
+            if (($(this)[0].scrollTop + $(this)[0].offsetHeight + 30) >= $(this)[0].scrollHeight) {
+                //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）   
+                if (off_on) {
+                    off_on = false;
+                    pIndex++;
+                    console.log("第"+pIndex+"页");
+                    sendKeyWordToBack(keyword); //调用执行上面的加载方法
+                }
+            }
+        });
+    })
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

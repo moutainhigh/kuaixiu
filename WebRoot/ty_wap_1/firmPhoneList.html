@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/main.css?version=1.6.1">
+    <title>企业手机回收</title>
+</head>
+<body class="firm-phone-list-wrapper">
+<dl id="phoneList" class="phone-list">
+	<dd class="phone-item">
+		<div class="item-create-date">
+			<label>创建时间：</label>
+			<span>####-##-## ##:##:##</span>
+		</div>
+		<div class="item-content">----</div>
+		<div class="item-bar">
+			<div class="back-date"><label>回收时间：</label><span class="date-value">####-##-##</span></div>
+			<div class="back-price"><label>订单金额：</label><span class="price-value">￥--</span></div>
+		</div>
+	</dd>
+</dl>
+<script src="js/jquery.js"></script>
+<script>
+    $(function(){
+    	
+    	function getRealPath(){
+			var pathName=location.pathname;  
+			var allPath=location.href;
+			var pos=allPath.indexOf(pathName);
+			var linkUrl=allPath.substring(0,pos);
+			var u='zj.189.cn'; //欢GO
+			if(linkUrl.indexOf(u)>0){
+				linkUrl='http://m-super.com';
+			}
+			return linkUrl;
+		}
+    	
+		//a. 判断是否登录成功
+		var G = {};
+		G.logined = false ;
+		G.mobile = '' ;
+		G.dataRecord = [];
+		if( window.localStorage ){
+			var tokenId = localStorage.getItem( 'tokenid' );
+			var mobile = localStorage.getItem( 'mobile' );
+			if( tokenId ){
+				G.logined = true ;
+				G.tokenid = tokenId ;
+				G.mobile = mobile ;
+			}
+			else{
+				G.logined = false ;	
+			}
+		}
+		if( G.logined === false ){
+			//跳转到登录页面
+			window.location.href = 'firmLogin.html' ;
+			return ;
+		}
+		
+		//b. 请求数据列表
+		G.isPosting = true ;
+		var param = {
+			"mobile":G.mobile,
+			"tokenId":G.tokenid,
+			"pageIndex":"1",
+			"pageSize":"100"
+		};
+		$.post(
+			getRealPath()+"/recycleNew/getRecycleNews.do",
+			{
+				params:JSON.stringify(param)
+			},
+			function(data){
+				if ( data.success){
+					//获得记录列表
+					G.dataRecord = data.result.info;
+					//将记录渲染到页面
+					updateData( G.dataRecord );
+					
+				}else{
+					alert(data.resultMessage);
+				}
+				
+				G.isPosting = false ;
+			});
+		//更新记录列表数据	
+		function updateData( recordData ){
+			$('#phoneList').html( '' );
+			
+			var recordHTML = recordData.map( function( obj , index ){
+				return renderRecord( obj );
+			});
+			$('#phoneList').html( recordHTML.join( '' ) );
+			return recordHTML;
+		}
+		//渲染单条记录
+		function renderRecord( recordItem ){
+			return '<dd class="phone-item" data-id="'+recordItem.id+'" >'
+				    +'<div class="item-create-date">'
+					+'<label>创建时间：'+recordItem.inTime+'</label>'
+					+'<span></span>'
+					+'</div>'
+					+'<div class="item-content">'+recordItem.model+'</div>'
+					+'<div class="item-bar">'
+					+'<div class="back-date"><label>回收时间：</label><span class="date-value">'+recordItem.recycleTime.slice( 0 , 10 )+'</span></div>'
+					+'<div class="back-price"><label>订单金额：</label><span class="price-value">￥'+recordItem.totalPrice+'</span></div>'
+					+'</div>'
+					+'</dd>' ;
+		}
+		
+		//注册显示详情的记录
+		$('#phoneList').delegate( '.phone-item' , 'click' , function(){
+			var _self = this ;
+			var itemId = $(this).data( 'id' );
+			
+			if( window.localStorage ){
+				localStorage.setItem( 'itemid' , itemId );
+			}
+			//跳转到订单详情页面
+			window.location.href = 'firmPhoneDetail.html' ;
+		});
+		
+    });    
+</script>
+</body>
+</html>
