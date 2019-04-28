@@ -29,6 +29,10 @@
         .price-tip i {
             font-style: normal;
         }
+		
+		#wrap>#main-box {
+          overflow: auto;
+        }
     </style>
 </head>
 <body>
@@ -277,7 +281,7 @@
                             $('.price').html(prePrice + 200);
 						}else{
 						    //$('.price-tip span').text(prePrice*0.1);
-                            $('.price').html(prePrice + prePrice*0.05);
+                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
 						}
 
                       /*  if(  prePrice * 0.1 >= 200 ){

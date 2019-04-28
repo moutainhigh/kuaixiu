@@ -65,12 +65,12 @@
 
 			if( PrePrice ){
 			
-			   if(PrePrice* 0.05>=200){
+			   if(PrePrice* 0.1>=200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
 					$('.pre-price-t').text( 200 )
 				}else {
-					$('.pre-price-o').text( Number(PrePrice) + PrePrice*0.05 )
-					$('.pre-price-t').text( PrePrice*0.1 )
+					$('.pre-price-o').text( Number(PrePrice) + Math.round(PrePrice*0.05) )
+					$('.pre-price-t').text( Math.round(PrePrice*0.1) )
 				} 
 				
 				/* if(PrePrice*0.1>=200){
