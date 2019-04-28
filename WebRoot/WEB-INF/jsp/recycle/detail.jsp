@@ -140,7 +140,7 @@
                         <h4>加价券编码：${coupon.couponCode}</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>加价券金额：${coupon.couponPrice}</h4>
+                        <h4>加价券金额：${coupon.couponPrice}元</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row --></c:when>
                 </c:choose>

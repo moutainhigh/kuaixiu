@@ -1454,19 +1454,14 @@ public class RecycleController extends BaseController {
         if (StringUtils.isNotBlank(o.getCouponId())) {
             recycleCoupon = recycleCouponService.queryById(o.getCouponId());
             if (recycleCoupon.getPricingType() == 1) {
-                recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString() + "%");
-            } else if (recycleCoupon.getPricingType() == 2) {
-                recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString() + "元");
-            }
-            if (recycleCoupon.getPricingType() == 1) {
                 Integer addCouponPrice = (o.getPrice().divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
                 if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
-                    recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString() + "元");
+                    recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());
                 } else {
                     recycleCoupon.setCouponPrice(String.valueOf(addCouponPrice));
                 }
             } else {
-                recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString() + "元");
+                recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString());
             }
             if(recycleCoupon.getStrCouponPrice().intValue()==5){
                 recycleCoupon.setCouponPrice(new BigDecimal(recycleCoupon.getCouponPrice()).multiply(new BigDecimal("2")).toString());

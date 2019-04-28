@@ -93,20 +93,20 @@
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
+                <th class="fontWeight_normal tdwidth40"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth70">订单号</th>
-                <th class="fontWeight_normal tdwidth40">快递单号</th>
-                <th class="fontWeight_normal tdwidth80">订单状态</th>
-                <th class="fontWeight_normal table-title tdwidth80">联系人/<br/>手机号</th>
-                <th class="fontWeight_normal tdwidth70">回收类型</th>
-                <th class="fontWeight_normal tdwidth70">支付类型</th>
-                <th class="fontWeight_normal tdwidth70">回收价格</th>
-                <th class="fontWeight_normal tdwidth70">订单来源</th>
-                <th class="fontWeight_normal tdwidth70">使用加价券</th>
-                <th class="fontWeight_normal tdwidth70">下单时间</th>
-                <th class="fontWeight_normal tdwidth50">操作</th>
+                <th class="fontWeight_normal tdwidth50">订单号</th>
+                <%--<th class="fontWeight_normal tdwidth40">快递单号</th>--%>
+                <th class="fontWeight_normal tdwidth50">订单状态</th>
+                <th class="fontWeight_normal tdwidth50">联系人/<br/>手机号</th>
+                <%--<th class="fontWeight_normal tdwidth70">回收类型</th>--%>
+                <th class="fontWeight_normal tdwidth50">支付类型</th>
+                <th class="fontWeight_normal tdwidth50">回收价格</th>
+                <th class="fontWeight_normal tdwidth50">订单来源</th>
+                <th class="fontWeight_normal tdwidth30">使用加价券</th>
+                <th class="fontWeight_normal tdwidth60">下单时间</th>
+                <th class="fontWeight_normal tdwidth40">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -148,10 +148,10 @@
     dto.setColumns([
         {"data": "id", "class": " center"},
         {"data": "orderNo", "class": ""},
-        {"data": "sfOrderNo", "class": ""},
+//        {"data": "sfOrderNo", "class": ""},
         {"data": "orderStatus", "class": ""},
         {"data": "name", "class": ""},
-        {"data": "recycleType", "class": ""},
+//        {"data": "recycleType", "class": ""},
         {"data": "exchangeType", "class": ""},
         {"data": "price", "class": ""},
         {"data": "fm", "class": ""},
@@ -174,7 +174,7 @@
             }
         },
         {
-            targets: 3,
+            targets: 2,
             render: function (data, type, row, meta) {
                 if (row.orderStatus == 0) {
                     return "订单已取消";
@@ -210,23 +210,23 @@
             }
         },
         {
-            targets: 4,
+            targets: 3,
             render: function (data, type, row, meta) {
                 return row.name + "/<br/>" + row.mobile;
             }
         },
+//        {
+//            targets: 5,
+//            render: function (data, type, row, meta) {
+//                if (row.recycleType == "0") {
+//                    return "信用回收";
+//                } else {
+//                    return "普通回收";
+//                }
+//            }
+//        },
         {
-            targets: 5,
-            render: function (data, type, row, meta) {
-                if (row.recycleType == "0") {
-                    return "信用回收";
-                } else {
-                    return "普通回收";
-                }
-            }
-        },
-        {
-            targets: 6,
+            targets: 4,
             render: function (data, type, row, meta) {
                 if (row.exchangeType == "1") {
                     return "支付宝收款";
