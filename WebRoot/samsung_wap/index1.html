@@ -8,18 +8,6 @@
     <script src="js/flexible.js"></script>
     <link rel="stylesheet" href="css/main.css?version=1.6">
     <title>天翼回收</title>
-	<style>
-		.swiper-container.hide{
-			display:none;
-		}
-		.image-box{
-			position:relative;
-			padding:0;
-		}
-		.image-box img{
-			width:100%;
-		}
-	</style>
 </head>
 <body>
     <div id="wrap" class="indexWrap">
@@ -28,13 +16,13 @@
                 <a href="javascript:;"><img src="img/logo-go.png" alt=""><span>天翼回收</span></a>
                 <a href="login.html"><img src="img/icon_order.png" alt="">我的订单</a>
             </div>
-            <div class="swiper-container hide">
+            <div class="swiper-container">
                 <div class="banner">
                     <div class="slide-item">
-                        <a href="product.html"><img src="img/banner5.png" alt=""></a>
+                        <a href="product.html"><img src="img/banner6.png" alt=""></a>
                     </div>
                     <div class="slide-item">
-                        <a href="product.html"> <img src="img/banner4.png" alt=""></a>
+                        <a href="product.html"> <img src="img/banner5.png" alt=""></a>
                     </div>
                     <div class="slide-item">
                         <a href="process.html "><img src="img/banner2.png" alt=""></a>
@@ -44,12 +32,8 @@
                     </div>
                 </div>
             </div>
-			
-			<div id="banner-image" class="image-box">
-				<img src="img/ty_banner.jpg" />
-			</div>
             
-            <div id="recycle-btn" class="recyclePro">
+            <div class="recyclePro">
                 <div class="title">
                 </div>
                 <div class="cont">
@@ -123,26 +107,26 @@
                     </div>
                 </div>
                 <div class="modelCont">
-                    <div class="item" data-mid="636105728405345559">
-                        <img src="http://114.215.210.238/resources/Mobile/iPhoneX.png" alt="">
+                    <div class="item" data-mid="11564">
+                        <img src="https://static.m-super.cn/Mobile/25827.jpg" alt="">
                         <p>iPhone X</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
-                    <div class="item" data-mid="636272407102742310">
-                        <img src="http://114.215.210.238/resources/Mobile/iPhone8.png" alt="">
+                    <div class="item" data-mid="11529">
+                        <img src="https://static.m-super.cn/Mobile/25680.jpg" alt="">
                         <p>iPhone 8 Plus</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
-                    <div class="item" data-mid="636177401271291496">
-                        <img src="http://114.215.210.238/resources/Mobile/SX-N9500.png" alt="">
-                        <p>三星GALAXY note 8 (N9500/全网通)</p>
+                    <div class="item" data-mid="11530">
+                        <img src="https://static.m-super.cn/Mobile/25681.jpg" alt="">
+                        <p>三星GALAXY note 8</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
-                    <div class="item" data-mid="20171119123832602">
-                        <img src="http://114.215.210.238/resources/Mobile/iPhone8.png" alt="">
+                    <div class="item" data-mid="11528">
+                        <img src="https://static.m-super.cn/Mobile/25679.jpg" alt="">
                         <p>iPhone 8</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
@@ -194,10 +178,10 @@
                 </div>
             </div>
 
-           <!-- <div class="Copyright">
+            <div class="Copyright">
                 <p>Copyright 2017 杭州翼诺科技有限公司技术支持</p>
                 <p>浙ICP备 16041546号</p>
-            </div>  -->
+            </div>
         </div>
         <div class="footer">
             <a href="product.html" class="btn-large">我要卖手机</a>
@@ -255,18 +239,6 @@
             $('.brandCont .item').click(function(){
                 location.href = 'product.html?bid='+$(this).attr('data-bid');
             });
-			
-			//banner图片的单击事件
-			$('#banner-image').click( function(){
-				//TODO
-				location.href = 'manisPoster.html';
-			});
-			
-			//流程图的单击事件
-			$('#recycle-btn').click( function(){
-				//TODO
-				 location.href = 'process.html';
-			});
 			
 			
 			//a.1 根据ticket获得手机号码

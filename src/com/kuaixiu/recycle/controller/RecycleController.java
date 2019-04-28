@@ -1466,7 +1466,7 @@ public class RecycleController extends BaseController {
                 }
             } else {
                 //%5加价券
-                Integer addCouponPriceFalse = (o.getPrice().divide(new BigDecimal("100")).multiply(new BigDecimal("10"))).intValue();
+                Integer addCouponPriceFalse = (o.getPrice().divide(new BigDecimal("100")).multiply(new BigDecimal("5"))).intValue();
                 //BigDecimal couponPrice=new BigDecimal(recycleCoupon.getCouponPrice()).multiply(new BigDecimal("2"));
                 if (recycleCoupon.getAddPriceUpper() != null && addCouponPriceFalse > recycleCoupon.getAddPriceUpper().intValue()) {
                     recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());

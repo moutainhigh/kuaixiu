@@ -1,14 +1,14 @@
 $(function(){
-    var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+    
     var fm=eCacheUtil.storage.getCache(CacheKey.source);
     if(isEmpty(fm)){
         eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
     }
-    if(isEmpty(isGo)&&!isEmpty(GetQueryString('tip'))){
-        isGo=true;
-        eCacheUtil.storage.cache(CacheKey.happyGo, true);
+    if(fm == 2 || fm == 9 || fm == 10){
+        document.title = '天翼回收';
+    }else{
+        document.title = '翼回收';
     }
-    
     $('h3').html(eCacheUtil.storage.getCache(CacheKey.ModelName));
     //如果产品id为空则跳转到product页面
     if(isEmpty(eCacheUtil.storage.getCache(CacheKey.ProjectId))){
@@ -80,7 +80,6 @@ function loadData(param) {
     });
 }
 
-
 function LoadOrNot() {
     var isSelected = eCacheUtil.storage.getCache(CacheKey.isSelect);
     if(isSelected == 'true'){
@@ -126,6 +125,7 @@ function LoadOrNot() {
 		$('.footer #submit').removeClass('disabled');
     }
 }
+
 $('.select-property.required').on('click','.value-text',function () {
     //滑动
     $('.mainCont').animate({

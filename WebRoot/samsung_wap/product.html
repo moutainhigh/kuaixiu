@@ -7,6 +7,57 @@
     <script src="js/flexible.js"></script>
     <link rel="stylesheet" href="css/main.css?version=1.6">
     <title></title>
+    <style>
+        .native-model {
+             display: none; 
+             flex-basis: 2.55rem;
+             overflow: hidden;
+             margin-bottom: 0.1rem;
+             padding: 0.1rem 0.05rem;
+             background-color: white;
+             box-shadow: 0.01rem 0.01rem 0.06rem 0.02rem #e6e3e3;
+        }
+         .native-fl {
+             float: left;
+             width: 30% 
+        }
+         .native-fl img {
+             width: 100%;
+        }
+         .native-fr {
+             float: right;
+             width: 70%;
+             height: 100%;
+        }
+         .native-top, .native-bot {
+             width: 100%;
+             height: 50%;
+             overflow: hidden;
+        }
+         .native-top .native-title {
+             float: left;
+             font-size: 0.16rem;
+             font-weight: 600;
+        }
+         .native-top .native-btn {
+             float: right;
+             display: block;
+             width: 0.75rem;
+             height: 0.3rem;
+             line-height: 0.3rem;
+             text-align: center;
+             background: #5185ed;
+             color: #fff;
+        }
+         .native-bot {
+             padding-top: 0.05rem;
+             box-sizing: border-box;
+        }
+         .native-bot .native-code {
+             font-size: 0.18rem;
+             font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <div id="wrap" class="productWrap">
@@ -23,7 +74,22 @@
                 </ul>
             </div>
             <div class="mainRight fl">
-                
+                <!-- start of 本机机型 -->
+                <div class="native-model">
+                        <div class="native-fl">
+                            <img class="js-native-img" src="" alt="">
+                        </div>
+                        <div class="native-fr">
+                            <div class="native-top">
+                                <span class="native-title">本机机型</span>
+                                <a class="native-btn js-native-btn">立即估价</a>
+                            </div>
+                            <div class="native-bot">
+                                <p class="native-code js-native-code"></p>
+                            </div>                           
+                        </div>
+                </div>
+                <!-- end of 本机机型 -->
                 <div class="loadMore">
                     <a href="javascript:;" class="btn-large">加载更多</a>
                 </div>
@@ -53,6 +119,42 @@
     <script src="js/common.js"></script>
 	
     <script>
+		var fm=eCacheUtil.storage.getCache(CacheKey.source);
+		if(isEmpty(fm)){
+			eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+		}
+		if(fm == 2 || fm == 9 || fm == 10){
+			document.title = '天翼回收';
+		}else{
+			document.title = '翼回收';
+		}
+
+        var ModelName_cache = '';
+        var ProjectId_cache = '';
+
+        // 首次进入获取本机型
+        function getNativeModel(mobileData){
+            var brandId = getUrlParam('brandId');  //品牌
+            var productId = getUrlParam('productId'); //型号
+            var $dom_li = $('.mainLeft li.swiper-slide');
+
+            $('.native-model').show();
+            // 跳转到指定品牌, 如果没有这两个参数则不做任何操作
+            for( var i = 0; i < $dom_li.length; i++ ){
+                if( brandId == $dom_li.eq(i).data('bid') ){
+                    var height = $dom_li.eq(i).height()*i; 
+                    $('.mainLeft .swiper-wrapper').css('transform','translate3d(0px, -'+height+'px, 0px)')
+                    $dom_li.eq(i).addClass('active').siblings().removeClass('active');
+                }
+            }
+
+            ModelName_cache =  mobileData.modelName;
+            ProjectId_cache = getUrlParam('productId');
+
+            $('.js-native-img').attr('src', mobileData.modelLogo);
+            $('.js-native-code').text( mobileData.modelName )
+        }
+	
 		function getUrlParam(key){
 			var url = window.location.search;
 			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
@@ -85,12 +187,6 @@
         	if(tip==1){
         		 eCacheUtil.storage.cache(CacheKey.happyGo,true);
         	}
-            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-            if(isGo == 'true'){
-                document.title = '天翼回收';
-            }else{
-                document.title = '超人回收';
-            }
             var bid = GetQueryString('bid');
             if(isEmpty(bid)){
                 bid = 1;
@@ -117,11 +213,13 @@
                 setHistoryItems(mname,mid,imgHref);
                 //判断是否良品价评估
                 var fm=eCacheUtil.storage.getCache(CacheKey.source);
-                if(fm==10){
+                /*if(fm==10){
                     location.href = 'resultHappyPrize.html';
                 }else{
                     location.href = 'test.html';
-                }
+                }*/
+				
+				location.href = 'test.html';
             });
 
             $('.loadMore').click(function(){
@@ -135,6 +233,15 @@
             $('#search').focus(function(){
                 location.href = "search.html";
             })
+
+            // 立即估价
+            $('.js-native-btn').on('click',function(){
+                var brandId = getUrlParam('brandId');  //品牌
+                var productId = getUrlParam('productId'); //型号
+                eCacheUtil.storage.cache(CacheKey.ModelName, ModelName_cache);
+                eCacheUtil.storage.cache(CacheKey.ProjectId, ProjectId_cache);
+                location.href = "test.html";
+            })
         });
         
         //加载品牌
@@ -146,7 +253,12 @@
                         s += '<li class="swiper-slide" data-bid="'+dataInfo[i].brandid+'">'+dataInfo[i].brandname+'</li>';
                     }
                     $('.swiper-wrapper').html(s);
-                    searchModel(bid);
+                    if( getUrlParam('brandId') ){
+                        searchModel( getUrlParam('brandId') );
+                    }else{
+                        searchModel(bid);
+                    }
+                    getMobileCode();
                     $('.swiper-slide[data-bid="'+bid+'"]').addClass('active');
                     var mySwiper = new Swiper('.mainLeft',{
                         freeMode : true,
@@ -189,6 +301,28 @@
                             $('.loadMore a').html('加载更多');
                         }
                     }
+                }else {
+                    loading_hide();
+                    alertTip(data.resultMessage);
+                }
+            })
+        }
+
+        // 获取本机型
+        function getMobileCode() {
+            var param = {
+                brandId : getUrlParam("brandId"),  //品牌
+                productId : getUrlParam("productId") //型号
+            }
+
+            if( param.brandId == null || param.productId == null  ){
+                return
+            }
+
+            $.post(linkUrl+"/recycleNew/getModelName.do",{params:JSON.stringify(param)},function(data){
+                if (data.success){
+                    var dataInfo = data.result;
+                    getNativeModel(dataInfo);
                 }else {
                     loading_hide();
                     alertTip(data.resultMessage);

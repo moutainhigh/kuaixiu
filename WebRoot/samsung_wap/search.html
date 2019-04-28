@@ -37,11 +37,11 @@
                     <p>大家热搜</p>
                 </div>
                 <div class="cont">
-                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhoneX.png" data-mid="20180108121045534">iPhone X</a>
-                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhone8.png" data-mid="20171220141338338">iPhone 8 Plus</a>
-                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/SX-N9500.png" data-mid="20180105130224777">三星GALAXY note 8 (N9500/全网通)</a>
-                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhone8.png" data-mid="20171220141244874">iPhone 8</a>
-                    <a href="javascript:;" data-img="http://39.108.6.107/resource/brandLogo/default.png" data-mid="20180104192701857">华为Mate 10 Pro</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhoneX.png" data-mid="11564">iPhone X</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhone8.png" data-mid="11529">iPhone 8 Plus</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/SX-N9500.png" data-mid="11530">三星GALAXY note 8</a>
+                    <a href="javascript:;" data-img="http://114.215.210.238/resources/Mobile/iPhone8.png" data-mid="11528">iPhone 8</a>
+                    <a href="javascript:;" data-img="http://39.108.6.107/resource/brandLogo/default.png" data-mid="11592">华为Mate 10 Pro</a>
                 </div>
             </div>
         </div>
@@ -60,13 +60,20 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
+	<script src="js/util.js"></script>
     <script>
         var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-        if(isGo == 'true'){
-            document.title = '天翼回收';
-        }else{
-            document.title = '超人回收';
-        }
+		var tip = GetQueryString('tip');
+		var fm = eCacheUtil.storage.getCache(CacheKey.source);
+
+		if(isEmpty(fm)){
+			eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+		}
+		if(fm == 2 || fm == 9 || fm == 10){
+			document.title = '天翼回收';
+		}else{
+			document.title = '翼回收';
+		}
         function oSearchSuggest(searchFuc){
             var input = $('#search');
             var suggestWrap = $('#gov_search_suggest');
