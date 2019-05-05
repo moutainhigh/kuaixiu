@@ -543,19 +543,19 @@ public class RecycleNewController extends BaseController {
         renderJson(response, result);
     }
 
-    @RequestMapping(value = "recycleNew/updateSubmitOrder")
-    public void updateSubmitOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<String> ids = recycleOrderService.getDao().querySubmitOrderIdsBy();
-        log.info("修改回收订单数量："+ids.size());
-        for (String id : ids) {
-            log.info("修改回收订单id："+id);
-            RecycleOrder o = recycleOrderService.queryById(id);
-            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
-            RecycleCoupon recycleCoupon = recycleOrderService.getCouponCodeTest(o.getMobile(), addValues, o.getPrice());
-            o.setCouponId(recycleCoupon.getId());
-            recycleOrderService.saveUpdate(o);
-        }
-    }
+//    @RequestMapping(value = "recycleNew/updateSubmitOrder")
+//    public void updateSubmitOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        List<String> ids = recycleOrderService.getDao().querySubmitOrderIdsBy();
+//        log.info("修改回收订单数量："+ids.size());
+//        for (String id : ids) {
+//            log.info("修改回收订单id："+id);
+//            RecycleOrder o = recycleOrderService.queryById(id);
+//            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
+//            RecycleCoupon recycleCoupon = recycleOrderService.getCouponCodeTest(o.getMobile(), addValues, o.getPrice());
+//            o.setCouponId(recycleCoupon.getId());
+//            recycleOrderService.saveUpdate(o);
+//        }
+//    }
 
     /**
      * 微信平台回收提交订单  先保存超人平台    调用回收接口成功后再转为正常订单
