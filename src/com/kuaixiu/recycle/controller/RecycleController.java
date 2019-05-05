@@ -780,7 +780,7 @@ public class RecycleController extends BaseController {
             List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
             //判断该订单来源确定是否使用加价券
             if (isSend10Coupon) {
-                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues);
+                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues,order.getPrice());
                 if (recycleCoupon != null) {
                     couponCode = recycleCoupon.getCouponCode();
                 }

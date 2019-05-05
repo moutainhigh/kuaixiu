@@ -125,16 +125,44 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
 
 
     //判断该订单来源确定是否使用加价券
-    public RecycleCoupon getCouponCode(String mobile, HttpServletRequest request, List<CouponAddValue> addValues) {
+    public RecycleCoupon getCouponCode(String mobile, HttpServletRequest request, List<CouponAddValue> addValues,BigDecimal price) {
         CouponAddValue addValue = new CouponAddValue();
         for (CouponAddValue addValue1 : addValues) {
-            if (addValue1.getPricingType() == 1) {
-                addValue = addValue1;
+            if(price.intValue()>4000){
+                if (addValue1.getPricingType() == 2) {
+                    addValue = addValue1;
+                }
+            }else{
+                if (addValue1.getPricingType() == 1) {
+                    addValue = addValue1;
+                }
             }
         }
         RecycleCoupon recycleCoupon = new RecycleCoupon();
         if (new Date().getTime() < addValue.getActivityEndTime().getTime()) {
             SessionUser su = (SessionUser) request.getSession().getAttribute(SystemConstant.SESSION_USER_KEY);
+            recycleCoupon = this.addCoupon(addValue, su, mobile);
+        }
+        return recycleCoupon;
+    }
+
+    //判断该订单来源确定是否使用加价券
+    public RecycleCoupon getCouponCodeTest(String mobile, List<CouponAddValue> addValues,BigDecimal price) {
+        CouponAddValue addValue = new CouponAddValue();
+        for (CouponAddValue addValue1 : addValues) {
+            if(price.intValue()>4000){
+                if (addValue1.getPricingType() == 2) {
+                    addValue = addValue1;
+                }
+            }else{
+                if (addValue1.getPricingType() == 1) {
+                    addValue = addValue1;
+                }
+            }
+        }
+        RecycleCoupon recycleCoupon = new RecycleCoupon();
+        if (new Date().getTime() < addValue.getActivityEndTime().getTime()) {
+            SessionUser su = new SessionUser();
             recycleCoupon = this.addCoupon(addValue, su, mobile);
         }
         return recycleCoupon;

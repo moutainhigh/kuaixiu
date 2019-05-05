@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface RecycleCouponMapper<T> extends BaseDao<T> {
 
+    int updateUpdateRecycleOrder();
+
     /**
      * 根据优惠券查询
      */

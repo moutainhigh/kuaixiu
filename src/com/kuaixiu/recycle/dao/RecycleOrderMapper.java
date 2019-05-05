@@ -6,7 +6,9 @@ import com.kuaixiu.recycle.entity.RecycleOrder;
 import java.util.List;
 
 public interface RecycleOrderMapper<T> extends BaseDao<T>  {
-  
+
+	List<String> querySubmitOrderIdsBy();
+
 	/**
 	 * 根据回收流水号查询记录
 	 */
