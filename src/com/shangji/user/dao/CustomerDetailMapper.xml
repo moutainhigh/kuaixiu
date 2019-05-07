@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangji.user.dao.CustomerDetailMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.shangji.user.entity.CustomerDetail" >
+        <result column="id" property="id"/>
+        <result column="login_id" property="loginId"/>
+        <result column="city_company_id" property="cityCompanyId"/>
+        <result column="management_unit_id" property="managementUnitId"/>
+        <result column="branch_office_id" property="branchOfficeId"/>
+        <result column="contract_body_id" property="contractBodyId"/>
+        <result column="marketing_no" property="marketingNo"/>
+    </resultMap>
+    
+    <!-- sj_customer_detail table all fields -->
+    <sql id="Base_Column_List" >
+        id,login_id,password,city_company_id,management_unit_id,branch_office_id,contract_body_id,marketing_no
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_customer_detail
+        (id,login_id,city_company_id,management_unit_id,branch_office_id,contract_body_id,marketing_no)
+        values
+        (#{id},#{loginId},#{cityCompanyId},#{managementUnitId},#{branchOfficeId},#{contractBodyId},#{marketingNo})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_customer_detail 
+        set 
+            id=#{id},
+            login_id=#{loginId},
+            password=#{password},
+            city_company_id=#{cityCompanyId},
+            management_unit_id=#{managementUnitId},
+            branch_office_id=#{branchOfficeId},
+            contract_body_id=#{contractBodyId},
+            marketing_no=#{marketingNo}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_customer_detail where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_customer_detail where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_customer_detail
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and login_id = #{loginId}
+        </if>
+        <if test="password != null and password != ''" >
+            and password = #{password}
+        </if>
+        <if test="cityCompanyId != null and cityCompanyId != ''" >
+            and city_company_id = #{cityCompanyId}
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''" >
+            and management_unit_id = #{managementUnitId}
+        </if>
+        <if test="branchOfficeId != null and branchOfficeId != ''" >
+            and branch_office_id = #{branchOfficeId}
+        </if>
+        <if test="contractBodyId != null and contractBodyId != ''" >
+            and contract_body_id = #{contractBodyId}
+        </if>
+        <if test="marketingNo != null and marketingNo != ''" >
+            and marketing_no = #{marketingNo}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_customer_detail
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and login_id = #{loginId}
+        </if>
+        <if test="password != null and password != ''" >
+            and password = #{password}
+        </if>
+        <if test="cityCompanyId != null and cityCompanyId != ''" >
+            and city_company_id = #{cityCompanyId}
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''" >
+            and management_unit_id = #{managementUnitId}
+        </if>
+        <if test="branchOfficeId != null and branchOfficeId != ''" >
+            and branch_office_id = #{branchOfficeId}
+        </if>
+        <if test="contractBodyId != null and contractBodyId != ''" >
+            and contract_body_id = #{contractBodyId}
+        </if>
+        <if test="marketingNo != null and marketingNo != ''" >
+            and marketing_no = #{marketingNo}
+        </if>
+    </select>
+
+</mapper>   

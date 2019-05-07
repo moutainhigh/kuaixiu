@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.business.dao.RoleMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.shangji.user.entity.Role" >
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="state" property="state"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- sj_role table all fields -->
+    <sql id="Base_Column_List" >
+        id,name,type,state,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <sql id="Base_Column_List_T" >
+        t.id,t.name,t.type,t.state,t.is_del,date_format(t.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
+        t.create_userid,date_format(t.`update_time`,'%Y-%m-%d %H:%i:%s')update_time,t.update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_role
+        (id,name,type,state,is_del,create_time,create_userid,update_time,update_userid)
+        values
+        (#{id},#{name},#{type},#{state},#{isDel},#{createTime},#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_role 
+        set 
+            id=#{id},
+            name=#{name},
+            type=#{type},
+            state=#{state},
+            is_del=#{isDel},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=#{updateTime},
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+
+    <select id="queryRolesByUserId" resultMap="BaseResultMap"  parameterType="String">
+        select <include refid="Base_Column_List_T" />
+        from sj_user_role ur
+        LEFT JOIN sj_role t on t.id = ur.role_id
+        where ur.login_id = #{uid}
+        and t.state=0
+    </select>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_role where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_role where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_role
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_role
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+
+</mapper>   

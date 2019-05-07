@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangji.user.dao.ConstructionCompanyMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.shangji.user.entity.ConstructionCompany" >
+        <result column="id" property="id"/>
+        <result column="login_id" property="loginId"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="area" property="area"/>
+        <result column="street" property="street"/>
+        <result column="person" property="person"/>
+        <result column="phone" property="phone"/>
+        <result column="project" property="project"/>
+    </resultMap>
+    
+    <!-- sj_construction_company table all fields -->
+    <sql id="Base_Column_List" >
+        id,login_id,province,city,county,area,street,person,phone,project
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_construction_company
+        (id,login_id,province,city,county,area,street,person,phone,project)
+        values
+        (#{id},#{loginId},#{province},#{city},#{county},#{area},#{street},#{person},#{phone},#{project})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_construction_company 
+        set 
+            id=#{id},
+            login_id=#{loginId},
+            province=#{province},
+            city=#{city},
+            county=#{county},
+            area=#{area},
+            street=#{street},
+            person=#{person},
+            phone=#{phone},
+            project=#{project}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_construction_company where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_construction_company where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_construction_company
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and login_id = #{loginId}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="person != null and person != ''" >
+            and person = #{person}
+        </if>
+        <if test="phone != null and phone != ''" >
+            and phone = #{phone}
+        </if>
+        <if test="project != null and project != ''" >
+            and project = #{project}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_construction_company
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and login_id = #{loginId}
+        </if>
+        <if test="province != null and province != ''" >
+            and province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and city = #{city}
+        </if>
+        <if test="county != null and county != ''" >
+            and county = #{county}
+        </if>
+        <if test="area != null and area != ''" >
+            and area = #{area}
+        </if>
+        <if test="street != null and street != ''" >
+            and street = #{street}
+        </if>
+        <if test="person != null and person != ''" >
+            and person = #{person}
+        </if>
+        <if test="phone != null and phone != ''" >
+            and phone = #{phone}
+        </if>
+        <if test="project != null and project != ''" >
+            and project = #{project}
+        </if>
+    </select>
+
+</mapper>   
