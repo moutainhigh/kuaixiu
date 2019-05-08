@@ -13,6 +13,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,5 +104,32 @@ public class SjOrderService extends BaseService<SjOrder> {
             projects.add(project);
         }
         return projects;
+    }
+
+    public static File thumbnailImage(File imgFile, String format, int w, int h, boolean force){
+        File file = null;
+        try {
+            // ImageIO 支持的图片类型 : [BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
+            // 获取图片后缀
+            Image img = ImageIO.read(imgFile);
+            BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            Graphics g = bi.getGraphics();
+            g.drawImage(img, 0, 0, w, h, Color.LIGHT_GRAY, null);
+            g.dispose();
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(bi,format,os);
+            byte [] bytes = os.toByteArray();
+            BufferedOutputStream bos = null;
+            FileOutputStream fos = null;
+            file = new File("temp");
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+            bos.close();
+            fos.close();
+            os.close();
+        } catch (IOException e) {
+        }
+        return file;
     }
 }

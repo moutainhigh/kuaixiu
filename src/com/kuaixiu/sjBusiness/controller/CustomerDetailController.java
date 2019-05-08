@@ -67,14 +67,14 @@ public class CustomerDetailController extends BaseController {
 
             if (StringUtils.isBlank(name) || StringUtils.isBlank(phone)
                     || StringUtils.isBlank(code) || null == cityCompanyId) {
-                getSjResult(result, null, false, "2", null, "参数为空");
+                return getSjResult(result, null, false, "2", null, "参数为空");
             }
 
             SjUser user = userService.checkWechatLogin(phone);
             if (!userService.checkRandomCode(phone, code)) {
-                getSjResult(result, null, false, "3", null, "验证码错误");
+                return getSjResult(result, null, false, "3", null, "验证码错误");
             } else if (user != null) {
-                getSjResult(result, null, false, "1", null, "该手机号已注册");
+                return getSjResult(result, null, false, "1", null, "该手机号已注册");
             } else {
                 SjUser createUser = new SjUser();
                 createUser.setLoginId(phone);
@@ -123,9 +123,9 @@ public class CustomerDetailController extends BaseController {
             }
             SjUser user = userService.checkWechatLogin(phone);
             if (!userService.checkRandomCode(phone, code)) {
-                getSjResult(result, null, false, "3", null, "验证码错误");
+                return getSjResult(result, null, false, "3", null, "验证码错误");
             } else if (user == null) {
-                getSjResult(result, null, false, "1", null, "该手机用户不存在");
+                return getSjResult(result, null, false, "1", null, "该手机用户不存在");
             } else {
                 //初始化SessionUser
                 sessionUserService.initSessionUser(user, request);
@@ -198,7 +198,7 @@ public class CustomerDetailController extends BaseController {
             String phone = Base64Util.getFromBase64(phoneStr);
             SjUser user = userService.checkWechatLogin(phone);
             if (user == null) {
-                getSjResult(result, null, false, "1", null, "该手机用户不存在");
+                return getSjResult(result, null, false, "1", null, "该手机用户不存在");
             }
             sessionUserService.initSessionUser(user, request);
 
