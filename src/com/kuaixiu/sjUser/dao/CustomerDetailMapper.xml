@@ -16,7 +16,7 @@
     
     <!-- sj_customer_detail table all fields -->
     <sql id="Base_Column_List" >
-        id,login_id,password,city_company_id,management_unit_id,branch_office_id,contract_body_id,marketing_no
+        id,login_id,city_company_id,management_unit_id,branch_office_id,contract_body_id,marketing_no
     </sql>
 
     <!-- 插入记录 -->
@@ -33,7 +33,6 @@
         set 
             id=#{id},
             login_id=#{loginId},
-            password=#{password},
             city_company_id=#{cityCompanyId},
             management_unit_id=#{managementUnitId},
             branch_office_id=#{branchOfficeId},
@@ -71,9 +70,6 @@
         <if test="loginId != null and loginId != ''" >
             and login_id = #{loginId}
         </if>
-        <if test="password != null and password != ''" >
-            and password = #{password}
-        </if>
         <if test="cityCompanyId != null and cityCompanyId != ''" >
             and city_company_id = #{cityCompanyId}
         </if>
@@ -102,9 +98,6 @@
         </if>
         <if test="loginId != null and loginId != ''" >
             and login_id = #{loginId}
-        </if>
-        <if test="password != null and password != ''" >
-            and password = #{password}
         </if>
         <if test="cityCompanyId != null and cityCompanyId != ''" >
             and city_company_id = #{cityCompanyId}

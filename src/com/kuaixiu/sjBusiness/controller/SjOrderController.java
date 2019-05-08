@@ -13,7 +13,6 @@ import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjBusiness.service.SjProjectService;
 import com.system.api.entity.ResultData;
-import com.system.basic.address.service.AddressService;
 import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +119,7 @@ public class SjOrderController extends BaseController {
 
             SjOrder sjOrder = new SjOrder();
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setType(type);
             sjOrder.setState(100);
             sjOrder.setCompanyName(companyName);
             sjOrder.setProvinceId(provinceId);
@@ -131,8 +131,9 @@ public class SjOrderController extends BaseController {
             sjOrder.setPhone(personPhone);
             sjOrder.setProjectId(projectId);
             sjOrder.setSingle(single);
-            sjOrder.setGroup(group);
+            sjOrder.setGroupNet(group);
             sjOrder.setCreateUserid(phone);
+            sjOrder.setStayPerson("admin");
             orderService.add(sjOrder);
 
             for (int i = 0; i < imagesList.size(); i++) {
@@ -143,7 +144,7 @@ public class SjOrderController extends BaseController {
                 orderCompanyPictureService.add(companyPicture);
             }
 
-            getSjResult(result, null, true, "0", null, "注册成功");
+            getSjResult(result, null, true, "0", null, "提交成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());

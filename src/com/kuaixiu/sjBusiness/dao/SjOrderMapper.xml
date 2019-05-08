@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.sjBusiness.dao.SjOrderMapper" >
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjOrderMapper">
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjOrder" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjOrder">
         <result column="id" property="id"/>
         <result column="order_no" property="orderNo"/>
         <result column="type" property="type"/>
@@ -18,7 +18,7 @@
         <result column="person" property="person"/>
         <result column="phone" property="phone"/>
         <result column="project_id" property="projectId"/>
-        <result column="group" property="group"/>
+        <result column="group_net" property="groupNet"/>
         <result column="single" property="single"/>
         <result column="stayPerson" property="stayPerson"/>
         <result column="approval_person" property="approvalPerson"/>
@@ -36,22 +36,22 @@
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
     </resultMap>
-    
+
     <!-- sj_order table all fields -->
-    <sql id="Base_Column_List" >
-        id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group,single,stayPerson,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
+    <sql id="Base_Column_List">
+        id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+    <insert id="add" parameterType="Object">
         insert into sj_order
-        (id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group,single,stayPerson,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid)
+        (id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid)
         values
-        (#{id},#{orderNo},#{type},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{group},#{single},#{stayPerson},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},#{createTime},#{createUserid})
+        (#{id},#{orderNo},#{type},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},now(),#{createUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update sj_order 
         set 
             id=#{id},
@@ -67,7 +67,7 @@
             person=#{person},
             phone=#{phone},
             project_id=#{projectId},
-            group=#{group},
+            group_not=#{groupNet},
             single=#{single},
             stayPerson=#{stayPerson},
             approval_person=#{approvalPerson},
@@ -91,210 +91,212 @@
     <delete id="delete" parameterType="Object">
         delete from sj_order where id = #{id}
     </delete>
-    
+
     <!-- 根据id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_order where id = #{id}
     </select>
 
-    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_order where order_no=#{orderNo} and create_userid=#{createUserid}
     </select>
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_order
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="orderNo != null and orderNo != ''" >
+        <if test="orderNo != null and orderNo != ''">
             and order_no = #{orderNo}
         </if>
-        <if test="type != null and type != ''" >
+        <if test="type != null and type != ''">
             and type = #{type}
         </if>
-        <if test="state != null and state != ''" >
+        <if test="state != null and state != ''">
             and state = #{state}
         </if>
-        <if test="companyName != null and companyName != ''" >
+        <if test="companyName != null and companyName != ''">
             and company_name = #{companyName}
         </if>
-        <if test="provinceId != null and provinceId != ''" >
+        <if test="provinceId != null and provinceId != ''">
             and province_id = #{provinceId}
         </if>
-        <if test="cityId != null and cityId != ''" >
+        <if test="cityId != null and cityId != ''">
             and city_id = #{cityId}
         </if>
-        <if test="areaId != null and areaId != ''" >
+        <if test="areaId != null and areaId != ''">
             and area_id = #{areaId}
         </if>
-        <if test="streetId != null and streetId != ''" >
+        <if test="streetId != null and streetId != ''">
             and street_id = #{streetId}
         </if>
-        <if test="addressDetail != null and addressDetail != ''" >
+        <if test="addressDetail != null and addressDetail != ''">
             and address_detail = #{addressDetail}
         </if>
-        <if test="person != null and person != ''" >
+        <if test="person != null and person != ''">
             and person = #{person}
         </if>
-        <if test="phone != null and phone != ''" >
+        <if test="phone != null and phone != ''">
             and phone = #{phone}
         </if>
-        <if test="projectId != null and projectId != ''" >
+        <if test="projectId != null and projectId != ''">
             and project_id = #{projectId}
         </if>
-        <if test="group != null and group != ''" >
-            and group = #{group}
+        <if test="groupNet != null and groupNet != ''">
+            and group_not=#{groupNet}
         </if>
-        <if test="single != null and single != ''" >
+        <if test="single != null and single != ''">
             and single = #{single}
         </if>
-        <if test="stayPerson != null and stayPerson != ''" >
+        <if test="stayPerson != null and stayPerson != ''">
             and stayPerson = #{stayPerson}
         </if>
-        <if test="approvalPerson != null and approvalPerson != ''" >
+        <if test="approvalPerson != null and approvalPerson != ''">
             and approval_person = #{approvalPerson}
         </if>
-        <if test="approvalNote != null and approvalNote != ''" >
+        <if test="approvalNote != null and approvalNote != ''">
             and approval_note = #{approvalNote}
         </if>
-        <if test="approvalTime != null and approvalTime != ''" >
+        <if test="approvalTime != null and approvalTime != ''">
             and approval_time = #{approvalTime}
         </if>
-        <if test="assignPerson != null and assignPerson != ''" >
+        <if test="assignPerson != null and assignPerson != ''">
             and assign_person = #{assignPerson}
         </if>
-        <if test="assignTime != null and assignTime != ''" >
+        <if test="assignTime != null and assignTime != ''">
             and assign_time = #{assignTime}
         </if>
-        <if test="buildPerson != null and buildPerson != ''" >
+        <if test="buildPerson != null and buildPerson != ''">
             and build_person = #{buildPerson}
         </if>
-        <if test="buildPhone != null and buildPhone != ''" >
+        <if test="buildPhone != null and buildPhone != ''">
             and build_phone = #{buildPhone}
         </if>
-        <if test="buildCompany != null and buildCompany != ''" >
+        <if test="buildCompany != null and buildCompany != ''">
             and build_company = #{buildCompany}
         </if>
-        <if test="endTime != null and endTime != ''" >
+        <if test="endTime != null and endTime != ''">
             and end_time = #{endTime}
         </if>
-        <if test="completedPerson != null and completedPerson != ''" >
+        <if test="completedPerson != null and completedPerson != ''">
             and completed_person = #{completedPerson}
         </if>
-        <if test="completedPhone != null and completedPhone != ''" >
+        <if test="completedPhone != null and completedPhone != ''">
             and completed_phone = #{completedPhone}
         </if>
-        <if test="completedTime != null and completedTime != ''" >
+        <if test="completedTime != null and completedTime != ''">
             and completed_time = #{completedTime}
         </if>
-        <if test="createTime != null and createTime != ''" >
+        <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
-        <if test="createUserid != null and createUserid != ''" >
+        <if test="createUserid != null and createUserid != ''">
             and create_userid = #{createUserid}
         </if>
     </select>
-    
+
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_order
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="orderNo != null and orderNo != ''" >
+        <if test="orderNo != null and orderNo != ''">
             and order_no = #{orderNo}
         </if>
-        <if test="type != null and type != ''" >
+        <if test="type != null and type != ''">
             and type = #{type}
         </if>
-        <if test="state != null and state != ''" >
+        <if test="state != null and state != ''">
             and state = #{state}
         </if>
-        <if test="companyName != null and companyName != ''" >
+        <if test="companyName != null and companyName != ''">
             and company_name = #{companyName}
         </if>
-        <if test="provinceId != null and provinceId != ''" >
+        <if test="provinceId != null and provinceId != ''">
             and province_id = #{provinceId}
         </if>
-        <if test="cityId != null and cityId != ''" >
+        <if test="cityId != null and cityId != ''">
             and city_id = #{cityId}
         </if>
-        <if test="areaId != null and areaId != ''" >
+        <if test="areaId != null and areaId != ''">
             and area_id = #{areaId}
         </if>
-        <if test="streetId != null and streetId != ''" >
+        <if test="streetId != null and streetId != ''">
             and street_id = #{streetId}
         </if>
-        <if test="addressDetail != null and addressDetail != ''" >
+        <if test="addressDetail != null and addressDetail != ''">
             and address_detail = #{addressDetail}
         </if>
-        <if test="person != null and person != ''" >
+        <if test="person != null and person != ''">
             and person = #{person}
         </if>
-        <if test="phone != null and phone != ''" >
+        <if test="phone != null and phone != ''">
             and phone = #{phone}
         </if>
-        <if test="projectId != null and projectId != ''" >
+        <if test="projectId != null and projectId != ''">
             and project_id = #{projectId}
         </if>
-        <if test="group != null and group != ''" >
-            and group = #{group}
+        <if test="groupNet != null and groupNet != ''">
+            and group_not=#{groupNet}
         </if>
-        <if test="single != null and single != ''" >
+        <if test="single != null and single != ''">
             and single = #{single}
         </if>
-        <if test="stayPerson != null and stayPerson != ''" >
+        <if test="stayPerson != null and stayPerson != ''">
             and stayPerson = #{stayPerson}
         </if>
-        <if test="approvalPerson != null and approvalPerson != ''" >
+        <if test="approvalPerson != null and approvalPerson != ''">
             and approval_person = #{approvalPerson}
         </if>
-        <if test="approvalNote != null and approvalNote != ''" >
+        <if test="approvalNote != null and approvalNote != ''">
             and approval_note = #{approvalNote}
         </if>
-        <if test="approvalTime != null and approvalTime != ''" >
+        <if test="approvalTime != null and approvalTime != ''">
             and approval_time = #{approvalTime}
         </if>
-        <if test="assignPerson != null and assignPerson != ''" >
+        <if test="assignPerson != null and assignPerson != ''">
             and assign_person = #{assignPerson}
         </if>
-        <if test="assignTime != null and assignTime != ''" >
+        <if test="assignTime != null and assignTime != ''">
             and assign_time = #{assignTime}
         </if>
-        <if test="buildPerson != null and buildPerson != ''" >
+        <if test="buildPerson != null and buildPerson != ''">
             and build_person = #{buildPerson}
         </if>
-        <if test="buildPhone != null and buildPhone != ''" >
+        <if test="buildPhone != null and buildPhone != ''">
             and build_phone = #{buildPhone}
         </if>
-        <if test="buildCompany != null and buildCompany != ''" >
+        <if test="buildCompany != null and buildCompany != ''">
             and build_company = #{buildCompany}
         </if>
-        <if test="endTime != null and endTime != ''" >
+        <if test="endTime != null and endTime != ''">
             and end_time = #{endTime}
         </if>
-        <if test="completedPerson != null and completedPerson != ''" >
+        <if test="completedPerson != null and completedPerson != ''">
             and completed_person = #{completedPerson}
         </if>
-        <if test="completedPhone != null and completedPhone != ''" >
+        <if test="completedPhone != null and completedPhone != ''">
             and completed_phone = #{completedPhone}
         </if>
-        <if test="completedTime != null and completedTime != ''" >
+        <if test="completedTime != null and completedTime != ''">
             and completed_time = #{completedTime}
         </if>
-        <if test="createTime != null and createTime != ''" >
+        <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
-        <if test="createUserid != null and createUserid != ''" >
+        <if test="createUserid != null and createUserid != ''">
             and create_userid = #{createUserid}
         </if>
     </select>

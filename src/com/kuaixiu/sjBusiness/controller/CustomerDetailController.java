@@ -196,9 +196,15 @@ public class CustomerDetailController extends BaseController {
             }
             //3.base64解密用户名
             String phone = Base64Util.getFromBase64(phoneStr);
+            SjUser user = userService.checkWechatLogin(phone);
+            if (user == null) {
+                getSjResult(result, null, false, "1", null, "该手机用户不存在");
+            }
+            sessionUserService.initSessionUser(user, request);
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("mobile", phone);
-            getSjResult(result, jsonObject, true, "0", null, "未登录");
+            getSjResult(result, jsonObject, true, "0", null, "已登录");
         } catch (Exception e) {
             e.printStackTrace();
             getSjResult(result, null, false, "5", null, "系统异常请稍后再试");
@@ -313,8 +319,6 @@ public class CustomerDetailController extends BaseController {
         }
         return result;
     }
-
-
 
 
 }

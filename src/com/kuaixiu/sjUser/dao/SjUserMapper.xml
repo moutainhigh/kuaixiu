@@ -27,7 +27,7 @@
         insert into sj_user
         (id,login_id,password,name,phone,type,is_cancel,is_del,create_time,update_time)
         values
-        (#{id},#{loginId},#{password},#{name},#{phone},#{type},#{isCancel},#{isDel},#{createTime},#{updateTime})
+        (#{id},#{loginId},#{password},#{name},#{phone},#{type},0,0,now(),#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -42,8 +42,7 @@
             type=#{type},
             is_cancel=#{isCancel},
             is_del=#{isDel},
-            create_time=#{createTime},
-            update_time=#{updateTime}
+            update_time=now()
         where id=#{id}
     </update>
 

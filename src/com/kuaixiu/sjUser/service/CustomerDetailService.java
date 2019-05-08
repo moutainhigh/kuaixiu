@@ -4,6 +4,9 @@ package com.kuaixiu.sjUser.service;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.util.SmsSendUtil;
+import com.kuaixiu.sjBusiness.entity.AreaBranchOffice;
+import com.kuaixiu.sjBusiness.entity.AreaContractBody;
+import com.kuaixiu.sjBusiness.entity.AreaManagementUnit;
 import com.kuaixiu.sjBusiness.entity.SjCode;
 import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.dao.CustomerDetailMapper;
@@ -17,15 +20,17 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
  * CustomerDetail Service
+ *
  * @CreateDate: 2019-05-06 上午10:48:12
  * @version: V 1.0
  */
 @Service("customerDetailService")
 public class CustomerDetailService extends BaseService<CustomerDetail> {
-    private static final Logger log= Logger.getLogger(CustomerDetailService.class);
+    private static final Logger log = Logger.getLogger(CustomerDetailService.class);
 
     @Autowired
     private CustomerDetailMapper<CustomerDetail> mapper;
@@ -50,11 +55,32 @@ public class CustomerDetailService extends BaseService<CustomerDetail> {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", sjUser.getName());
         jsonObject.put("phone", sjUser.getPhone());
+        StringBuilder ascription = new StringBuilder();
         String cityCompany = cityCompanyService.queryById(customerDetail.getCityCompanyId()).getCityCompany();
-        String managementUnit = managementUnitService.queryById(customerDetail.getManagementUnitId()).getManagementUnit();
-        String branchOffice = branchOfficeService.queryById(customerDetail.getBranchOfficeId()).getBranchOffice();
-        String contractBody = contractBodyService.queryById(customerDetail.getContractBodyId()).getContractBody();
-        jsonObject.put("ascription", cityCompany + "/" + managementUnit + "/" + branchOffice + "/" + contractBody);
+        ascription.append(cityCompany);
+        if (customerDetail.getManagementUnitId() != null) {
+            AreaManagementUnit managementUnit1 = managementUnitService.queryById(customerDetail.getManagementUnitId());
+            if (managementUnit1 != null) {
+                String managementUnit = managementUnit1.getManagementUnit();
+                ascription.append("/" + managementUnit);
+            }
+        }
+        if (customerDetail.getBranchOfficeId() != null) {
+            AreaBranchOffice branchOffice1 = branchOfficeService.queryById(customerDetail.getBranchOfficeId());
+            if (branchOffice1 != null) {
+                String branchOffice = branchOffice1.getBranchOffice();
+                ascription.append("/" + branchOffice);
+            }
+        }
+        if (customerDetail.getContractBodyId() != null) {
+            AreaContractBody contractBody1 = contractBodyService.queryById(customerDetail.getContractBodyId());
+            if (contractBody1 != null) {
+                String contractBody = contractBody1.getContractBody();
+                ascription.append("/" + contractBody);
+            }
+
+        }
+        jsonObject.put("ascription", ascription.toString());
         jsonObject.put("marketingNo", customerDetail.getMarketingNo());
         return jsonObject;
     }
