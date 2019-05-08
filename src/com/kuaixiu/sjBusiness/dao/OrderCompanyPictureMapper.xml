@@ -44,6 +44,11 @@
         from sj_order_company_picture where id = #{id}
     </select>
 
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_order_company_picture where order_no=#{orderNo}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select

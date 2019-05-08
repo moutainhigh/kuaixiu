@@ -3,18 +3,18 @@ package com.kuaixiu.sjBusiness.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
+import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.sjBusiness.entity.AreaCityCompany;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjProject;
 import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjBusiness.service.SjProjectService;
-import com.kuaixiu.sjUser.entity.CustomerDetail;
-import com.kuaixiu.sjUser.entity.SjUser;
 import com.system.api.entity.ResultData;
+import com.system.basic.address.service.AddressService;
+import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +42,7 @@ public class SjOrderController extends BaseController {
     private SjProjectService projectService;
     @Autowired
     private OrderCompanyPictureService orderCompanyPictureService;
+
 
     /**
      * 获取所有产品需求
@@ -149,4 +150,121 @@ public class SjOrderController extends BaseController {
         }
         return result;
     }
+
+    /**
+     * 订单列表
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/wechat/getOrderList")
+    @ResponseBody
+    public ResultData getOrderList(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            Integer type = params.getInteger("type");
+            Integer state = params.getInteger("state");
+            String phone = params.getString("phone");
+            Integer pageIndex = params.getInteger("pageIndex");
+            Integer pageSize = params.getInteger("pageSize");
+
+            SjOrder sjOrder = new SjOrder();
+            Page page = new Page();
+            //将值转化为绝对值
+            pageIndex = Math.abs(pageIndex);
+            pageSize = Math.abs(pageSize);
+            page.setCurrentPage(pageIndex);
+            page.setPageSize(pageSize);
+            sjOrder.setPage(page);
+            sjOrder.setCreateUserid(phone);
+            sjOrder.setType(type);
+            switch (state) {
+                case 1:
+                    break;
+                case 2:
+                    sjOrder.setState(100);
+                    break;
+                case 3:
+                    sjOrder.setState(600);
+                    break;
+                case 4:
+                    sjOrder.setState(300);
+                    break;
+                case 5:
+                    sjOrder.setState(500);
+                    break;
+            }
+            List<SjOrder> sjOrders = orderService.queryListForPage(sjOrder);
+            List<JSONObject> jsonObjects=orderService.sjListOrderToObejct(sjOrders);
+            getSjResult(result, jsonObjects, true, "0", null, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 订单详情
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/wechat/getOrderDetail")
+    @ResponseBody
+    public ResultData getOrderDetail(HttpServletRequest request,
+                                     HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");
+            String orderNo = params.getString("orderNo");
+            if(StringUtils.isBlank(phone)||StringUtils.isBlank(orderNo)){
+                return getSjResult(result, null, false, "0", null, "参数为空");
+            }
+            SjOrder sjOrder=orderService.getDao().queryByOrderNo(orderNo,phone);
+            JSONObject jsonObject=orderService.sjOrderToObejct(sjOrder);
+
+            getSjResult(result, jsonObject, true, "0", null, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 上传照片
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/wechat/uplocadImage")
+    @ResponseBody
+    public ResultData uplocadImage(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            //获取图片，保存图片到webapp同级inages/sj_images
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "sj_images" + System.getProperty("file.separator") + "sj_company";
+            String logoPath = getPath(request, "image", savePath);             //图片路径
+            String image = "";
+            if (StringUtils.isNotBlank(logoPath)) {
+                image = getProjectUrl(request) + "/images/sj_images/sj_company" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            }
+            getSjResult(result, image, true, "0", null, "上传成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
 }

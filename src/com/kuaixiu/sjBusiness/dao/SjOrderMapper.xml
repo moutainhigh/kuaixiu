@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjOrder" >
         <result column="id" property="id"/>
         <result column="order_no" property="orderNo"/>
+        <result column="type" property="type"/>
         <result column="state" property="state"/>
         <result column="company_name" property="companyName"/>
         <result column="province_id" property="provinceId"/>
@@ -17,6 +18,9 @@
         <result column="person" property="person"/>
         <result column="phone" property="phone"/>
         <result column="project_id" property="projectId"/>
+        <result column="group" property="group"/>
+        <result column="single" property="single"/>
+        <result column="stayPerson" property="stayPerson"/>
         <result column="approval_person" property="approvalPerson"/>
         <result column="approval_note" property="approvalNote"/>
         <result column="approval_time" property="approvalTime"/>
@@ -35,15 +39,15 @@
     
     <!-- sj_order table all fields -->
     <sql id="Base_Column_List" >
-        id,order_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
+        id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group,single,stayPerson,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_order
-        (id,order_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid)
+        (id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group,single,stayPerson,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid)
         values
-        (#{id},#{orderNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},#{createTime},#{createUserid})
+        (#{id},#{orderNo},#{type},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{group},#{single},#{stayPerson},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},#{createTime},#{createUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -52,6 +56,7 @@
         set 
             id=#{id},
             order_no=#{orderNo},
+            type=#{type},
             state=#{state},
             company_name=#{companyName},
             province_id=#{provinceId},
@@ -62,6 +67,9 @@
             person=#{person},
             phone=#{phone},
             project_id=#{projectId},
+            group=#{group},
+            single=#{single},
+            stayPerson=#{stayPerson},
             approval_person=#{approvalPerson},
             approval_note=#{approvalNote},
             approval_time=#{approvalTime},
@@ -90,6 +98,11 @@
         from sj_order where id = #{id}
     </select>
 
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_order where order_no=#{orderNo} and create_userid=#{createUserid}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
@@ -101,6 +114,9 @@
         </if>
         <if test="orderNo != null and orderNo != ''" >
             and order_no = #{orderNo}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
         </if>
         <if test="state != null and state != ''" >
             and state = #{state}
@@ -131,6 +147,15 @@
         </if>
         <if test="projectId != null and projectId != ''" >
             and project_id = #{projectId}
+        </if>
+        <if test="group != null and group != ''" >
+            and group = #{group}
+        </if>
+        <if test="single != null and single != ''" >
+            and single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''" >
+            and stayPerson = #{stayPerson}
         </if>
         <if test="approvalPerson != null and approvalPerson != ''" >
             and approval_person = #{approvalPerson}
@@ -188,6 +213,9 @@
         <if test="orderNo != null and orderNo != ''" >
             and order_no = #{orderNo}
         </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
         <if test="state != null and state != ''" >
             and state = #{state}
         </if>
@@ -217,6 +245,15 @@
         </if>
         <if test="projectId != null and projectId != ''" >
             and project_id = #{projectId}
+        </if>
+        <if test="group != null and group != ''" >
+            and group = #{group}
+        </if>
+        <if test="single != null and single != ''" >
+            and single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''" >
+            and stayPerson = #{stayPerson}
         </if>
         <if test="approvalPerson != null and approvalPerson != ''" >
             and approval_person = #{approvalPerson}

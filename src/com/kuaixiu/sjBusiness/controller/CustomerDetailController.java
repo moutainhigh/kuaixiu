@@ -1,20 +1,15 @@
 package com.kuaixiu.sjBusiness.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
-import com.google.common.collect.Maps;
-import com.kuaixiu.sjBusiness.entity.SjCode;
-import com.kuaixiu.sjBusiness.service.SjCodeService;
 import com.kuaixiu.sjUser.entity.CustomerDetail;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
 import com.kuaixiu.sjUser.service.SjSessionUserService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.api.entity.ResultData;
-import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,8 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * CustomerDetail Controller
@@ -43,11 +36,10 @@ public class CustomerDetailController extends BaseController {
     @Autowired
     private SjSessionUserService sessionUserService;
     @Autowired
-    private SjCodeService codeService;
-    @Autowired
     private SjUserService userService;
     @Autowired
     private CustomerDetailService customerDetailService;
+
 
     /**
      * 注册
@@ -74,7 +66,7 @@ public class CustomerDetailController extends BaseController {
             String marketingNo = params.getString("marketingNo");
 
             if (StringUtils.isBlank(name) || StringUtils.isBlank(phone)
-                    || StringUtils.isBlank(code) || null==cityCompanyId) {
+                    || StringUtils.isBlank(code) || null == cityCompanyId) {
                 getSjResult(result, null, false, "2", null, "参数为空");
             }
 
@@ -91,7 +83,7 @@ public class CustomerDetailController extends BaseController {
                 createUser.setType(2);
                 userService.add(createUser);
 
-                CustomerDetail customerDetail=new CustomerDetail();
+                CustomerDetail customerDetail = new CustomerDetail();
                 customerDetail.setLoginId(phone);
                 customerDetail.setCityCompanyId(cityCompanyId);
                 customerDetail.setManagementUnitId(managementUnitId);
@@ -120,7 +112,7 @@ public class CustomerDetailController extends BaseController {
     @RequestMapping(value = "/sj/wechat/checkLogin")
     @ResponseBody
     public ResultData checkLogin(HttpServletRequest request,
-                            HttpServletResponse response) throws Exception {
+                                 HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             JSONObject params = getPrarms(request);
@@ -139,7 +131,7 @@ public class CustomerDetailController extends BaseController {
                 sessionUserService.initSessionUser(user, request);
 
                 String[] dname = request.getServerName().split("\\.");
-                String phoneBase64=Base64Util.getBase64(phone);
+                String phoneBase64 = Base64Util.getBase64(phone);
                 CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
 
                 getSjResult(result, null, true, "0", null, "登录成功");
@@ -165,7 +157,7 @@ public class CustomerDetailController extends BaseController {
             String mobile = params.getString("phone");
             //验证手机号码
             if (ValidatorUtil.isMobile(mobile)) {
-                String randomCode = getRandomCode(request, mobile);
+                String randomCode = customerDetailService.getRandomCode(request, mobile);
                 SmsSendUtil.sendCheckCode(mobile, randomCode);
                 getSjResult(result, null, true, "0", null, "操作成功");
             } else {
@@ -180,6 +172,7 @@ public class CustomerDetailController extends BaseController {
 
     /**
      * 验证是否登录
+     *
      * @param request
      * @param response
      * @return
@@ -197,15 +190,14 @@ public class CustomerDetailController extends BaseController {
             //Cookie不过期
             String phoneStr = cookie.getValue();
             try {
-                phoneStr = URLDecoder.decode(phoneStr,"UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
+                phoneStr = URLDecoder.decode(phoneStr, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             //3.base64解密用户名
             String phone = Base64Util.getFromBase64(phoneStr);
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("mobile",phone);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("mobile", phone);
             getSjResult(result, jsonObject, true, "0", null, "未登录");
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,27 +207,114 @@ public class CustomerDetailController extends BaseController {
     }
 
     /**
-     * 获取验证码并保存到session
+     * 查看个人信息
      *
      * @param request
+     * @param response
      * @return
-     * @CreateDate: 2016-9-13 下午8:24:41
+     * @throws IOException
      */
-    protected String getRandomCode(HttpServletRequest request, String key) {
-        String randomCode = SmsSendUtil.randomCode();
-        request.getSession().setAttribute(SystemConstant.SESSION_RANDOM_CODE + key, randomCode);
-        //保存验证码到数据库
-        SjCode code = codeService.queryById(key);
-        if (code == null) {
-            code = new SjCode();
-            code.setCode(randomCode);
-            code.setPhone(key);
-            codeService.add(code);
-        } else {
-            code.setCode(randomCode);
-            code.setUpdateTime(new Date());
-            codeService.saveUpdate(code);
+    @RequestMapping("/sj/wechat/getUserDetail")
+    @ResponseBody
+    public ResultData getUserDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");
+            if (StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            SjUser sjUser = userService.getDao().queryByLoginId(phone);
+            CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(phone);
+            JSONObject jsonObject = customerDetailService.getUserToJsonObject(sjUser, customerDetail);
+
+            getSjResult(result, jsonObject, true, "0", null, "操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            getSjResult(result, null, false, "1", null, "操作失败");
         }
-        return randomCode;
+        return result;
     }
+
+    /**
+     * 编辑个人信息
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/sj/wechat/updateUser")
+    @ResponseBody
+    public ResultData updateUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");
+            String name = params.getString("name");
+            Integer cityCompanyId = params.getInteger("cityCompanyId");
+            Integer managementUnitId = params.getInteger("managementUnitId");
+            Integer branchOfficeId = params.getInteger("branchOfficeId");
+            Integer contractBodyId = params.getInteger("contractBodyId");
+            String marketingNo = params.getString("marketingNo");
+            if (StringUtils.isBlank(phone) || StringUtils.isBlank(name) || null == cityCompanyId) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            SjUser sjUser = userService.getDao().queryByLoginId(phone);
+            CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(phone);
+            if (sjUser == null || customerDetail == null) {
+                return getSjResult(result, null, false, "3", null, "参数错误");
+            }
+            sjUser.setName(name);
+            userService.saveUpdate(sjUser);
+
+            customerDetail.setCityCompanyId(cityCompanyId);
+            customerDetail.setManagementUnitId(managementUnitId);
+            customerDetail.setBranchOfficeId(branchOfficeId);
+            customerDetail.setContractBodyId(contractBodyId);
+            customerDetail.setMarketingNo(marketingNo);
+            customerDetailService.saveUpdate(customerDetail);
+
+            getSjResult(result, null, true, "0", null, "修改成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            getSjResult(result, null, false, "1", null, "操作失败");
+        }
+        return result;
+    }
+
+    /**
+     * 退出登录
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/sj/wechat/loginOut")
+    @ResponseBody
+    public ResultData loginOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");
+            if (StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+
+            String[] dname = request.getServerName().split("\\.");
+            String phoneBase64 = Base64Util.getBase64(phone);
+            CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 0);
+
+            getSjResult(result, null, true, "0", null, "操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            getSjResult(result, null, false, "1", null, "操作失败");
+        }
+        return result;
+    }
+
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.kuaixiu.sjUser.dao;
 
 import com.common.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * CustomerDetail Mapper
@@ -11,6 +12,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface CustomerDetailMapper<T> extends BaseDao<T> {
 
+    T queryByLoginId(@Param("loginId")String phone);
 }
 
 
