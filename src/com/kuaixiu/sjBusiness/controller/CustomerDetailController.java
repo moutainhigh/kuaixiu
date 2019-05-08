@@ -65,9 +65,17 @@ public class CustomerDetailController extends BaseController {
             Integer contractBodyId = params.getInteger("contractBodyId");//承包体
             String marketingNo = params.getString("marketingNo");
 
-            if (StringUtils.isBlank(name) || StringUtils.isBlank(phone)
-                    || StringUtils.isBlank(code) || null == cityCompanyId) {
-                return getSjResult(result, null, false, "2", null, "参数为空");
+            if (StringUtils.isBlank(name)) {
+                return getSjResult(result, null, false, "2", null, "姓名为空");
+            }
+            if (StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, false, "2", null, "手机号为空");
+            }
+            if (StringUtils.isBlank(code)) {
+                return getSjResult(result, null, false, "2", null, "验证码为空");
+            }
+            if (null == cityCompanyId) {
+                return getSjResult(result, null, false, "2", null, "市公司为空");
             }
 
             SjUser user = userService.checkWechatLogin(phone);

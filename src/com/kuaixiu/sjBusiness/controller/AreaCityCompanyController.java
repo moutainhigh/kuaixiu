@@ -65,7 +65,7 @@ public class AreaCityCompanyController extends BaseController {
             Integer managementUnitId = params.getInteger("managementUnitId");
             Integer branchOfficeId = params.getInteger("branchOfficeId");
             if (type == null) {
-                return getSjResult(result, null, false, "2", null, "参数为空");
+                return getSjResult(result, null, false, "2", null, "查询类型为空");
             }
             JSONObject jsonObject = new JSONObject();
             switch (type) {
@@ -82,7 +82,7 @@ public class AreaCityCompanyController extends BaseController {
                     break;
                 case 2:
                     if (cityCompanyId == null) {
-                        return getSjResult(result, null, false, "2", null, "参数为空");
+                        return getSjResult(result, null, false, "2", null, "市公司为空");
                     }
                     AreaManagementUnit managementUnit = new AreaManagementUnit();
                     managementUnit.setCityCompanyId(cityCompanyId);
@@ -97,8 +97,11 @@ public class AreaCityCompanyController extends BaseController {
                     jsonObject.put("unit", objects2);
                     break;
                 case 3:
-                    if (cityCompanyId == null || managementUnitId == null) {
-                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    if (cityCompanyId == null) {
+                        return getSjResult(result, null, false, "2", null, "市公司为空");
+                    }
+                    if (managementUnitId == null) {
+                        return getSjResult(result, null, false, "2", null, "经营单元为空");
                     }
                     AreaBranchOffice areaBranchOffice = new AreaBranchOffice();
                     areaBranchOffice.setCityCompanyId(cityCompanyId);
@@ -114,8 +117,14 @@ public class AreaCityCompanyController extends BaseController {
                     jsonObject.put("office", objects3);
                     break;
                 case 4:
-                    if (cityCompanyId == null || managementUnitId == null || branchOfficeId == null) {
-                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    if (cityCompanyId == null ) {
+                        return getSjResult(result, null, false, "2", null, "市公司为空");
+                    }
+                    if (managementUnitId == null) {
+                        return getSjResult(result, null, false, "2", null, "经营单元为空");
+                    }
+                    if (branchOfficeId == null) {
+                        return getSjResult(result, null, false, "2", null, "支局为空");
                     }
                     AreaContractBody areaContractBody = new AreaContractBody();
                     areaContractBody.setCityCompanyId(cityCompanyId);
@@ -132,10 +141,10 @@ public class AreaCityCompanyController extends BaseController {
                     jsonObject.put("body", objects4);
                     break;
             }
-            getSjResult(result, jsonObject, true, "0", null, "成功");
+            getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
-            getSjResult(result, null, false, "5", null, "系统异常请稍后再试");
+            getSjResult(result, null, false, "5", null, "系统异常");
         }
         return result;
     }
