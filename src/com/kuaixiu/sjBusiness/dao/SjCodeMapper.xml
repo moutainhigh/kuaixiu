@@ -21,7 +21,7 @@
         insert into sj_code
         (phone,code,create_time,update_tIme)
         values
-        (#{phone},#{code},#{createTime},#{updateTime})
+        (#{phone},#{code},now(),#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -30,8 +30,7 @@
         set 
             phone=#{phone},
             code=#{code},
-            create_time=#{createTime},
-            update_tIme=#{updateTime}
+            update_tIme=now()
         where  phone=#{phone}
     </update>
 
