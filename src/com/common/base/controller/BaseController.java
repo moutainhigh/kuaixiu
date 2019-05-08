@@ -12,6 +12,7 @@ import com.common.util.DateUtil;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.coupon.service.CouponService;
+import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.system.api.CodeService;
 import com.system.api.entity.Code;
 import com.system.api.entity.ResultData;
@@ -260,6 +261,10 @@ public class BaseController {
      */
     protected SessionUser getCurrentUser(HttpServletRequest request) {
         return (SessionUser) request.getSession().getAttribute(SystemConstant.SESSION_USER_KEY);
+    }
+
+    protected SjSessionUser getSjCurrentUser(HttpServletRequest request) {
+        return (SjSessionUser) request.getSession().getAttribute(SystemConstant.SESSION_SJ_USER_KEY);
     }
     
     /**
@@ -942,6 +947,15 @@ public class BaseController {
 
 
     public ResultData getResult(ResultData result,Object object,Boolean isTrue,String code,String message){
+        result.setResultMessage(message);
+        result.setResultCode(code);
+        result.setSuccess(isTrue);
+        result.setResult(object);
+        return result;
+    }
+
+    public ResultData getSjResult(ResultData result,Object object,Boolean isTrue,String code,String msg,String message){
+        result.setMsg(msg);
         result.setResultMessage(message);
         result.setResultCode(code);
         result.setSuccess(isTrue);

@@ -11,6 +11,7 @@ public class ResultData {
      * 返回数据描述
      */
     private String resultMessage;
+    private String msg;
     /**
      * 业务代码标记
      */
@@ -33,6 +34,15 @@ public class ResultData {
     public void setResultMessage(String resultMessage) {
         this.resultMessage = resultMessage;
     }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     public String getResultCode() {
         return resultCode;
     }

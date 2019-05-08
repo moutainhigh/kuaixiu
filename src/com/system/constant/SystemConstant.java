@@ -11,6 +11,10 @@ import java.math.BigDecimal;
  * @version: V 1.0
  */
 public class SystemConstant {
+    /**
+     * 用户sj后台登录session
+     */
+    public static final String SESSION_SJ_USER_KEY = "session_sj_user_key_";
 
     /**
      * 用户后台登录session

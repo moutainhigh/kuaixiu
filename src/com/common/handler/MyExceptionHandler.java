@@ -75,6 +75,9 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
             else if (uri.startsWith("/webpc/")) {
                 return new ModelAndView("/pc/error", map);
             }
+            else if (uri.startsWith("/sj/")) {
+                return new ModelAndView("/sjAdmin/error", map);
+            }
             else {
             	log.info("其他错误");
                 return new ModelAndView("/admin/error", map);

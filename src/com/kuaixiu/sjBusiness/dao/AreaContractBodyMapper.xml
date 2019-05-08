@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.AreaContractBodyMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.AreaContractBody" >
+        <result column="id" property="id"/>
+        <result column="city_company_id" property="cityCompanyId"/>
+        <result column="management_unit_id" property="managementUnitId"/>
+        <result column="branch_office_id" property="branchOfficeId"/>
+        <result column="contract_body" property="contractBody"/>
+    </resultMap>
+    
+    <!-- sj_area_contract_body table all fields -->
+    <sql id="Base_Column_List" >
+        id,city_company_id,management_unit_id,branch_office_id,contract_body
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_area_contract_body
+        (id,city_company_id,management_unit_id,branch_office_id,contract_body)
+        values
+        (#{id},#{cityCompanyId},#{managementUnitId},#{branchOfficeId},#{contractBody})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_area_contract_body 
+        set 
+            id=#{id},
+            city_company_id=#{cityCompanyId},
+            management_unit_id=#{managementUnitId},
+            branch_office_id=#{branchOfficeId},
+            contract_body=#{contractBody}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_area_contract_body where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_area_contract_body where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_area_contract_body
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="cityCompanyId != null and cityCompanyId != ''" >
+            and city_company_id = #{cityCompanyId}
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''" >
+            and management_unit_id = #{managementUnitId}
+        </if>
+        <if test="branchOfficeId != null and branchOfficeId != ''" >
+            and branch_office_id = #{branchOfficeId}
+        </if>
+        <if test="contractBody != null and contractBody != ''" >
+            and contract_body = #{contractBody}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_area_contract_body
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="cityCompanyId != null and cityCompanyId != ''" >
+            and city_company_id = #{cityCompanyId}
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''" >
+            and management_unit_id = #{managementUnitId}
+        </if>
+        <if test="branchOfficeId != null and branchOfficeId != ''" >
+            and branch_office_id = #{branchOfficeId}
+        </if>
+        <if test="contractBody != null and contractBody != ''" >
+            and contract_body = #{contractBody}
+        </if>
+    </select>
+
+</mapper>   

@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.common.exception.SessionInvalidateException;
+import com.kuaixiu.sjUser.entity.Menu;
+import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.LoginUser;
 import com.system.basic.user.entity.SessionUser;
@@ -58,54 +60,84 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
         if (uri.indexOf(";") > 0) {
             uri = uri.substring(0, uri.indexOf(";"));
         }
-        //获取登录用户
-        SessionUser sessionUser = (SessionUser) (request.getSession().getAttribute(SystemConstant.SESSION_USER_KEY));
-
-
-        //对于手机端的用户登录 还需判定用户是否处于唯一登录环境 
-        if (sessionUser != null && uri.startsWith("/wechat/order/wechatLogin")) {
-            verifyLogin(sessionUser, sessionId, request);
-        }
-        //访问无权限页面，直接放行
-        if (checkUriMatch(uri, anonymousUrls)) {
-            // log.info("符合无session通过条件");
-            return true;
-        }
-
-        if (sessionUser == null) {
-            //验证cookie用户是否存在
-            if (sessionUserService.checkCookieUser(request)) {
-                return true;
-            } else {
-                //判断是否是因为session丢失
-                throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
-                //return true;
-//                log.info("您离开系统时间过长，请重新登录");
-//                result.setResultMessage("您离开系统时间过长，请重新登录");
-//                renderJson(response, result);
-//                return false;
-            }
-        } else {
-            //如果是客户操作限制手机端唯一登录
-            if (uri.startsWith("/admin/checkLogin")) {
+        //如果sessionUser转换异常,查看商机sessionUser
+        if (!url.contains("/sj")) {
+            //获取登录用户
+            SessionUser sessionUser = (SessionUser) (request.getSession().getAttribute(SystemConstant.SESSION_USER_KEY));
+            //对于手机端的用户登录 还需判定用户是否处于唯一登录环境
+            if (sessionUser != null && uri.startsWith("/wechat/order/wechatLogin")) {
                 verifyLogin(sessionUser, sessionId, request);
             }
-            //验证用户权限
-            if (checkUriFromList(uri, sessionUser.getUserAuthoritys())) {
-                return true;
-            }
-            if (sessionUser.getType() == 8) {
-                //特殊用户登录后台
+            //访问无权限页面，直接放行
+            if (checkUriMatch(uri, anonymousUrls)) {
+                // log.info("符合无session通过条件");
                 return true;
             }
 
+            if (sessionUser == null) {
+                //验证cookie用户是否存在
+                if (sessionUserService.checkCookieUser(request)) {
+                    return true;
+                } else {
+                    //判断是否是因为session丢失
+                    throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
+                }
+            } else {
+                //如果是客户操作限制手机端唯一登录
+                if (uri.startsWith("/admin/checkLogin")) {
+                    verifyLogin(sessionUser, sessionId, request);
+                }
+                //验证用户权限
+                if (checkUriFromList(uri, sessionUser.getUserAuthoritys())) {
+                    return true;
+                }
+                if (sessionUser.getType() == 8) {
+                    //特殊用户登录后台
+                    return true;
+                }
+            }
+            throw new SessionInvalidateException("对不起，您没有访问权限！");
+        } else {
+            //获取登录用户
+            SjSessionUser sessionUser = (SjSessionUser) (request.getSession().getAttribute(SystemConstant.SESSION_SJ_USER_KEY));
+            //对于手机端的用户登录 还需判定用户是否处于唯一登录环境
+            if (sessionUser != null && uri.startsWith("/wechat/order/wechatLogin")) {
+                sjVerifyLogin(sessionUser, sessionId, request);
+            }
+            //访问无权限页面，直接放行
+            if (checkUriMatch(uri, anonymousUrls)) {
+                // log.info("符合无session通过条件");
+                return true;
+            }
+
+            if (sessionUser == null) {
+                //验证cookie用户是否存在
+                if (sessionUserService.checkCookieUser(request)) {
+                    return true;
+                } else {
+                    //判断是否是因为session丢失
+                    throw new SessionInvalidateException("您离开系统时间过长，请重新登录");
+                }
+            } else {
+                //如果是客户操作限制手机端唯一登录
+                if (uri.startsWith("/sjAdmin/checkLogin")) {
+                    sjVerifyLogin(sessionUser, sessionId, request);
+                }
+                //验证用户权限
+                if (sjCheckUriFromList(uri, sessionUser.getUserAuthoritys())) {
+                    return true;
+                }
+                if (sessionUser.getType() == 8) {
+                    //特殊用户登录后台
+                    return true;
+                }
+            }
+            throw new SessionInvalidateException("对不起，您没有访问权限！");
         }
-        throw new SessionInvalidateException("对不起，您没有访问权限！");
-//        log.info("对不起，您没有访问权限！");
-//        result.setResultMessage("对不起，您没有访问权限！");
-//        renderJson(response, result);
-//        return true;
+
+
     }
+
     /**
      * 以Json格式输出
      *
@@ -172,6 +204,30 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
+    /**
+     * 验证用户手机端是否唯一登录
+     */
+    public void sjVerifyLogin(SjSessionUser sessionUser, String sessionId, HttpServletRequest request) {
+        String ua = request.getHeader("user-agent").toLowerCase();
+        List<LoginUser> list = loginUserService.findLoginUserBysessionId(sessionId);
+        if (sessionUser != null && list.size() == 0 && checkAgentIsMobile(ua)) {
+            request.getSession().invalidate();
+            throw new SessionInvalidateException("您的账号已在其他地方登录，请重新登录");
+        }
+        if (sessionUser != null && list.size() > 0 && checkAgentIsMobile(ua)) {//来自手机端的登录
+            boolean tip = false;
+            for (LoginUser u : list) {
+                if (u.getUid().equals(sessionUser.getUserId())) {
+                    tip = true;
+                }
+            }
+            if (!tip) {
+                request.getSession().invalidate();
+                throw new SessionInvalidateException("您的账号已在其他地方登录，请重新登录");
+            }
+        }
+    }
+
 
     /**
      * 检测当前拦截的uri 是否在权限范围内
@@ -183,6 +239,28 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
     private boolean checkUriFromList(String uri, List<SysMenu> list) {
         if (list != null) {
             for (SysMenu menu : list) {
+                String href = menu.getHref();
+                if (href != null) {
+                    String[] hrefFront = href.split("\\?");
+                    if (uri.equals(hrefFront[0])) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检测当前拦截的uri 是否在权限范围内
+     *
+     * @param uri
+     * @param list
+     * @return
+     */
+    private boolean sjCheckUriFromList(String uri, List<Menu> list) {
+        if (list != null) {
+            for (Menu menu : list) {
                 String href = menu.getHref();
                 if (href != null) {
                     String[] hrefFront = href.split("\\?");
