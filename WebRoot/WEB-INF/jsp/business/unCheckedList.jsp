@@ -151,7 +151,7 @@
             targets: 3,
             render: function (data, type, row, meta) {
                 var state = '';
-                switch (row.repairType) {
+                switch (row.type) {
                     case 1:
                         state = "商机";
                         break;
@@ -165,20 +165,20 @@
         {
             targets: 4,
             render: function (data, type, row, meta) {
-                return row.createName/row.createUserid;
+                return row.createName+"/"+row.createUserid;
             }
         },
         {
             targets: -4,
             render: function (data, type, row, meta) {
-                return row.person/row.phone;
+                return row.person+"/"+row.phone;
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
             targets: -3,
             render: function (data, type, row, meta) {
                 var state = "";
-                switch (row.balanceStatus) {
+                switch (row.state) {
                     case 100:
                         state = "待审核";
                         break;
@@ -222,7 +222,7 @@
                     func: [
                         {
                             "name": "指派",
-                            "fn": "againOrderView(\'" + row.id + "\')",
+                            "fn": "againOrderView(\'" + row.id + "\',\'"+row.projectId+"\')",
                             "icon": "am-icon-pencil-square-o",
                             "class": "am-text-secondary"
                         }
@@ -242,8 +242,10 @@
     function refreshPage() {
         myTable.ajax.reload(null, false);
     }
-    function againOrderView(order_no) {
-        $("#againOrderNo").val(order_no);
+    function againOrderView(orderId,projectId) {
+        alert(orderId+"/"+projectId)
+        $("#orderId").val(orderId);
+        $("#projectIds").val(projectId);
         $("#modal-againOrderView").modal("show");
     }
 
@@ -255,5 +257,24 @@
             $(this).prop("checked", obj.checked);
         });
     }
+
+    function updateWaitTime() {
+        $(".waitTimeCountUp").each(function () {
+            var obj = $(this);
+            var remainTime = obj.attr("remainTime");
+            remainTime = Number(remainTime) + 1;
+            if (remainTime < 0) {
+                remainTime = 0;
+            }
+            obj.attr("remainTime", remainTime);
+            obj.html(getHourTimeStr(remainTime));
+        });
+    }
+
+    if ("undefined" != typeof(countIntervalProcess)) {
+        clearInterval(countIntervalProcess);
+    }
+    countIntervalProcess = setInterval("updateWaitTime()", 1000);
+
 
 </script>

@@ -109,4 +109,9 @@ public class SjUserService extends BaseService<SjUser> {
         }
         return false;
     }
+
+    public String userIdToUserIdName(String userId){
+        SjUser sjUser=this.getDao().queryByLoginId(userId);
+        return sjUser.getName()+"/"+sjUser.getLoginId();
+    }
 }

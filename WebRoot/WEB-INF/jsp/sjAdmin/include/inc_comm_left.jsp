@@ -4,21 +4,19 @@
 <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
   <div class="am-offcanvas-bar admin-offcanvas-bar">
     <ul class="am-list admin-sidebar-list">
-		<c:if test="${loginUserId ne 'kf014' || loginUserId ne 'kf015' || loginUserId ne 'kf016'}">
       <li><a href="${commonurl_sj_home }"><span class="am-icon-home"></span> 首页</a></li>
-		</c:if>
       <%-- 循环输出菜单 --%>
       <c:forEach items="${sysMenuList }" var="menu" varStatus="i" >
 	    <li class="admin-parent">
 	      <a class="am-cf am-collapsed" onclick="func_admin_parent_click(this);" data-am-collapse="{target: '#collapse-nav_${i.index}'}">
-	        <span class="${menu.icon }"></span> ${menu.name }<span class="am-icon-angle-down am-fr am-margin-right"></span>
+				  ${menu.name }<span class="am-icon-angle-down am-fr am-margin-right"></span>
 	      </a>
 	      <%-- 循环子菜单 --%>
 	      <c:if test="${not empty menu.subMenuList }">
 		    <ul class="am-list am-collapse admin-sidebar-sub" id="collapse-nav_${i.index}">
 		    <c:forEach items="${menu.subMenuList }" var="subMenu" varStatus="sub" >
 		      <li><a href="javascript:void(0);" onclick="func_menu_click(this,'','${ctx}${subMenu.href }',0);" class="am-cf">
-		          <span class="${subMenu.icon }"></span> ${subMenu.name }</a></li>
+		           ${subMenu.name }</a></li>
 		    </c:forEach>
 		    </ul>
 	      </c:if>

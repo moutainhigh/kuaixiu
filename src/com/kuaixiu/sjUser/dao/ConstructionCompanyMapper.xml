@@ -15,19 +15,21 @@
         <result column="person" property="person"/>
         <result column="phone" property="phone"/>
         <result column="project" property="project"/>
+        <result column="person_num" property="personNum"/>
+        <result column="end_order_num" property="endOrderNum"/>
     </resultMap>
     
     <!-- sj_construction_company table all fields -->
     <sql id="Base_Column_List" >
-        id,login_id,province,city,county,area,street,person,phone,project
+        id,login_id,province,city,county,area,street,person,phone,project,person_num,end_order_num
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_construction_company
-        (id,login_id,province,city,county,area,street,person,phone,project)
+        (id,login_id,province,city,county,area,street,person,phone,project,person_num,end_order_num)
         values
-        (#{id},#{loginId},#{province},#{city},#{county},#{area},#{street},#{person},#{phone},#{project})
+        (#{id},#{loginId},#{province},#{city},#{county},#{area},#{street},#{person},#{phone},#{project},#{personNum},#{endOrderNum})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -43,7 +45,9 @@
             street=#{street},
             person=#{person},
             phone=#{phone},
-            project=#{project}
+            project=#{project},
+            person_num=#{personNum},
+            end_order_num=#{endOrderNum}
         where id=#{id}
     </update>
 
@@ -94,6 +98,12 @@
         <if test="project != null and project != ''" >
             and project = #{project}
         </if>
+        <if test="personNum != null and personNum != ''" >
+            and person_num = #{personNum}
+        </if>
+        <if test="endOrderNum != null and endOrderNum != ''" >
+            and end_order_num = #{endOrderNum}
+        </if>
     </select>
     
     <!-- 查询列表 带分页 -->
@@ -129,8 +139,19 @@
         <if test="phone != null and phone != ''" >
             and phone = #{phone}
         </if>
+        <if test="queryStatusArray != null and queryStatusArray.size() > 0">
+            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+                and project like CONCAT('%', #{item}, '%')
+            </foreach>
+        </if>
         <if test="project != null and project != ''" >
             and project = #{project}
+        </if>
+        <if test="personNum != null and personNum != ''" >
+            and person_num = #{personNum}
+        </if>
+        <if test="endOrderNum != null and endOrderNum != ''" >
+            and end_order_num = #{endOrderNum}
         </if>
     </select>
 

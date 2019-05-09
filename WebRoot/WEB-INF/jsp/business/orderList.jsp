@@ -80,14 +80,14 @@
                 <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth160">单号</th>
+                <th class="fontWeight_normal tdwidth100">单号</th>
                 <th class="fontWeight_normal tdwidth80">创建时间</th>
-                <th class="fontWeight_normal tdwidth70">类型</th>
+                <th class="fontWeight_normal tdwidth50">类型</th>
                 <th class="fontWeight_normal tdwidth90">提交人/账号</th>
                 <th class="fontWeight_normal tdwidth90">企业名字</th>
                 <th class="fontWeight_normal table-title tdwidth80">企业负责人/电话</th>
                 <th class="fontWeight_normal tdwidth100">需求</th>
-                <th class="fontWeight_normal tdwidth70">状态</th>
+                <th class="fontWeight_normal tdwidth50">状态</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
             </tr>
             </thead>
@@ -161,7 +161,7 @@
             targets: 3,
             render: function (data, type, row, meta) {
                 var state = '';
-                switch (row.repairType) {
+                switch (row.type) {
                     case 1:
                         state = "商机";
                         break;
@@ -175,20 +175,20 @@
         {
             targets: 4,
             render: function (data, type, row, meta) {
-                return row.createName/row.createUserid;
+                return row.createName+"/"+row.createUserid;
             }
         },
         {
             targets: -4,
             render: function (data, type, row, meta) {
-                    return row.person/row.phone;
+                    return row.person+"/"+row.phone;
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
             targets: -2,
             render: function (data, type, row, meta) {
                 var state = "";
-                switch (row.balanceStatus) {
+                switch (row.state) {
                     case 100:
                         state = "待审核";
                         break;
@@ -256,7 +256,7 @@
      * 查看订单详情
      */
     function showOrderDetail(id) {
-        func_reload_page("${ctx}/order/detail.do?id=" + id);
+        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
     }
 
 </script>

@@ -1,6 +1,9 @@
 package com.kuaixiu.sjBusiness.dao;
 
 import com.common.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * OrderContractPicture Mapper
@@ -11,6 +14,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface OrderContractPictureMapper<T> extends BaseDao<T> {
 
+    List<T> queryByOrderNo(@Param("orderNo")String orderNo);
 }
 
 

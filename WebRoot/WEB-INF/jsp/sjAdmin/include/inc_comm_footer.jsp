@@ -17,7 +17,7 @@
  * 跳转登录页面
  */
 function toLogin(){
-    window.location.href = AppConfig.ctx + '/admin/logout.do';
+    window.location.href = AppConfig.ctx + '/sj/admin/logout.do';
 }
 
 /**

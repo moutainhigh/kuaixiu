@@ -129,4 +129,27 @@ public class SjOrderService extends BaseService<SjOrder> {
         return pattern.matcher(str).matches();
     }
 
+    /**
+     * 1://审批人 2://指派人 3://施工人 4://竣工人
+     * @param num
+     * @return
+     */
+    public String setStayPerson(Integer num){
+        String stayPerson="";
+        switch (num){
+            case 1://审批人
+                stayPerson="admin";
+                break;
+            case 2://指派人
+                stayPerson="admin";
+                break;
+            case 3://施工人
+                stayPerson="admin";
+                break;
+            case 4://竣工人
+                stayPerson="admin";
+                break;
+        }
+        return stayPerson;
+    }
 }
