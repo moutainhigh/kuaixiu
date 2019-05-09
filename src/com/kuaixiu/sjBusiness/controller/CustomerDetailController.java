@@ -126,6 +126,7 @@ public class CustomerDetailController extends BaseController {
             JSONObject params = getPrarms(request);
             String phone = params.getString("phone");
             String code = params.getString("checkCode");
+            Integer isLogin = params.getInteger("isRememberLogin");//是否记住登录
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(code)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
@@ -134,16 +135,15 @@ public class CustomerDetailController extends BaseController {
                 return getSjResult(result, null, false, "3", null, "验证码错误");
             } else if (user == null) {
                 return getSjResult(result, null, false, "1", null, "该手机用户不存在");
-            } else {
-                //初始化SessionUser
-                sessionUserService.initSessionUser(user, request);
-
+            }
+//            if (isLogin == 1) {
                 String[] dname = request.getServerName().split("\\.");
                 String phoneBase64 = Base64Util.getBase64(phone);
                 CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
-
-                getSjResult(result, null, true, "0", null, "登录成功");
-            }
+//            }
+            //初始化SessionUser
+            sessionUserService.initSessionUser(user, request);
+            getSjResult(result, null, true, "0", null, "登录成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
