@@ -21,6 +21,7 @@ import com.system.basic.user.service.LoginUserService;
 import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.NameValuePair;
@@ -32,9 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -458,6 +461,56 @@ public class BaseController {
     	path=getProjectUrl(request)+path;
     	return path;
     	
+    }
+
+    /**
+     * 判断文件大小
+     *
+     * @param len
+     *            文件长度
+     * @param size
+     *            限制大小
+     * @param unit
+     *            限制单位（B,K,M,G）
+     * @return
+     */
+    protected boolean checkFileSize(Long len, int size, String unit) {
+//        long len = file.length();
+        double fileSize = 0;
+        if ("B".equals(unit.toUpperCase())) {
+            fileSize = (double) len;
+        } else if ("K".equals(unit.toUpperCase())) {
+            fileSize = (double) len / 1024;
+        } else if ("M".equals(unit.toUpperCase())) {
+            fileSize = (double) len / 1048576;
+        } else if ("G".equals(unit.toUpperCase())) {
+            fileSize = (double) len / 1073741824;
+        }
+        if (fileSize > size) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param arr 原图片2进制流
+     * @return
+     */
+    public byte[] imageCompress(byte[] arr){
+        byte[] byteArray = null;
+        ByteArrayInputStream intputStream = new ByteArrayInputStream(arr);
+        Thumbnails.Builder<? extends InputStream> builder = Thumbnails.of(intputStream).scale(0.3f);//0.3f图片质量压缩比例，0.1~1之间，越小图片质量越差
+        try {
+            BufferedImage bufferedImage = builder.asBufferedImage();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "png", baos);
+            byteArray = baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return byteArray;
+
     }
     
     /**

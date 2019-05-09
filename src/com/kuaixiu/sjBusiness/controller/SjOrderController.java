@@ -3,6 +3,7 @@ package com.kuaixiu.sjBusiness.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
+import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
@@ -19,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +45,8 @@ public class SjOrderController extends BaseController {
     private SjProjectService projectService;
     @Autowired
     private OrderCompanyPictureService orderCompanyPictureService;
+
+    private String Ext_Name = "jpg,jpeg,png";
 
 
     /**
@@ -200,7 +206,7 @@ public class SjOrderController extends BaseController {
                     break;
             }
             List<SjOrder> sjOrders = orderService.queryListForPage(sjOrder);
-            List<JSONObject> jsonObjects=orderService.sjListOrderToObejct(sjOrders);
+            List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
             getSjResult(result, jsonObjects, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,6 +217,7 @@ public class SjOrderController extends BaseController {
 
     /**
      * 订单详情
+     *
      * @param request
      * @param response
      * @return
@@ -225,11 +232,11 @@ public class SjOrderController extends BaseController {
             JSONObject params = getPrarms(request);
             String phone = params.getString("phone");
             String orderNo = params.getString("orderNo");
-            if(StringUtils.isBlank(phone)||StringUtils.isBlank(orderNo)){
+            if (StringUtils.isBlank(phone) || StringUtils.isBlank(orderNo)) {
                 return getSjResult(result, null, false, "0", null, "参数为空");
             }
-            SjOrder sjOrder=orderService.getDao().queryByOrderNo(orderNo,phone);
-            JSONObject jsonObject=orderService.sjOrderToObejct(sjOrder);
+            SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
+            JSONObject jsonObject = orderService.sjOrderToObejct(sjOrder);
 
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
@@ -255,10 +262,10 @@ public class SjOrderController extends BaseController {
         try {
             //获取图片，保存图片到webapp同级inages/sj_images
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "sj_images" + System.getProperty("file.separator") + "sj_company";
-            String logoPath = getPath(request, "image", savePath);             //图片路径
+            String logoPath = getImagePath(request, "image", savePath);             //图片路径
             String image = "";
             if (StringUtils.isNotBlank(logoPath)) {
-                image = getProjectUrl(request) + "/images/sj_images/sj_company" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+                image = getProjectUrl(request) + "/images/sj_images/sj_company/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             }
             getSjResult(result, image, true, "0", null, "上传成功");
         } catch (Exception e) {
@@ -268,4 +275,40 @@ public class SjOrderController extends BaseController {
         return result;
     }
 
+    /**
+     * 保存文件
+     */
+    private String getImagePath(HttpServletRequest request, String file, String URLPath) {
+        String fileName = "";                   //上传的文件名
+        String path = "";                       //存储路径
+        try {
+            //转化request
+            MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
+            MultipartFile mfile = rm.getFile(file);                             //获得前端页面传来的文件
+            byte[] bfile = mfile.getBytes();                                    //获得文件的字节数组
+            if (checkFileSize(mfile.getSize(), 300, "K")) {
+                bfile = imageCompress(bfile);
+            }
+            if (bfile.length == 0) {
+                log.info("未上传图片");
+                return "";
+            }
+            fileName = mfile.getOriginalFilename();                             //获得文件名
+            // 处理获取到的上传文件的文件名的路径部分，只保留文件名部分
+            fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+
+            // 得到上传文件的扩展名
+            String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+            // 检查扩展名
+            if (!Ext_Name.contains(fileExt)) {
+                throw new SystemException("上传文件扩展名是不允许的扩展名：" + fileExt);
+            } else {
+                //保存文件
+                path = saveFile(bfile, fileName, request, URLPath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return path;
+    }
 }
