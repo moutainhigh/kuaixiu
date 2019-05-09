@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="priceBox">
-                        <p>预估价 <span></span></p>
+                        <p><span class='priceText'>预估价 </span></p>
                     </div>
                 </section>
             </div>
@@ -153,8 +153,12 @@
                     item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
                 }
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
-        
-                $('.priceBox span',tmp).html("¥"+(n.orderprice).toFixed(2));
+				
+				if(n.processstatus == 204){
+				 $('.priceText',tmp).html("成交价"+"¥"+(n.orderprice).toFixed(2));
+				}else{
+				 $('.priceText',tmp).html("预估价"+"¥"+(n.orderprice).toFixed(2));
+				}
         
                 //追加到对应区块
                 $(".cont").append(tmp);

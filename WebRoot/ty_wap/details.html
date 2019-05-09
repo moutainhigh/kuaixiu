@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="priceBox">
-                        <p>预估价 <span class="prePrice fb">¥0.00</span><span class="tickets">(含加价￥300)</span></p>
+                        <p ><span class='prePriceText'>预估价</span> <span class="prePrice fb">¥0.00</span><span class="tickets">(含加价￥300)</span></p>
                     </div>
                 </section>
             </div>
@@ -150,6 +150,9 @@
                         $('.address').html(dataInfo.address);
                         $('.pickText').show();
                     }
+					if(dataInfo.processstatus == 204){
+					  $('.prePriceText').html('成交价'); 
+					}
                     $('.image img').attr('src',dataInfo.modelpic);
                     $('.proInfor .text').html('<p class="fb">'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p><a class="pull_down"><img src="img/icon_arrow_down.png" /></a>');
                     $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
