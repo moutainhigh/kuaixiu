@@ -9,7 +9,6 @@
         <result column="login_id" property="loginId"/>
         <result column="province" property="province"/>
         <result column="city" property="city"/>
-        <result column="county" property="county"/>
         <result column="area" property="area"/>
         <result column="street" property="street"/>
         <result column="person" property="person"/>
@@ -21,15 +20,15 @@
     
     <!-- sj_construction_company table all fields -->
     <sql id="Base_Column_List" >
-        id,login_id,province,city,county,area,street,person,phone,project,person_num,end_order_num
+        id,login_id,province,city,area,street,person,phone,project,person_num,end_order_num
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_construction_company
-        (id,login_id,province,city,county,area,street,person,phone,project,person_num,end_order_num)
+        (id,login_id,province,city,area,street,person,phone,project,person_num,end_order_num)
         values
-        (#{id},#{loginId},#{province},#{city},#{county},#{area},#{street},#{person},#{phone},#{project},#{personNum},#{endOrderNum})
+        (#{id},#{loginId},#{province},#{city},#{area},#{street},#{person},#{phone},#{project},#{personNum},#{endOrderNum})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -40,7 +39,6 @@
             login_id=#{loginId},
             province=#{province},
             city=#{city},
-            county=#{county},
             area=#{area},
             street=#{street},
             person=#{person},
@@ -79,9 +77,6 @@
         </if>
         <if test="city != null and city != ''" >
             and city = #{city}
-        </if>
-        <if test="county != null and county != ''" >
-            and county = #{county}
         </if>
         <if test="area != null and area != ''" >
             and area = #{area}
@@ -124,9 +119,6 @@
         <if test="city != null and city != ''" >
             and city = #{city}
         </if>
-        <if test="county != null and county != ''" >
-            and county = #{county}
-        </if>
         <if test="area != null and area != ''" >
             and area = #{area}
         </if>
@@ -140,7 +132,7 @@
             and phone = #{phone}
         </if>
         <if test="queryStatusArray != null and queryStatusArray.size() > 0">
-            <foreach collection="queryStatusArray" item="item" open="(" separator=", " close=")">
+            <foreach collection="queryStatusArray" item="item">
                 and project like CONCAT('%', #{item}, '%')
             </foreach>
         </if>
@@ -153,6 +145,7 @@
         <if test="endOrderNum != null and endOrderNum != ''" >
             and end_order_num = #{endOrderNum}
         </if>
+        ORDER BY end_order_num DESC
     </select>
 
 </mapper>   

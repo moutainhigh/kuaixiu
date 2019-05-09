@@ -68,7 +68,7 @@
             person=#{person},
             phone=#{phone},
             project_id=#{projectId},
-            group_not=#{groupNet},
+            group_net=#{groupNet},
             single=#{single},
             stayPerson=#{stayPerson},
             approval_person=#{approvalPerson},
@@ -312,6 +312,7 @@
         <if test="createName != null and createName != ''">
             and create_name = #{createName}
         </if>
+        ORDER BY create_name DESC
     </select>
 
     <!-- 查询列表 带分页 -->
@@ -418,6 +419,7 @@
         <if test="createName != null and createName != ''">
             and create_name = #{createName}
         </if>
+        ORDER BY create_name DESC
     </select>
 
 </mapper>   

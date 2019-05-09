@@ -12,11 +12,14 @@ import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
+import com.kuaixiu.sjUser.entity.SjWorker;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.SjUserService;
+import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.api.entity.ResultData;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,8 @@ public class SjBackstageController extends BaseController {
     private OrderContractPictureService orderContractPictureService;
     @Autowired
     private ConstructionCompanyService constructionCompanyService;
+    @Autowired
+    private SjWorkerService sjWorkerService;
 
     /**
      * 订单列表
@@ -285,7 +290,7 @@ public class SjBackstageController extends BaseController {
                     street = address.getArea();
                 }
                 company.setAddress(province + city + area + street);
-                List<String> projects1 = orderService.getProject(company.getProvince());
+                List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId());
@@ -317,13 +322,29 @@ public class SjBackstageController extends BaseController {
         try {
             String orderId = request.getParameter("orderId");
             String userId = request.getParameter("userId");
+
+            List<SjWorker> sjWorkers=sjWorkerService.getDao().queryByCompanyId(userId);
+            if(CollectionUtils.isEmpty(sjWorkers)){
+                return getSjResult(result, null, true, "0", null, "该单位没有员工");
+            }
+            SjWorker sjWorker=sjWorkers.get(0);
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjWorker.getLoginId());
             SjOrder sjOrder = orderService.queryById(orderId);
+
             sjOrder.setState(300);
             sjOrder.setAssignTime(new Date());
             sjOrder.setAssignPerson(su.getUserId());
-            sjOrder.setStayPerson(userId);
+            sjOrder.setStayPerson(sjWorker.getLoginId());
+            //待施工人信息
+            sjOrder.setBuildPerson(sjWorker.getLoginId());
+            sjOrder.setBuildCompany(sjWorker.getCompanyLoginId());
+            sjOrder.setBuildPhone(sjUser.getPhone());
             orderService.saveUpdate(sjOrder);
-            getSjResult(result, null, true, "0", null, "获取成功");
+            //工人接单数量加一
+            sjWorker.setBuildingNum(sjWorker.getBuildingNum()+1);
+            sjWorkerService.saveUpdate(sjWorker);
+
+            getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
