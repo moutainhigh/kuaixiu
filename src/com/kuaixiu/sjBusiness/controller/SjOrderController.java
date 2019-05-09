@@ -13,6 +13,8 @@ import com.kuaixiu.sjBusiness.entity.SjProject;
 import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjBusiness.service.SjProjectService;
+import com.kuaixiu.sjUser.entity.SjUser;
+import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
@@ -45,6 +47,8 @@ public class SjOrderController extends BaseController {
     private SjProjectService projectService;
     @Autowired
     private OrderCompanyPictureService orderCompanyPictureService;
+    @Autowired
+    private SjUserService userService;
 
     private String Ext_Name = "jpg,jpeg,png";
 
@@ -122,6 +126,10 @@ public class SjOrderController extends BaseController {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
             }
+            SjUser user=userService.getDao().queryByLoginId(phone);
+            if(user==null){
+                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+            }
 
             SjOrder sjOrder = new SjOrder();
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
@@ -139,6 +147,7 @@ public class SjOrderController extends BaseController {
             sjOrder.setSingle(single);
             sjOrder.setGroupNet(group);
             sjOrder.setCreateUserid(phone);
+            sjOrder.setCreateName(user.getName());
             sjOrder.setStayPerson("admin");
             orderService.add(sjOrder);
 

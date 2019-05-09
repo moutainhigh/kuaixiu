@@ -12,6 +12,7 @@ import com.common.base.dao.BaseDao;
 public interface SjUserMapper<T> extends BaseDao<T> {
 
     T queryByLoginId(String loginId);
+    T queryByName(String name);
 }
 
 

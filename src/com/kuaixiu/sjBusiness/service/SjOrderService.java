@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * SjOrder Service
@@ -92,7 +93,7 @@ public class SjOrderService extends BaseService<SjOrder> {
         return images;
     }
 
-    private List<String> getProject(String projectIds) {
+    public List<String> getProject(String projectIds) {
         String[] projectIds1 = projectIds.split(",");
         List<String> projects = new ArrayList<>();
         for (int i = 0; i < projectIds1.length; i++) {
@@ -102,5 +103,26 @@ public class SjOrderService extends BaseService<SjOrder> {
         return projects;
     }
 
+    public String listToString(List<String> projects) {
+        StringBuilder sb = new StringBuilder();
+        for (String project : projects) {
+            sb.append(project);
+            sb.append(",");
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 判断是否纯数字
+     * @param str
+     * @return
+     */
+    public boolean isNumeric(String str) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
+    }
 
 }
