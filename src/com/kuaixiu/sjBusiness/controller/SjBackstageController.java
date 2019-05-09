@@ -52,7 +52,15 @@ public class SjBackstageController  extends BaseController {
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
 
-        String returnView ="shangji/orderList";
+        String returnView ="business/orderList";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/unCheckedList")
+    public ModelAndView unCheckedList(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+
+        String returnView ="business/unCheckedList";
         return new ModelAndView(returnView);
     }
 
@@ -64,8 +72,8 @@ public class SjBackstageController  extends BaseController {
             //获取查询条件
             String orderNo = request.getParameter("orderNo");
             String type = request.getParameter("type");
-            String queryStartTime = request.getParameter("queryStartTime");
-            String queryEndTime = request.getParameter("queryEndTime");
+            String queryStartTime = request.getParameter("query_startTime");
+            String queryEndTime = request.getParameter("query_endTime");
             String createUser = request.getParameter("createUser");
             String companyName = request.getParameter("companyName");
             String state = request.getParameter("state");

@@ -126,8 +126,8 @@ public class SjOrderController extends BaseController {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
             }
-            SjUser user=userService.getDao().queryByLoginId(phone);
-            if(user==null){
+            SjUser user = userService.getDao().queryByLoginId(phone);
+            if (user == null) {
                 return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
             }
 
@@ -144,8 +144,10 @@ public class SjOrderController extends BaseController {
             sjOrder.setPerson(person);
             sjOrder.setPhone(personPhone);
             sjOrder.setProjectId(projectId);
-            sjOrder.setSingle(single);
-            sjOrder.setGroupNet(group);
+            if (type == 2) {
+                sjOrder.setSingle(single);
+                sjOrder.setGroupNet(group);
+            }
             sjOrder.setCreateUserid(phone);
             sjOrder.setCreateName(user.getName());
             sjOrder.setStayPerson("admin");

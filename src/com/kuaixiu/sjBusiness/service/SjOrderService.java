@@ -61,6 +61,7 @@ public class SjOrderService extends BaseService<SjOrder> {
 
     public JSONObject sjOrderToObejct(SjOrder o) {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", o.getType());
         jsonObject.put("orderNo", o.getOrderNo());
         jsonObject.put("companyName", o.getCompanyName());
         jsonObject.put("state", o.getState());
@@ -78,8 +79,10 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("address", province + city + area + street);
         jsonObject.put("person", o.getPerson());
         jsonObject.put("personPhone", o.getPhone());
-        jsonObject.put("single", o.getSingle());
-        jsonObject.put("group", o.getGroupNet());
+        if (o.getType() == 2) {
+            jsonObject.put("single", o.getSingle());
+            jsonObject.put("group", o.getGroupNet());
+        }
         jsonObject.put("images", getImages(o.getOrderNo()));
         return jsonObject;
     }
@@ -117,6 +120,7 @@ public class SjOrderService extends BaseService<SjOrder> {
 
     /**
      * 判断是否纯数字
+     *
      * @param str
      * @return
      */
