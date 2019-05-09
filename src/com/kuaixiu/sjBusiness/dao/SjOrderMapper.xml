@@ -297,6 +297,118 @@
         <if test="completedTime != null and completedTime != ''">
             and completed_time = #{completedTime}
         </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''">
+            and create_userid = #{createUserid}
+        </if>
+        <if test="createName != null and createName != ''">
+            and create_name = #{createName}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryWebListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and order_no = #{orderNo}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="state != null and state != ''">
+            <if test="state == 300">
+                and state in ('200','300','400')
+            </if>
+            <if test="state != 300">
+                and state = #{state}
+            </if>
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and company_name = #{companyName}
+        </if>
+        <if test="provinceId != null and provinceId != ''">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and city_id = #{cityId}
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and area_id = #{areaId}
+        </if>
+        <if test="streetId != null and streetId != ''">
+            and street_id = #{streetId}
+        </if>
+        <if test="addressDetail != null and addressDetail != ''">
+            and address_detail = #{addressDetail}
+        </if>
+        <if test="person != null and person != ''">
+            and person = #{person}
+        </if>
+        <if test="phone != null and phone != ''">
+            and phone = #{phone}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="groupNet != null and groupNet != ''">
+            and group_not=#{groupNet}
+        </if>
+        <if test="single != null and single != ''">
+            and single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''">
+            and stayPerson = #{stayPerson}
+        </if>
+        <if test="approvalPerson != null and approvalPerson != ''">
+            and approval_person = #{approvalPerson}
+        </if>
+        <if test="approvalNote != null and approvalNote != ''">
+            and approval_note = #{approvalNote}
+        </if>
+        <if test="approvalTime != null and approvalTime != ''">
+            and approval_time = #{approvalTime}
+        </if>
+        <if test="assignPerson != null and assignPerson != ''">
+            and assign_person = #{assignPerson}
+        </if>
+        <if test="assignTime != null and assignTime != ''">
+            and assign_time = #{assignTime}
+        </if>
+        <if test="buildPerson != null and buildPerson != ''">
+            and build_person = #{buildPerson}
+        </if>
+        <if test="buildPhone != null and buildPhone != ''">
+            and build_phone = #{buildPhone}
+        </if>
+        <if test="buildCompany != null and buildCompany != ''">
+            and build_company = #{buildCompany}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and end_time = #{endTime}
+        </if>
+        <if test="completedPerson != null and completedPerson != ''">
+            and completed_person = #{completedPerson}
+        </if>
+        <if test="completedPhone != null and completedPhone != ''">
+            and completed_phone = #{completedPhone}
+        </if>
+        <if test="completedTime != null and completedTime != ''">
+            and completed_time = #{completedTime}
+        </if>
         <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>

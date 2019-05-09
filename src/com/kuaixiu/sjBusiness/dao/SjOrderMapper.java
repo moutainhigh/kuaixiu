@@ -3,6 +3,8 @@ package com.kuaixiu.sjBusiness.dao;
 import com.common.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * SjOrder Mapper
  *
@@ -13,6 +15,7 @@ import org.apache.ibatis.annotations.Param;
 public interface SjOrderMapper<T> extends BaseDao<T> {
 
     T queryByOrderNo(@Param("orderNo") String orderNo, @Param("createUserid")String phone);
+    List<T> queryWebListForPage(T t);
 }
 
 

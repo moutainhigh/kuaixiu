@@ -216,7 +216,7 @@ public class SjOrderController extends BaseController {
                     sjOrder.setState(500);
                     break;
             }
-            List<SjOrder> sjOrders = orderService.queryListForPage(sjOrder);
+            List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
             getSjResult(result, jsonObjects, true, "0", null, "查询成功");
         } catch (Exception e) {
