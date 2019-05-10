@@ -132,10 +132,6 @@ public class SjBackstageController extends BaseController {
             List<SjOrder> sjOrders = orderService.queryListForPage(sjOrder);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (SjOrder sjOrder1 : sjOrders) {
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder1.getCreateUserid());
-                if (sjUser != null) {
-                    sjOrder1.setCreateName(sjUser.getName());
-                }
                 List<String> projects = orderService.getProject(sjOrder1.getProjectId());
                 String projectName = orderService.listToString(projects);
                 sjOrder1.setProjectNames(projectName);

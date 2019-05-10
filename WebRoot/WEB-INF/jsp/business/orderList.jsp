@@ -175,13 +175,13 @@
         {
             targets: 4,
             render: function (data, type, row, meta) {
-                return row.createName+"/"+row.createUserid;
+                return row.createName+"/<br/>"+row.createUserid;
             }
         },
         {
             targets: -4,
             render: function (data, type, row, meta) {
-                    return row.person+"/"+row.phone;
+                    return row.person+"/<br/>"+row.phone;
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600

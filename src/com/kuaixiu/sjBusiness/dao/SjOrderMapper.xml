@@ -217,7 +217,7 @@
             and id = #{id}
         </if>
         <if test="orderNo != null and orderNo != ''">
-            and order_no = #{orderNo}
+            and order_no like CONCAT('%', #{orderNo}, '%')
         </if>
         <if test="type != null and type != ''">
             and type = #{type}
@@ -226,7 +226,7 @@
             and state = #{state}
         </if>
         <if test="companyName != null and companyName != ''">
-            and company_name = #{companyName}
+            and company_name like CONCAT('%', #{companyName}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and province_id = #{provinceId}
@@ -307,10 +307,10 @@
             and create_time = #{createTime}
         </if>
         <if test="createUserid != null and createUserid != ''">
-            and create_userid = #{createUserid}
+            and create_userid like CONCAT('%', #{createUserid}, '%')
         </if>
         <if test="createName != null and createName != ''">
-            and create_name = #{createName}
+            and create_name like CONCAT('%', #{createName}, '%')
         </if>
         ORDER BY create_name DESC
     </select>
