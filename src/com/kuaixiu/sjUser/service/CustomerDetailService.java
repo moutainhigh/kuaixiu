@@ -4,10 +4,7 @@ package com.kuaixiu.sjUser.service;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.util.SmsSendUtil;
-import com.kuaixiu.sjBusiness.entity.AreaBranchOffice;
-import com.kuaixiu.sjBusiness.entity.AreaContractBody;
-import com.kuaixiu.sjBusiness.entity.AreaManagementUnit;
-import com.kuaixiu.sjBusiness.entity.SjCode;
+import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.dao.CustomerDetailMapper;
 import com.kuaixiu.sjUser.entity.CustomerDetail;
@@ -55,13 +52,18 @@ public class CustomerDetailService extends BaseService<CustomerDetail> {
         jsonObject.put("name", sjUser.getName());
         jsonObject.put("phone", sjUser.getPhone());
         StringBuilder ascription = new StringBuilder();
-        String cityCompany = cityCompanyService.queryById(customerDetail.getCityCompanyId()).getCityCompany();
+        AreaCityCompany areaCityCompany = cityCompanyService.queryById(customerDetail.getCityCompanyId());
+        String cityCompany = areaCityCompany.getCityCompany();
+        jsonObject.put("cityCompanyId", areaCityCompany.getId());
+        jsonObject.put("cityCompany", cityCompany);
         ascription.append(cityCompany);
         if (customerDetail.getManagementUnitId() != null) {
             AreaManagementUnit managementUnit1 = managementUnitService.queryById(customerDetail.getManagementUnitId());
             if (managementUnit1 != null) {
                 String managementUnit = managementUnit1.getManagementUnit();
                 ascription.append("/" + managementUnit);
+                jsonObject.put("managementUnitId", managementUnit1.getId());
+                jsonObject.put("managementUnit", managementUnit);
             }
         }
         if (customerDetail.getBranchOfficeId() != null) {
@@ -69,6 +71,8 @@ public class CustomerDetailService extends BaseService<CustomerDetail> {
             if (branchOffice1 != null) {
                 String branchOffice = branchOffice1.getBranchOffice();
                 ascription.append("/" + branchOffice);
+                jsonObject.put("branchOfficeId", branchOffice1.getId());
+                jsonObject.put("branchOffice", branchOffice);
             }
         }
         if (customerDetail.getContractBodyId() != null) {
@@ -76,8 +80,9 @@ public class CustomerDetailService extends BaseService<CustomerDetail> {
             if (contractBody1 != null) {
                 String contractBody = contractBody1.getContractBody();
                 ascription.append("/" + contractBody);
+                jsonObject.put("contractBodyId", contractBody1.getId());
+                jsonObject.put("contractBody", contractBody);
             }
-
         }
         jsonObject.put("ascription", ascription.toString());
         jsonObject.put("marketingNo", customerDetail.getMarketingNo());
