@@ -316,6 +316,8 @@ public class CustomerDetailController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
 
+            sessionUserService.removeSessionUser(request);
+
             String[] dname = request.getServerName().split("\\.");
             String phoneBase64 = Base64Util.getBase64(phone);
             CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 0);

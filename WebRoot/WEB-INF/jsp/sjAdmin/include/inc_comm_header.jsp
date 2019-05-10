@@ -2,19 +2,8 @@
 <%@ include file="/commons/taglibs.jsp" %>
 
 <div class="am-topbar-brand">
-    <strong>欢迎登陆M-超人</strong> -- 
-    <c:if test="${loginUserType == USER_TYPE_SYSTEM }">
+    <strong>欢迎登陆商机</strong> --
         <small>后台管理系统</small>
-    </c:if>
-    <c:if test="${loginUserType == USER_TYPE_PROVIDER }">
-        <small>连锁商版</small>
-    </c:if>
-    <c:if test="${loginUserType == USER_TYPE_SHOP }">
-        <small>门店商版</small>
-    </c:if>
-    <c:if test="${loginUserType == USER_TYPE_CUSTOMER_SERVICE }">
-        <small>客服管理</small>
-    </c:if>
 </div>
 
 <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
