@@ -497,14 +497,21 @@ public class BaseController {
      * @param arr 原图片2进制流
      * @return
      */
-    public byte[] imageCompress(byte[] arr){
+    public byte[] imageCompress(byte[] arr,MultipartFile mfile){
         byte[] byteArray = null;
+
+        String fileName = mfile.getOriginalFilename();                             //获得文件名
+        // 处理获取到的上传文件的文件名的路径部分，只保留文件名部分
+        fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+        // 得到上传文件的扩展名
+        String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+
         ByteArrayInputStream intputStream = new ByteArrayInputStream(arr);
-        Thumbnails.Builder<? extends InputStream> builder = Thumbnails.of(intputStream).scale(0.3f);//0.3f图片质量压缩比例，0.1~1之间，越小图片质量越差
+        Thumbnails.Builder<? extends InputStream> builder = Thumbnails.of(intputStream).scale(0.9f);//0.3f图片质量压缩比例，0.1~1之间，越小图片质量越差
         try {
             BufferedImage bufferedImage = builder.asBufferedImage();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "png", baos);
+            ImageIO.write(bufferedImage, fileExt, baos);
             byteArray = baos.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();

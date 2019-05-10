@@ -71,7 +71,6 @@ public class SjBackstageController extends BaseController {
     @RequestMapping(value = "/sj/order/list")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-
         String returnView = "business/orderList";
         return new ModelAndView(returnView);
     }
@@ -87,7 +86,6 @@ public class SjBackstageController extends BaseController {
     @RequestMapping(value = "/sj/order/unCheckedList")
     public ModelAndView unCheckedList(HttpServletRequest request,
                                       HttpServletResponse response) throws Exception {
-
         String returnView = "business/unCheckedList";
         return new ModelAndView(returnView);
     }
@@ -244,6 +242,19 @@ public class SjBackstageController extends BaseController {
         return result;
     }
 
+    @RequestMapping(value = "/sj/order/toAssign")
+    public ModelAndView add(HttpServletRequest request,
+                            HttpServletResponse response) {
+        try {
+            //获取省份地址
+            List<Address> provinceL = addressService.queryByPid("0");
+            request.setAttribute("provinceL", provinceL);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String returnView ="business/againOrder";
+        return new ModelAndView(returnView);
+    }
 
     /**
      * 筛选查询企业
@@ -264,14 +275,15 @@ public class SjBackstageController extends BaseController {
             String streetId = request.getParameter("addStreet");
             String project = request.getParameter("projectIds");
             List<String> projects = new ArrayList<>();
-            if (project.contains(",")) {
-                String[] projectIds1 = project.split(",");
-                for (int i = 0; i < projectIds1.length; i++) {
-                    String project1 = projectIds1[i];
-                    projects.add(project1);
+            if(StringUtils.isNotEmpty(project)){
+                if (project.contains(",")) {
+                    String[] projectIds1 = project.split(",");
+                    for (int i = 0; i < projectIds1.length; i++) {
+                        String project1 = projectIds1[i];
+                        projects.add(project1);
+                    }
                 }
             }
-
             ConstructionCompany constructionCompany = new ConstructionCompany();
             constructionCompany.setQueryStatusArray(projects);
             constructionCompany.setProvince(provinceId);
@@ -296,8 +308,6 @@ public class SjBackstageController extends BaseController {
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId());
                 company.setCompanyName(sjUser.getName());
             }
-
-
             page.setData(companies);
         } catch (Exception e) {
             e.printStackTrace();

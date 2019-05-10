@@ -144,7 +144,7 @@
         {//复选框
             targets: 3,
             render: function (data, type, row, meta) {
-                return row.person + "/" + row.phone;
+                return row.person + "/<br/>" + row.phone;
             }
         },
         {

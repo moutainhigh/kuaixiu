@@ -244,10 +244,13 @@
         myTable.ajax.reload(null, false);
     }
     function againOrderView(orderId,projectId) {
-        alert(orderId+"/"+projectId)
         $("#orderId").val(orderId);
         $("#projectIds").val(projectId);
-        $("#modal-againOrderView").modal("show");
+//        $("#modal-againOrderView").modal("show");
+        $("#modal-againOrderView").html("");
+        $("#modal-againOrderView").load("${ctx}/sj/order/toAssign.do", function () {
+            func_after_model_load(this);
+        });
     }
 
     /**

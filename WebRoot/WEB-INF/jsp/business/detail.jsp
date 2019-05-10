@@ -80,10 +80,10 @@
                 </div><!-- /.row -->
 
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>门头图片：
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
-                                <img src="${item.companyPictureUrl}" style="width: 80px;height:80px;"/>
+                                <img src="${item.companyPictureUrl}" width="260" height="180"/>
                             </c:forEach>
                         </h4>
                     </div><!-- /.col -->
@@ -162,7 +162,7 @@
                     </div><!-- /.row -->
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>待施工人：${sjOrder.buildPerson}/${sjOrder.buildPhone}</h4>
+                            <h4>待施工人：${sjOrder.buildPerson}</h4>
                         </div><!-- /.col -->
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <h4>单位：${sjOrder.buildCompany }</h4>
@@ -202,7 +202,7 @@
                 <td class="td-info">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>待施工人：${sjOrder.buildPerson}/${sjOrder.buildPhone}</h4>
+                            <h4>待施工人：${sjOrder.buildPerson}</h4>
                         </div><!-- /.col -->
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <h4>单位：${sjOrder.buildCompany }</h4>
@@ -228,17 +228,17 @@
                 <td class="td-info">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>竣工人：${sjOrder.completedPerson }/${sjOrder.completedPhone }</h4>
+                            <h4>竣工人：${sjOrder.completedPerson }</h4>
                         </div><!-- /.col -->
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <h4>竣工时间：<fmt:formatDate value="${sjOrder.completedTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <h4>合同图片：
                                 <c:forEach items="${contractPictures }" var="item" varStatus="i">
-                                    <img src="${item.contractPictureUrl}" style="width: 80px;height:80px;"/>
+                                    <img src="${item.contractPictureUrl}" width="260" height="180"/>
                                 </c:forEach>
                             </h4>
                         </div><!-- /.col -->

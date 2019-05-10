@@ -2,7 +2,6 @@ package com.kuaixiu.sjLogin.controller;
 
 import com.common.base.controller.BaseController;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
-import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -24,15 +23,6 @@ import java.math.BigDecimal;
 @Controller
 public class SjIndexController extends BaseController {
     private final Logger log = Logger.getLogger(SjIndexController.class);
-
-//    @Autowired
-//    private ProviderService providerService;
-//    @Autowired
-//    private OrderService orderService;
-//    @Autowired
-//    private EngineerService engineerService;
-//    @Autowired
-//    private CustomerService customerService;
 
     /**
      * 首页面
@@ -64,31 +54,7 @@ public class SjIndexController extends BaseController {
             BigDecimal orderWeekAmount = new BigDecimal("0");
             BigDecimal orderMonthAmount = new BigDecimal("0");
             BigDecimal allAmount = new BigDecimal("0");
-//            //判断用户类型系统管理员可以查看所有工程师
-//            if (su.getType() == SystemConstant.USER_TYPE_SYSTEM) {
-//                orderAllCount = orderService.queryAllCount(o);
-//                allAmount = orderService.queryAllAmount(o);
-//                orderDayCount = orderService.queryDayCount(o);
-//                orderDayAmount = orderService.queryDayAmount(o);
-//                engCount = engineerService.queryAllCount();
-//                customerCount = customerService.queryAllCount();
-//            }
-//            else if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
-//                Provider provider = providerService.queryByCode(su.getProviderCode());
-//                request.setAttribute("provider", provider);
-//                o.setProviderCode(provider.getCode());
-//                orderAllCount = orderService.queryAllCount(o);
-//                allAmount = orderService.queryAllAmount(o);
-//                orderWeekCount = orderService.queryWeekCount(o);
-//                orderWeekAmount = orderService.queryWeekAmount(o);
-//                engCount = engineerService.queryCountByProviderCode(provider.getCode());
-//            }
-//            else if (su.getType() == SystemConstant.USER_TYPE_SHOP) {
-//                allAmount = orderService.queryAllAmount(o);
-//                orderAllCount = orderService.queryAllCount(o);
-//                orderMonthCount = orderService.queryMonthCount(o);
-//                orderMonthAmount = orderService.queryMonthAmount(o);
-//            }
+            //判断用户类型系统管理员可以查看所有工程师
             request.setAttribute("orderDayCount", orderDayCount);
             request.setAttribute("orderWeekCount", orderWeekCount);
             request.setAttribute("orderMonthCount", orderMonthCount);

@@ -297,8 +297,9 @@ public class SjOrderController extends BaseController {
             MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
             MultipartFile mfile = rm.getFile(file);                             //获得前端页面传来的文件
             byte[] bfile = mfile.getBytes();                                    //获得文件的字节数组
-            if (checkFileSize(mfile.getSize(), 500, "k")) {
-                bfile = imageCompress(bfile);
+            if (checkFileSize(mfile.getSize(), 300, "k")) {
+                log.info("图片大小："+mfile.getSize()/1024 +"KB");
+                bfile = imageCompress(bfile,mfile);
             }
             if (bfile.length == 0) {
                 log.info("未上传图片");

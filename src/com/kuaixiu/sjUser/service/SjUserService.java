@@ -47,9 +47,6 @@ public class SjUserService extends BaseService<SjUser> {
         if (user == null) {
             return null;
         }
-//        else if (!passwd.equalsIgnoreCase(MD5Util.encodePassword(user.getPassword()))){
-//            return null;
-//        }
         return user;
     }
 
