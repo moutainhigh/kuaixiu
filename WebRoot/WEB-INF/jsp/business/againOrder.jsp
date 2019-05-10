@@ -21,28 +21,29 @@
                                 onchange="fn_select_address(2, this.value, '', 'add');" class="form-control-inline">
                             <option value="">--请选择--</option>
                             <c:forEach items="${provinceL }" var="item" varStatus="i">
-                                <option value="${item.areaId }">${item.area }</option>
+                                <option value="${item.areaId }"${item.areaId == 15 ? 'selected="selected"' : '' }>${item.area }</option>
                             </c:forEach>
                         </select>
 
                         <select id="addCity" name="addCity" onchange="fn_select_address(3, this.value, '', 'add');"
-                                class="form-control-inline" style="display: none;">
+                                class="form-control-inline">
                             <option value="">--请选择--</option>
+                            <c:forEach items="${cityL }" var="item" varStatus="i">
+                                <option value="${item.areaId }" ${item.areaId == 1213 ? 'selected="selected"' : '' }>${item.area }</option>
+                            </c:forEach>
                         </select>
 
                         <select id="addCounty" name="addCounty" onchange="fn_select_address(4, this.value, '', 'add');"
-                                class="form-control-inline" style="display: none;">
+                                class="form-control-inline">
                             <option value="">--请选择--</option>
+                            <c:forEach items="${areal }" var="item" varStatus="i">
+                                <option value="${item.areaId }" ${item.areaId == shop.county ? 'selected="selected"' : '' }>${item.area }</option>
+                            </c:forEach>
                         </select>
 
                         <select id="addStreet" name="addStreet" class="form-control-inline" style="display: none;">
                             <option value="">--请选择--</option>
                         </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <input type="text" id="addAddress" name="addAddress" class="form-control" placeholder="请输入详细地址">
                     </div>
                 </div>
                 <button type="submit" class="hide" id="againOrderBtn"></button>

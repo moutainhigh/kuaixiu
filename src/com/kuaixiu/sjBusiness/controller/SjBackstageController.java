@@ -248,7 +248,13 @@ public class SjBackstageController extends BaseController {
         try {
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
+            //获取市地址
+            List<Address> cityL = addressService.queryByPid("15");
+            //获取区县地址
+            List<Address> areal = addressService.queryByPid("1213");
             request.setAttribute("provinceL", provinceL);
+            request.setAttribute("cityL", cityL);
+            request.setAttribute("areal", areal);
         }catch (Exception e){
             e.printStackTrace();
         }
