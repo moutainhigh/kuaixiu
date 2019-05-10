@@ -131,7 +131,7 @@
         {"data": "person", "class": ""},
         {"data": "projectNames", "class": ""},
         {"data": "state", "class": ""},
-        {"data": "strCreateTime", "class": ""},
+        {"data": "strApprovalTime", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
@@ -207,7 +207,7 @@
         {
             targets: -2,
             render: function (data, type, row, meta) {
-                var ts = (new Date(row.newDate)) - (new Date(row.strCreateTime));//计算已等待的毫秒数
+                var ts = (new Date(row.newDate)) - (new Date(row.strApprovalTime));//计算已等待的毫秒数
                 var remainTime = ts / 1000 + 1;
                 if (remainTime < 0) {
                     remainTime = 0;

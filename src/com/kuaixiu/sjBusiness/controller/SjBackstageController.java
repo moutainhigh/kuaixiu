@@ -137,6 +137,9 @@ public class SjBackstageController extends BaseController {
                 sjOrder1.setProjectNames(projectName);
                 sjOrder1.setStrCreateTime(sdf.format(sjOrder1.getCreateTime()));
                 sjOrder1.setNewDate(sdf.format(new Date()));
+                if (sjOrder1.getApprovalTime() != null) {
+                    sjOrder1.setStrApprovalTime(sdf.format(sjOrder1.getApprovalTime()));
+                }
             }
             page.setData(sjOrders);
         } catch (Exception e) {
@@ -251,10 +254,10 @@ public class SjBackstageController extends BaseController {
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("cityL", cityL);
             request.setAttribute("areal", areal);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        String returnView ="business/againOrder";
+        String returnView = "business/againOrder";
         return new ModelAndView(returnView);
     }
 
@@ -277,7 +280,7 @@ public class SjBackstageController extends BaseController {
             String streetId = request.getParameter("addStreet");
             String project = request.getParameter("projectIds");
             List<String> projects = new ArrayList<>();
-            if(StringUtils.isNotEmpty(project)){
+            if (StringUtils.isNotEmpty(project)) {
                 if (project.contains(",")) {
                     String[] projectIds1 = project.split(",");
                     for (int i = 0; i < projectIds1.length; i++) {
@@ -335,12 +338,12 @@ public class SjBackstageController extends BaseController {
             String orderId = request.getParameter("orderId");
             String userId = request.getParameter("userId");
 
-            List<SjWorker> sjWorkers=sjWorkerService.getDao().queryByCompanyId(userId);
-            if(CollectionUtils.isEmpty(sjWorkers)){
+            List<SjWorker> sjWorkers = sjWorkerService.getDao().queryByCompanyId(userId);
+            if (CollectionUtils.isEmpty(sjWorkers)) {
                 return getSjResult(result, null, true, "0", null, "该单位没有员工");
             }
-            SjWorker sjWorker=sjWorkers.get(0);
-            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjWorker.getLoginId());
+            SjWorker sjWorker = sjWorkers.get(0);
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId());
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
@@ -353,7 +356,7 @@ public class SjBackstageController extends BaseController {
             sjOrder.setBuildPhone(sjUser.getPhone());
             orderService.saveUpdate(sjOrder);
             //工人接单数量加一
-            sjWorker.setBuildingNum(sjWorker.getBuildingNum()+1);
+            sjWorker.setBuildingNum(sjWorker.getBuildingNum() + 1);
             sjWorkerService.saveUpdate(sjWorker);
 
             getSjResult(result, null, true, "0", null, "指派成功");

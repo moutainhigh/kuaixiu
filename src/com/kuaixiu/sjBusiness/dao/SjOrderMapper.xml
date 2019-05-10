@@ -312,7 +312,7 @@
         <if test="createName != null and createName != ''">
             and create_name like CONCAT('%', #{createName}, '%')
         </if>
-        ORDER BY create_name DESC
+        ORDER BY create_time DESC
     </select>
 
     <!-- 查询列表 带分页 -->
@@ -419,7 +419,7 @@
         <if test="createName != null and createName != ''">
             and create_name = #{createName}
         </if>
-        ORDER BY create_name DESC
+        ORDER BY create_time DESC
     </select>
 
 </mapper>   
