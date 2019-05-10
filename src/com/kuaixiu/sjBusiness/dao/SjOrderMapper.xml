@@ -312,7 +312,12 @@
         <if test="createName != null and createName != ''">
             and create_name like CONCAT('%', #{createName}, '%')
         </if>
-        ORDER BY create_time DESC
+        <if test="isAssign != null and isAssign != ''">
+            ORDER BY approval_time DESC
+        </if>
+        <if test="isAssign == null or isAssign == ''">
+            ORDER BY create_time DESC
+        </if>
     </select>
 
     <!-- 查询列表 带分页 -->

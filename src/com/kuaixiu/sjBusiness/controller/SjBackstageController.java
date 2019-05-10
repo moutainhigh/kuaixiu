@@ -110,7 +110,9 @@ public class SjBackstageController extends BaseController {
             String createUser = request.getParameter("createUser");
             String companyName = request.getParameter("companyName");
             String state = request.getParameter("state");
+            String isAssign = request.getParameter("isAssign");//是否查询指派订单
             SjOrder sjOrder = new SjOrder();
+            sjOrder.setIsAssign(isAssign);
             sjOrder.setOrderNo(orderNo);
             if (StringUtils.isNotBlank(type)) {
                 sjOrder.setType(Integer.valueOf(type));
