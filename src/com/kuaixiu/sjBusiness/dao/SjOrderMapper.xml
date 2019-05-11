@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjOrderMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjOrder">
+        <result column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="type" property="type"/>
+        <result column="state" property="state"/>
+        <result column="company_name" property="companyName"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="city_id" property="cityId"/>
+        <result column="area_id" property="areaId"/>
+        <result column="street_id" property="streetId"/>
+        <result column="address_detail" property="addressDetail"/>
+        <result column="person" property="person"/>
+        <result column="phone" property="phone"/>
+        <result column="project_id" property="projectId"/>
+        <result column="group_net" property="groupNet"/>
+        <result column="single" property="single"/>
+        <result column="stayPerson" property="stayPerson"/>
+        <result column="approval_person" property="approvalPerson"/>
+        <result column="approval_note" property="approvalNote"/>
+        <result column="approval_time" property="approvalTime"/>
+        <result column="assign_person" property="assignPerson"/>
+        <result column="assign_time" property="assignTime"/>
+        <result column="build_person" property="buildPerson"/>
+        <result column="build_phone" property="buildPhone"/>
+        <result column="build_company" property="buildCompany"/>
+        <result column="end_time" property="endTime"/>
+        <result column="completed_person" property="completedPerson"/>
+        <result column="completed_phone" property="completedPhone"/>
+        <result column="completed_time" property="completedTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="create_name" property="createName"/>
+    </resultMap>
+
+    <!-- sj_order table all fields -->
+    <sql id="Base_Column_List">
+        id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object">
+        insert into sj_order
+        (id,order_no,type,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid,create_name)
+        values
+        (#{id},#{orderNo},#{type},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},now(),#{createUserid},#{createName})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object">
+        update sj_order 
+        set 
+            id=#{id},
+            order_no=#{orderNo},
+            type=#{type},
+            state=#{state},
+            company_name=#{companyName},
+            province_id=#{provinceId},
+            city_id=#{cityId},
+            area_id=#{areaId},
+            street_id=#{streetId},
+            address_detail=#{addressDetail},
+            person=#{person},
+            phone=#{phone},
+            project_id=#{projectId},
+            group_net=#{groupNet},
+            single=#{single},
+            stayPerson=#{stayPerson},
+            approval_person=#{approvalPerson},
+            approval_note=#{approvalNote},
+            approval_time=#{approvalTime},
+            assign_person=#{assignPerson},
+            assign_time=#{assignTime},
+            build_person=#{buildPerson},
+            build_phone=#{buildPhone},
+            build_company=#{buildCompany},
+            end_time=#{endTime},
+            completed_person=#{completedPerson},
+            completed_phone=#{completedPhone},
+            completed_time=#{completedTime},
+            create_time=#{createTime},
+            create_userid=#{createUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_order where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order where id = #{id}
+    </select>
+
+    <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order where order_no=#{orderNo} and create_userid=#{createUserid}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and order_no = #{orderNo}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="state != null and state != ''">
+            and state = #{state}
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and company_name = #{companyName}
+        </if>
+        <if test="provinceId != null and provinceId != ''">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and city_id = #{cityId}
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and area_id = #{areaId}
+        </if>
+        <if test="streetId != null and streetId != ''">
+            and street_id = #{streetId}
+        </if>
+        <if test="addressDetail != null and addressDetail != ''">
+            and address_detail = #{addressDetail}
+        </if>
+        <if test="person != null and person != ''">
+            and person = #{person}
+        </if>
+        <if test="phone != null and phone != ''">
+            and phone = #{phone}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="groupNet != null and groupNet != ''">
+            and group_not=#{groupNet}
+        </if>
+        <if test="single != null and single != ''">
+            and single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''">
+            and stayPerson = #{stayPerson}
+        </if>
+        <if test="approvalPerson != null and approvalPerson != ''">
+            and approval_person = #{approvalPerson}
+        </if>
+        <if test="approvalNote != null and approvalNote != ''">
+            and approval_note = #{approvalNote}
+        </if>
+        <if test="approvalTime != null and approvalTime != ''">
+            and approval_time = #{approvalTime}
+        </if>
+        <if test="assignPerson != null and assignPerson != ''">
+            and assign_person = #{assignPerson}
+        </if>
+        <if test="assignTime != null and assignTime != ''">
+            and assign_time = #{assignTime}
+        </if>
+        <if test="buildPerson != null and buildPerson != ''">
+            and build_person = #{buildPerson}
+        </if>
+        <if test="buildPhone != null and buildPhone != ''">
+            and build_phone = #{buildPhone}
+        </if>
+        <if test="buildCompany != null and buildCompany != ''">
+            and build_company = #{buildCompany}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and end_time = #{endTime}
+        </if>
+        <if test="completedPerson != null and completedPerson != ''">
+            and completed_person = #{completedPerson}
+        </if>
+        <if test="completedPhone != null and completedPhone != ''">
+            and completed_phone = #{completedPhone}
+        </if>
+        <if test="completedTime != null and completedTime != ''">
+            and completed_time = #{completedTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''">
+            and create_userid = #{createUserid}
+        </if>
+        <if test="createName != null and createName != ''">
+            and create_name = #{createName}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="state != null and state != ''">
+            and state = #{state}
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and company_name like CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="provinceId != null and provinceId != ''">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and city_id = #{cityId}
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and area_id = #{areaId}
+        </if>
+        <if test="streetId != null and streetId != ''">
+            and street_id = #{streetId}
+        </if>
+        <if test="addressDetail != null and addressDetail != ''">
+            and address_detail = #{addressDetail}
+        </if>
+        <if test="person != null and person != ''">
+            and person = #{person}
+        </if>
+        <if test="phone != null and phone != ''">
+            and phone = #{phone}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="groupNet != null and groupNet != ''">
+            and group_not=#{groupNet}
+        </if>
+        <if test="single != null and single != ''">
+            and single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''">
+            and stayPerson = #{stayPerson}
+        </if>
+        <if test="approvalPerson != null and approvalPerson != ''">
+            and approval_person = #{approvalPerson}
+        </if>
+        <if test="approvalNote != null and approvalNote != ''">
+            and approval_note = #{approvalNote}
+        </if>
+        <if test="approvalTime != null and approvalTime != ''">
+            and approval_time = #{approvalTime}
+        </if>
+        <if test="assignPerson != null and assignPerson != ''">
+            and assign_person = #{assignPerson}
+        </if>
+        <if test="assignTime != null and assignTime != ''">
+            and assign_time = #{assignTime}
+        </if>
+        <if test="buildPerson != null and buildPerson != ''">
+            and build_person = #{buildPerson}
+        </if>
+        <if test="buildPhone != null and buildPhone != ''">
+            and build_phone = #{buildPhone}
+        </if>
+        <if test="buildCompany != null and buildCompany != ''">
+            and build_company = #{buildCompany}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and end_time = #{endTime}
+        </if>
+        <if test="completedPerson != null and completedPerson != ''">
+            and completed_person = #{completedPerson}
+        </if>
+        <if test="completedPhone != null and completedPhone != ''">
+            and completed_phone = #{completedPhone}
+        </if>
+        <if test="completedTime != null and completedTime != ''">
+            and completed_time = #{completedTime}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''">
+            and create_userid like CONCAT('%', #{createUserid}, '%')
+        </if>
+        <if test="createName != null and createName != ''">
+            and create_name like CONCAT('%', #{createName}, '%')
+        </if>
+        <if test="isAssign != null and isAssign != ''">
+            ORDER BY approval_time DESC
+        </if>
+        <if test="isAssign == null or isAssign == ''">
+            ORDER BY create_time DESC
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryWebListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and order_no = #{orderNo}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="state != null and state != ''">
+            <if test="state == 300">
+                and state in ('200','300','400')
+            </if>
+            <if test="state != 300">
+                and state = #{state}
+            </if>
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and company_name = #{companyName}
+        </if>
+        <if test="provinceId != null and provinceId != ''">
+            and province_id = #{provinceId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and city_id = #{cityId}
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and area_id = #{areaId}
+        </if>
+        <if test="streetId != null and streetId != ''">
+            and street_id = #{streetId}
+        </if>
+        <if test="addressDetail != null and addressDetail != ''">
+            and address_detail = #{addressDetail}
+        </if>
+        <if test="person != null and person != ''">
+            and person = #{person}
+        </if>
+        <if test="phone != null and phone != ''">
+            and phone = #{phone}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="groupNet != null and groupNet != ''">
+            and group_not=#{groupNet}
+        </if>
+        <if test="single != null and single != ''">
+            and single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''">
+            and stayPerson = #{stayPerson}
+        </if>
+        <if test="approvalPerson != null and approvalPerson != ''">
+            and approval_person = #{approvalPerson}
+        </if>
+        <if test="approvalNote != null and approvalNote != ''">
+            and approval_note = #{approvalNote}
+        </if>
+        <if test="approvalTime != null and approvalTime != ''">
+            and approval_time = #{approvalTime}
+        </if>
+        <if test="assignPerson != null and assignPerson != ''">
+            and assign_person = #{assignPerson}
+        </if>
+        <if test="assignTime != null and assignTime != ''">
+            and assign_time = #{assignTime}
+        </if>
+        <if test="buildPerson != null and buildPerson != ''">
+            and build_person = #{buildPerson}
+        </if>
+        <if test="buildPhone != null and buildPhone != ''">
+            and build_phone = #{buildPhone}
+        </if>
+        <if test="buildCompany != null and buildCompany != ''">
+            and build_company = #{buildCompany}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and end_time = #{endTime}
+        </if>
+        <if test="completedPerson != null and completedPerson != ''">
+            and completed_person = #{completedPerson}
+        </if>
+        <if test="completedPhone != null and completedPhone != ''">
+            and completed_phone = #{completedPhone}
+        </if>
+        <if test="completedTime != null and completedTime != ''">
+            and completed_time = #{completedTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''">
+            and create_userid = #{createUserid}
+        </if>
+        <if test="createName != null and createName != ''">
+            and create_name = #{createName}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>   

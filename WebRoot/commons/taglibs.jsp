@@ -15,6 +15,10 @@
 <c:set var="commonurl_logout" value="${ctx}/admin/logout.do" />
 
 
+<c:set var="commonurl_sj_home" value="${ctx}/sj/admin/index.do" />
+
+<c:set var="commonurl_sj_logout" value="${ctx}/sj/admin/logout.do" />
+
 <c:set var="pc_home" value="${ctx}/index.do" />
 
 

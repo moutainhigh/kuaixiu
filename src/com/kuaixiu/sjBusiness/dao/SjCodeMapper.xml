@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjCodeMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjCode" >
+        <result column="phone" property="phone"/>
+        <result column="code" property="code"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_tIme" property="updateTime"/>
+    </resultMap>
+    
+    <!-- sj_code table all fields -->
+    <sql id="Base_Column_List" >
+        phone,code,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_tIme`,'%Y-%m-%d %H:%i:%s')update_tIme
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_code
+        (phone,code,create_time,update_tIme)
+        values
+        (#{phone},#{code},now(),#{updateTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_code 
+        set 
+            phone=#{phone},
+            code=#{code},
+            update_tIme=now()
+        where  phone=#{phone}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_code where  phone=#{phone}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_code where phone=#{phone}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_code
+        where 1=1
+        <if test="phone != null and phone != ''" >
+            and phone = #{phone}
+        </if>
+        <if test="code != null and code != ''" >
+            and code = #{code}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_tIme = #{updateTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_code
+        where 1=1
+        <if test="phone != null and phone != ''" >
+            and phone = #{phone}
+        </if>
+        <if test="code != null and code != ''" >
+            and code = #{code}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_tIme = #{updateTime}
+        </if>
+    </select>
+
+</mapper>   

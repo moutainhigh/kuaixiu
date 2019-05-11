@@ -17,4 +17,7 @@ public interface Consts {
     //H5回收列表查询手机号免登录，cookie 的key
     public static final String COOKIE_H5_PHONE = "cookie_h5_phone";
     public static final String COOKIE_NEW_H5_PHONE = "cookie_new_h5_phone";
+
+    //商机登录手机号  key
+    public static final String COOKIE_SJ_PHONE = "__sj";
 }

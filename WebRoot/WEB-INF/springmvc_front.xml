@@ -88,7 +88,18 @@
                 <value>^/admin/checkCookie\.do.*</value>
                 <value>^/admin/forgot\.do.*</value>
                 <value>^/admin/forgotCheck\.do.*</value>
-                
+
+                <!-- 商机登录 -->
+                <value>^/sj/admin</value>
+                <value>^/sj/admin/</value>
+                <value>^/sj/admin/login\.do.*</value>
+                <value>^/sj/admin/logout\.do.*</value>
+                <value>^/sj/admin/checkLogin\.do.*</value>
+                <value>^/sj/admin/checkCookie\.do.*</value>
+                <value>^/sj/admin/forgot\.do.*</value>
+                <value>^/sj/admin/forgotCheck\.do.*</value>
+                <value>^/sj/wechat/.*</value>
+
                 <!--微信端-->
                 <value>^/wechat/repair/.*</value>
                 <value>^/wechat/reworkOrder/.*</value>

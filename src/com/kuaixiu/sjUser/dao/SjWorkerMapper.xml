@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjUser.dao.SjWorkerMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.SjWorker" >
+        <result column="id" property="id"/>
+        <result column="login_id" property="loginId"/>
+        <result column="company_login_id" property="companyLoginId"/>
+        <result column="is_del" property="isDel"/>
+        <result column="building_num" property="buildingNum"/>
+    </resultMap>
+    
+    <!-- sj_worker table all fields -->
+    <sql id="Base_Column_List" >
+        id,login_id,company_login_id,is_del,building_num
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_worker
+        (id,login_id,company_login_id,is_del,building_num)
+        values
+        (#{id},#{loginId},#{companyLoginId},#{isDel},#{buildingNum})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_worker 
+        set 
+            id=#{id},
+            login_id=#{loginId},
+            company_login_id=#{companyLoginId},
+            is_del=#{isDel},
+            building_num=#{buildingNum}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_worker where id = #{id}
+    </delete>
+
+    <select id="queryByCompanyId"  resultMap="BaseResultMap" parameterType="Object">
+        select * from sj_worker
+        where company_login_id=#{companyLoginId}
+        and is_del=0
+        ORDER BY building_num
+    </select>
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_worker where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_worker
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and login_id = #{loginId}
+        </if>
+        <if test="companyLoginId != null and companyLoginId != ''" >
+            and company_login_id = #{companyLoginId}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="buildingNum != null and buildingNum != ''" >
+            and building_num = #{buildingNum}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_worker
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and login_id = #{loginId}
+        </if>
+        <if test="companyLoginId != null and companyLoginId != ''" >
+            and company_login_id = #{companyLoginId}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="buildingNum != null and buildingNum != ''" >
+            and building_num = #{buildingNum}
+        </if>
+    </select>
+
+</mapper>   
