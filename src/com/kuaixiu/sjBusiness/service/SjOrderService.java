@@ -3,6 +3,7 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
+import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
@@ -76,7 +77,11 @@ public class SjOrderService extends BaseService<SjOrder> {
         if (address != null) {
             street = address.getArea();
         }
-        jsonObject.put("address", province + city + area + street);
+        String addressDetail = "";
+        if (StringUtils.isNotBlank(o.getAddressDetail())) {
+            addressDetail = o.getAddressDetail();
+        }
+        jsonObject.put("address", province + city + area + street + addressDetail);
         jsonObject.put("person", o.getPerson());
         jsonObject.put("personPhone", o.getPhone());
         if (o.getType() == 2) {
@@ -131,23 +136,24 @@ public class SjOrderService extends BaseService<SjOrder> {
 
     /**
      * 1://审批人 2://指派人 3://施工人 4://竣工人
+     *
      * @param num
      * @return
      */
-    public String setStayPerson(Integer num){
-        String stayPerson="";
-        switch (num){
+    public String setStayPerson(Integer num) {
+        String stayPerson = "";
+        switch (num) {
             case 1://审批人
-                stayPerson="admin";
+                stayPerson = "admin";
                 break;
             case 2://指派人
-                stayPerson="admin";
+                stayPerson = "admin";
                 break;
             case 3://施工人
-                stayPerson="admin";
+                stayPerson = "admin";
                 break;
             case 4://竣工人
-                stayPerson="admin";
+                stayPerson = "admin";
                 break;
         }
         return stayPerson;
