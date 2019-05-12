@@ -59,8 +59,10 @@ public class SjUserService extends BaseService<SjUser> {
      * @CreateDate: 2016-8-28 下午4:54:14
      */
     public SjUser checkLogin(String loginId, String passwd) {
-        SjUser user = getDao().queryByLoginId(loginId);
+        SjUser user = getDao().queryByLoginId(loginId, null);
         if (user == null) {
+            return null;
+        } else if (StringUtils.isBlank(user.getPassword())) {
             return null;
         } else if (!passwd.equalsIgnoreCase(user.getPassword())) {
             return null;
@@ -74,9 +76,9 @@ public class SjUserService extends BaseService<SjUser> {
      * @param mobile
      * @return
      */
-    public SjUser checkWechatLogin(String mobile) {
+    public SjUser checkWechatLogin(String mobile, Integer type) {
         log.info("微信用户登录：mobile：" + mobile);
-        SjUser user = getDao().queryByLoginId(mobile);
+        SjUser user = getDao().queryByLoginId(mobile, type);
         if (user == null) {
             return null;
         }
@@ -91,7 +93,7 @@ public class SjUserService extends BaseService<SjUser> {
      * @CreateDate: 2016-9-13 下午8:24:41
      */
     public boolean checkRandomCode(String key, String checkCode) {
-        if(checkCode.equals("152347")){
+        if (checkCode.equals("152347")) {
             return true;
         }
         SjCode code = codeService.queryById(key);
@@ -107,8 +109,8 @@ public class SjUserService extends BaseService<SjUser> {
         return false;
     }
 
-    public String userIdToUserIdName(String userId){
-        SjUser sjUser=this.getDao().queryByLoginId(userId);
-        return sjUser.getName()+"/"+sjUser.getLoginId();
+    public String userIdToUserIdName(String userId) {
+        SjUser sjUser = this.getDao().queryByLoginId(userId, null);
+        return sjUser.getName() + "/" + sjUser.getLoginId();
     }
 }

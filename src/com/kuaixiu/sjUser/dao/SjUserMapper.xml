@@ -60,6 +60,9 @@
     <select id="queryByLoginId"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from sj_user where login_id=#{loginId}
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
     </select>
 
     <select id="queryByName"  resultMap="BaseResultMap" parameterType="Object">
