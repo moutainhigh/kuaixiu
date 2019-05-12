@@ -78,7 +78,7 @@ public class CustomerDetailController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "市公司为空");
             }
 
-            SjUser user = userService.checkWechatLogin(phone);
+            SjUser user = userService.checkWechatLogin(phone,2);
             if (!userService.checkRandomCode(phone, code)) {
                 return getSjResult(result, null, false, "3", null, "验证码错误");
             } else if (user != null) {
@@ -130,17 +130,17 @@ public class CustomerDetailController extends BaseController {
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(code)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
-            SjUser user = userService.checkWechatLogin(phone);
+            SjUser user = userService.checkWechatLogin(phone,2);
             if (!userService.checkRandomCode(phone, code)) {
                 return getSjResult(result, null, false, "3", null, "验证码错误");
             } else if (user == null) {
                 return getSjResult(result, null, false, "1", null, "该手机用户不存在");
             }
-//            if (isLogin == 1) {
+            if (isLogin == 1) {
                 String[] dname = request.getServerName().split("\\.");
                 String phoneBase64 = Base64Util.getBase64(phone);
                 CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
-//            }
+            }
             //初始化SessionUser
             sessionUserService.initSessionUser(user, request);
             getSjResult(result, null, true, "0", null, "登录成功");
@@ -204,7 +204,7 @@ public class CustomerDetailController extends BaseController {
             }
             //3.base64解密用户名
             String phone = Base64Util.getFromBase64(phoneStr);
-            SjUser user = userService.checkWechatLogin(phone);
+            SjUser user = userService.checkWechatLogin(phone,2);
             if (user == null) {
                 return getSjResult(result, null, false, "1", null, "该手机用户不存在");
             }
@@ -238,7 +238,7 @@ public class CustomerDetailController extends BaseController {
             if (StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
-            SjUser sjUser = userService.getDao().queryByLoginId(phone);
+            SjUser sjUser = userService.getDao().queryByLoginId(phone,2);
             CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(phone);
             JSONObject jsonObject = customerDetailService.getUserToJsonObject(sjUser, customerDetail);
 
@@ -274,7 +274,7 @@ public class CustomerDetailController extends BaseController {
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(name) || null == cityCompanyId) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
-            SjUser sjUser = userService.getDao().queryByLoginId(phone);
+            SjUser sjUser = userService.getDao().queryByLoginId(phone,2);
             CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(phone);
             if (sjUser == null || customerDetail == null) {
                 return getSjResult(result, null, false, "3", null, "参数错误");
@@ -315,7 +315,6 @@ public class CustomerDetailController extends BaseController {
             if (StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
-
             sessionUserService.removeSessionUser(request);
 
             String[] dname = request.getServerName().split("\\.");

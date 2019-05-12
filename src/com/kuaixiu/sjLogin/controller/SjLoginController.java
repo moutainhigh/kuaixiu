@@ -145,7 +145,6 @@ public class SjLoginController extends BaseController {
     public ResultData checkLogin(HttpServletRequest request,
                                  HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
-        Map<String, Object> resultMap = Maps.newHashMap();
         try {
             //获取用户名称
             String loginId = request.getParameter("loginId");
@@ -154,15 +153,18 @@ public class SjLoginController extends BaseController {
             //是否选中自动登录
             String isChecked = request.getParameter("autoLogin");
             SjUser user = userService.checkLogin(loginId, passwd);
+            if (StringUtils.isBlank(loginId) || StringUtils.isBlank(passwd)) {
+                return getSjResult(result, null, false, "2", "用户名或密码不能为空", null);
+            }
             if (user == null) {
-                return getSjResult(result, null, false, "2", "用户名或密码错误",null);
+                return getSjResult(result, null, false, "2", "用户名或密码错误", null);
             } else if (user.getIsDel() == 1) {
-                return getSjResult(result, null, false, "3", "用户名已删除",null);
+                return getSjResult(result, null, false, "3", "用户名已删除", null);
             }
             //初始化SessionUser
             sessionUserService.initSessionUser(user, request);
 
-            getSjResult(result, null, true, "0", "登录成功",null);
+            getSjResult(result, null, true, "0", "登录成功", null);
 
             String[] dname = request.getServerName().split("\\.");
             //自动登录COOKIE存储
@@ -185,7 +187,7 @@ public class SjLoginController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            getSjResult(result, null, false, "5", "系统异常请稍后",null);
+            getSjResult(result, null, false, "5", "系统异常请稍后", null);
         }
         return result;
     }

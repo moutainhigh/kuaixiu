@@ -1,6 +1,5 @@
 package com.kuaixiu.sjBusiness.controller;
 
-
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
@@ -312,7 +311,7 @@ public class SjBackstageController extends BaseController {
                 List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId());
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId(),null);
                 company.setCompanyName(sjUser.getName());
             }
             page.setData(companies);
@@ -345,7 +344,7 @@ public class SjBackstageController extends BaseController {
                 return getSjResult(result, null, true, "0", null, "该单位没有员工");
             }
             SjWorker sjWorker = sjWorkers.get(0);
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId());
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId(),null);
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);

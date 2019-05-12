@@ -126,7 +126,7 @@ public class SjOrderController extends BaseController {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
             }
-            SjUser user = userService.getDao().queryByLoginId(phone);
+            SjUser user = userService.getDao().queryByLoginId(phone,null);
             if (user == null) {
                 return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
             }
