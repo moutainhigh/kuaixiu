@@ -80,10 +80,14 @@ public class SjOrderService extends BaseService<SjOrder> {
             Address address = addressService.queryByAreaId(o.getStreetId());
             street = address.getArea();
             jsonObject.put("streetId", o.getStreetId());
+            jsonObject.put("streetName",street);
         }
         jsonObject.put("provinceId", o.getProvinceId());
+        jsonObject.put("provinceName", province);
         jsonObject.put("cityId", o.getCityId());
+        jsonObject.put("cityName", city);
         jsonObject.put("areaId", o.getAreaId());
+        jsonObject.put("areaName", area);
         String addressDetail = "";
         if (StringUtils.isNotBlank(o.getAddressDetail())) {
             addressDetail = o.getAddressDetail();

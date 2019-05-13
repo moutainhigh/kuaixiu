@@ -1,11 +1,13 @@
 package com.kuaixiu.sjUser.service;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.SystemException;
 import com.common.util.Base64Util;
 import com.common.util.Consts;
 import com.common.util.CookiesUtil;
+import com.kuaixiu.sjUser.entity.Menu;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.system.api.entity.ResultData;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 /**
  * SysUser Service
@@ -60,10 +63,14 @@ public class SjSessionUserService {
         su.setUserAuthoritys(menuService.queryMenusByUserId(su.getUserId()));
         //设置用户菜单
         su.setMenuList(menuService.dealSysMenusByUserAuthoritys(su.getUserAuthoritys()));
-        
+        List<Menu> menuList=su.getMenuList();
+        Menu menu=menuList.get(0);
+        List<Menu> menuList1=menu.getSubMenuList();
+
         //保存用户到session
         HttpSession session = request.getSession();
         session.setAttribute(SystemConstant.SESSION_SJ_USER_KEY, su);
+        session.setAttribute("imdexUrl", menuList1.get(0).getHref());
         session.setAttribute("sysMenuList", su.getMenuList());
         session.setAttribute("loginUserName", su.getUserName());
         session.setAttribute("loginUserType", su.getType());

@@ -256,6 +256,9 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "0", null, "参数为空");
             }
             SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
+            if(sjOrder==null){
+                return getSjResult(result, null, false, "0", null, "订单号错误");
+            }
             JSONObject jsonObject = orderService.sjOrderToObejct(sjOrder);
 
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
