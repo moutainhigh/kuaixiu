@@ -475,7 +475,6 @@ public class BaseController {
      * @return
      */
     protected boolean checkFileSize(Long len, int size, String unit) {
-//        long len = file.length();
         double fileSize = 0;
         if ("B".equals(unit.toUpperCase())) {
             fileSize = (double) len;

@@ -2,9 +2,11 @@ package com.kuaixiu.sjBusiness.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
+import com.kuaixiu.sjBusiness.entity.ApprovalNote;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
+import com.kuaixiu.sjBusiness.service.ApprovalNoteService;
 import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.OrderContractPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
@@ -58,6 +60,8 @@ public class SjBackstageController extends BaseController {
     private ConstructionCompanyService constructionCompanyService;
     @Autowired
     private SjWorkerService sjWorkerService;
+    @Autowired
+    private ApprovalNoteService approvalNoteService;
 
     /**
      * 订单列表
@@ -234,6 +238,12 @@ public class SjBackstageController extends BaseController {
             }
             sjOrder.setStayPerson(orderService.setStayPerson(2));
             orderService.saveUpdate(sjOrder);
+
+            ApprovalNote approvalNote=new ApprovalNote();
+            approvalNote.setOrderNo(sjOrder.getOrderNo());
+            approvalNote.setNote(note);
+            approvalNoteService.add(approvalNote);
+
             getSjResult(result, null, true, "0", null, "获取成功");
         } catch (Exception e) {
             e.printStackTrace();

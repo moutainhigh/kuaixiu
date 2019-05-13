@@ -2,62 +2,55 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.sjBusiness.dao.OrderCompanyPictureMapper" >
+<mapper namespace="com.kuaixiu.sjBusiness.dao.ApprovalNoteMapper" >
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.OrderCompanyPicture" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.ApprovalNote" >
         <result column="id" property="id"/>
         <result column="order_no" property="orderNo"/>
-        <result column="company_picture_url" property="companyPictureUrl"/>
+        <result column="note" property="note"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
     
-    <!-- sj_order_company_picture table all fields -->
+    <!-- sj_approval_note table all fields -->
     <sql id="Base_Column_List" >
-        id,order_no,company_picture_url
+        id,order_no,note,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
-        insert into sj_order_company_picture
-        (id,order_no,company_picture_url)
+        insert into sj_approval_note
+        (id,order_no,note,create_time)
         values
-        (#{id},#{orderNo},#{companyPictureUrl})
+        (#{id},#{orderNo},#{note},now())
     </insert>
 
     <!-- 根据id，修改记录-->
     <update id="update" parameterType="Object" >
-        update sj_order_company_picture 
+        update sj_approval_note 
         set 
             id=#{id},
             order_no=#{orderNo},
-            company_picture_url=#{companyPictureUrl}
+            note=#{note},
+            create_time=#{createTime}
         where id=#{id}
     </update>
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
-        delete from sj_order_company_picture where id = #{id}
-    </delete>
-
-    <delete id="deleteByOrderNo" parameterType="Object">
-        delete from sj_order_company_picture where order_no=#{orderNo}
+        delete from sj_approval_note where id = #{id}
     </delete>
     
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
-        from sj_order_company_picture where id = #{id}
-    </select>
-
-    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
-        from sj_order_company_picture where order_no=#{orderNo}
+        from sj_approval_note where id = #{id}
     </select>
 
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from sj_order_company_picture
+        from sj_approval_note
         where 1=1
         <if test="id != null and id != ''" >
             and id = #{id}
@@ -65,8 +58,11 @@
         <if test="orderNo != null and orderNo != ''" >
             and order_no = #{orderNo}
         </if>
-        <if test="companyPictureUrl != null and companyPictureUrl != ''" >
-            and company_picture_url = #{companyPictureUrl}
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
         </if>
     </select>
     
@@ -74,7 +70,7 @@
     <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from sj_order_company_picture
+        from sj_approval_note
         where 1=1
         <if test="id != null and id != ''" >
             and id = #{id}
@@ -82,8 +78,11 @@
         <if test="orderNo != null and orderNo != ''" >
             and order_no = #{orderNo}
         </if>
-        <if test="companyPictureUrl != null and companyPictureUrl != ''" >
-            and company_picture_url = #{companyPictureUrl}
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
         </if>
     </select>
 

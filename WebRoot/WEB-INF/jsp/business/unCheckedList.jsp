@@ -149,6 +149,13 @@
                 return html;
             }
         },
+        {
+            targets: 1,
+            render: function (data, type, row, meta) {
+                var html = "<a href=\"javascript:void(0);\" onclick=\"toDetail('" + row.id + "');\">" + row.orderNo + "</a>";
+                return html;
+            }
+        },
         {//复选框
             targets: 3,
             render: function (data, type, row, meta) {
@@ -252,6 +259,10 @@
         $("#modal-againOrderView").load("${ctx}/sj/order/toAssign.do", function () {
             func_after_model_load(this);
         });
+    }
+
+    function toDetail(id) {
+        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
     }
 
     /**

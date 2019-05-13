@@ -8,6 +8,7 @@ import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 
+import com.kuaixiu.sjBusiness.entity.SjProject;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
@@ -62,24 +63,31 @@ public class SjOrderService extends BaseService<SjOrder> {
 
     public JSONObject sjOrderToObejct(SjOrder o) {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("phone", o.getCreateUserid());
         jsonObject.put("type", o.getType());
+        jsonObject.put("crmNo", o.getCrmNo());
         jsonObject.put("orderNo", o.getOrderNo());
         jsonObject.put("companyName", o.getCompanyName());
         jsonObject.put("state", o.getState());
         jsonObject.put("createTime", o.getCreateTime());
         jsonObject.put("stayPerson", o.getStayPerson());
-        jsonObject.put("projects", getProject(o.getProjectId()));
+        jsonObject.put("projects", getProjectIds(o.getProjectId()));
         String province = addressService.queryByAreaId(o.getProvinceId()).getArea();
         String city = addressService.queryByAreaId(o.getCityId()).getArea();
         String area = addressService.queryByAreaId(o.getAreaId()).getArea();
-        Address address = addressService.queryByAreaId(o.getStreetId());
         String street = "";
-        if (address != null) {
+        if (StringUtils.isNotBlank(o.getStreetId())) {
+            Address address = addressService.queryByAreaId(o.getStreetId());
             street = address.getArea();
+            jsonObject.put("streetId", o.getStreetId());
         }
+        jsonObject.put("provinceId", o.getProvinceId());
+        jsonObject.put("cityId", o.getCityId());
+        jsonObject.put("areaId", o.getAreaId());
         String addressDetail = "";
         if (StringUtils.isNotBlank(o.getAddressDetail())) {
             addressDetail = o.getAddressDetail();
+            jsonObject.put("addressDetail", addressDetail);
         }
         jsonObject.put("address", province + city + area + street + addressDetail);
         jsonObject.put("person", o.getPerson());
@@ -89,6 +97,11 @@ public class SjOrderService extends BaseService<SjOrder> {
             jsonObject.put("group", o.getGroupNet());
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
+        if (o.getState() == 200 || o.getState() == 600) {
+            jsonObject.put("approvalPerson", o.getApprovalPerson());
+            jsonObject.put("approvalTime", o.getApprovalTime());
+            jsonObject.put("approvalNote", o.getApprovalNote());
+        }
         return jsonObject;
     }
 
@@ -99,6 +112,19 @@ public class SjOrderService extends BaseService<SjOrder> {
             images.add(companyPicture1.getCompanyPictureUrl());
         }
         return images;
+    }
+
+    public List<JSONObject> getProjectIds(String projectIds) {
+        String[] projectIds1 = projectIds.split(",");
+        List<JSONObject> projects = new ArrayList<>();
+        for (int i = 0; i < projectIds1.length; i++) {
+            JSONObject object=new JSONObject();
+            SjProject project = projectService.queryById(projectIds1[i]);
+            object.put("projectId",project.getId());
+            object.put("project",project.getProject());
+            projects.add(object);
+        }
+        return projects;
     }
 
     public List<String> getProject(String projectIds) {

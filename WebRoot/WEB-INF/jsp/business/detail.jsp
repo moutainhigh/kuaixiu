@@ -18,22 +18,22 @@
 
         <h4>
             订单状态：
-            <c:if test="${order.state==100}">
+            <c:if test="${sjOrder.state==100}">
                 待审核
             </c:if>
-            <c:if test="${order.state==200}">
+            <c:if test="${sjOrder.state==200}">
                 待派单
             </c:if>
-            <c:if test="${order.state==300}">
+            <c:if test="${sjOrder.state==300}">
                 待施工
             </c:if>
-            <c:if test="${order.state==400}">
+            <c:if test="${sjOrder.state==400}">
                 待竣工
             </c:if>
-            <c:if test="${order.state==500}">
+            <c:if test="${sjOrder.state==500}">
                 已完成
             </c:if>
-            <c:if test="${order.state==600}">
+            <c:if test="${sjOrder.state==600}">
                 未通过
             </c:if>
         </h4>
@@ -83,7 +83,7 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>门头图片：
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
-                                <img src="${item.companyPictureUrl}" width="260" height="180"/>
+                                <img src="${item.companyPictureUrl}" width="90" height="80"/>
                             </c:forEach>
                         </h4>
                     </div><!-- /.col -->
