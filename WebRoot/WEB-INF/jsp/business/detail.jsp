@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/commons/taglibs.jsp" %>
 <link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
+<link rel="stylesheet" href="${webResourceUrl}/resource/layui/css/modules/laydate/default/laydate.css">
+<link rel="stylesheet" href="${webResourceUrl}/resource/layui/css/modules/layer/default/layer.css">
+<link rel="stylesheet" href="${webResourceUrl}/resource/layui/css/modules/code.css">
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">商机订单管理</a></strong>
@@ -83,7 +86,7 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>门头图片：
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
-                                <img src="${item.companyPictureUrl}" width="90" height="80"/>
+                                <img src="${item.companyPictureUrl}" class="layui-upload-img" onclick="zoomImage('${item.companyPictureUrl}')" width="90" height="80"/>
                             </c:forEach>
                         </h4>
                     </div><!-- /.col -->
@@ -249,10 +252,30 @@
     </table>
 </div>
 <!-- /am-g -->
-
+<script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     function toList() {
         func_reload_page("${ctx}/sj/order/list.do");
+    }
+
+    function zoomImage(url) {
+//        var img = new Image();
+//        img.src = url;
+        var imgHtml = "<img src='" + url + "' width='500' height='auto'/>";
+        //弹出层
+        layer.open({
+            type: 1,
+            shade: 0.8,
+            offset: 'auto',
+            area: ['auto', 'auto'],
+            shadeClose:true,
+            scrollbar: false,
+            title: "图片预览", //不显示标题
+            content: imgHtml //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+//            cancel: function () {
+//                layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });
+//            }
+        });
     }
 
     function orderCancel(id, isPast) {

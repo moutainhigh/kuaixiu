@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.sjUser.dao.SjUserMapper" >
+<mapper namespace="com.kuaixiu.sjUser.dao.SjUserMapper">
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.SjUser" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.SjUser">
         <result column="id" property="id"/>
         <result column="login_id" property="loginId"/>
         <result column="password" property="password"/>
@@ -16,14 +16,14 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
-    
+
     <!-- sj_user table all fields -->
-    <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
         id,login_id,password,name,phone,type,is_cancel,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+    <insert id="add" parameterType="Object">
         insert into sj_user
         (id,login_id,password,name,phone,type,is_cancel,is_del,create_time,update_time)
         values
@@ -31,7 +31,7 @@
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update sj_user 
         set 
             id=#{id},
@@ -50,94 +50,101 @@
     <delete id="delete" parameterType="Object">
         delete from sj_user where id = #{id}
     </delete>
-    
+
     <!-- 根据id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_user where id = #{id}
     </select>
 
-    <select id="queryByLoginId"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryByLoginId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_user where login_id=#{loginId}
-        <if test="type != null and type != ''" >
+        <if test="type != null and type != ''">
             and type = #{type}
         </if>
+        and is_del=0
     </select>
 
-    <select id="queryByName"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryByName" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_user where name=#{name}
+        and is_del=0
     </select>
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_user
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="loginId != null and loginId != ''" >
+        <if test="loginId != null and loginId != ''">
             and login_id = #{loginId}
         </if>
-        <if test="name != null and name != ''" >
+        <if test="name != null and name != ''">
             and name = #{name}
         </if>
-        <if test="phone != null and phone != ''" >
+        <if test="phone != null and phone != ''">
             and phone = #{phone}
         </if>
-        <if test="type != null and type != ''" >
+        <if test="type != null and type != ''">
             and type = #{type}
         </if>
-        <if test="isCancel != null and isCancel != ''" >
+        <if test="isCancel != null and isCancel != ''">
             and is_cancel = #{isCancel}
         </if>
-        <if test="isDel != null and isDel != ''" >
+        <if test="isDel != null and isDel != ''">
             and is_del = #{isDel}
         </if>
-        <if test="createTime != null and createTime != ''" >
+        <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
-        <if test="updateTime != null and updateTime != ''" >
+        <if test="updateTime != null and updateTime != ''">
             and update_time = #{updateTime}
         </if>
+        and is_del=0
     </select>
-    
+
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_user
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="loginId != null and loginId != ''" >
+        <if test="loginId != null and loginId != ''">
             and login_id = #{loginId}
         </if>
-        <if test="name != null and name != ''" >
+        <if test="name != null and name != ''">
             and name = #{name}
         </if>
-        <if test="phone != null and phone != ''" >
+        <if test="phone != null and phone != ''">
             and phone = #{phone}
         </if>
-        <if test="type != null and type != ''" >
+        <if test="type != null and type != ''">
             and type = #{type}
         </if>
-        <if test="isCancel != null and isCancel != ''" >
+        <if test="isCancel != null and isCancel != ''">
             and is_cancel = #{isCancel}
         </if>
-        <if test="isDel != null and isDel != ''" >
+        <if test="isDel != null and isDel != ''">
             and is_del = #{isDel}
         </if>
-        <if test="createTime != null and createTime != ''" >
+        <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
-        <if test="updateTime != null and updateTime != ''" >
+        <if test="updateTime != null and updateTime != ''">
             and update_time = #{updateTime}
         </if>
+        and is_del=0
     </select>
 
 </mapper>   

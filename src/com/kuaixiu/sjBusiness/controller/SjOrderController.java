@@ -121,18 +121,19 @@ public class SjOrderController extends BaseController {
                     || StringUtils.isBlank(addressDetail) || StringUtils.isBlank(person)
                     || StringUtils.isBlank(personPhone) || StringUtils.isBlank(projectId)
                     || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId)
-                    || StringUtils.isBlank(areaId) || StringUtils.isBlank(crmNo)
+                    || StringUtils.isBlank(areaId)
                     || null == type || null == imagesList) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             if (type == 2) {
-                if (null == single || null == group) {
+                if (null == single || null == group || StringUtils.isBlank(crmNo)) {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
+                if (crmNo.length() != 18) {
+                    return getSjResult(result, null, false, "2", null, "CRM错误");
+                }
             }
-            if (crmNo.length() != 36) {
-                return getSjResult(result, null, false, "2", null, "CRM错误");
-            }
+
             SjUser user = userService.getDao().queryByLoginId(phone, null);
             if (user == null) {
                 return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
@@ -301,18 +302,18 @@ public class SjOrderController extends BaseController {
                     || StringUtils.isBlank(addressDetail) || StringUtils.isBlank(person)
                     || StringUtils.isBlank(personPhone) || StringUtils.isBlank(projectId)
                     || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId)
-                    || StringUtils.isBlank(areaId) || StringUtils.isBlank(crmNo)
-                    || null == type || null == imagesList) {
+                    || StringUtils.isBlank(areaId) || null == type || null == imagesList) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             if (type == 2) {
-                if (null == single || null == group) {
+                if (null == single || null == group || StringUtils.isBlank(crmNo)) {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
+                if (crmNo.length() != 18) {
+                    return getSjResult(result, null, false, "2", null, "CRM错误");
+                }
             }
-            if (crmNo.length() != 18) {
-                return getSjResult(result, null, false, "2", null, "CRM错误");
-            }
+
             SjUser user = userService.getDao().queryByLoginId(phone, null);
             if (user == null) {
                 return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
