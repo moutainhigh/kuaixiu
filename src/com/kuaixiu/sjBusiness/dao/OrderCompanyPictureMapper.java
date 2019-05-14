@@ -15,6 +15,8 @@ import java.util.List;
 public interface OrderCompanyPictureMapper<T> extends BaseDao<T> {
 
     List<T> queryByOrderNo(@Param("orderNo")String orderNo);
+
+    int deleteByOrderNo(@Param("orderNo")String orderNo);
 }
 
 

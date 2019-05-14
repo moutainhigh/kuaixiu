@@ -2,9 +2,11 @@ package com.kuaixiu.sjBusiness.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
+import com.kuaixiu.sjBusiness.entity.ApprovalNote;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
+import com.kuaixiu.sjBusiness.service.ApprovalNoteService;
 import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.OrderContractPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
@@ -18,6 +20,7 @@ import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.api.entity.ResultData;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
+import com.system.basic.sequence.util.SeqUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -58,6 +61,8 @@ public class SjBackstageController extends BaseController {
     private ConstructionCompanyService constructionCompanyService;
     @Autowired
     private SjWorkerService sjWorkerService;
+    @Autowired
+    private ApprovalNoteService approvalNoteService;
 
     /**
      * 订单列表
@@ -222,18 +227,31 @@ public class SjBackstageController extends BaseController {
             String id = request.getParameter("id");
             String note = request.getParameter("note");
             String isPast = request.getParameter("isPast");//是否通过   1通过   2不通过
+            if (StringUtils.isNotBlank(note)) {
+                return getSjResult(result, null, false, "0", null, "请填写备注");
+            }
             SjOrder sjOrder = orderService.queryById(id);
             SjSessionUser su = getSjCurrentUser(request);
             sjOrder.setApprovalPerson(su.getUserId());
             sjOrder.setApprovalTime(new Date());
             sjOrder.setApprovalNote(note);
             if ("1".equals(isPast)) {
-                sjOrder.setState(200);
+                if (sjOrder.getType() == 1) {
+                    sjOrder.setState(500);
+                } else if (sjOrder.getType() == 2) {
+                    sjOrder.setState(200);
+                }
             } else if ("2".equals(isPast)) {
                 sjOrder.setState(600);
             }
             sjOrder.setStayPerson(orderService.setStayPerson(2));
             orderService.saveUpdate(sjOrder);
+
+            ApprovalNote approvalNote = new ApprovalNote();
+            approvalNote.setOrderNo(sjOrder.getOrderNo());
+            approvalNote.setNote(note);
+            approvalNoteService.add(approvalNote);
+
             getSjResult(result, null, true, "0", null, "获取成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,7 +329,7 @@ public class SjBackstageController extends BaseController {
                 List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId(),null);
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId(), null);
                 company.setCompanyName(sjUser.getName());
             }
             page.setData(companies);
@@ -344,7 +362,7 @@ public class SjBackstageController extends BaseController {
                 return getSjResult(result, null, true, "0", null, "该单位没有员工");
             }
             SjWorker sjWorker = sjWorkers.get(0);
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId(),null);
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId(), null);
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
@@ -359,6 +377,85 @@ public class SjBackstageController extends BaseController {
             //工人接单数量加一
             sjWorker.setBuildingNum(sjWorker.getBuildingNum() + 1);
             sjWorkerService.saveUpdate(sjWorker);
+
+            getSjResult(result, null, true, "0", null, "指派成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/sj/order/toRegister")
+    public ModelAndView toRegister(HttpServletRequest request,
+                                   HttpServletResponse response) {
+        try {
+            //获取省份地址
+            List<Address> provinceL = addressService.queryByPid("0");
+            request.setAttribute("provinceL", provinceL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String returnView = "business/register";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/register")
+    @ResponseBody
+    public ResultData register(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        SjSessionUser su = getSjCurrentUser(request);
+        try {
+            String type = request.getParameter("type");//1企业单位，2审批人，3指派人，4工人
+            String phone = request.getParameter("phone");//注册人手机号
+            String name = request.getParameter("name");//名字
+            String person = request.getParameter("person");//负责人
+            String personPhone = request.getParameter("personPhone");//负责人手机号
+            String provinceId = request.getParameter("provinceId");
+            String cityId = request.getParameter("cityId");
+            String areaId = request.getParameter("areaId");
+            String projects = request.getParameter("projects");
+            String companyId = request.getParameter("companyId");//企业Id
+            if (StringUtils.isBlank(type) || StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, true, "0", null, "参数为空F");
+            }
+            SjUser sjUser = new SjUser();
+            sjUser.setName(name);
+            sjUser.setPhone(phone);
+            if ("1".equals(type)) {
+                if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(personPhone)
+                        || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
+                    return getSjResult(result, null, true, "0", null, "参数为空F");
+                }
+                String fristSpell = orderService.getFristSpell(provinceId, cityId);
+                sjUser.setLoginId(SeqUtil.getNext(fristSpell));
+                sjUser.setType(3);
+
+                ConstructionCompany company = new ConstructionCompany();
+                company.setLoginId(sjUser.getLoginId());
+                company.setProvince(provinceId);
+                company.setCity(cityId);
+                company.setArea(areaId);
+                company.setProject(projects);
+                company.setPerson(person);
+                company.setPhone(personPhone);
+                constructionCompanyService.add(company);
+            }
+            if ("4".equals(type)) {
+                if (StringUtils.isBlank(companyId)) {
+                    return getSjResult(result, null, true, "0", null, "参数为空F");
+                }
+                String fristSpell = orderService.getFristSpell(provinceId, cityId);
+                sjUser.setLoginId(SeqUtil.getNext(fristSpell));
+                sjUser.setType(8);
+                SjWorker sjWorker = new SjWorker();
+                sjWorker.setLoginId(sjUser.getLoginId());
+                sjWorker.setCompanyLoginId(companyId);
+                sjWorkerService.add(sjWorker);
+            }
+            sjUserService.add(sjUser);
+
 
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {

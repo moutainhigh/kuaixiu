@@ -52,6 +52,7 @@
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from sj_worker where id = #{id}
+        and is_del=0
     </select>
 
     <!-- 查询列表无分页 -->
@@ -60,6 +61,7 @@
         <include refid="Base_Column_List"/>
         from sj_worker
         where 1=1
+        and is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -83,6 +85,7 @@
         <include refid="Base_Column_List"/>
         from sj_worker
         where 1=1
+        and is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>

@@ -74,6 +74,7 @@
                 <th class="fontWeight_normal tdwidth80">创建时间</th>
                 <th class="fontWeight_normal tdwidth70">类型</th>
                 <th class="fontWeight_normal tdwidth90">提交人/账号</th>
+                <th class="fontWeight_normal tdwidth90">CRM编码</th>
                 <th class="fontWeight_normal tdwidth90">企业名字</th>
                 <th class="fontWeight_normal table-title tdwidth80">企业负责人/电话</th>
                 <th class="fontWeight_normal tdwidth100">需求</th>
@@ -128,6 +129,7 @@
         {"data": "strCreateTime", "class": ""},
         {"data": "type", "class": ""},
         {"data": "createUserid", "class": ""},
+        {"data": "crmNo", "class": ""},
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
         {"data": "projectNames", "class": ""},
@@ -146,6 +148,13 @@
                     ]
                 };
                 var html = template_chk(context);
+                return html;
+            }
+        },
+        {
+            targets: 1,
+            render: function (data, type, row, meta) {
+                var html = "<a href=\"javascript:void(0);\" onclick=\"toDetail('" + row.id + "');\">" + row.orderNo + "</a>";
                 return html;
             }
         },
@@ -252,6 +261,10 @@
         $("#modal-againOrderView").load("${ctx}/sj/order/toAssign.do", function () {
             func_after_model_load(this);
         });
+    }
+
+    function toDetail(id) {
+        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
     }
 
     /**

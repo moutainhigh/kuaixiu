@@ -8,19 +8,20 @@
         <result column="id" property="id"/>
         <result column="order_no" property="orderNo"/>
         <result column="company_picture_url" property="companyPictureUrl"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
     
     <!-- sj_order_company_picture table all fields -->
     <sql id="Base_Column_List" >
-        id,order_no,company_picture_url
+        id,order_no,company_picture_url,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_order_company_picture
-        (id,order_no,company_picture_url)
+        (id,order_no,company_picture_url,create_time)
         values
-        (#{id},#{orderNo},#{companyPictureUrl})
+        (#{id},#{orderNo},#{companyPictureUrl},now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -29,6 +30,7 @@
         set 
             id=#{id},
             order_no=#{orderNo},
+            create_time=now(),
             company_picture_url=#{companyPictureUrl}
         where id=#{id}
     </update>
@@ -36,6 +38,10 @@
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
         delete from sj_order_company_picture where id = #{id}
+    </delete>
+
+    <delete id="deleteByOrderNo" parameterType="Object">
+        delete from sj_order_company_picture where order_no=#{orderNo}
     </delete>
     
     <!-- 根据id查询  -->

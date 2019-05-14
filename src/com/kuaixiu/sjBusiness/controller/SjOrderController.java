@@ -113,20 +113,31 @@ public class SjOrderController extends BaseController {
             String projectId = params.getString("projectId");
             Integer single = params.getInteger("single");
             Integer group = params.getInteger("group");
+            String crmNo = params.getString("crmNo");
 
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(companyName)
                     || StringUtils.isBlank(addressDetail) || StringUtils.isBlank(person)
                     || StringUtils.isBlank(personPhone) || StringUtils.isBlank(projectId)
                     || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId)
-                    || StringUtils.isBlank(areaId) || null == type || null == imagesList) {
+                    || StringUtils.isBlank(areaId)
+                    || null == type || null == imagesList) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             if (type == 2) {
-                if (null == single || null == group) {
+                if (projectId.contains("1")) {
+                    if (null == single || null == group) {
+                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    }
+                }
+                if (StringUtils.isBlank(crmNo)) {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
+                if (crmNo.length() != 18) {
+                    return getSjResult(result, null, false, "2", null, "CRM错误");
+                }
             }
-            SjUser user = userService.getDao().queryByLoginId(phone,null);
+
+            SjUser user = userService.getDao().queryByLoginId(phone, null);
             if (user == null) {
                 return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
             }
@@ -134,6 +145,7 @@ public class SjOrderController extends BaseController {
             SjOrder sjOrder = new SjOrder();
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setType(type);
+            sjOrder.setCrmNo(crmNo);
             sjOrder.setState(100);
             sjOrder.setCompanyName(companyName);
             sjOrder.setProvinceId(provinceId);
@@ -190,6 +202,9 @@ public class SjOrderController extends BaseController {
             Integer pageIndex = params.getInteger("pageIndex");
             Integer pageSize = params.getInteger("pageSize");
 
+            if (StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, false, "2", null, "手机号不能为空");
+            }
             SjOrder sjOrder = new SjOrder();
             Page page = new Page();
             //将值转化为绝对值
@@ -218,7 +233,13 @@ public class SjOrderController extends BaseController {
             }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
-            getSjResult(result, jsonObjects, true, "0", null, "查询成功");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("pageSize", page.getPageSize());
+            jsonObject.put("pageIndex", page.getCurrentPage());
+            jsonObject.put("recordsTotal", page.getRecordsTotal());
+            jsonObject.put("totalPage", page.getTotalPage());
+            jsonObject.put("sjOrders", jsonObjects);
+            getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -247,9 +268,110 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "0", null, "参数为空");
             }
             SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
+            if (sjOrder == null) {
+                return getSjResult(result, null, false, "0", null, "订单号错误");
+            }
             JSONObject jsonObject = orderService.sjOrderToObejct(sjOrder);
 
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 详情重新提交商机/派单
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/wechat/reworkSubmitOrder")
+    @ResponseBody
+    public ResultData reworkSubmitOrder(HttpServletRequest request,
+                                        HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            Integer type = params.getInteger("type");
+            String phone = params.getString("phone");
+            String orderNo = params.getString("orderNo");
+            String companyName = params.getString("companyName");
+            String provinceId = params.getString("provinceId");
+            String cityId = params.getString("cityId");
+            String areaId = params.getString("areaId");
+            String streetId = params.getString("streetId");
+            String addressDetail = params.getString("addressDetail");
+            String person = params.getString("person");
+            String personPhone = params.getString("personPhone");
+            JSONArray imagesList = params.getJSONArray("imagesList");
+            String projectId = params.getString("projectId");
+            Integer single = params.getInteger("single");
+            Integer group = params.getInteger("group");
+            String crmNo = params.getString("crmNo");
+
+            if (StringUtils.isBlank(phone) || StringUtils.isBlank(companyName) || StringUtils.isBlank(orderNo)
+                    || StringUtils.isBlank(addressDetail) || StringUtils.isBlank(person)
+                    || StringUtils.isBlank(personPhone) || StringUtils.isBlank(projectId)
+                    || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId)
+                    || StringUtils.isBlank(areaId) || null == type || null == imagesList) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            if (type == 2) {
+                if (projectId.contains("1")) {
+                    if (null == single || null == group) {
+                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    }
+                }
+                if (StringUtils.isBlank(crmNo)) {
+                    return getSjResult(result, null, false, "2", null, "参数为空");
+                }
+                if (crmNo.length() != 18) {
+                    return getSjResult(result, null, false, "2", null, "CRM错误");
+                }
+            }
+
+            SjUser user = userService.getDao().queryByLoginId(phone, null);
+            if (user == null) {
+                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+            }
+
+            SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
+            sjOrder.setType(type);
+            sjOrder.setCrmNo(crmNo);
+            sjOrder.setState(100);
+            sjOrder.setCompanyName(companyName);
+            sjOrder.setProvinceId(provinceId);
+            sjOrder.setCityId(cityId);
+            sjOrder.setAreaId(areaId);
+            sjOrder.setStreetId(streetId);
+            sjOrder.setAddressDetail(addressDetail);
+            sjOrder.setPerson(person);
+            sjOrder.setPhone(personPhone);
+            sjOrder.setProjectId(projectId);
+            if (type == 2) {
+                sjOrder.setSingle(single);
+                sjOrder.setGroupNet(group);
+            }
+            sjOrder.setCreateUserid(phone);
+            sjOrder.setCreateName(user.getName());
+            sjOrder.setStayPerson(orderService.setStayPerson(1));
+            orderService.saveUpdate(sjOrder);
+
+            orderCompanyPictureService.getDao().deleteByOrderNo(orderNo);
+
+            for (int i = 0; i < imagesList.size(); i++) {
+                String image = imagesList.get(i).toString();
+                OrderCompanyPicture companyPicture = new OrderCompanyPicture();
+                companyPicture.setOrderNo(sjOrder.getOrderNo());
+                companyPicture.setCompanyPictureUrl(image);
+                orderCompanyPictureService.add(companyPicture);
+            }
+
+            getSjResult(result, null, true, "0", null, "提交成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -297,9 +419,9 @@ public class SjOrderController extends BaseController {
             MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
             MultipartFile mfile = rm.getFile(file);                             //获得前端页面传来的文件
             byte[] bfile = mfile.getBytes();                                    //获得文件的字节数组
-            if (checkFileSize(mfile.getSize(), 300, "k")) {
-                log.info("图片大小："+mfile.getSize()/1024 +"KB");
-                bfile = imageCompress(bfile,mfile);
+            if (!checkFileSize(mfile.getSize(), 300, "k")) {
+                log.info("图片大小：" + mfile.getSize() / 1024 + "KB");
+                bfile = imageCompress(bfile, mfile);
             }
             if (bfile.length == 0) {
                 log.info("未上传图片");
