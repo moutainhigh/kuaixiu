@@ -340,7 +340,6 @@ public class SjOrderController extends BaseController {
             }
 
             SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
-            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setType(type);
             sjOrder.setCrmNo(crmNo);
             sjOrder.setState(100);

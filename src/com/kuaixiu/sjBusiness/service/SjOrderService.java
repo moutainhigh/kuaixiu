@@ -3,6 +3,7 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
+import com.common.util.ConverterUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
@@ -80,7 +81,7 @@ public class SjOrderService extends BaseService<SjOrder> {
             Address address = addressService.queryByAreaId(o.getStreetId());
             street = address.getArea();
             jsonObject.put("streetId", o.getStreetId());
-            jsonObject.put("streetName",street);
+            jsonObject.put("streetName", street);
         }
         jsonObject.put("provinceId", o.getProvinceId());
         jsonObject.put("provinceName", province);
@@ -101,7 +102,7 @@ public class SjOrderService extends BaseService<SjOrder> {
             jsonObject.put("group", o.getGroupNet());
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
-        if (o.getState() == 200 || o.getState() == 600) {
+        if (o.getState() >= 200) {
             jsonObject.put("approvalPerson", o.getApprovalPerson());
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
@@ -122,10 +123,10 @@ public class SjOrderService extends BaseService<SjOrder> {
         String[] projectIds1 = projectIds.split(",");
         List<JSONObject> projects = new ArrayList<>();
         for (int i = 0; i < projectIds1.length; i++) {
-            JSONObject object=new JSONObject();
+            JSONObject object = new JSONObject();
             SjProject project = projectService.queryById(projectIds1[i]);
-            object.put("projectId",project.getId());
-            object.put("project",project.getProject());
+            object.put("projectId", project.getId());
+            object.put("project", project.getProject());
             projects.add(object);
         }
         return projects;
@@ -162,6 +163,16 @@ public class SjOrderService extends BaseService<SjOrder> {
     public boolean isNumeric(String str) {
         Pattern pattern = Pattern.compile("[0-9]*");
         return pattern.matcher(str).matches();
+    }
+
+
+    public String getFristSpell(String provinceId,String cityId){
+        Address province = addressService.queryByAreaId(provinceId);
+        String fristSpell = ConverterUtil.getFirstSpellForAreaName(province.getArea());
+        //获取市名称首字母
+        Address city = addressService.queryByAreaId(cityId);
+        fristSpell += ConverterUtil.getFirstSpellForAreaName(city.getArea());
+        return fristSpell;
     }
 
     /**

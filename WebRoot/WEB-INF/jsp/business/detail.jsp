@@ -86,7 +86,8 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>门头图片：
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
-                                <img src="${item.companyPictureUrl}" class="layui-upload-img" onclick="zoomImage('${item.companyPictureUrl}')" width="90" height="80"/>
+                                <img src="${item.companyPictureUrl}" class="layui-upload-img"
+                                     onclick="zoomImage('${item.companyPictureUrl}')" width="90" height="80"/>
                             </c:forEach>
                         </h4>
                     </div><!-- /.col -->
@@ -139,7 +140,8 @@
                             <h4>审批人：${sjOrder.approvalPerson }</h4>
                         </div><!-- /.col -->
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>审批时间：<fmt:formatDate value="${sjOrder.approvalTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                            <h4>审批时间：<fmt:formatDate value="${sjOrder.approvalTime }"
+                                                     pattern="yyyy-MM-dd HH:mm:ss"/></h4>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </td>
@@ -174,80 +176,85 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${sjOrder.state==400 ||sjOrder.state==500}">
-            <tr>
-                <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>指派信息：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>指派人：${sjOrder.assignPerson }</h4>
-                        </div><!-- /.col -->
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>审批时间：<fmt:formatDate value="${sjOrder.assignTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>指派信息：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>待施工人：${sjOrder.buildPerson}</h4>
-                        </div><!-- /.col -->
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>单位：${sjOrder.buildCompany }</h4>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>审批时间：<fmt:formatDate value="${sjOrder.endTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </td>
-            </tr>
-        </c:if>
-        <c:if test="${sjOrder.state==500}">
-            <tr>
-                <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>竣工信息：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>竣工人：${sjOrder.completedPerson }</h4>
-                        </div><!-- /.col -->
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>竣工时间：<fmt:formatDate value="${sjOrder.completedTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>合同图片：
-                                <c:forEach items="${contractPictures }" var="item" varStatus="i">
-                                    <img src="${item.contractPictureUrl}" width="260" height="180"/>
-                                </c:forEach>
-                            </h4>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </td>
-            </tr>
+        <c:if test="${sjOrder.type==2}">
+            <c:if test="${sjOrder.state==400 ||sjOrder.state==500}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>指派信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>指派人：${sjOrder.assignPerson }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>审批时间：<fmt:formatDate value="${sjOrder.assignTime }"
+                                                         pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>指派信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>待施工人：${sjOrder.buildPerson}</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>单位：${sjOrder.buildCompany }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>审批时间：<fmt:formatDate value="${sjOrder.endTime }"
+                                                         pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+            </c:if>
+            <c:if test="${sjOrder.state==500}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>竣工信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>竣工人：${sjOrder.completedPerson }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>竣工时间：<fmt:formatDate value="${sjOrder.completedTime }"
+                                                         pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>合同图片：
+                                    <c:forEach items="${contractPictures }" var="item" varStatus="i">
+                                        <img src="${item.contractPictureUrl}" width="260" height="180"/>
+                                    </c:forEach>
+                                </h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+            </c:if>
         </c:if>
     </table>
 </div>
@@ -266,7 +273,7 @@
             shade: 0.8,
             offset: 'auto',
             area: ['auto', 'auto'],
-            shadeClose:true,
+            shadeClose: true,
             scrollbar: false,
             title: "图片预览", //不显示标题
             content: imgHtml //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
