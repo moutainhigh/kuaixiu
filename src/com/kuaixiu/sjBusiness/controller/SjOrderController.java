@@ -227,7 +227,13 @@ public class SjOrderController extends BaseController {
             }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
-            getSjResult(result, jsonObjects, true, "0", null, "查询成功");
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("pageSize",page.getPageSize());
+            jsonObject.put("pageIndex",page.getCurrentPage());
+            jsonObject.put("recordsTotal",page.getRecordsTotal());
+            jsonObject.put("totalPage",page.getTotalPage());
+            jsonObject.put("sjOrders",jsonObjects);
+            getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
