@@ -3,11 +3,14 @@ package com.system.basic.user.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.kuaixiu.sjUser.entity.Menu;
+import com.system.basic.user.entity.SysMenu;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +87,12 @@ public class SessionUserService {
             su.setProviderCode(shop.getProviderCode());
             su.setProviderName(shop.getProviderName());
         }
-        
+        List<SysMenu> menuList=su.getSysMenuList();
+        SysMenu menu=menuList.get(0);
+        List<SysMenu> menuList1=menu.getSubMenuList();
         //保存用户到session
         HttpSession session = request.getSession();
+        session.setAttribute("imdexUrl", menuList1.get(0).getHref());
         session.setAttribute(SystemConstant.SESSION_USER_KEY, su);
         session.setAttribute("sysMenuList", su.getSysMenuList());
         session.setAttribute("loginUserName", su.getUserName());
@@ -137,7 +143,6 @@ public class SessionUserService {
     }
     /**
      * 删除SessionUser
-     * @param user
      * @param request
      * @author: lijx
      * @CreateDate: 2016-8-28 下午6:46:35

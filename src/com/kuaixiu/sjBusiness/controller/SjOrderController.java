@@ -124,7 +124,12 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             if (type == 2) {
-                if (null == single || null == group || StringUtils.isBlank(crmNo)) {
+                if (projectId.contains("1")) {
+                    if (null == single || null == group) {
+                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    }
+                }
+                if (StringUtils.isBlank(crmNo)) {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
                 if (crmNo.length() != 18) {
@@ -197,7 +202,7 @@ public class SjOrderController extends BaseController {
             Integer pageIndex = params.getInteger("pageIndex");
             Integer pageSize = params.getInteger("pageSize");
 
-            if(StringUtils.isBlank(phone)){
+            if (StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, false, "2", null, "手机号不能为空");
             }
             SjOrder sjOrder = new SjOrder();
@@ -228,12 +233,12 @@ public class SjOrderController extends BaseController {
             }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("pageSize",page.getPageSize());
-            jsonObject.put("pageIndex",page.getCurrentPage());
-            jsonObject.put("recordsTotal",page.getRecordsTotal());
-            jsonObject.put("totalPage",page.getTotalPage());
-            jsonObject.put("sjOrders",jsonObjects);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("pageSize", page.getPageSize());
+            jsonObject.put("pageIndex", page.getCurrentPage());
+            jsonObject.put("recordsTotal", page.getRecordsTotal());
+            jsonObject.put("totalPage", page.getTotalPage());
+            jsonObject.put("sjOrders", jsonObjects);
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -263,7 +268,7 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "0", null, "参数为空");
             }
             SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
-            if(sjOrder==null){
+            if (sjOrder == null) {
                 return getSjResult(result, null, false, "0", null, "订单号错误");
             }
             JSONObject jsonObject = orderService.sjOrderToObejct(sjOrder);
@@ -316,7 +321,12 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             if (type == 2) {
-                if (null == single || null == group || StringUtils.isBlank(crmNo)) {
+                if (projectId.contains("1")) {
+                    if (null == single || null == group) {
+                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    }
+                }
+                if (StringUtils.isBlank(crmNo)) {
                     return getSjResult(result, null, false, "2", null, "参数为空");
                 }
                 if (crmNo.length() != 18) {
