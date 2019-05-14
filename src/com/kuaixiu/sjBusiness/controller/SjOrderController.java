@@ -7,11 +7,9 @@ import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.sjBusiness.entity.ApprovalNote;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjProject;
-import com.kuaixiu.sjBusiness.service.ApprovalNoteService;
 import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjBusiness.service.SjProjectService;
@@ -199,6 +197,9 @@ public class SjOrderController extends BaseController {
             Integer pageIndex = params.getInteger("pageIndex");
             Integer pageSize = params.getInteger("pageSize");
 
+            if(StringUtils.isBlank(phone)){
+                return getSjResult(result, null, false, "2", null, "手机号不能为空");
+            }
             SjOrder sjOrder = new SjOrder();
             Page page = new Page();
             //将值转化为绝对值

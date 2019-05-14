@@ -163,6 +163,9 @@ public class CustomerDetailController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String mobile = params.getString("phone");
+            if(StringUtils.isBlank(mobile)){
+                return getSjResult(result, null, false, "2", null, "手机号不能为空");
+            }
             //验证手机号码
             if (ValidatorUtil.isMobile(mobile)) {
                 String randomCode = customerDetailService.getRandomCode(request, mobile);
@@ -318,8 +321,8 @@ public class CustomerDetailController extends BaseController {
             sessionUserService.removeSessionUser(request);
 
             String[] dname = request.getServerName().split("\\.");
-            String phoneBase64 = Base64Util.getBase64(phone);
-            CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 0);
+//            String phoneBase64 = Base64Util.getBase64(phone);
+            CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, null, CookiesUtil.prepare(dname), 0);
 
             getSjResult(result, null, true, "0", null, "操作成功");
         } catch (Exception e) {
