@@ -80,7 +80,7 @@ public class SjSessionUserService {
     /**
      *  客户端登录初始化 
      */
-    public void customerInitSessionUser(SjUser user, HttpServletRequest request, String accessToken){
+    public void customerInitSessionUser(SjUser user, HttpServletRequest request){
         if (user == null) {
             throw new SystemException("登录用户为空，初始化失败");
         }
@@ -102,7 +102,6 @@ public class SjSessionUserService {
         session.setAttribute("loginUserName", su.getUserName());
         session.setAttribute("loginUserType", su.getType());
         session.setAttribute("loginUserId", su.getUserId());
-        session.setAttribute("accessToken", accessToken);
     }
     /**
      * 删除SessionUser

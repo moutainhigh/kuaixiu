@@ -136,13 +136,13 @@ public class CustomerDetailController extends BaseController {
             } else if (user == null) {
                 return getSjResult(result, null, false, "1", null, "该手机用户不存在");
             }
-            if (isLogin == 1) {
+            if (isLogin!=null&&isLogin == 1) {
                 String[] dname = request.getServerName().split("\\.");
                 String phoneBase64 = Base64Util.getBase64(phone);
                 CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
             }
             //初始化SessionUser
-            sessionUserService.initSessionUser(user, request);
+            sessionUserService.customerInitSessionUser(user, request);
             getSjResult(result, null, true, "0", null, "登录成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,7 +211,7 @@ public class CustomerDetailController extends BaseController {
             if (user == null) {
                 return getSjResult(result, null, false, "1", null, "该手机用户不存在");
             }
-            sessionUserService.initSessionUser(user, request);
+            sessionUserService.customerInitSessionUser(user, request);
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("mobile", phone);
