@@ -259,9 +259,7 @@
     }
 
     function zoomImage(url) {
-//        var img = new Image();
-//        img.src = url;
-        var imgHtml = "<img src='" + url + "' width='500' height='auto'/>";
+        var imgHtml = "<img src='" + url + "' width='auto' height='500'/>";
         //弹出层
         layer.open({
             type: 1,
