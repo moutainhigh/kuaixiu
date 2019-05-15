@@ -14,7 +14,7 @@ public interface SjUserMapper<T> extends BaseDao<T> {
 
     T queryByLoginId(@Param("loginId") String loginId, @Param("type") Integer type);
 
-    T queryByName(String name);
+    T queryByName(@Param("name")String name, @Param("type") Integer type);
 }
 
 

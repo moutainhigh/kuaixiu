@@ -2,6 +2,7 @@ package com.kuaixiu.sjBusiness.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
+import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.ApprovalNote;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
@@ -313,19 +314,13 @@ public class SjBackstageController extends BaseController {
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setArea(areaId);
-            constructionCompany.setStreet(streetId);
             constructionCompany.setPage(page);
             List<ConstructionCompany> companies = constructionCompanyService.queryListForPage(constructionCompany);
             for (ConstructionCompany company : companies) {
                 String province = addressService.queryByAreaId(company.getProvince()).getArea();
                 String city = addressService.queryByAreaId(company.getCity()).getArea();
                 String area = addressService.queryByAreaId(company.getArea()).getArea();
-                Address address = addressService.queryByAreaId(company.getStreet());
-                String street = "";
-                if (address != null) {
-                    street = address.getArea();
-                }
-                company.setAddress(province + city + area + street);
+                company.setAddress(province + city + area);
                 List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
@@ -420,9 +415,14 @@ public class SjBackstageController extends BaseController {
             if (StringUtils.isBlank(type) || StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, true, "0", null, "参数为空F");
             }
+            if (phone.length()<11) {
+                return getSjResult(result, null, true, "0", null, "参数为空F");
+            }
             SjUser sjUser = new SjUser();
             sjUser.setName(name);
             sjUser.setPhone(phone);
+            String pwd = phone.substring(phone.length() - 6);
+            sjUser.setPassword(pwd);
             if ("1".equals(type)) {
                 if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(personPhone)
                         || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
@@ -442,12 +442,19 @@ public class SjBackstageController extends BaseController {
                 company.setPhone(personPhone);
                 constructionCompanyService.add(company);
             }
+            if ("2".equals(type)) {
+                sjUser.setLoginId(SeqUtil.getNext("sj"));
+                sjUser.setType(3);
+            }
+            if ("3".equals(type)) {
+                sjUser.setLoginId(SeqUtil.getNext("sj"));
+                sjUser.setType(4);
+            }
             if ("4".equals(type)) {
                 if (StringUtils.isBlank(companyId)) {
                     return getSjResult(result, null, true, "0", null, "参数为空F");
                 }
-                String fristSpell = orderService.getFristSpell(provinceId, cityId);
-                sjUser.setLoginId(SeqUtil.getNext(fristSpell));
+                sjUser.setLoginId(SeqUtil.getNext("yg"));
                 sjUser.setType(8);
                 SjWorker sjWorker = new SjWorker();
                 sjWorker.setLoginId(sjUser.getLoginId());
@@ -456,6 +463,7 @@ public class SjBackstageController extends BaseController {
             }
             sjUserService.add(sjUser);
 
+            SmsSendUtil.sjRegisterUserSend(sjUser);
 
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBManager;
 import com.kuaixiu.order.entity.ReworkOrder;
+import com.kuaixiu.sjUser.entity.SjUser;
 import org.apache.commons.lang3.StringUtils;
 
 import sun.misc.BASE64Encoder;
@@ -617,6 +618,18 @@ public class SmsSendUtil {
         return sendSmsThread(mobile, content.toString());
     }
 
+
+    /**
+     * 商机用户注册发送短信
+     * @param user
+     * @return
+     */
+    public static boolean sjRegisterUserSend(SjUser user) {
+        StringBuffer content = new StringBuffer();
+        content.append("商机后台注册，账号为").append(user.getLoginId());
+        content.append("密码为").append(user.getPassword());
+        return sendSmsThread(user.getPhone(), content.toString());
+    }
 
     private static DateFormat formater = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 

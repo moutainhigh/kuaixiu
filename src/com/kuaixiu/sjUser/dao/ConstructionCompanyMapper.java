@@ -11,6 +11,9 @@ import com.common.base.dao.BaseDao;
  */
 public interface ConstructionCompanyMapper<T> extends BaseDao<T> {
 
+    int updatePersonAddNum(String loginId);
+
+    int updatePersonCutNum(String loginId);
 }
 
 

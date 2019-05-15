@@ -98,8 +98,8 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("person", o.getPerson());
         jsonObject.put("personPhone", o.getPhone());
         if (o.getType() == 2) {
-            jsonObject.put("single", o.getSingle());
-            jsonObject.put("group", o.getGroupNet());
+            jsonObject.put("ap", o.getSingle());
+            jsonObject.put("monitor", o.getGroupNet());
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
@@ -166,7 +166,7 @@ public class SjOrderService extends BaseService<SjOrder> {
     }
 
 
-    public String getFristSpell(String provinceId,String cityId){
+    public String getFristSpell(String provinceId, String cityId) {
         Address province = addressService.queryByAreaId(provinceId);
         String fristSpell = ConverterUtil.getFirstSpellForAreaName(province.getArea());
         //获取市名称首字母
