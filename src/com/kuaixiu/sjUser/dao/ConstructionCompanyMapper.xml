@@ -10,7 +10,7 @@
         <result column="province" property="province"/>
         <result column="city" property="city"/>
         <result column="area" property="area"/>
-        <result column="street" property="street"/>
+        <result column="address_detail" property="addressDetail"/>
         <result column="person" property="person"/>
         <result column="phone" property="phone"/>
         <result column="project" property="project"/>
@@ -20,15 +20,15 @@
     
     <!-- sj_construction_company table all fields -->
     <sql id="Base_Column_List" >
-        id,login_id,province,city,area,street,person,phone,project,person_num,end_order_num
+        id,login_id,province,city,area,address_detail,person,phone,project,person_num,end_order_num
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_construction_company
-        (id,login_id,province,city,area,street,person,phone,project,person_num,end_order_num)
+        (id,login_id,province,city,area,address_detail,person,phone,project,person_num,end_order_num)
         values
-        (#{id},#{loginId},#{province},#{city},#{area},#{street},#{person},#{phone},#{project},#{personNum},#{endOrderNum})
+        (#{id},#{loginId},#{province},#{city},#{area},#{addressDetail},#{person},#{phone},#{project},#{personNum},#{endOrderNum})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -40,13 +40,27 @@
             province=#{province},
             city=#{city},
             area=#{area},
-            street=#{street},
+            address_detail=#{addressDetail},
             person=#{person},
             phone=#{phone},
             project=#{project},
             person_num=#{personNum},
             end_order_num=#{endOrderNum}
         where id=#{id}
+    </update>
+
+    <update id="updatePersonAddNum" parameterType="Object" >
+        update sj_construction_company
+        set
+        end_order_num=end_order_num+1
+        where login_id=#{loginId}
+    </update>
+
+    <update id="updatePersonCutNum" parameterType="Object" >
+        update sj_construction_company
+        set
+        end_order_num=end_order_num-1
+        where login_id=#{loginId}
     </update>
 
     <!-- 删除记录 -->
@@ -81,8 +95,8 @@
         <if test="area != null and area != ''" >
             and area = #{area}
         </if>
-        <if test="street != null and street != ''" >
-            and street = #{street}
+        <if test="addressDetail != null and addressDetail != ''" >
+            and address_detail = #{addressDetail}
         </if>
         <if test="person != null and person != ''" >
             and person = #{person}
@@ -122,8 +136,8 @@
         <if test="area != null and area != ''" >
             and area = #{area}
         </if>
-        <if test="street != null and street != ''" >
-            and street = #{street}
+        <if test="addressDetail != null and addressDetail != ''" >
+            and address_detail = #{addressDetail}
         </if>
         <if test="person != null and person != ''" >
             and person = #{person}
@@ -144,6 +158,41 @@
         </if>
         <if test="endOrderNum != null and endOrderNum != ''" >
             and end_order_num = #{endOrderNum}
+        </if>
+        ORDER BY end_order_num DESC
+    </select>
+
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryCompanyListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select c.login_id loginId,u.`name` companyName,c.province,c.city,c.area,c.address_detail addressDetail,c.person,c.phone
+        ,c.project,u.create_time createTime,c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
+        from sj_construction_company c
+        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        where 1=1
+        <if test="companyName != null and companyName != ''" >
+            and u.`name` like CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and u.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and u.create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="province != null and province != ''" >
+            and c.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and c.city = #{city}
+        </if>
+        <if test="area != null and area != ''" >
+            and c.area = #{area}
+        </if>
+        <if test="person != null and person != ''" >
+            and c.person like CONCAT('%', #{person}, '%')
+        </if>
+        <if test="phone != null and phone != ''" >
+            and c.phone like CONCAT('%', #{phone}, '%')
         </if>
         ORDER BY end_order_num DESC
     </select>

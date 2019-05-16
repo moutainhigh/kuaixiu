@@ -1,7 +1,9 @@
 package com.kuaixiu.sjBusiness.controller;
 
 import com.common.base.controller.BaseController;
+import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
+import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.ApprovalNote;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
@@ -10,11 +12,9 @@ import com.kuaixiu.sjBusiness.service.ApprovalNoteService;
 import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
 import com.kuaixiu.sjBusiness.service.OrderContractPictureService;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
-import com.kuaixiu.sjUser.entity.ConstructionCompany;
-import com.kuaixiu.sjUser.entity.SjSessionUser;
-import com.kuaixiu.sjUser.entity.SjUser;
-import com.kuaixiu.sjUser.entity.SjWorker;
+import com.kuaixiu.sjUser.entity.*;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
+import com.kuaixiu.sjUser.service.CustomerDetailService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.api.entity.ResultData;
@@ -22,20 +22,22 @@ import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Order Controller
@@ -63,6 +65,8 @@ public class SjBackstageController extends BaseController {
     private SjWorkerService sjWorkerService;
     @Autowired
     private ApprovalNoteService approvalNoteService;
+    @Autowired
+    private CustomerDetailService customerDetailService;
 
     /**
      * 订单列表
@@ -281,7 +285,7 @@ public class SjBackstageController extends BaseController {
     }
 
     /**
-     * 筛选查询企业
+     * 弹窗筛选查询企业
      *
      * @param request
      * @param response
@@ -313,19 +317,13 @@ public class SjBackstageController extends BaseController {
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setArea(areaId);
-            constructionCompany.setStreet(streetId);
             constructionCompany.setPage(page);
             List<ConstructionCompany> companies = constructionCompanyService.queryListForPage(constructionCompany);
             for (ConstructionCompany company : companies) {
                 String province = addressService.queryByAreaId(company.getProvince()).getArea();
                 String city = addressService.queryByAreaId(company.getCity()).getArea();
                 String area = addressService.queryByAreaId(company.getArea()).getArea();
-                Address address = addressService.queryByAreaId(company.getStreet());
-                String street = "";
-                if (address != null) {
-                    street = address.getArea();
-                }
-                company.setAddress(province + city + area + street);
+                company.setAddress(province + city + area);
                 List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
@@ -420,9 +418,14 @@ public class SjBackstageController extends BaseController {
             if (StringUtils.isBlank(type) || StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, true, "0", null, "参数为空F");
             }
+            if (phone.length() < 11) {
+                return getSjResult(result, null, true, "0", null, "参数为空F");
+            }
             SjUser sjUser = new SjUser();
             sjUser.setName(name);
             sjUser.setPhone(phone);
+            String pwd = phone.substring(phone.length() - 6);
+            sjUser.setPassword(pwd);
             if ("1".equals(type)) {
                 if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(personPhone)
                         || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
@@ -442,12 +445,19 @@ public class SjBackstageController extends BaseController {
                 company.setPhone(personPhone);
                 constructionCompanyService.add(company);
             }
+            if ("2".equals(type)) {
+                sjUser.setLoginId(SeqUtil.getNext("sj"));
+                sjUser.setType(3);
+            }
+            if ("3".equals(type)) {
+                sjUser.setLoginId(SeqUtil.getNext("sj"));
+                sjUser.setType(4);
+            }
             if ("4".equals(type)) {
                 if (StringUtils.isBlank(companyId)) {
                     return getSjResult(result, null, true, "0", null, "参数为空F");
                 }
-                String fristSpell = orderService.getFristSpell(provinceId, cityId);
-                sjUser.setLoginId(SeqUtil.getNext(fristSpell));
+                sjUser.setLoginId(SeqUtil.getNext("yg"));
                 sjUser.setType(8);
                 SjWorker sjWorker = new SjWorker();
                 sjWorker.setLoginId(sjUser.getLoginId());
@@ -456,6 +466,7 @@ public class SjBackstageController extends BaseController {
             }
             sjUserService.add(sjUser);
 
+            SmsSendUtil.sjRegisterUserSend(sjUser);
 
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
@@ -463,5 +474,240 @@ public class SjBackstageController extends BaseController {
             log.error(e.getMessage());
         }
         return result;
+    }
+
+    @RequestMapping(value = "/sj/order/toCompany")
+    public ModelAndView toCompany(HttpServletRequest request,
+                                  HttpServletResponse response) {
+        try {
+            //获取省份地址
+            List<Address> provinceL = addressService.queryByPid("0");
+            request.setAttribute("provinceL", provinceL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String returnView = "business/company";
+        return new ModelAndView(returnView);
+    }
+
+    /**
+     * 查询企业列表
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/queryCompanyListForPage")
+    public void queryCompanyListForPage(HttpServletRequest request,
+                                        HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            //获取查询条件
+            String provinceId = request.getParameter("addProvince");
+            String cityId = request.getParameter("addCity");
+            String areaId = request.getParameter("addCounty");
+            ConstructionCompany constructionCompany = new ConstructionCompany();
+            constructionCompany.setProvince(provinceId);
+            constructionCompany.setCity(cityId);
+            constructionCompany.setArea(areaId);
+            constructionCompany.setPage(page);
+            //loginId,companyName,province,city,area,addressDetail,person,phone,
+            // project,createTime,personNum,endOrderNum,isCancel
+            List<Map<String, String>> companies = constructionCompanyService.getDao().queryCompanyListForPage(constructionCompany);
+            for (Map<String, String> company : companies) {
+                String province = addressService.queryByAreaId(company.get("province")).getArea();
+                String city = addressService.queryByAreaId(company.get("city")).getArea();
+                String area = addressService.queryByAreaId(company.get("area")).getArea();
+                company.put("address", province + city + area + company.get("addressDetail"));
+                company.put("areaAddress", province + city + area);
+                List<String> projects1 = orderService.getProject(company.get("project"));
+                String projectName = orderService.listToString(projects1);
+                company.put("projectName", projectName);
+            }
+            page.setData(companies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
+
+    //客户经理
+    @RequestMapping(value = "/sj/order/toCustomer")
+    public ModelAndView toWorker(HttpServletRequest request,
+                                 HttpServletResponse response) {
+        String returnView = "business/customer";
+        return new ModelAndView(returnView);
+    }
+
+
+
+    /**
+     * 客户经理列表
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/queryCustomerListForPage")
+    public void queryCustomerListForPage(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            //获取查询条件
+            String name = request.getParameter("name");
+            String phone = request.getParameter("phone");
+            String ascription = request.getParameter("ascription");//归属
+            String queryStartTime = request.getParameter("queryStartTime");
+            String queryEndTime = request.getParameter("queryEndTime");
+            String marketingNo = request.getParameter("marketingNo");
+            CustomerDetail customerDetail = new CustomerDetail();
+            customerDetail.setName(name);
+            customerDetail.setPhone(phone);
+            customerDetail.setQueryStartTime(queryStartTime);
+            customerDetail.setQueryEndTime(queryEndTime);
+            customerDetail.setMarketingNo(marketingNo);
+            if (StringUtils.isNotBlank(ascription)) {
+                switch (ascription) {
+                    case "1":
+                        customerDetail.setCityCompanyId(1);
+                        break;
+                    case "2":
+                        customerDetail.setManagementUnitId(1);
+                        break;
+                    case "3":
+                        customerDetail.setBranchOfficeId(1);
+                        break;
+                    case "4":
+                        customerDetail.setContractBodyId(1);
+                        break;
+                }
+            }
+
+            //login_id,name,phone,city_company_id,management_unit_id,branch_office_id,
+            // contract_body_id,marketing_no,create_time,is_cancel
+            List<Map<String, String>> customerDetails = customerDetailService.getDao().queryCustomerListForPage(customerDetail);
+            for (Map<String, String> companies : customerDetails) {
+                int totalNum = customerDetailService.getDao().queryByLoginIdState(companies.get("login_id"), null);
+                companies.put("totalNum", String.valueOf(totalNum));
+                int noPassNum = customerDetailService.getDao().queryByLoginIdState(companies.get("login_id"), "600");
+                companies.put("noPassNum", String.valueOf(noPassNum));
+                int endNum = customerDetailService.getDao().queryByLoginIdState(companies.get("login_id"), "500");
+                companies.put("endNum", String.valueOf(endNum));
+                int ingNum = customerDetailService.getDao().queryIngByLoginIdState(companies.get("login_id"), null);
+                companies.put("ingNum", String.valueOf(ingNum));
+            }
+            page.setData(customerDetails);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
+
+    //企业导入
+    @RequestMapping(value = "/sj/company/importIndex")
+    public ModelAndView importcompanyIndex(HttpServletRequest request,
+                                           HttpServletResponse response) throws Exception {
+
+        String returnView = "business/importCompany";
+        return new ModelAndView(returnView);
+    }
+
+    //员工导入
+    @RequestMapping(value = "/sj/worker/importIndex")
+    public ModelAndView importworkerIndex(HttpServletRequest request,
+                                          HttpServletResponse response) throws Exception {
+
+        String returnView = "business/importWorker";
+        return new ModelAndView(returnView);
+    }
+
+    /**
+     * fileUpload:员工注册导入.
+     *
+     * @param myfile   上传的文件
+     * @param request  请求实体
+     * @param response 返回实体
+     * @throws IOException 异常信息
+     * @date 2016-5-9
+     * @author
+     */
+    @RequestMapping(value = "/sj/worker/import")
+    public void doImportWorker(
+            @RequestParam("fileInput") MultipartFile myfile,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        // 返回结果，默认失败
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
+        ImportReport report = new ImportReport();
+        StringBuffer errorMsg = new StringBuffer();
+        try {
+            if (myfile != null && StringUtils.isNotBlank(myfile.getOriginalFilename())) {
+                String fileName = myfile.getOriginalFilename();
+                //扩展名
+                String extension = FilenameUtils.getExtension(fileName);
+                if (!extension.equalsIgnoreCase("xls")) {
+                    errorMsg.append("导入文件格式错误！只能导入excel文件！");
+                } else {
+                    sjUserService.importExcel(myfile, report, getCurrentUser(request), 1);
+                    resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
+                    resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
+                }
+            } else {
+                errorMsg.append("导入文件为空");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorMsg.append("导入失败");
+            resultMap.put(RESULTMAP_KEY_MSG, "导入失败");
+        }
+        request.setAttribute("report", report);
+        resultMap.put(RESULTMAP_KEY_DATA, report);
+        renderJson(response, resultMap);
+    }
+
+    /**
+     * fileUpload:企业单位注册导入.
+     *
+     * @param myfile   上传的文件
+     * @param request  请求实体
+     * @param response 返回实体
+     * @throws IOException 异常信息
+     * @date 2016-5-9
+     * @author
+     */
+    @RequestMapping(value = "/sj/company/import")
+    public void doImportCompany(
+            @RequestParam("fileInput") MultipartFile myfile,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        // 返回结果，默认失败
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
+        ImportReport report = new ImportReport();
+        StringBuffer errorMsg = new StringBuffer();
+        try {
+            if (myfile != null && StringUtils.isNotBlank(myfile.getOriginalFilename())) {
+                String fileName = myfile.getOriginalFilename();
+                //扩展名
+                String extension = FilenameUtils.getExtension(fileName);
+                if (!extension.equalsIgnoreCase("xls")) {
+                    errorMsg.append("导入文件格式错误！只能导入excel文件！");
+                } else {
+                    sjUserService.importExcel(myfile, report, getCurrentUser(request), 2);
+                    resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
+                    resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
+                }
+            } else {
+                errorMsg.append("导入文件为空");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorMsg.append("导入失败");
+            resultMap.put(RESULTMAP_KEY_MSG, "导入失败");
+        }
+        request.setAttribute("report", report);
+        resultMap.put(RESULTMAP_KEY_DATA, report);
+        renderJson(response, resultMap);
     }
 }

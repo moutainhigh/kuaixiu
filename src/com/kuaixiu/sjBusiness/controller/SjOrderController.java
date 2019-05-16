@@ -111,8 +111,8 @@ public class SjOrderController extends BaseController {
             String personPhone = params.getString("personPhone");
             JSONArray imagesList = params.getJSONArray("imagesList");
             String projectId = params.getString("projectId");
-            Integer single = params.getInteger("single");
-            Integer group = params.getInteger("group");
+            Integer single = params.getInteger("ap");//AP
+            Integer group = params.getInteger("monitor");//监控
             String crmNo = params.getString("crmNo");
 
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(companyName)
@@ -125,8 +125,13 @@ public class SjOrderController extends BaseController {
             }
             if (type == 2) {
                 if (projectId.contains("1")) {
-                    if (null == single || null == group) {
-                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    if (null == single) {
+                        return getSjResult(result, null, false, "2", null, "AP为空");
+                    }
+                }
+                if (projectId.contains("2")) {
+                    if (null == group) {
+                        return getSjResult(result, null, false, "2", null, "监控为空");
                     }
                 }
                 if (StringUtils.isBlank(crmNo)) {
@@ -309,8 +314,8 @@ public class SjOrderController extends BaseController {
             String personPhone = params.getString("personPhone");
             JSONArray imagesList = params.getJSONArray("imagesList");
             String projectId = params.getString("projectId");
-            Integer single = params.getInteger("single");
-            Integer group = params.getInteger("group");
+            Integer single = params.getInteger("ap");
+            Integer group = params.getInteger("monitor");
             String crmNo = params.getString("crmNo");
 
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(companyName) || StringUtils.isBlank(orderNo)
@@ -322,8 +327,13 @@ public class SjOrderController extends BaseController {
             }
             if (type == 2) {
                 if (projectId.contains("1")) {
-                    if (null == single || null == group) {
-                        return getSjResult(result, null, false, "2", null, "参数为空");
+                    if (null == single) {
+                        return getSjResult(result, null, false, "2", null, "AP为空");
+                    }
+                }
+                if (projectId.contains("2")) {
+                    if (null == group) {
+                        return getSjResult(result, null, false, "2", null, "监控为空");
                     }
                 }
                 if (StringUtils.isBlank(crmNo)) {

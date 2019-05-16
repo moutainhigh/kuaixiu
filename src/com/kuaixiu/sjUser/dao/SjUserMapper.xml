@@ -72,6 +72,9 @@
         select
         <include refid="Base_Column_List"/>
         from sj_user where name=#{name}
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
         and is_del=0
     </select>
 
