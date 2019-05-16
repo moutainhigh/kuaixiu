@@ -233,8 +233,10 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setPassword(pwd);
             this.add(sjUser);
 
+            SjUser sjUser1=this.getDao().queryByLoginId(sjUser.getLoginId(),3);
+
             ConstructionCompany company = new ConstructionCompany();
-            company.setLoginId(sjUser.getLoginId());
+            company.setLoginId(sjUser1.getId());
             company.setProvince(c.getProvince());
             company.setCity(c.getCity());
             company.setArea(c.getArea());
@@ -429,15 +431,17 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setType(8);
             this.add(sjUser);
 
+            SjUser sjUser2=this.getDao().queryByLoginId(sjUser.getLoginId(),8);
+
             SjWorker sjWorker = new SjWorker();
             SjUser sjUser1 = this.getDao().queryByName(s.getCompanyName(), 3);
             if (sjUser1 != null) {
                 sjWorker.setCompanyLoginId(sjUser1.getLoginId());
             }
-            sjWorker.setLoginId(sjUser.getLoginId());
+            sjWorker.setLoginId(sjUser2.getId());
             sjWorkerService.add(sjWorker);
 
-            companyService.getDao().updatePersonAddNum(sjUser1.getLoginId());
+            companyService.getDao().updatePersonAddNum(sjUser1.getId());
         }
     }
 

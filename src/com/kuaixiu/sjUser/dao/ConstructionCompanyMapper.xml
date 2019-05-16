@@ -170,7 +170,7 @@
         c.project,date_format(u,`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
         c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
         from sj_construction_company c
-        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        LEFT JOIN sj_user u ON c.login_id=u.id
         where 1=1
         <if test="companyName != null and companyName != ''" >
             and u.`name` like CONCAT('%', #{companyName}, '%')

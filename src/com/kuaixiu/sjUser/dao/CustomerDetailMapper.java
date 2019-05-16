@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface CustomerDetailMapper<T> extends BaseDao<T> {
 
-    T queryByLoginId(@Param("loginId")String phone);
+    T queryByLoginId(@Param("loginId")Integer loginId);
 
     List<Map<String,String>> queryCustomerListForPage(T t);
 

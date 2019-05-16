@@ -327,7 +327,7 @@ public class SjBackstageController extends BaseController {
                 List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId(), null);
+                SjUser sjUser = sjUserService.getDao().queryById(company.getLoginId());
                 company.setCompanyName(sjUser.getName());
             }
             page.setData(companies);
@@ -360,15 +360,15 @@ public class SjBackstageController extends BaseController {
                 return getSjResult(result, null, true, "0", null, "该单位没有员工");
             }
             SjWorker sjWorker = sjWorkers.get(0);
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId(), null);
+            SjUser sjUser = sjUserService.getDao().queryById(sjWorker.getLoginId());
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
             sjOrder.setAssignTime(new Date());
             sjOrder.setAssignPerson(su.getUserId());
-            sjOrder.setStayPerson(sjWorker.getLoginId());
+            sjOrder.setStayPerson(sjUser.getLoginId());
             //待施工人信息
-            sjOrder.setBuildPerson(sjWorker.getLoginId());
+            sjOrder.setBuildPerson(sjUser.getLoginId());
             sjOrder.setBuildCompany(sjWorker.getCompanyLoginId());
             sjOrder.setBuildPhone(sjUser.getPhone());
             orderService.saveUpdate(sjOrder);
@@ -440,6 +440,7 @@ public class SjBackstageController extends BaseController {
             sjUser.setPhone(phone);
             String pwd = phone.substring(phone.length() - 6);
             sjUser.setPassword(pwd);
+
             if ("1".equals(type)) {
                 if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(personPhone)
                         || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
@@ -448,9 +449,12 @@ public class SjBackstageController extends BaseController {
                 String fristSpell = orderService.getFristSpell(provinceId, cityId);
                 sjUser.setLoginId(SeqUtil.getNext(fristSpell));
                 sjUser.setType(3);
+                sjUserService.add(sjUser);
+
+                SjUser sjUser1=sjUserService.getDao().queryByLoginId(sjUser.getLoginId(),3);
 
                 ConstructionCompany company = new ConstructionCompany();
-                company.setLoginId(sjUser.getLoginId());
+                company.setLoginId(sjUser1.getId());
                 company.setProvince(provinceId);
                 company.setCity(cityId);
                 company.setArea(areaId);
@@ -462,10 +466,12 @@ public class SjBackstageController extends BaseController {
             if ("2".equals(type)) {
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(3);
+                sjUserService.add(sjUser);
             }
             if ("3".equals(type)) {
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(4);
+                sjUserService.add(sjUser);
             }
             if ("4".equals(type)) {
                 if (StringUtils.isBlank(companyId)) {
@@ -473,12 +479,15 @@ public class SjBackstageController extends BaseController {
                 }
                 sjUser.setLoginId(SeqUtil.getNext("yg"));
                 sjUser.setType(8);
+                sjUserService.add(sjUser);
+
+                SjUser sjUser1=sjUserService.getDao().queryByLoginId(sjUser.getLoginId(),8);
+
                 SjWorker sjWorker = new SjWorker();
-                sjWorker.setLoginId(sjUser.getLoginId());
+                sjWorker.setLoginId(sjUser1.getId());
                 sjWorker.setCompanyLoginId(companyId);
                 sjWorkerService.add(sjWorker);
             }
-            sjUserService.add(sjUser);
 
             SmsSendUtil.sjRegisterUserSend(sjUser);
 

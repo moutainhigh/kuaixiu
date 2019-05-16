@@ -121,8 +121,9 @@
     <select id="queryIngByLoginIdState" resultType="Integer" parameterType="Object">
         select count(o.id)
         from sj_customer_detail c
-        LEFT JOIN sj_order o ON c.login_id=o.create_userid
-        where 1=1 and c.login_id=#{loginId}
+        LEFT JOIN sj_user u ON c.login_id=u.id
+        LEFT JOIN sj_order o ON u.login_id=o.create_userid
+        where 1=1 and u.login_id=#{loginId}
         <if test="state != null and state != ''">
             and o.state not in('500','600')
         </if>
@@ -131,8 +132,9 @@
     <select id="queryByLoginIdState" resultType="Integer" parameterType="Object">
         select count(o.id)
         from sj_customer_detail c
-        LEFT JOIN sj_order o ON c.login_id=o.create_userid
-        where 1=1 and c.login_id=#{loginId}
+        LEFT JOIN sj_user u ON c.login_id=u.id
+        LEFT JOIN sj_order o ON u.login_id=o.create_userid
+        where 1=1 and u.login_id=#{loginId}
         <if test="state != null and state != ''">
             and o.state=#{state}
         </if>
@@ -140,9 +142,9 @@
 
     <select id="queryCustomerListForPage" resultType="Map" parameterType="Object">
         select u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
-        c.contract_body_id,c.marketing_no,date_format(u,`create_time`,'%Y-%m-%d %H:%i:%s')create_time,u.is_cancel
+        c.contract_body_id,c.marketing_no,date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,u.is_cancel
         from sj_customer_detail c
-        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        LEFT JOIN sj_user u ON c.login_id=u.id
         where 1=1
         <if test="phone != null and phone != ''">
             and u.`phone` like CONCAT('%', #{phone}, '%')
