@@ -164,9 +164,11 @@
 
 
     <!-- 查询列表 带分页 -->
-    <select id="queryCompanyListForPage" resultMap="BaseResultMap"  parameterType="Object">
-        select c.login_id loginId,u.`name` companyName,c.province,c.city,c.area,c.address_detail addressDetail,c.person,c.phone
-        ,c.project,u.create_time createTime,c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
+    <select id="queryCompanyListForPage" resultType="Map"  parameterType="Object">
+        select c.login_id loginId,u.`name` companyName,c.province,c.city,c.area,
+        c.address_detail addressDetail,c.person,c.phone,
+        c.project,date_format(u,`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
+        c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
         from sj_construction_company c
         LEFT JOIN sj_user u ON c.login_id=u.login_id
         where 1=1

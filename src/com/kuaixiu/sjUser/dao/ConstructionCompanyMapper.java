@@ -21,7 +21,7 @@ public interface ConstructionCompanyMapper<T> extends BaseDao<T> {
     int updatePersonCutNum(String loginId);
 
     //查询企业列表
-    List<Map<String,String>> queryCompanyListForPage(T t);
+    List<Map<String,Object>> queryCompanyListForPage(T t);
 }
 
 

@@ -410,6 +410,7 @@ public class SjUserService extends BaseService<SjUser> {
                 }
             }
             c.setProject(areaName);
+            list.add(c);
         }
         return list;
     }
@@ -444,27 +445,6 @@ public class SjUserService extends BaseService<SjUser> {
         Sheet sheet = workbook.getSheetAt(0);
         int rowNum = sheet.getLastRowNum();
         List<SjUser> list = new ArrayList<SjUser>();
-        //存放维修项目名称
-        Map<Integer, String> phone = new HashMap<Integer, String>();
-        Row rowTitle = sheet.getRow(0);
-        for (int i = 2; ; i++) {
-            String title = rowTitle.getCell(i).toString().trim();
-            if (StringUtils.isBlank(title)) {
-                break;
-            }
-            phone.put(i, title);
-        }
-
-        if (phone.size() == 0) {
-            ImportError error = new ImportError();
-            error.setPosition("第1行,2列");
-            error.setMsgType("模板错误");
-            error.setMessage("手机号不能为空");
-            report.getErrorList().add(error);
-            report.setPass(false);
-            return list;
-        }
-
         for (int i = 1; i <= rowNum; i++) {
             Row row = sheet.getRow(i);
             if (row == null) {
@@ -524,7 +504,7 @@ public class SjUserService extends BaseService<SjUser> {
             report.setPass(false);
         } else {
             SjUser sjUser1 = this.getDao().queryByName(companyName, 3);
-            if (sjUser1 != null) {
+            if (sjUser1 == null) {
                 ImportError error = new ImportError();
                 error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
                 error.setMsgType("单位名字错误");
