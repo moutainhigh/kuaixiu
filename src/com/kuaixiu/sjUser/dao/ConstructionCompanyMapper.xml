@@ -162,4 +162,39 @@
         ORDER BY end_order_num DESC
     </select>
 
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryCompanyListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select c.login_id loginId,u.`name` companyName,c.province,c.city,c.area,c.address_detail addressDetail,c.person,c.phone
+        ,c.project,u.create_time createTime,c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
+        from sj_construction_company c
+        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        where 1=1
+        <if test="companyName != null and companyName != ''" >
+            and u.`name` like CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and u.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and u.create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="province != null and province != ''" >
+            and c.province = #{province}
+        </if>
+        <if test="city != null and city != ''" >
+            and c.city = #{city}
+        </if>
+        <if test="area != null and area != ''" >
+            and c.area = #{area}
+        </if>
+        <if test="person != null and person != ''" >
+            and c.person like CONCAT('%', #{person}, '%')
+        </if>
+        <if test="phone != null and phone != ''" >
+            and c.phone like CONCAT('%', #{phone}, '%')
+        </if>
+        ORDER BY end_order_num DESC
+    </select>
+
 </mapper>   

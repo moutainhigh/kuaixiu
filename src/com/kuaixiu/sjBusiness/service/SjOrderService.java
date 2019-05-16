@@ -3,20 +3,29 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
+import com.common.paginate.Page;
 import com.common.util.ConverterUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
-import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
+import com.kuaixiu.sjBusiness.entity.*;
 
-import com.kuaixiu.sjBusiness.entity.SjProject;
+import com.kuaixiu.sjUser.entity.ConstructionCompany;
+import com.kuaixiu.sjUser.entity.SjSessionUser;
+import com.kuaixiu.sjUser.entity.SjUser;
+import com.kuaixiu.sjUser.entity.SjWorker;
+import com.kuaixiu.sjUser.service.ConstructionCompanyService;
+import com.kuaixiu.sjUser.service.SjUserService;
+import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -38,6 +47,16 @@ public class SjOrderService extends BaseService<SjOrder> {
     private SjProjectService projectService;
     @Autowired
     private OrderCompanyPictureService orderCompanyPictureService;
+    @Autowired
+    private SjUserService sjUserService;
+    @Autowired
+    private OrderContractPictureService orderContractPictureService;
+    @Autowired
+    private ConstructionCompanyService constructionCompanyService;
+    @Autowired
+    private SjWorkerService sjWorkerService;
+    @Autowired
+    private ApprovalNoteService approvalNoteService;
 
 
     public SjOrderMapper<SjOrder> getDao() {

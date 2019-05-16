@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.sjUser.dao.CustomerDetailMapper" >
+<mapper namespace="com.kuaixiu.sjUser.dao.CustomerDetailMapper">
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.CustomerDetail" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.CustomerDetail">
         <result column="id" property="id"/>
         <result column="login_id" property="loginId"/>
         <result column="city_company_id" property="cityCompanyId"/>
@@ -13,14 +13,14 @@
         <result column="contract_body_id" property="contractBodyId"/>
         <result column="marketing_no" property="marketingNo"/>
     </resultMap>
-    
+
     <!-- sj_customer_detail table all fields -->
-    <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
         id,login_id,city_company_id,management_unit_id,branch_office_id,contract_body_id,marketing_no
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+    <insert id="add" parameterType="Object">
         insert into sj_customer_detail
         (id,login_id,city_company_id,management_unit_id,branch_office_id,contract_body_id,marketing_no)
         values
@@ -28,7 +28,7 @@
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update sj_customer_detail 
         set 
             id=#{id},
@@ -45,74 +45,134 @@
     <delete id="delete" parameterType="Object">
         delete from sj_customer_detail where id = #{id}
     </delete>
-    
+
     <!-- 根据id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_customer_detail where id = #{id}
     </select>
 
-    <select id="queryByLoginId"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryByLoginId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_customer_detail where login_id=#{loginId}
     </select>
 
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_customer_detail
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="loginId != null and loginId != ''" >
+        <if test="loginId != null and loginId != ''">
             and login_id = #{loginId}
         </if>
-        <if test="cityCompanyId != null and cityCompanyId != ''" >
+        <if test="cityCompanyId != null and cityCompanyId != ''">
             and city_company_id = #{cityCompanyId}
         </if>
-        <if test="managementUnitId != null and managementUnitId != ''" >
+        <if test="managementUnitId != null and managementUnitId != ''">
             and management_unit_id = #{managementUnitId}
         </if>
-        <if test="branchOfficeId != null and branchOfficeId != ''" >
+        <if test="branchOfficeId != null and branchOfficeId != ''">
             and branch_office_id = #{branchOfficeId}
         </if>
-        <if test="contractBodyId != null and contractBodyId != ''" >
+        <if test="contractBodyId != null and contractBodyId != ''">
             and contract_body_id = #{contractBodyId}
         </if>
-        <if test="marketingNo != null and marketingNo != ''" >
+        <if test="marketingNo != null and marketingNo != ''">
             and marketing_no = #{marketingNo}
         </if>
     </select>
-    
+
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_customer_detail
         where 1=1
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="loginId != null and loginId != ''" >
+        <if test="loginId != null and loginId != ''">
             and login_id = #{loginId}
         </if>
-        <if test="cityCompanyId != null and cityCompanyId != ''" >
+        <if test="cityCompanyId != null and cityCompanyId != ''">
             and city_company_id = #{cityCompanyId}
         </if>
-        <if test="managementUnitId != null and managementUnitId != ''" >
+        <if test="managementUnitId != null and managementUnitId != ''">
             and management_unit_id = #{managementUnitId}
         </if>
-        <if test="branchOfficeId != null and branchOfficeId != ''" >
+        <if test="branchOfficeId != null and branchOfficeId != ''">
             and branch_office_id = #{branchOfficeId}
         </if>
-        <if test="contractBodyId != null and contractBodyId != ''" >
+        <if test="contractBodyId != null and contractBodyId != ''">
             and contract_body_id = #{contractBodyId}
         </if>
-        <if test="marketingNo != null and marketingNo != ''" >
+        <if test="marketingNo != null and marketingNo != ''">
             and marketing_no = #{marketingNo}
+        </if>
+    </select>
+
+    <select id="queryIngByLoginIdState" resultType="Integer" parameterType="Object">
+        select count(o.id)
+        from sj_customer_detail c
+        LEFT JOIN sj_order o ON c.login_id=o.create_userid
+        where 1=1 and c.login_id=#{loginId}
+        <if test="state != null and state != ''">
+            and o.state not in('500','600')
+        </if>
+    </select>
+
+    <select id="queryByLoginIdState" resultType="Integer" parameterType="Object">
+        select count(o.id)
+        from sj_customer_detail c
+        LEFT JOIN sj_order o ON c.login_id=o.create_userid
+        where 1=1 and c.login_id=#{loginId}
+        <if test="state != null and state != ''">
+            and o.state=#{state}
+        </if>
+    </select>
+
+    <select id="queryCustomerListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
+        c.contract_body_id,c.marketing_no,u.create_time,u.is_cancel
+        from sj_customer_detail c
+        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        where 1=1
+        <if test="phone != null and phone != ''">
+            and u.`phone` like CONCAT('%', #{phone}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and u.`name` like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and u.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and u.create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="cityCompanyId != null and cityCompanyId != ''">
+            and c.city_company_id is not null
+            and c.management_unit_id is null
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''">
+            and c.management_unit_id is not null
+            and c.branch_office_id is null
+        </if>
+        <if test="branchOfficeId != null and branchOfficeId != ''">
+            and c.branch_office_id is not null
+            and c.contract_body_id is null
+        </if>
+        <if test="contractBodyId != null and contractBodyId != ''">
+            and c.contract_body_id is not null
+        </if>
+        <if test="marketingNo != null and marketingNo != ''">
+            and c.marketing_no = #{marketingNo}
         </if>
     </select>
 

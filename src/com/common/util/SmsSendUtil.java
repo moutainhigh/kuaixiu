@@ -9,6 +9,7 @@ import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBManager;
 import com.kuaixiu.order.entity.ReworkOrder;
+import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
 import org.apache.commons.lang3.StringUtils;
 
@@ -626,10 +627,12 @@ public class SmsSendUtil {
      */
     public static boolean sjRegisterUserSend(SjUser user) {
         StringBuffer content = new StringBuffer();
-        content.append("商机后台注册，账号为").append(user.getLoginId());
+        content.append("商机后台注册:用户：").append(user.getName());
+        content.append("账号为").append(user.getLoginId());
         content.append("密码为").append(user.getPassword());
         return sendSmsThread(user.getPhone(), content.toString());
     }
+
 
     private static DateFormat formater = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
