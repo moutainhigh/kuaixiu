@@ -64,6 +64,8 @@ public class SjBackstageController extends BaseController {
     private CustomerDetailService customerDetailService;
     @Autowired
     private SjProjectService projectService;
+    @Autowired
+    private ConstructionCompanyService companyService;
 
     /**
      * 订单列表
@@ -410,8 +412,6 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-@Autowired
-private ConstructionCompanyService companyService;
 
     @RequestMapping(value = "/sj/order/register")
     @ResponseBody
@@ -618,6 +618,7 @@ private ConstructionCompanyService companyService;
             String queryEndTime = request.getParameter("query_endTime");
             String marketingNo = request.getParameter("marketingNo");
             CustomerDetail customerDetail = new CustomerDetail();
+            customerDetail.setPage(page);
             if (StringUtils.isNotBlank(namePhone)) {
                 if (orderService.isNumeric(namePhone)) {
                     customerDetail.setPhone(namePhone);
