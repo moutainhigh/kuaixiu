@@ -202,7 +202,7 @@
                         func: [
                             {
                                 "name": "恢复",
-                                "fn": "notCancel(\'" + row.loginId + "\')",
+                                "fn": "cancel(\'" + row.login_id + "\',isCancel=0)",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -215,7 +215,7 @@
                         func: [
                             {
                                 "name": "注销",
-                                "fn": "cancel(\'" + row.loginId + "\')",
+                                "fn": "cancel(\'" + row.login_id + "\',isCancel=1)",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -239,12 +239,6 @@
         myTable.ajax.reload(null, false);
     }
 
-    function addBtnClick() {
-        $("#modal-insertView").html("");
-        $("#modal-insertView").load("${ctx}/sj/order/toRegisterCompany.do", function () {
-            func_after_model_load(this);
-        });
-    }
 
     /**
      * 全选按钮
@@ -255,11 +249,41 @@
         });
     }
 
-    /**
-     * 查看订单详情
-     */
-    function showOrderDetail(id) {
-        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
-    }
 
+
+
+    function cancel(loginId,isCancel){
+        var html1="";
+        var html2="";
+        if(isCancel==1){
+            html1="注销提示";
+            html2="确定要注销吗?"
+        }else{
+            html1="恢复提示";
+            html2="确定要恢复吗?"
+        }
+        AlertText.tips("d_confirm", html1, html2, function(){
+            //加载等待
+            AlertText.tips("d_loading");
+            var url_ = AppConfig.ctx + "/sj/company/isCancellation.do";
+            var data_ = {loginId: loginId,type:2,isCancel:isCancel};
+            $.ajax({
+                url: url_,
+                data: data_,
+                type: "POST",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        //保存成功,关闭窗口，刷新列表
+                        refreshPage();
+                    } else {
+                        AlertText.tips("d_alert", "提示", result.msg);
+                        return false;
+                    }
+                    //隐藏等待
+                    AlertText.hide();
+                }
+            });
+        });
+    }
 </script>

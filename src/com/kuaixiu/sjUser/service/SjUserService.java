@@ -244,6 +244,8 @@ public class SjUserService extends BaseService<SjUser> {
             company.setPerson(c.getPerson());
             company.setPhone(c.getPhone());
             company.setProject(c.getProject());
+            company.setPersonNum(0);
+            company.setEndOrderNum(0);
             companyService.add(company);
 
             users.add(sjUser);
@@ -273,6 +275,16 @@ public class SjUserService extends BaseService<SjUser> {
                 report.setPass(false);
             }
             c.setCompanyName(value);
+
+            SjUser sjUser1 = this.getDao().queryByName(value, 3);
+            if (sjUser1 != null) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("企业名字错误");
+                error.setMessage("该企业名字已注册！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
 
             col++;
             value = ExcelUtil.getCellValue(row, col);
@@ -439,6 +451,8 @@ public class SjUserService extends BaseService<SjUser> {
                 sjWorker.setCompanyLoginId(sjUser1.getLoginId());
             }
             sjWorker.setLoginId(sjUser2.getId());
+            sjWorker.setIsDel(0);
+            sjWorker.setBuildingNum(0);
             sjWorkerService.add(sjWorker);
 
             companyService.getDao().updatePersonAddNum(sjUser1.getId());

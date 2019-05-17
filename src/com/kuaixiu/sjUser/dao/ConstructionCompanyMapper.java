@@ -22,6 +22,7 @@ public interface ConstructionCompanyMapper<T> extends BaseDao<T> {
 
     //查询企业列表
     List<Map<String,Object>> queryCompanyListForPage(T t);
+    T queryByLoginId(Integer LoginId);
 }
 
 

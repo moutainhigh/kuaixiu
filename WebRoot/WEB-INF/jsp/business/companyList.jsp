@@ -62,6 +62,12 @@
                     <div class="am-btn-group am-btn-group-sm m20">
                         <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 开始查找
                         </button>
+                        <button onclick="addBtnClick(1);" type="button" class="am-btn am-btn-default"><span
+                                class="am-icon-plus"></span> 企业新增
+                        </button>
+                        <button onclick="addBtnClick(2);" type="button" class="am-btn am-btn-default"><span
+                                class="am-icon-plus"></span> 员工新增
+                        </button>
                     </div>
                 </div>
             </div>
@@ -96,10 +102,31 @@
     </div>
 </div>
 
-
+<!-- 新增弹窗 end -->
+<div id="modal-insertCompanyView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
+<!-- 新增弹窗 end -->
+<!-- 新增弹窗 end -->
+<div id="modal-insertWorkerView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
+<!-- 新增弹窗 end -->
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
+    function addBtnClick(type) {
+        if(type==1){
+            $("#modal-insertCompanyView").html("");
+            $("#modal-insertCompanyView").load("${ctx}/sj/order/toRegisterCompany.do", function () {
+                func_after_model_load(this);
+            });
+        }else{
+            $("#modal-insertWorkerView").html("");
+            $("#modal-insertWorkerView").load("${ctx}/sj/order/toRegisterWorker.do", function () {
+                func_after_model_load(this);
+            });
+        }
+
+    }
 
     $("#query_startTime").datetimepicker({
         format: "yyyy-mm-dd",
@@ -187,7 +214,7 @@
                         func: [
                             {
                                 "name": "恢复",
-                                "fn": "notCancel(\'" + row.loginId + "\')",
+                                "fn": "cancel(\'" + row.loginId + "\',isCancel=0)",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -200,7 +227,7 @@
                         func: [
                             {
                                 "name": "注销",
-                                "fn": "cancel(\'" + row.loginId + "\')",
+                                "fn": "cancel(\'" + row.loginId + "\',isCancel=1)",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -234,11 +261,39 @@
         });
     }
 
-    function showOrderDetail(loginId) {
-        func_reload_page("${ctx}/sj/order/detail.do?loginId=" + loginId+"&type=1");
-    }
-    function showOrderDetail(loginId) {
-        func_reload_page("${ctx}/sj/order/detail.do?loginId=" + loginId+"&type=2");
+    function cancel(loginId,isCancel){
+        var html1="";
+        var html2="";
+        if(isCancel==1){
+            html1="注销提示";
+            html2="确定要注销吗?"
+        }else{
+            html1="恢复提示";
+            html2="确定要恢复吗?"
+        }
+        AlertText.tips("d_confirm", html1, html2, function(){
+            //加载等待
+            AlertText.tips("d_loading");
+            var url_ = AppConfig.ctx + "/sj/company/isCancellation.do";
+            var data_ = {loginId: loginId,type:3,isCancel:isCancel};
+            $.ajax({
+                url: url_,
+                data: data_,
+                type: "POST",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        //保存成功,关闭窗口，刷新列表
+                        refreshPage();
+                    } else {
+                        AlertText.tips("d_alert", "提示", result.msg);
+                        return false;
+                    }
+                    //隐藏等待
+                    AlertText.hide();
+                }
+            });
+        });
     }
 
 </script>

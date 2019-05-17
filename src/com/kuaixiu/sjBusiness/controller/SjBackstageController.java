@@ -1,17 +1,12 @@
 package com.kuaixiu.sjBusiness.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.SmsSendUtil;
-import com.kuaixiu.sjBusiness.entity.ApprovalNote;
-import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
-import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
-import com.kuaixiu.sjBusiness.service.ApprovalNoteService;
-import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
-import com.kuaixiu.sjBusiness.service.OrderContractPictureService;
-import com.kuaixiu.sjBusiness.service.SjOrderService;
+import com.kuaixiu.sjBusiness.entity.*;
+import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.entity.*;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
@@ -67,6 +62,8 @@ public class SjBackstageController extends BaseController {
     private ApprovalNoteService approvalNoteService;
     @Autowired
     private CustomerDetailService customerDetailService;
+    @Autowired
+    private SjProjectService projectService;
 
     /**
      * 订单列表
@@ -390,6 +387,8 @@ public class SjBackstageController extends BaseController {
         try {
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
+            List<SjProject> projects = projectService.queryList(null);
+            request.setAttribute("projects", projects);
             request.setAttribute("provinceL", provinceL);
         } catch (Exception e) {
             e.printStackTrace();
@@ -398,19 +397,21 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    @RequestMapping(value = "/sj/order/toRegisterCustomer")
+    @RequestMapping(value = "/sj/order/toRegisterWorker")
     public ModelAndView toRegister(HttpServletRequest request,
                                    HttpServletResponse response) {
         try {
-            //获取省份地址
-            List<Address> provinceL = addressService.queryByPid("0");
-            request.setAttribute("provinceL", provinceL);
+            List<SjUser> companys=sjUserService.getDao().queryByType(3);
+            request.setAttribute("companys", companys);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String returnView = "business/registerCustomer";
+        String returnView = "business/addWorker";
         return new ModelAndView(returnView);
     }
+
+@Autowired
+private ConstructionCompanyService companyService;
 
     @RequestMapping(value = "/sj/order/register")
     @ResponseBody
@@ -423,11 +424,11 @@ public class SjBackstageController extends BaseController {
             String phone = request.getParameter("phone");//注册人手机号
             String name = request.getParameter("name");//名字
             String person = request.getParameter("person");//负责人
-            String personPhone = request.getParameter("personPhone");//负责人手机号
-            String provinceId = request.getParameter("provinceId");
-            String cityId = request.getParameter("cityId");
-            String areaId = request.getParameter("areaId");
-            String projects = request.getParameter("projects");
+            String provinceId = request.getParameter("addProvince");
+            String cityId = request.getParameter("addCity");
+            String areaId = request.getParameter("addCounty");
+            String addressDetail = request.getParameter("addAddress");
+            String[] projectIds = request.getParameterValues("projects");
             String companyId = request.getParameter("companyId");//企业Id
             if (StringUtils.isBlank(type) || StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, true, "0", null, "参数为空F");
@@ -442,25 +443,38 @@ public class SjBackstageController extends BaseController {
             sjUser.setPassword(pwd);
 
             if ("1".equals(type)) {
-                if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(personPhone)
-                        || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
+                if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(provinceId)
+                        || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
                     return getSjResult(result, null, true, "0", null, "参数为空F");
                 }
+                SjUser sjUser1 = sjUserService.getDao().queryByName(name, 3);
+                if (sjUser1 != null) {
+                    return getSjResult(result, null, true, "0", null, "该企业名字已注册");
+                }
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < projectIds.length; i++) {
+                    sb.append(projectIds[i]);
+                    sb.append(",");
+                }
+
                 String fristSpell = orderService.getFristSpell(provinceId, cityId);
                 sjUser.setLoginId(SeqUtil.getNext(fristSpell));
                 sjUser.setType(3);
                 sjUserService.add(sjUser);
 
-                SjUser sjUser1=sjUserService.getDao().queryByLoginId(sjUser.getLoginId(),3);
+                SjUser sjUser2 = sjUserService.getDao().queryByLoginId(sjUser.getLoginId(), 3);
 
                 ConstructionCompany company = new ConstructionCompany();
-                company.setLoginId(sjUser1.getId());
+                company.setLoginId(sjUser2.getId());
                 company.setProvince(provinceId);
                 company.setCity(cityId);
                 company.setArea(areaId);
-                company.setProject(projects);
+                company.setAddressDetail(addressDetail);
+                company.setProject(sb.toString());
                 company.setPerson(person);
-                company.setPhone(personPhone);
+                company.setPhone(phone);
+                company.setEndOrderNum(0);
+                company.setPersonNum(0);
                 constructionCompanyService.add(company);
             }
             if ("2".equals(type)) {
@@ -481,12 +495,17 @@ public class SjBackstageController extends BaseController {
                 sjUser.setType(8);
                 sjUserService.add(sjUser);
 
-                SjUser sjUser1=sjUserService.getDao().queryByLoginId(sjUser.getLoginId(),8);
+                SjUser sjUser1 = sjUserService.getDao().queryByLoginId(sjUser.getLoginId(), 8);
 
                 SjWorker sjWorker = new SjWorker();
                 sjWorker.setLoginId(sjUser1.getId());
                 sjWorker.setCompanyLoginId(companyId);
+                sjWorker.setIsDel(0);
+                sjWorker.setBuildingNum(0);
                 sjWorkerService.add(sjWorker);
+
+                SjUser sjUser2 = sjUserService.getDao().queryByLoginId(companyId, 3);
+                companyService.getDao().updatePersonAddNum(sjUser2.getId());
             }
 
             SmsSendUtil.sjRegisterUserSend(sjUser);
@@ -648,16 +667,33 @@ public class SjBackstageController extends BaseController {
 
     /**
      * 注销
+     *
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/sj/company/isCancellation")
+    @ResponseBody
     public ResultData isCancellation(HttpServletRequest request,
-                                           HttpServletResponse response) throws Exception {
-        ResultData result=new ResultData();
+                                     HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String type = request.getParameter("type");//角色类型
+            String loginId = request.getParameter("loginId");
+            String isCancel = request.getParameter("isCancel");//是否注销   1注销   0恢复
+            if ("1".equals(isCancel)) {
+                sjUserService.getDao().updateCancel1(loginId, Integer.valueOf(type));
+                getSjResult(result, null, true, "0", null, "注销成功");
+            } else {
+                sjUserService.getDao().updateCancel0(loginId, Integer.valueOf(type));
+                getSjResult(result, null, true, "0", null, "恢复成功");
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
         return result;
     }
 

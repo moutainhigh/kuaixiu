@@ -3,50 +3,33 @@
 <div class="modal-backdrop fade in"></div>
 <div class="modal-dialog" style="width: 700px;">
   <div class="modal-content">
-    <div class="modal-title"><span>新增门店商</span>
+    <div class="modal-title"><span>新增企业单位</span>
       <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
     </div>
     <div class="modal-body">
       <form id="insertForm" method="post" class="form-horizontal">
+        <input type="hidden" id="type" name="type" value="1"/><br/>
         <div class="form-group">
-          <label for="addName" class="col-sm-3 control-label"><span style="color:red">*</span> 维修门店名称</label>
+          <label for="name" class="col-sm-3 control-label"><span style="color:red">*</span> 企业名称</label>
           <div class="col-sm-9">
-            <input type="text" id="addName" name="addName" class="form-control" placeholder="请输入维修门店名称">
+            <input type="text" id="name" name="name" class="form-control" placeholder="请输入企业名称">
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerName" class="col-sm-3 control-label"><span style="color:red">*</span> 负责人姓名</label>
+          <label for="person" class="col-sm-3 control-label"><span style="color:red">*</span> 对接人姓名</label>
           <div class="col-sm-9">
-            <input type="text" id="addManagerName" name="addManagerName" class="form-control" placeholder="请输入负责人姓名">
+            <input type="text" id="person" name="person" class="form-control" placeholder="请输入负责人姓名">
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerMobile" class="col-sm-3 control-label"><span style="color:red">*</span> 负责人手机号</label>
+          <label for="personPhone" class="col-sm-3 control-label"><span style="color:red">*</span> 对接人手机号</label>
           <div class="col-sm-9">
-            <input type="text" id="addManagerMobile" name="addManagerMobile" class="form-control" placeholder="请输入负责人手机号">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="addManagerMobile1" class="col-sm-3 control-label">备用手机号1</label>
-          <div class="col-sm-9">
-            <input type="text" id="addManagerMobile1" name="addManagerMobile1" class="form-control" placeholder="请输入手机号">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="addManagerMobile2" class="col-sm-3 control-label">备用手机号2</label>
-          <div class="col-sm-9">
-            <input type="text" id="addManagerMobile2" name="addManagerMobile2" class="form-control" placeholder="请输入手机号">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="addTel" class="col-sm-3 control-label"><span style="color:red">*</span> 维修门店电话号码</label>
-          <div class="col-sm-9">
-            <input type="text" id="addTel" name="addTel" class="form-control" placeholder="请输入维修门店电话号码">
+            <input type="text" id="phone" name="phone" class="form-control" placeholder="请输入负责人手机号">
           </div>
         </div>
         <div class="form-group">
           <input type="hidden" id="addAreas" name="addAreas" >
-          <label for="addArea" class="col-sm-3 control-label"><span style="color:red">*</span> 地址</label>
+          <label for="addProvince" class="col-sm-3 control-label"><span style="color:red">*</span> 地址</label>
           <div class="col-sm-9">
             <select id="addProvince" name="addProvince" onchange="fn_select_address(2, this.value, '', 'add');" class="form-control-inline">
               <option value="">--请选择--</option>
@@ -62,10 +45,6 @@
             <select id="addCounty" name="addCounty" onchange="fn_select_address(4, this.value, '', 'add');" class="form-control-inline" style="display: none;">
               <option value="">--请选择--</option>
             </select>
-            
-            <select id="addStreet" name="addStreet" class="form-control-inline" style="display: none;">
-              <option value="">--请选择--</option>
-            </select>
           </div>
         </div>
         <div class="form-group">
@@ -73,53 +52,16 @@
             <input type="text" id="addAddress" name="addAddress" class="form-control" placeholder="请输入详细地址">
           </div>
         </div>
-        <c:if test="${loginUserType != USER_TYPE_PROVIDER }">
         <div class="form-group">
-          <label for="addProviderCode" class="col-sm-3 control-label"><span style="color:red">*</span> 所属连锁商账号</label>
+          <label for="projects" class="col-sm-3 control-label">产品需求</label>
           <div class="col-sm-9">
-            <select id="addProviderCode" name="addProviderCode" class="form-control">
-              <option value="">--请选择--</option>
-              <c:forEach items="${providerL }" var="item" varStatus="i">
-                <option value="${item.code }">${item.name }</option>
-              </c:forEach>
-            </select>
+            <c:forEach items="${projects }" var="item" varStatus="i">
+              <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
+                <input type="checkbox" name="projects" value="${item.id }"> ${item.project }
+              </label>
+            </c:forEach>
           </div>
         </div>
-        </c:if>
-        <div class="form-group">
-          <label for="addBrand" class="col-sm-3 control-label">支持品牌</label>
-          <div class="col-sm-9">
-          	  <c:forEach items="${brandL }" var="item" varStatus="i">
-				<label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
-				  <input type="checkbox" name="addBrand" value="${item.id }" checked="checked"> ${item.name }
-				</label>
-			  </c:forEach>
-          </div>
-        </div>
-        
-           <div class="form-group">
-          <label for="oldToNew" class="col-sm-3 control-label"><span style="color:red"></span>是否支持以旧换新</label>
-          <div class="col-sm-9">
-            <div class="oldToNew">
-              <input name="oldToNew" type="radio"  value="0"checked/>是
-              &nbsp&nbsp&nbsp&nbsp
-              <input name="oldToNew" type="radio"  value="1"/>否
-            </div>
-          </div>
-        </div>
-        
-        <!--
-         <div class="form-group">
-          <label for="addNewBrand" class="col-sm-3 control-label">支持兑换品牌</label>
-          <div class="col-sm-9">
-          	  <c:forEach items="${newBrand}" var="item" varStatus="i">
-				<label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
-				  <input type="checkbox" name="addNewBrand" value="${item.id}" checked="checked"> ${item.name }
-				</label>
-			  </c:forEach>
-          </div>
-        </div>
-          -->
         <button type="submit" class="hide" id="addSubmitBtn"></button>
       </form>
     </div>
@@ -148,59 +90,32 @@ function insertValidatorForm() {
                 validating : 'glyphicon glyphicon-refresh'
             },
             fields : {
-                addName: {
+                name: {
                     validators : {
                         notEmpty : {
                             message : "不能为空"
                         }
                     }
                 },
-                addManagerName: {
+                person: {
                     validators : {
                         notEmpty : {
                             message : "不能为空"
                         }
                     }
                 },
-                addManagerMobile: {
-                    validators : {
-                        notEmpty : {
-                            message : "不能为空"
-                        },
-                        regexp: {
-                            regexp: /^1[0-9]{10}$/,
-                            message: '请输入正确格式'
-                        }
-                    }
-                },
-                addManagerMobile1: {
-                    validators : {
-                        regexp: {
-                            regexp: /^1[0-9]{10}$/,
-                            message: '请输入正确格式'
-                        }
-                    }
-                },
-                addManagerMobile2: {
-                    validators : {
-                        regexp: {
-                            regexp: /^1[0-9]{10}$/,
-                            message: '请输入正确格式'
-                        }
-                    }
-                },
-                addTel: {
+                phone: {
                     validators : {
                         notEmpty : {
                             message : "不能为空"
                         },
                         regexp: {
-                            regexp: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,8}$/,
+                            regexp: /^1[0-9]{10}$/,
                             message: '请输入正确格式'
                         }
                     }
                 },
-                addProviderCode: {
+                projects: {
                     validators : {
                         notEmpty : {
                             message : "不能为空"
@@ -240,17 +155,7 @@ function insertValidatorForm() {
             }
             var addCountyName = $("#addCounty").find("option:selected").text();
             
-            if($("#addStreet").val() == ''){
-            	 AlertText.tips("d_alert", "提示", "请选择街道/乡镇！");
-                 $("#insertForm").data("bootstrapValidator").resetForm();
-                 return;
-            }
-            var addStreetName = "";
-            if($("#addStreet").val() != '0'){
-                addStreetName = " " + $("#addStreet").find("option:selected").text();  
-            }
-            
-            var areas = addProvinceName + " " + addCityName + " " + addCountyName + addStreetName;
+            var areas = addProvinceName + " " + addCityName + " " + addCountyName;
             $("#addAreas").val(areas);
             
             //加载等待
@@ -261,7 +166,7 @@ function insertValidatorForm() {
             btn.button("loading");
             //遮盖层
             var options = {
-                url : "${ctx}/shop/save.do",
+                url : "${ctx}/sj/order/register.do",
                 dataType : "JSON",
                 success : function(data) {
                     if(data.success){
