@@ -177,6 +177,7 @@
         from sj_construction_company c
         LEFT JOIN sj_user u ON c.login_id=u.id
         where 1=1
+        and u.is_del=0
         <if test="companyName != null and companyName != ''" >
             and u.`name` like CONCAT('%', #{companyName}, '%')
         </if>

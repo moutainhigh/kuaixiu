@@ -123,7 +123,9 @@
         from sj_customer_detail c
         LEFT JOIN sj_user u ON c.login_id=u.id
         LEFT JOIN sj_order o ON u.login_id=o.create_userid
-        where 1=1 and u.login_id=#{loginId}
+        where 1=1
+        and u.login_id=#{loginId}
+        and u.is_del=0
         <if test="state != null and state != ''">
             and o.state not in('500','600')
         </if>
@@ -134,7 +136,9 @@
         from sj_customer_detail c
         LEFT JOIN sj_user u ON c.login_id=u.id
         LEFT JOIN sj_order o ON u.login_id=o.create_userid
-        where 1=1 and u.login_id=#{loginId}
+        where 1=1
+        and u.login_id=#{loginId}
+        and u.is_del=0
         <if test="state != null and state != ''">
             and o.state=#{state}
         </if>
@@ -146,6 +150,7 @@
         from sj_customer_detail c
         LEFT JOIN sj_user u ON c.login_id=u.id
         where 1=1
+        and u.is_del=0
         <if test="phone != null and phone != ''">
             and u.`phone` like CONCAT('%', #{phone}, '%')
         </if>
