@@ -15,7 +15,7 @@
             <tr>
                 <td class="search_th "><label class="control-label">单位名字 ：</label></td>
                 <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
-                <td style="width:4%;">区域：</td>
+                <td class="search_th "><label class="control-label">区域 ：</label></td>
                 <td style="width:6%;">
                     <select id="queryProvince" name="queryProvince"
                             onchange="fn_select_address(2, this.value, '', 'query');" class="form-control-inline">
