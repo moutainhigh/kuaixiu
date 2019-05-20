@@ -640,6 +640,8 @@ public class SmsSendUtil {
     private static String SIID = SystemUtil.getSysCfgProperty("smsUtil.siid");
     private static String USER = SystemUtil.getSysCfgProperty("smsUtil.user");
     private static String SPSECRET = SystemUtil.getSysCfgProperty("smsUtil.spSecret");
+    private static String USER2 = SystemUtil.getSysCfgProperty("smsUtil.user2");
+    private static String SPSECRET2 = SystemUtil.getSysCfgProperty("smsUtil.spSecret2");
 
     /**
      * 发送短信
@@ -683,6 +685,50 @@ public class SmsSendUtil {
                 .append("\"authenticator\":").append("\"" + authenticator + "\",")
                 .append("\"siid\":").append("\"" + SIID + "\",")
                 .append("\"user\":").append("\"" + USER + "\",")
+                .append("\"mobile\":").append("\"" + mobile + "\",")
+                .append("\"content\":").append("\"" + content + "\"").append("}");
+
+        String response = HttpClientUtil.sendPostContent(URL, sendData.toString());
+        if (response == null) {
+            throw new SystemException("调用短信接口失败");
+        }
+        //解析返回数据
+        JSONObject json = JSONObject.parseObject(response);
+        if ("0000".equals(json.getString("retCode"))) {
+            return true;
+        } else {
+            throw new SystemException(json.getString("msg"));
+        }
+    }
+
+    /**
+     * 发送短信
+     *
+     * @param mobile  手机号码
+     * @param content 短信内容
+     * @CreateDate: 2016-9-26 下午8:10:21
+     */
+    public static Boolean sendSms2(String mobile, String content) {
+
+        long currenttime = System.currentTimeMillis();
+        //获取当前时间戳
+        String timeStamp = formater.format(currenttime);
+        //事务号
+        String transactionID = timeStamp;
+        //流水号，标识操作唯一性，只能使用一次
+        String streamingNo = SIID + transactionID;
+        //认证码，参见产品接入规范
+        String authenticator = MD5Util.md5Encode(timeStamp + transactionID + streamingNo + SPSECRET2);
+        authenticator = Base64Util.getBase64(authenticator.toUpperCase());
+        authenticator = encoderByMd5(timeStamp + transactionID + streamingNo + SPSECRET2);
+        //拼接
+        StringBuilder sendData = new StringBuilder();
+        sendData.append("{\"streamingNo\":").append("\"" + streamingNo + "\",")
+                .append("\"timeStamp\":").append("\"" + timeStamp + "\",")
+                .append("\"transactionID\":").append("\"" + transactionID + "\",")
+                .append("\"authenticator\":").append("\"" + authenticator + "\",")
+                .append("\"siid\":").append("\"" + SIID + "\",")
+                .append("\"user\":").append("\"" + USER2 + "\",")
                 .append("\"mobile\":").append("\"" + mobile + "\",")
                 .append("\"content\":").append("\"" + content + "\"").append("}");
 

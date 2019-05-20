@@ -119,6 +119,12 @@ public class SjOrderService extends BaseService<SjOrder> {
         if (o.getType() == 2) {
             jsonObject.put("ap", o.getSingle());
             jsonObject.put("monitor", o.getGroupNet());
+        } else {
+            if (o.getState() > 200) {
+                jsonObject.put("feedbackPerson", o.getFeedbackPerson());
+                jsonObject.put("feedbackTime", o.getFeedbackTime());
+                jsonObject.put("feedbackNote", o.getFeedbackNote());
+            }
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
