@@ -156,7 +156,7 @@
             </foreach>
         </if>
         <if test="project != null and project != ''" >
-            and project = like CONCAT('%', #{project}, '%')
+            and project like CONCAT('%', #{project}, '%')
         </if>
         <if test="personNum != null and personNum != ''" >
             and person_num = #{personNum}

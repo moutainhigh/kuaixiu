@@ -82,6 +82,14 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
+    @RequestMapping(value = "/sj/order/list2")
+    public ModelAndView list2(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        String returnView = "business/order2List";
+        return new ModelAndView(returnView);
+    }
+
+
     /**
      * 指派订单列表
      *
@@ -373,7 +381,8 @@ public class SjBackstageController extends BaseController {
             sjOrder.setStayPerson(sjUser.getLoginId());
             //待施工人信息
             sjOrder.setBuildPerson(sjUser.getLoginId());
-            sjOrder.setBuildCompany(sjWorker.getCompanyLoginId());
+            SjUser sjUser1 = sjUserService.getDao().queryById(sjWorker.getCompanyLoginId());
+            sjOrder.setBuildCompany(sjUser1.getName());
             sjOrder.setBuildPhone(sjUser.getPhone());
             orderService.saveUpdate(sjOrder);
             //工人接单数量加一

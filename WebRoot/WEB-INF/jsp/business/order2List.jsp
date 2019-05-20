@@ -3,7 +3,7 @@
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg">订单管理</strong> /
-        <small>商机单列表查询</small>
+        <small>派单列表查询</small>
     </div>
 </div>
 
@@ -12,7 +12,7 @@
 <div class="am-g">
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
-            <input type="hidden" id="type" name="type" value="1"/><br/>
+            <input type="hidden" id="type" name="type" value="2"/><br/>
             <tr>
                 <td class="search_th "><label class="control-label">单  号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
@@ -49,6 +49,7 @@
             <tr>
                 <td class="search_th "><label class="control-label">企业名字：</label></td>
                 <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
+
             </tr>
 
         </table>

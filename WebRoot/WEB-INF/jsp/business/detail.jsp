@@ -57,19 +57,30 @@
                         <h4>订单号：${sjOrder.orderNo }</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
+                        <c:if test="${sjOrder.type==1}">
+                            <h4>订单类型：商机单</h4>
+                        </c:if>
+                        <c:if test="${sjOrder.type==2}">
+                            <h4>订单类型：派单</h4>
+                        </c:if>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>创建时间：<fmt:formatDate value="${sjOrder.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                    </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>单位名字：${sjOrder.companyName }</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>单位名字：${sjOrder.companyName }</h4>
-                    </div><!-- /.col -->
-                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>联系人/电话：${sjOrder.person }/${sjOrder.phone }</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
-
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>地址：${sjOrder.address }</h4>
@@ -84,7 +95,13 @@
 
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <h4>受理单或合同图片：
+                        <h4>
+                            <c:if test="${sjOrder.type==1}">
+                                <h4>门头图片：</h4>
+                            </c:if>
+                            <c:if test="${sjOrder.type==2}">
+                                <h4>受理单或合同图片：</h4>
+                            </c:if>
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
                                 <img src="${item.companyPictureUrl}" class="layui-upload-img"
                                      onclick="zoomImage('${item.companyPictureUrl}')" width="90" height="80"/>
@@ -285,7 +302,7 @@
 
     function orderCancel(id, isPast) {
         var note = $("#note").val();
-        if (note == null) {
+        if (note == null || note == "") {
             AlertText.tips("d_alert", "提示", "请输入备注");
         }
         var url_ = AppConfig.ctx + "/sj/order/approval.do";
@@ -298,7 +315,7 @@
                 if (result.success) {
                     func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
                 } else {
-                    AlertText.tips("d_alert", "提示", result.msg);
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
                 }
             },
             error: function () {
