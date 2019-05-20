@@ -218,4 +218,48 @@ public class SjOrderService extends BaseService<SjOrder> {
         }
         return stayPerson;
     }
+
+    public Integer setOrderType(Integer num, Integer type) {
+        Integer ordertype = null;
+        if (type == 2) {
+            switch (num) {
+                case 1:
+                    break;
+                case 2:
+                    ordertype = 100;
+                    break;
+                case 3:
+                    ordertype = 600;
+                    break;
+                case 4:
+                    ordertype = 300;
+                    break;
+                case 5:
+                    ordertype = 500;
+                    break;
+            }
+        } else {
+            switch (num) {
+                case 1:
+                    break;
+                case 2:
+                    ordertype = 100;
+                    break;
+                case 3:
+                    ordertype = 200;
+                    break;
+                case 4:
+                    ordertype = 300;
+                    break;
+                case 5:
+                    ordertype = 400;
+                    break;
+                case 6:
+                    ordertype = 600;
+                    break;
+            }
+        }
+
+        return ordertype;
+    }
 }

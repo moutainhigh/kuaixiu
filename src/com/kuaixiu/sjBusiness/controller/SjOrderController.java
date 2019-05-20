@@ -220,21 +220,9 @@ public class SjOrderController extends BaseController {
             sjOrder.setPage(page);
             sjOrder.setCreateUserid(phone);
             sjOrder.setType(type);
-            switch (state) {
-                case 1:
-                    break;
-                case 2:
-                    sjOrder.setState(100);
-                    break;
-                case 3:
-                    sjOrder.setState(600);
-                    break;
-                case 4:
-                    sjOrder.setState(300);
-                    break;
-                case 5:
-                    sjOrder.setState(500);
-                    break;
+            if (state != 1) {
+                Integer orderState = orderService.setOrderType(state, type);
+                sjOrder.setState(orderState);
             }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
