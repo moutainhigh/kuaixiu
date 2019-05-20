@@ -77,6 +77,9 @@ public class CustomerDetailController extends BaseController {
             if (null == cityCompanyId) {
                 return getSjResult(result, null, false, "2", null, "市公司为空");
             }
+            if (StringUtils.isBlank(marketingNo)) {
+                return getSjResult(result, null, false, "2", null, "营销工号为空");
+            }
 
             SjUser user = userService.checkWechatLogin(phone, 2);
             if (!userService.checkRandomCode(phone, code)) {

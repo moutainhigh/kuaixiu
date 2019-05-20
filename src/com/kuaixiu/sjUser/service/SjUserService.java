@@ -154,19 +154,20 @@ public class SjUserService extends BaseService<SjUser> {
         SjUser sjUser = this.getDao().queryByLoginId(userId, null);
         return sjUser.getName() + "/" + sjUser.getLoginId();
     }
+
     /**
      * 发送短信
+     *
      * @param list
      * @return
      * @CreateDate: 2016-9-3 上午12:43:26
      */
-    public void sendSms(List<SjUser> list){
-        for(SjUser sjUser : list){
+    public void sendSms(List<SjUser> list) {
+        for (SjUser sjUser : list) {
             //发送短信
-            try{
+            try {
                 SmsSendUtil.sjRegisterUserSend(sjUser);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -233,7 +234,7 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setPassword(pwd);
             this.add(sjUser);
 
-            SjUser sjUser1=this.getDao().queryByLoginId(sjUser.getLoginId(),3);
+            SjUser sjUser1 = this.getDao().queryByLoginId(sjUser.getLoginId(), 3);
 
             ConstructionCompany company = new ConstructionCompany();
             company.setLoginId(sjUser1.getId());
@@ -412,12 +413,12 @@ public class SjUserService extends BaseService<SjUser> {
                 String[] projectIds1 = areaName.split(",");
                 for (int p = 0; p < projectIds1.length; p++) {
                     String project1 = projectIds1[p];
-                    SjProject sjProject=sjProjectService.queryById(project1);
+                    SjProject sjProject = sjProjectService.queryById(project1);
                     if (sjProject == null) {
                         ImportError error = new ImportError();
                         error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
                         error.setMsgType("产品需求错误");
-                        error.setMessage("产品需求"+project1+"未找到！");
+                        error.setMessage("产品需求" + project1 + "未找到！");
                         report.getErrorList().add(error);
                         report.setPass(false);
                     }
@@ -443,13 +444,11 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setType(8);
             this.add(sjUser);
 
-            SjUser sjUser2=this.getDao().queryByLoginId(sjUser.getLoginId(),8);
+            SjUser sjUser2 = this.getDao().queryByLoginId(sjUser.getLoginId(), 8);
 
             SjWorker sjWorker = new SjWorker();
             SjUser sjUser1 = this.getDao().queryByName(s.getCompanyName(), 3);
-            if (sjUser1 != null) {
-                sjWorker.setCompanyLoginId(sjUser1.getLoginId());
-            }
+            sjWorker.setCompanyLoginId(String.valueOf(sjUser1.getId()));
             sjWorker.setLoginId(sjUser2.getId());
             sjWorker.setIsDel(0);
             sjWorker.setBuildingNum(0);

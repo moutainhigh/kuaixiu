@@ -230,7 +230,7 @@ public class SjBackstageController extends BaseController {
             String id = request.getParameter("id");
             String note = request.getParameter("note");
             String isPast = request.getParameter("isPast");//是否通过   1通过   2不通过
-            if (StringUtils.isNotBlank(note)) {
+            if (StringUtils.isBlank(note)) {
                 return getSjResult(result, null, false, "0", null, "请填写备注");
             }
             SjOrder sjOrder = orderService.queryById(id);
@@ -267,6 +267,8 @@ public class SjBackstageController extends BaseController {
     public ModelAndView add(HttpServletRequest request,
                             HttpServletResponse response) {
         try {
+            String projectIds = request.getParameter("projectIds");
+            String orderId = request.getParameter("orderId");
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
             //获取市地址
@@ -276,6 +278,8 @@ public class SjBackstageController extends BaseController {
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("cityL", cityL);
             request.setAttribute("areal", areal);
+            request.setAttribute("orderId", orderId);
+            request.setAttribute("projectIds", projectIds);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -301,18 +305,19 @@ public class SjBackstageController extends BaseController {
             String areaId = request.getParameter("addCounty");
             String streetId = request.getParameter("addStreet");
             String project = request.getParameter("projectIds");
-            List<String> projects = new ArrayList<>();
-            if (StringUtils.isNotEmpty(project)) {
-                if (project.contains(",")) {
-                    String[] projectIds1 = project.split(",");
-                    for (int i = 0; i < projectIds1.length; i++) {
-                        String project1 = projectIds1[i];
-                        projects.add(project1);
-                    }
-                }
-            }
+//            List<String> projects = new ArrayList<>();
+//            if (StringUtils.isNotEmpty(project)) {
+//                if (project.contains(",")) {
+//                    String[] projectIds1 = project.split(",");
+//                    for (int i = 0; i < projectIds1.length; i++) {
+//                        String project1 = projectIds1[i];
+//                        projects.add(project1);
+//                    }
+//                }
+//            }
             ConstructionCompany constructionCompany = new ConstructionCompany();
-            constructionCompany.setQueryStatusArray(projects);
+//            constructionCompany.setQueryStatusArray(projects);
+            constructionCompany.setProject(project);
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setArea(areaId);
@@ -356,7 +361,7 @@ public class SjBackstageController extends BaseController {
 
             List<SjWorker> sjWorkers = sjWorkerService.getDao().queryByCompanyId(userId);
             if (CollectionUtils.isEmpty(sjWorkers)) {
-                return getSjResult(result, null, true, "0", null, "该单位没有员工");
+                return getSjResult(result, null, false, "0", null, "该单位没有员工");
             }
             SjWorker sjWorker = sjWorkers.get(0);
             SjUser sjUser = sjUserService.getDao().queryById(sjWorker.getLoginId());
@@ -504,8 +509,8 @@ public class SjBackstageController extends BaseController {
                 sjWorker.setBuildingNum(0);
                 sjWorkerService.add(sjWorker);
 
-                SjUser sjUser2 = sjUserService.getDao().queryByLoginId(companyId, 3);
-                companyService.getDao().updatePersonAddNum(sjUser2.getId());
+//                SjUser sjUser2 = sjUserService.getDao().queryByLoginId(companyId, 3);
+                companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
             }
 
             SmsSendUtil.sjRegisterUserSend(sjUser);

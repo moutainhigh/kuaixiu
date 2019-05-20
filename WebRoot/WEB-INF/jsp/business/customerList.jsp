@@ -51,9 +51,9 @@
                     <div class="am-btn-group am-btn-group-sm m20">
                         <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 开始查找
                         </button>
-                        <button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span
-                                class="am-icon-plus"></span> 新增
-                        </button>
+                        <%--<button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span--%>
+                                <%--class="am-icon-plus"></span> 新增--%>
+                        <%--</button>--%>
                     </div>
                 </div>
             </div>

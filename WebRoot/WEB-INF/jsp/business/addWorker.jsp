@@ -27,7 +27,7 @@
             <select id="companyId" name="companyId" class="form-control">
               <option value="">--请选择--</option>
               <c:forEach items="${companys }" var="item" varStatus="i">
-                <option value="${item.loginId }">${item.name }</option>
+                <option value="${item.id }">${item.name }</option>
               </c:forEach>
             </select>
           </div>

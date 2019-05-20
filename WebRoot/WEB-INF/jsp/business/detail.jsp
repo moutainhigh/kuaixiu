@@ -84,7 +84,7 @@
 
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <h4>门头图片：
+                        <h4>受理单或合同图片：
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
                                 <img src="${item.companyPictureUrl}" class="layui-upload-img"
                                      onclick="zoomImage('${item.companyPictureUrl}')" width="90" height="80"/>
