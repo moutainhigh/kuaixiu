@@ -25,6 +25,9 @@
         <result column="approval_person" property="approvalPerson"/>
         <result column="approval_note" property="approvalNote"/>
         <result column="approval_time" property="approvalTime"/>
+        <result column="feedback_person" property="feedbackPerson"/>
+        <result column="feedback_note" property="feedbackNote"/>
+        <result column="feedback_time" property="feedbackTime"/>
         <result column="assign_person" property="assignPerson"/>
         <result column="assign_time" property="assignTime"/>
         <result column="build_person" property="buildPerson"/>
@@ -41,21 +44,36 @@
 
     <!-- sj_order table all fields -->
     <sql id="Base_Column_List">
-        id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name
+        id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,
+        address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,
+        approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,
+        date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,
+        build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,
+        completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,
+        date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
+        feedback_person,feedback_note,feedback_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object">
         insert into sj_order
-        (id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid,create_name)
+        (id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,
+        person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,
+        assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,
+        completed_phone,completed_time,create_time,create_userid,create_name,feedback_person,
+        feedback_note,feedback_time)
         values
-        (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},now(),#{createUserid},#{createName})
+        (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},
+        #{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
+        #{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},
+        #{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},
+        now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime})
     </insert>
 
     <!-- 根据id，修改记录-->
     <update id="update" parameterType="Object">
         update sj_order 
-        set 
+        set
             id=#{id},
             order_no=#{orderNo},
             type=#{type},
@@ -76,6 +94,9 @@
             approval_person=#{approvalPerson},
             approval_note=#{approvalNote},
             approval_time=#{approvalTime},
+            feedback_person=#{feedbackPerson},
+        feedback_note=#{feedbackNote},
+        feedback_time=#{feedbackTime},
             assign_person=#{assignPerson},
             assign_time=#{assignTime},
             build_person=#{buildPerson},

@@ -21,10 +21,9 @@
                     <select name="state" class="form-control">
                         <option value="">--选择状态--</option>
                         <option value="100">待审核</option>
-                        <option value="200">带指派</option>
-                        <option value="300">待施工</option>
-                        <option value="400">待竣工</option>
-                        <option value="500">已完成</option>
+                        <option value="200">带反馈</option>
+                        <option value="300">已转化</option>
+                        <option value="400">已完结</option>
                         <option value="600">未通过</option>
                     </select>
                 </td>
@@ -186,16 +185,13 @@
                         state = "待审核";
                         break;
                     case 200:
-                        state = "待指派";
+                        state = "待反馈";
                         break;
                     case 300:
-                        state = "待施工";
+                        state = "已转化";
                         break;
                     case 400:
-                        state = "待竣工";
-                        break;
-                    case 500:
-                        state = "已完成";
+                        state = "已完结";
                         break;
                     case 600:
                         state = "未通过";

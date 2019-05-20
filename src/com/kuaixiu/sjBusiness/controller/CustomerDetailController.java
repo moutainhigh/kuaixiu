@@ -80,6 +80,9 @@ public class CustomerDetailController extends BaseController {
             if (StringUtils.isBlank(marketingNo)) {
                 return getSjResult(result, null, false, "2", null, "营销工号为空");
             }
+            if (marketingNo.length() == 12 && marketingNo.matches("[a-zA-Z]+")) {
+                marketingNo = marketingNo.substring(0, 1).toUpperCase().concat(marketingNo.substring(1));
+            }
 
             SjUser user = userService.checkWechatLogin(phone, 2);
             if (!userService.checkRandomCode(phone, code)) {

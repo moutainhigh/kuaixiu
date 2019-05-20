@@ -84,7 +84,7 @@ public class SjBackstageController extends BaseController {
 
     @RequestMapping(value = "/sj/order/list2")
     public ModelAndView list2(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+                              HttpServletResponse response) throws Exception {
         String returnView = "business/order2List";
         return new ModelAndView(returnView);
     }
@@ -216,7 +216,13 @@ public class SjBackstageController extends BaseController {
         }
         request.setAttribute("sjOrder", sjOrder);
         request.setAttribute("companyPictures", companyPictures);
-        String returnView = "business/detail";
+        String returnView = "";
+        if (sjOrder.getType() == 1) {
+            returnView = "business/detail2";
+        } else {
+            returnView = "business/detail";
+        }
+
         return new ModelAndView(returnView);
     }
 
@@ -231,8 +237,8 @@ public class SjBackstageController extends BaseController {
      */
     @RequestMapping(value = "/sj/order/approval")
     @ResponseBody
-    public ResultData getProject(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception {
+    public ResultData approval(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             String id = request.getParameter("id");
@@ -247,11 +253,7 @@ public class SjBackstageController extends BaseController {
             sjOrder.setApprovalTime(new Date());
             sjOrder.setApprovalNote(note);
             if ("1".equals(isPast)) {
-                if (sjOrder.getType() == 1) {
-                    sjOrder.setState(500);
-                } else if (sjOrder.getType() == 2) {
-                    sjOrder.setState(200);
-                }
+                sjOrder.setState(200);
             } else if ("2".equals(isPast)) {
                 sjOrder.setState(600);
             }
@@ -264,6 +266,47 @@ public class SjBackstageController extends BaseController {
             approvalNoteService.add(approvalNote);
 
             getSjResult(result, null, true, "0", null, "获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 反馈
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/feedback")
+    @ResponseBody
+    public ResultData feedback(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String id = request.getParameter("id");
+            String note = request.getParameter("feedNote");
+            String isPast = request.getParameter("isPast");//是否通过   1转化   2不完结
+            if (StringUtils.isBlank(note)) {
+                return getSjResult(result, null, false, "0", null, "请填写备注");
+            }
+            SjOrder sjOrder = orderService.queryById(id);
+            SjSessionUser su = getSjCurrentUser(request);
+            sjOrder.setFeedbackPerson(su.getUserId());
+            sjOrder.setFeedbackTime(new Date());
+            sjOrder.setFeedbackNote(note);
+            if ("1".equals(isPast)) {
+                sjOrder.setState(300);
+            } else if ("2".equals(isPast)) {
+                sjOrder.setState(400);
+            }
+            sjOrder.setStayPerson(su.getUserId());
+            orderService.saveUpdate(sjOrder);
+
+            getSjResult(result, null, true, "0", null, "反馈成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -417,7 +460,7 @@ public class SjBackstageController extends BaseController {
     public ModelAndView toRegister(HttpServletRequest request,
                                    HttpServletResponse response) {
         try {
-            List<SjUser> companys=sjUserService.getDao().queryByType(3);
+            List<SjUser> companys = sjUserService.getDao().queryByType(3);
             request.setAttribute("companys", companys);
         } catch (Exception e) {
             e.printStackTrace();
