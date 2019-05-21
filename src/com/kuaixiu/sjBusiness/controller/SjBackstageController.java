@@ -167,6 +167,7 @@ public class SjBackstageController extends BaseController {
 
     /**
      * 工人列表
+     *
      * @param request
      * @param response
      * @return
@@ -174,18 +175,25 @@ public class SjBackstageController extends BaseController {
      */
     @RequestMapping(value = "/sj/order/goWorker")
     public ModelAndView goWorker(HttpServletRequest request,
-                                      HttpServletResponse response) throws Exception {
+                                 HttpServletResponse response) throws Exception {
         String returnView = "business/workerList";
         return new ModelAndView(returnView);
     }
 
     @RequestMapping(value = "/sj/order/queryWorkerForPage")
     public void queryWorkerForPage(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception {
+                                   HttpServletResponse response) throws Exception {
         Page page = getPageByRequest(request);
         try {
             //获取查询条件
-            String orderNo = request.getParameter("orderNo");
+            SjWorker sjWorker = new SjWorker();
+            sjWorker.setPage(page);
+            List<Map<String, String>> sjWorkers = sjWorkerService.getDao().queryWorkerListForPage(sjWorker);
+            for (Map<String, String> worker : sjWorkers) {
+                SjUser sjUser = sjUserService.queryById(worker.get("company_id"));
+                worker.put("companyName", sjUser.getName());
+            }
+            page.setData(sjWorkers);
         } catch (Exception e) {
             e.printStackTrace();
         }
