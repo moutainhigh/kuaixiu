@@ -123,10 +123,10 @@
                     </div><!-- /.row -->
 
                     <div class="index_but">
-                        <a href="javascript:void(0);" onclick="orderCancel('${sjOrder.id}','2');"
-                           class="btn-cancel">不同意</a>
-                        <a href="javascript:void (0);" onclick="orderCancel('${sjOrder.id}','1');"
-                           class="btn-confirm">同意</a>
+                        <button onclick="orderCancel('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn" type="button"> 不同意
+                        </button>
+                        <button  onclick="orderCancel('${sjOrder.id}','1');" class="am-btn am-btn-default search_btn" type="button"> 同意
+                        </button>
                     </div>
 
                 </td>
@@ -176,10 +176,10 @@
                     </div><!-- /.row -->
 
                     <div class="index_but">
-                        <a href="javascript:void (0);" onclick="orderFeedBack('${sjOrder.id}','1');"
-                           class="btn-confirm">转化</a>
-                        <a href="javascript:void(0);" onclick="orderFeedBack('${sjOrder.id}','2');"
-                           class="btn-cancel">完结</a>
+                        <button onclick="orderFeedBack('${sjOrder.id}','1');" class="am-btn am-btn-default search_btn" type="button"> 转化
+                        </button>
+                        <button onclick="orderFeedBack('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn" type="button"> 完结
+                        </button>
                     </div>
 
                 </td>

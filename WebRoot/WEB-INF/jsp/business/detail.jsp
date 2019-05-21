@@ -18,7 +18,6 @@
 <div class="am-g">
     <div class="panel panel-success index-panel-msg">
 
-
         <h4>
             订单状态：
             <c:if test="${sjOrder.state==100}">
@@ -123,15 +122,25 @@
                 <td class="td-info">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button onclick="registerForm('${sjOrder.id}');" class="am-btn am-btn-default search_btn" type="button"> 录单
+                        </button>
+                        </div>
+                    </div><!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <textarea name="note" id="note" cols="79" rows="5" placeholder="请输入审批备注"></textarea>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
 
                     <div class="index_but">
-                        <a href="javascript:void(0);" onclick="orderCancel('${sjOrder.id}','2');"
-                           class="btn-cancel">不同意</a>
-                        <a href="javascript:void (0);" onclick="orderCancel('${sjOrder.id}','1');"
-                           class="btn-confirm">同意</a>
+                        <button onclick="orderCancel('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn" type="button"> 不同意
+                        </button>
+                        <button id="orderDetailApprovalButton" onclick="orderCancel('${sjOrder.id}','1');" disabled="disabled" class="am-btn am-btn-default search_btn" type="button"> 同意
+                        </button>
+                        <%--<a href="javascript:void(0);" onclick="orderCancel('${sjOrder.id}','2');"--%>
+                           <%--class="btn-cancel">不同意</a>--%>
+                        <%--<a href="javascript:void (0);" onclick="orderCancel('${sjOrder.id}','1');"--%>
+                           <%--class="btn-confirm">同意</a>--%>
                     </div>
 
                 </td>
@@ -275,6 +284,8 @@
         </c:if>
     </table>
 </div>
+<div id="modal-registerFormView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
 <!-- /am-g -->
 <script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
@@ -321,6 +332,13 @@
             error: function () {
                 AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
             }
+        });
+    }
+
+    function registerForm(orderId) {
+        $("#modal-registerFormView").html("");
+        $("#modal-registerFormView").load("${ctx}/sj/order/registerForm.do?orderId="+orderId, function () {
+            func_after_model_load(this);
         });
     }
 </script>

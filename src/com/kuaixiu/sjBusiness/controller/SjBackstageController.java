@@ -66,6 +66,8 @@ public class SjBackstageController extends BaseController {
     private SjProjectService projectService;
     @Autowired
     private ConstructionCompanyService companyService;
+    @Autowired
+    private SjRegisterFormService registerFormService;
 
     /**
      * 订单列表
@@ -755,6 +757,99 @@ public class SjBackstageController extends BaseController {
             e.printStackTrace();
         }
         this.renderJson(response, page);
+    }
+
+    /**
+     * 跳转登记单
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/sj/order/registerForm")
+    public ModelAndView registerForm(HttpServletRequest request,
+                                     HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
+        List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(null, null, null);
+        request.setAttribute("registerForms", registerForms);
+        request.setAttribute("orderId", orderId);
+        String returnView = "business/registerForm";
+        return new ModelAndView(returnView);
+    }
+
+    /**
+     * 获取登记单信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/getRegisterForm")
+    @ResponseBody
+    public ResultData getRegisterForm(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String strPoeId = request.getParameter("poeId");
+            String strModelId = request.getParameter("modelId");
+            String strMealId = request.getParameter("mealId");
+            Integer poeId = null;
+            Integer modelId = null;
+            Integer mealId = null;
+            if (StringUtils.isNotBlank(strMealId)) {
+                mealId = Integer.valueOf(strMealId);
+            }
+            if (StringUtils.isNotBlank(strModelId)) {
+                modelId = Integer.valueOf(strModelId);
+            }
+            if (StringUtils.isNotBlank(strPoeId)) {
+                poeId = Integer.valueOf(strPoeId);
+            }
+            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
+            getResult(result, registerForms, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 录单
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/setRegisterForm")
+    @ResponseBody
+    public ResultData setRegisterForm(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String orderId = request.getParameter("orderId");
+            Integer storageId = Integer.valueOf(request.getParameter("storageId"));
+            Integer storageNum = Integer.valueOf(request.getParameter("storageNum"));
+            Integer poeId = Integer.valueOf(request.getParameter("poeId"));
+            Integer poeNum = Integer.valueOf(request.getParameter("poeNum"));
+            Integer modelId = Integer.valueOf(request.getParameter("modelId"));
+            Integer modelNum = Integer.valueOf(request.getParameter("modelNum"));
+            Integer mealId = Integer.valueOf(request.getParameter("mealId"));
+            SjOrder sjOrder=orderService.queryById(orderId);
+            sjOrder.setMealId(mealId);
+            sjOrder.setModelId(modelId);
+            sjOrder.setModelNum(modelNum);
+            sjOrder.setPoeId(poeId);
+            sjOrder.setPoeNum(poeNum);
+            sjOrder.setStorageId(storageId);
+            sjOrder.setStorageNum(storageNum);
+            orderService.saveUpdate(sjOrder);
+            getResult(result, null, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
     }
 
     /**

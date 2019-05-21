@@ -40,6 +40,13 @@
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
         <result column="create_name" property="createName"/>
+        <result column="meal_id" property="mealId"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_num" property="modelNum"/>
+        <result column="poe_id" property="poeId"/>
+        <result column="poe_num" property="poeNum"/>
+        <result column="storage_id" property="storageId"/>
+        <result column="storage_num" property="storageNum"/>
     </resultMap>
 
     <!-- sj_order table all fields -->
@@ -51,7 +58,8 @@
         build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,
         completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
-        feedback_person,feedback_note,feedback_time
+        feedback_person,feedback_note,feedback_time,meal_id,model_id,model_num,poe_id,poe_num,
+        storage_id,storage_num
     </sql>
 
     <!-- 插入记录 -->
@@ -95,8 +103,8 @@
             approval_note=#{approvalNote},
             approval_time=#{approvalTime},
             feedback_person=#{feedbackPerson},
-        feedback_note=#{feedbackNote},
-        feedback_time=#{feedbackTime},
+            feedback_note=#{feedbackNote},
+            feedback_time=#{feedbackTime},
             assign_person=#{assignPerson},
             assign_time=#{assignTime},
             build_person=#{buildPerson},
@@ -107,7 +115,14 @@
             completed_phone=#{completedPhone},
             completed_time=#{completedTime},
             create_time=#{createTime},
-            create_userid=#{createUserid}
+            create_userid=#{createUserid},
+            meal_id=#{mealId},
+            model_id=#{modelId},
+            model_num=#{modelNum},
+            poe_id=#{poeId},
+            poe_num=#{poeNum},
+            storage_id=#{storageId},
+            storage_num=#{storageNum}
         where id=#{id}
     </update>
 

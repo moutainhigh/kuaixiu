@@ -123,14 +123,15 @@ public class SjOrderService extends BaseService<SjOrder> {
         } else {
             if (o.getState() > 200) {
                 SjUser sjUser=sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(),null);
-                jsonObject.put("feedbackPerson", sjUser.getName()+"/"+sjUser.getPhone());
+                jsonObject.put("feedbackPerson", sjUser.getName()+"/"+sjUser.getLoginId());
                 jsonObject.put("feedbackTime", o.getFeedbackTime());
                 jsonObject.put("feedbackNote", o.getFeedbackNote());
             }
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
-            jsonObject.put("approvalPerson", o.getApprovalPerson());
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(),null);
+            jsonObject.put("approvalPerson", sjUser.getName()+"/"+sjUser.getLoginId());
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
         }
