@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.paginate.Page;
 import com.common.util.ConverterUtil;
+import com.common.util.DateUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.*;
@@ -129,7 +130,7 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
             jsonObject.put("approvalPerson", o.getApprovalPerson());
-            jsonObject.put("approvalTime", o.getApprovalTime());
+            jsonObject.put("approvalTime", DateUtil.getDateyyyyMMddHHmmss(o.getApprovalTime()));
             jsonObject.put("approvalNote", o.getApprovalNote());
         }
         return jsonObject;
