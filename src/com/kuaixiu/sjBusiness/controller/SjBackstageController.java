@@ -165,6 +165,32 @@ public class SjBackstageController extends BaseController {
         this.renderJson(response, page);
     }
 
+    /**
+     * 工人列表
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/goWorker")
+    public ModelAndView goWorker(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        String returnView = "business/workerList";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/queryWorkerForPage")
+    public void queryWorkerForPage(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            //获取查询条件
+            String orderNo = request.getParameter("orderNo");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
 
     /**
      * 订单详情

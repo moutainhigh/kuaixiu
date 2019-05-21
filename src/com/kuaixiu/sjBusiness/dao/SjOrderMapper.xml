@@ -357,13 +357,20 @@
         </if>
         <if test="type != null and type != ''">
             and type = #{type}
-        </if>
-        <if test="state != null and state != ''">
-            <if test="state == 300">
-                and state in ('200','300','400')
+            <if test="type == 1">
+                <if test="state != null and state != ''">
+                    and state = #{state}
+                </if>
             </if>
-            <if test="state != 300">
-                and state = #{state}
+            <if test="type == 2">
+                <if test="state != null and state != ''">
+                    <if test="state == 300">
+                        and state in ('200','300','400')
+                    </if>
+                    <if test="state != 300">
+                        and state = #{state}
+                    </if>
+                </if>
             </if>
         </if>
         <if test="companyName != null and companyName != ''">
