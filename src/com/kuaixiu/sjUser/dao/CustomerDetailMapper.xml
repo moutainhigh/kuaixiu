@@ -148,7 +148,8 @@
         select u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
         c.contract_body_id,
         if(c.contract_body_id is null,if(c.branch_office_id is null,if(c.management_unit_id is null,
-        ac.city_company,am.management_unit),ab.branch_office),ao.contract_body) type_name,
+        ac.city_company,CONCAT(am.management_unit)),CONCAT(am.management_unit,'/',ab.branch_office)),
+        CONCAT(am.management_unit,'/',ab.branch_office,'/',ao.contract_body)) type_name,
         c.marketing_no,date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,u.is_cancel
         from sj_customer_detail c
         LEFT JOIN sj_user u ON c.login_id=u.id
