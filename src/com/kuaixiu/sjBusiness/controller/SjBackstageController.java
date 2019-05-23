@@ -1,17 +1,12 @@
 package com.kuaixiu.sjBusiness.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.SmsSendUtil;
-import com.kuaixiu.sjBusiness.entity.ApprovalNote;
-import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
-import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
-import com.kuaixiu.sjBusiness.service.ApprovalNoteService;
-import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
-import com.kuaixiu.sjBusiness.service.OrderContractPictureService;
-import com.kuaixiu.sjBusiness.service.SjOrderService;
+import com.kuaixiu.sjBusiness.entity.*;
+import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.entity.*;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
@@ -67,6 +62,12 @@ public class SjBackstageController extends BaseController {
     private ApprovalNoteService approvalNoteService;
     @Autowired
     private CustomerDetailService customerDetailService;
+    @Autowired
+    private SjProjectService projectService;
+    @Autowired
+    private ConstructionCompanyService companyService;
+    @Autowired
+    private SjRegisterFormService registerFormService;
 
     /**
      * 订单列表
@@ -82,6 +83,28 @@ public class SjBackstageController extends BaseController {
         String returnView = "business/orderList";
         return new ModelAndView(returnView);
     }
+
+    @RequestMapping(value = "/sj/order/approvalList")
+    public ModelAndView approvalList(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        String returnView = "business/orderApprovalList";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/list2")
+    public ModelAndView list2(HttpServletRequest request,
+                              HttpServletResponse response) throws Exception {
+        String returnView = "business/order2List";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/approvalList2")
+    public ModelAndView approvalList2(HttpServletRequest request,
+                              HttpServletResponse response) throws Exception {
+        String returnView = "business/order2ApprovalList";
+        return new ModelAndView(returnView);
+    }
+
 
     /**
      * 指派订单列表
@@ -158,6 +181,40 @@ public class SjBackstageController extends BaseController {
         this.renderJson(response, page);
     }
 
+    /**
+     * 工人列表
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/goWorker")
+    public ModelAndView goWorker(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        String returnView = "business/workerList";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/queryWorkerForPage")
+    public void queryWorkerForPage(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            //获取查询条件
+            SjWorker sjWorker = new SjWorker();
+            sjWorker.setPage(page);
+            List<Map<String, String>> sjWorkers = sjWorkerService.getDao().queryWorkerListForPage(sjWorker);
+            for (Map<String, String> worker : sjWorkers) {
+                SjUser sjUser = sjUserService.queryById(worker.get("company_id"));
+                worker.put("companyName", sjUser.getName());
+            }
+            page.setData(sjWorkers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
 
     /**
      * 订单详情
@@ -209,7 +266,27 @@ public class SjBackstageController extends BaseController {
         }
         request.setAttribute("sjOrder", sjOrder);
         request.setAttribute("companyPictures", companyPictures);
-        String returnView = "business/detail";
+        String returnView = "";
+        if (sjOrder.getType() == 1) {
+            returnView = "business/detail2";
+        } else {
+            String projectIds = sjOrder.getProjectId();
+            if (projectIds.contains("1") && projectIds.contains("2")) {
+                orderService.setWifi(1,sjOrder);
+                orderService.setWifi(2,sjOrder);
+                request.setAttribute("isWifi", 0);
+            } else if (projectIds.contains("1")) {
+                orderService.setWifi(1,sjOrder);
+                request.setAttribute("isWifi", 1);
+            } else if (projectIds.contains("2")) {
+                orderService.setWifi(2,sjOrder);
+                request.setAttribute("isWifi", 2);
+            }else{
+                request.setAttribute("isWifi", 4);
+            }
+            returnView = "business/detail";
+        }
+
         return new ModelAndView(returnView);
     }
 
@@ -224,14 +301,14 @@ public class SjBackstageController extends BaseController {
      */
     @RequestMapping(value = "/sj/order/approval")
     @ResponseBody
-    public ResultData getProject(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception {
+    public ResultData approval(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             String id = request.getParameter("id");
             String note = request.getParameter("note");
             String isPast = request.getParameter("isPast");//是否通过   1通过   2不通过
-            if (StringUtils.isNotBlank(note)) {
+            if (StringUtils.isBlank(note)) {
                 return getSjResult(result, null, false, "0", null, "请填写备注");
             }
             SjOrder sjOrder = orderService.queryById(id);
@@ -240,11 +317,7 @@ public class SjBackstageController extends BaseController {
             sjOrder.setApprovalTime(new Date());
             sjOrder.setApprovalNote(note);
             if ("1".equals(isPast)) {
-                if (sjOrder.getType() == 1) {
-                    sjOrder.setState(500);
-                } else if (sjOrder.getType() == 2) {
-                    sjOrder.setState(200);
-                }
+                sjOrder.setState(200);
             } else if ("2".equals(isPast)) {
                 sjOrder.setState(600);
             }
@@ -264,10 +337,53 @@ public class SjBackstageController extends BaseController {
         return result;
     }
 
+    /**
+     * 反馈
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/feedback")
+    @ResponseBody
+    public ResultData feedback(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String id = request.getParameter("id");
+            String note = request.getParameter("feedNote");
+            String isPast = request.getParameter("isPast");//是否通过   1转化   2不完结
+            if (StringUtils.isBlank(note)) {
+                return getSjResult(result, null, false, "0", null, "请填写备注");
+            }
+            SjOrder sjOrder = orderService.queryById(id);
+            SjSessionUser su = getSjCurrentUser(request);
+            sjOrder.setFeedbackPerson(su.getUserId());
+            sjOrder.setFeedbackTime(new Date());
+            sjOrder.setFeedbackNote(note);
+            if ("1".equals(isPast)) {
+                sjOrder.setState(300);
+            } else if ("2".equals(isPast)) {
+                sjOrder.setState(400);
+            }
+            sjOrder.setStayPerson(su.getUserId());
+            orderService.saveUpdate(sjOrder);
+
+            getSjResult(result, null, true, "0", null, "反馈成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/sj/order/toAssign")
     public ModelAndView add(HttpServletRequest request,
                             HttpServletResponse response) {
         try {
+            String projectIds = request.getParameter("projectIds");
+            String orderId = request.getParameter("orderId");
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
             //获取市地址
@@ -277,6 +393,8 @@ public class SjBackstageController extends BaseController {
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("cityL", cityL);
             request.setAttribute("areal", areal);
+            request.setAttribute("orderId", orderId);
+            request.setAttribute("projectIds", projectIds);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,20 +418,9 @@ public class SjBackstageController extends BaseController {
             String provinceId = request.getParameter("addProvince");
             String cityId = request.getParameter("addCity");
             String areaId = request.getParameter("addCounty");
-            String streetId = request.getParameter("addStreet");
             String project = request.getParameter("projectIds");
-            List<String> projects = new ArrayList<>();
-            if (StringUtils.isNotEmpty(project)) {
-                if (project.contains(",")) {
-                    String[] projectIds1 = project.split(",");
-                    for (int i = 0; i < projectIds1.length; i++) {
-                        String project1 = projectIds1[i];
-                        projects.add(project1);
-                    }
-                }
-            }
             ConstructionCompany constructionCompany = new ConstructionCompany();
-            constructionCompany.setQueryStatusArray(projects);
+            constructionCompany.setProject(project);
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setArea(areaId);
@@ -327,7 +434,7 @@ public class SjBackstageController extends BaseController {
                 List<String> projects1 = orderService.getProject(company.getProject());
                 String projectName = orderService.listToString(projects1);
                 company.setProjectNames(projectName);
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(company.getLoginId(), null);
+                SjUser sjUser = sjUserService.getDao().queryById(company.getLoginId());
                 company.setCompanyName(sjUser.getName());
             }
             page.setData(companies);
@@ -357,19 +464,20 @@ public class SjBackstageController extends BaseController {
 
             List<SjWorker> sjWorkers = sjWorkerService.getDao().queryByCompanyId(userId);
             if (CollectionUtils.isEmpty(sjWorkers)) {
-                return getSjResult(result, null, true, "0", null, "该单位没有员工");
+                return getSjResult(result, null, false, "0", null, "该单位没有员工");
             }
             SjWorker sjWorker = sjWorkers.get(0);
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjWorker.getLoginId(), null);
+            SjUser sjUser = sjUserService.getDao().queryById(sjWorker.getLoginId());
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
             sjOrder.setAssignTime(new Date());
             sjOrder.setAssignPerson(su.getUserId());
-            sjOrder.setStayPerson(sjWorker.getLoginId());
+            sjOrder.setStayPerson(sjUser.getLoginId());
             //待施工人信息
-            sjOrder.setBuildPerson(sjWorker.getLoginId());
-            sjOrder.setBuildCompany(sjWorker.getCompanyLoginId());
+            sjOrder.setBuildPerson(sjUser.getLoginId());
+            SjUser sjUser1 = sjUserService.getDao().queryById(sjWorker.getCompanyLoginId());
+            sjOrder.setBuildCompany(sjUser1.getName());
             sjOrder.setBuildPhone(sjUser.getPhone());
             orderService.saveUpdate(sjOrder);
             //工人接单数量加一
@@ -384,19 +492,35 @@ public class SjBackstageController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/sj/order/toRegister")
-    public ModelAndView toRegister(HttpServletRequest request,
-                                   HttpServletResponse response) {
+    @RequestMapping(value = "/sj/order/toRegisterCompany")
+    public ModelAndView toRegisterCompany(HttpServletRequest request,
+                                          HttpServletResponse response) {
         try {
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
+            List<SjProject> projects = projectService.queryList(null);
+            request.setAttribute("projects", projects);
             request.setAttribute("provinceL", provinceL);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String returnView = "business/register";
+        String returnView = "business/addCompany";
         return new ModelAndView(returnView);
     }
+
+    @RequestMapping(value = "/sj/order/toRegisterWorker")
+    public ModelAndView toRegister(HttpServletRequest request,
+                                   HttpServletResponse response) {
+        try {
+            List<SjUser> companys = sjUserService.getDao().queryByType(3);
+            request.setAttribute("companys", companys);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String returnView = "business/addWorker";
+        return new ModelAndView(returnView);
+    }
+
 
     @RequestMapping(value = "/sj/order/register")
     @ResponseBody
@@ -409,11 +533,11 @@ public class SjBackstageController extends BaseController {
             String phone = request.getParameter("phone");//注册人手机号
             String name = request.getParameter("name");//名字
             String person = request.getParameter("person");//负责人
-            String personPhone = request.getParameter("personPhone");//负责人手机号
-            String provinceId = request.getParameter("provinceId");
-            String cityId = request.getParameter("cityId");
-            String areaId = request.getParameter("areaId");
-            String projects = request.getParameter("projects");
+            String provinceId = request.getParameter("addProvince");
+            String cityId = request.getParameter("addCity");
+            String areaId = request.getParameter("addCounty");
+            String addressDetail = request.getParameter("addAddress");
+            String[] projectIds = request.getParameterValues("projects");
             String companyId = request.getParameter("companyId");//企业Id
             if (StringUtils.isBlank(type) || StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, true, "0", null, "参数为空F");
@@ -426,32 +550,51 @@ public class SjBackstageController extends BaseController {
             sjUser.setPhone(phone);
             String pwd = phone.substring(phone.length() - 6);
             sjUser.setPassword(pwd);
+
             if ("1".equals(type)) {
-                if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(personPhone)
-                        || StringUtils.isBlank(provinceId) || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
+                if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(provinceId)
+                        || StringUtils.isBlank(cityId) || StringUtils.isBlank(areaId)) {
                     return getSjResult(result, null, true, "0", null, "参数为空F");
                 }
+                SjUser sjUser1 = sjUserService.getDao().queryByName(name, 3);
+                if (sjUser1 != null) {
+                    return getSjResult(result, null, true, "0", null, "该企业名字已注册");
+                }
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < projectIds.length; i++) {
+                    sb.append(projectIds[i]);
+                    sb.append(",");
+                }
+
                 String fristSpell = orderService.getFristSpell(provinceId, cityId);
                 sjUser.setLoginId(SeqUtil.getNext(fristSpell));
                 sjUser.setType(3);
+                sjUserService.add(sjUser);
+
+                SjUser sjUser2 = sjUserService.getDao().queryByLoginId(sjUser.getLoginId(), 3);
 
                 ConstructionCompany company = new ConstructionCompany();
-                company.setLoginId(sjUser.getLoginId());
+                company.setLoginId(sjUser2.getId());
                 company.setProvince(provinceId);
                 company.setCity(cityId);
                 company.setArea(areaId);
-                company.setProject(projects);
+                company.setAddressDetail(addressDetail);
+                company.setProject(sb.toString());
                 company.setPerson(person);
-                company.setPhone(personPhone);
+                company.setPhone(phone);
+                company.setEndOrderNum(0);
+                company.setPersonNum(0);
                 constructionCompanyService.add(company);
             }
             if ("2".equals(type)) {
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(3);
+                sjUserService.add(sjUser);
             }
             if ("3".equals(type)) {
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(4);
+                sjUserService.add(sjUser);
             }
             if ("4".equals(type)) {
                 if (StringUtils.isBlank(companyId)) {
@@ -459,15 +602,20 @@ public class SjBackstageController extends BaseController {
                 }
                 sjUser.setLoginId(SeqUtil.getNext("yg"));
                 sjUser.setType(8);
+                sjUserService.add(sjUser);
+
+                SjUser sjUser1 = sjUserService.getDao().queryByLoginId(sjUser.getLoginId(), 8);
+
                 SjWorker sjWorker = new SjWorker();
-                sjWorker.setLoginId(sjUser.getLoginId());
+                sjWorker.setLoginId(sjUser1.getId());
                 sjWorker.setCompanyLoginId(companyId);
+                sjWorker.setIsDel(0);
+                sjWorker.setBuildingNum(0);
                 sjWorkerService.add(sjWorker);
+
+                companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
             }
-            sjUserService.add(sjUser);
-
             SmsSendUtil.sjRegisterUserSend(sjUser);
-
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -476,7 +624,7 @@ public class SjBackstageController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/sj/order/toCompany")
+    @RequestMapping(value = "/sj/order/toCompanyList")
     public ModelAndView toCompany(HttpServletRequest request,
                                   HttpServletResponse response) {
         try {
@@ -486,7 +634,7 @@ public class SjBackstageController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String returnView = "business/company";
+        String returnView = "business/companyList";
         return new ModelAndView(returnView);
     }
 
@@ -503,24 +651,42 @@ public class SjBackstageController extends BaseController {
         Page page = getPageByRequest(request);
         try {
             //获取查询条件
-            String provinceId = request.getParameter("addProvince");
-            String cityId = request.getParameter("addCity");
-            String areaId = request.getParameter("addCounty");
+            String companyName = request.getParameter("companyName");
+            String provinceId = request.getParameter("queryProvince");
+            String cityId = request.getParameter("queryCity");
+            String areaId = request.getParameter("queryCounty");
+            String queryStartTime = request.getParameter("query_startTime");
+            String queryEndTime = request.getParameter("query_endTime");
+            String personPhone = request.getParameter("personPhone");
             ConstructionCompany constructionCompany = new ConstructionCompany();
+            constructionCompany.setCompanyName(companyName);
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setArea(areaId);
+            if (StringUtils.isNotBlank(personPhone)) {
+                if (orderService.isNumeric(personPhone)) {
+                    constructionCompany.setPhone(personPhone);
+                } else {
+                    constructionCompany.setPerson(personPhone);
+                }
+            }
+            constructionCompany.setQueryStartTime(queryStartTime);
+            constructionCompany.setQueryEndTime(queryEndTime);
             constructionCompany.setPage(page);
             //loginId,companyName,province,city,area,addressDetail,person,phone,
             // project,createTime,personNum,endOrderNum,isCancel
-            List<Map<String, String>> companies = constructionCompanyService.getDao().queryCompanyListForPage(constructionCompany);
-            for (Map<String, String> company : companies) {
-                String province = addressService.queryByAreaId(company.get("province")).getArea();
-                String city = addressService.queryByAreaId(company.get("city")).getArea();
-                String area = addressService.queryByAreaId(company.get("area")).getArea();
-                company.put("address", province + city + area + company.get("addressDetail"));
+            List<Map<String, Object>> companies = constructionCompanyService.getDao().queryCompanyListForPage(constructionCompany);
+            for (Map<String, Object> company : companies) {
+                String province = addressService.queryByAreaId(company.get("province").toString()).getArea();
+                String city = addressService.queryByAreaId(company.get("city").toString()).getArea();
+                String area = addressService.queryByAreaId(company.get("area").toString()).getArea();
+                if (company.get("addressDetail") == null) {
+                    company.put("address", province + city + area);
+                } else {
+                    company.put("address", province + city + area + company.get("addressDetail").toString());
+                }
                 company.put("areaAddress", province + city + area);
-                List<String> projects1 = orderService.getProject(company.get("project"));
+                List<String> projects1 = orderService.getProject(company.get("project").toString());
                 String projectName = orderService.listToString(projects1);
                 company.put("projectName", projectName);
             }
@@ -532,14 +698,12 @@ public class SjBackstageController extends BaseController {
     }
 
     //客户经理
-    @RequestMapping(value = "/sj/order/toCustomer")
+    @RequestMapping(value = "/sj/order/toCustomerList")
     public ModelAndView toWorker(HttpServletRequest request,
                                  HttpServletResponse response) {
-        String returnView = "business/customer";
+        String returnView = "business/customerList";
         return new ModelAndView(returnView);
     }
-
-
 
     /**
      * 客户经理列表
@@ -554,15 +718,20 @@ public class SjBackstageController extends BaseController {
         Page page = getPageByRequest(request);
         try {
             //获取查询条件
-            String name = request.getParameter("name");
-            String phone = request.getParameter("phone");
+            String namePhone = request.getParameter("namePhone");
             String ascription = request.getParameter("ascription");//归属
-            String queryStartTime = request.getParameter("queryStartTime");
-            String queryEndTime = request.getParameter("queryEndTime");
+            String queryStartTime = request.getParameter("query_startTime");
+            String queryEndTime = request.getParameter("query_endTime");
             String marketingNo = request.getParameter("marketingNo");
             CustomerDetail customerDetail = new CustomerDetail();
-            customerDetail.setName(name);
-            customerDetail.setPhone(phone);
+            customerDetail.setPage(page);
+            if (StringUtils.isNotBlank(namePhone)) {
+                if (orderService.isNumeric(namePhone)) {
+                    customerDetail.setPhone(namePhone);
+                } else {
+                    customerDetail.setName(namePhone);
+                }
+            }
             customerDetail.setQueryStartTime(queryStartTime);
             customerDetail.setQueryEndTime(queryEndTime);
             customerDetail.setMarketingNo(marketingNo);
@@ -582,7 +751,6 @@ public class SjBackstageController extends BaseController {
                         break;
                 }
             }
-
             //login_id,name,phone,city_company_id,management_unit_id,branch_office_id,
             // contract_body_id,marketing_no,create_time,is_cancel
             List<Map<String, String>> customerDetails = customerDetailService.getDao().queryCustomerListForPage(customerDetail);
@@ -601,6 +769,167 @@ public class SjBackstageController extends BaseController {
             e.printStackTrace();
         }
         this.renderJson(response, page);
+    }
+
+    /**
+     * 跳转登记单
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/sj/order/registerForm")
+    public ModelAndView registerForm(HttpServletRequest request,
+                                     HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
+        String isWifi = request.getParameter("isWifi");
+        List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(null, null, null);
+        for (SjRegisterForm registerForm : registerForms) {
+            if (String.valueOf(registerForm.getMealId()).equals(isWifi)) {
+                request.setAttribute("registerForm", registerForm);
+            }
+        }
+        SjOrder sjOrder = orderService.queryById(orderId);
+        List<SjRegisterForm> modelL=null;
+        List<SjRegisterForm> poeL=null;
+        List<SjRegisterForm> storageL=null;
+        if(isWifi.equals("1")){
+            modelL = registerFormService.getSjRegisterForms(null, null, 1);
+            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelId(), 1);
+            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeId(), sjOrder.getModelId(), 1);
+        }else if(isWifi.equals("2")){
+            modelL = registerFormService.getSjRegisterForms(null, null, 2);
+            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelWifiId(), 2);
+            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeWifiId(), sjOrder.getModelWifiId(), 2);
+        }
+        request.setAttribute("modelL", modelL);
+        request.setAttribute("poeL", poeL);
+        request.setAttribute("storageL", storageL);
+
+        request.setAttribute("isWifi", isWifi);
+        request.setAttribute("sjOrder", sjOrder);
+        String returnView = "business/registerForm";
+        return new ModelAndView(returnView);
+    }
+
+    /**
+     * 获取登记单信息
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/getRegisterForm")
+    @ResponseBody
+    public ResultData getRegisterForm(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String strPoeId = request.getParameter("poeId");
+            String strModelId = request.getParameter("modelId");
+            String strMealId = request.getParameter("mealId");
+            Integer poeId = null;
+            Integer modelId = null;
+            Integer mealId = null;
+            if (StringUtils.isNotBlank(strMealId)) {
+                mealId = Integer.valueOf(strMealId);
+            }
+            if (StringUtils.isNotBlank(strModelId)) {
+                modelId = Integer.valueOf(strModelId);
+            }
+            if (StringUtils.isNotBlank(strPoeId)) {
+                poeId = Integer.valueOf(strPoeId);
+            }
+            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
+            getResult(result, registerForms, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 录单
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/setRegisterForm")
+    @ResponseBody
+    public ResultData setRegisterForm(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String orderId = request.getParameter("orderId");
+            String isWifi = request.getParameter("isWifi");
+            Integer storageId = Integer.valueOf(request.getParameter("storageId"));
+            Integer storageNum = Integer.valueOf(request.getParameter("storageNum"));
+            Integer poeId = Integer.valueOf(request.getParameter("poeId"));
+            Integer poeNum = Integer.valueOf(request.getParameter("poeNum"));
+            Integer modelId = Integer.valueOf(request.getParameter("modelId"));
+            Integer modelNum = Integer.valueOf(request.getParameter("modelNum"));
+            Integer mealId = Integer.valueOf(request.getParameter("mealId"));
+            SjOrder sjOrder = orderService.queryById(orderId);
+            if (isWifi.equals("1")) {
+                sjOrder.setMealId(mealId);
+                sjOrder.setModelId(modelId);
+                sjOrder.setModelNum(modelNum);
+                sjOrder.setPoeId(poeId);
+                sjOrder.setPoeNum(poeNum);
+                sjOrder.setStorageId(storageId);
+                sjOrder.setStorageNum(storageNum);
+            } else {
+                sjOrder.setMealWifiId(mealId);
+                sjOrder.setModelWifiId(modelId);
+                sjOrder.setModelWifiNum(modelNum);
+                sjOrder.setPoeWifiId(poeId);
+                sjOrder.setPoeWifiNum(poeNum);
+                sjOrder.setStorageWifiId(storageId);
+                sjOrder.setStorageWifiNum(storageNum);
+            }
+            orderService.saveUpdate(sjOrder);
+            getResult(result, null, true, "0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 注销
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/company/isCancellation")
+    @ResponseBody
+    public ResultData isCancellation(HttpServletRequest request,
+                                     HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String type = request.getParameter("type");//角色类型
+            String loginId = request.getParameter("loginId");
+            String isCancel = request.getParameter("isCancel");//是否注销   1注销   0恢复
+            if ("1".equals(isCancel)) {
+                sjUserService.getDao().updateCancel1(loginId, Integer.valueOf(type));
+                getSjResult(result, null, true, "0", null, "注销成功");
+            } else {
+                sjUserService.getDao().updateCancel0(loginId, Integer.valueOf(type));
+                getSjResult(result, null, true, "0", null, "恢复成功");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
     }
 
     //企业导入

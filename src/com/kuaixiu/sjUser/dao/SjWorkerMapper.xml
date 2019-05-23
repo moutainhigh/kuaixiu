@@ -103,4 +103,28 @@
         </if>
     </select>
 
+    <select id="queryWorkerListForPage" resultType="Map"  parameterType="Object">
+        SELECT u.login_id,u.`name`,u.phone,u.is_cancel,c.login_id company_id,w.building_num,
+        date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+        from sj_worker w
+        LEFT JOIN sj_user u ON u.id=w.login_id
+        LEFT JOIN sj_construction_company c ON w.company_login_id=c.login_id
+        where 1=1
+        and u.is_del=0
+        <if test="id != null and id != ''" >
+            and w.id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''" >
+            and w.login_id = #{loginId}
+        </if>
+        <if test="companyLoginId != null and companyLoginId != ''" >
+            and w.company_login_id = #{companyLoginId}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and w.is_del = #{isDel}
+        </if>
+        <if test="buildingNum != null and buildingNum != ''" >
+            and w.building_num = #{buildingNum}
+        </if>
+    </select>
 </mapper>   

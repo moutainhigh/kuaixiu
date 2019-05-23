@@ -13,16 +13,18 @@
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
             <tr>
-                <td class="search_th "><label class="control-label">单  号 ：</label></td>
+                <td class="search_th "><label class="control-label">单 号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
-                <td class="search_th"><label class="control-label">类  型：</label></td>
-                <td class="search_td">
-                    <select name="type" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="1">商机</option>
-                        <option value="2">派单</option>
-                    </select>
-                </td>
+                <td class="search_th "><label class="control-label">企业名字：</label></td>
+                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
+                <%--<td class="search_th"><label class="control-label">类 型：</label></td>--%>
+                <%--<td class="search_td">--%>
+                    <%--<select name="type" class="form-control">--%>
+                        <%--<option value="">--选择状态--</option>--%>
+                        <%--<option value="1">商机</option>--%>
+                        <%--<option value="2">派单</option>--%>
+                    <%--</select>--%>
+                <%--</td>--%>
             </tr>
 
 
@@ -42,8 +44,6 @@
                 <td class="search_td"><input type="text" name="createUser" class="form-control"></td>
             </tr>
             <tr>
-                <td class="search_th "><label class="control-label">企业名字：</label></td>
-                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
                 <input type="hidden" id="state" name="state" value="200"/><br/>
                 <input type="hidden" id="isAssign" name="isAssign" value="1"/><br/>
             </tr>
@@ -176,13 +176,13 @@
         {
             targets: 4,
             render: function (data, type, row, meta) {
-                return row.createName+"/"+row.createUserid;
+                return row.createName + "/" + row.createUserid;
             }
         },
         {
             targets: -5,
             render: function (data, type, row, meta) {
-                return row.person+"/"+row.phone;
+                return row.person + "/" + row.phone;
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
@@ -233,7 +233,7 @@
                     func: [
                         {
                             "name": "指派",
-                            "fn": "againOrderView(\'" + row.id + "\',\'"+row.projectId+"\')",
+                            "fn": "againOrderView(\'" + row.id + "\',\'" + row.projectId + "\')",
                             "icon": "am-icon-pencil-square-o",
                             "class": "am-text-secondary"
                         }
@@ -253,12 +253,9 @@
     function refreshPage() {
         myTable.ajax.reload(null, false);
     }
-    function againOrderView(orderId,projectId) {
-        $("#orderId").val(orderId);
-        $("#projectIds").val(projectId);
-//        $("#modal-againOrderView").modal("show");
+    function againOrderView(orderId, projectId) {
         $("#modal-againOrderView").html("");
-        $("#modal-againOrderView").load("${ctx}/sj/order/toAssign.do", function () {
+        $("#modal-againOrderView").load("${ctx}/sj/order/toAssign.do?orderId=" + orderId + "&projectIds=" + projectId, function () {
             func_after_model_load(this);
         });
     }

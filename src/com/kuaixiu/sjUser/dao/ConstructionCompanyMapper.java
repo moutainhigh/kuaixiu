@@ -15,13 +15,14 @@ import java.util.Map;
 public interface ConstructionCompanyMapper<T> extends BaseDao<T> {
 
     //添加企业人数1
-    int updatePersonAddNum(String loginId);
+    int updatePersonAddNum(Integer loginId);
 
     //减少企业人数1
-    int updatePersonCutNum(String loginId);
+    int updatePersonCutNum(Integer loginId);
 
     //查询企业列表
-    List<Map<String,String>> queryCompanyListForPage(T t);
+    List<Map<String,Object>> queryCompanyListForPage(T t);
+    T queryByLoginId(Integer LoginId);
 }
 
 

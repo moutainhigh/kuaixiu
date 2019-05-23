@@ -121,8 +121,11 @@
     <select id="queryIngByLoginIdState" resultType="Integer" parameterType="Object">
         select count(o.id)
         from sj_customer_detail c
-        LEFT JOIN sj_order o ON c.login_id=o.create_userid
-        where 1=1 and c.login_id=#{loginId}
+        LEFT JOIN sj_user u ON c.login_id=u.id
+        LEFT JOIN sj_order o ON u.login_id=o.create_userid
+        where 1=1
+        and u.login_id=#{loginId}
+        and u.is_del=0
         <if test="state != null and state != ''">
             and o.state not in('500','600')
         </if>
@@ -131,19 +134,31 @@
     <select id="queryByLoginIdState" resultType="Integer" parameterType="Object">
         select count(o.id)
         from sj_customer_detail c
-        LEFT JOIN sj_order o ON c.login_id=o.create_userid
-        where 1=1 and c.login_id=#{loginId}
+        LEFT JOIN sj_user u ON c.login_id=u.id
+        LEFT JOIN sj_order o ON u.login_id=o.create_userid
+        where 1=1
+        and u.login_id=#{loginId}
+        and u.is_del=0
         <if test="state != null and state != ''">
             and o.state=#{state}
         </if>
     </select>
 
-    <select id="queryCustomerListForPage" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryCustomerListForPage" resultType="Map" parameterType="Object">
         select u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
-        c.contract_body_id,c.marketing_no,u.create_time,u.is_cancel
+        c.contract_body_id,
+        if(c.contract_body_id is null,if(c.branch_office_id is null,if(c.management_unit_id is null,
+        ac.city_company,CONCAT(am.management_unit)),CONCAT(am.management_unit,'/',ab.branch_office)),
+        CONCAT(am.management_unit,'/',ab.branch_office,'/',ao.contract_body)) type_name,
+        c.marketing_no,date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,u.is_cancel
         from sj_customer_detail c
-        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        LEFT JOIN sj_user u ON c.login_id=u.id
+        LEFT JOIN sj_area_city_company ac ON ac.id=c.city_company_id
+        LEFT JOIN sj_area_management_unit am ON am.id=c.management_unit_id
+        LEFT JOIN sj_area_branch_office ab ON ab.id=c.branch_office_id
+        LEFT JOIN sj_area_contract_body ao ON ao.id=c.contract_body_id
         where 1=1
+        and u.is_del=0
         <if test="phone != null and phone != ''">
             and u.`phone` like CONCAT('%', #{phone}, '%')
         </if>

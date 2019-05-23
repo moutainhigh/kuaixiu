@@ -3,7 +3,7 @@
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg">订单管理</strong> /
-        <small>商机单列表查询</small>
+        <small>派单列表查询</small>
     </div>
 </div>
 
@@ -12,7 +12,7 @@
 <div class="am-g">
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
-            <input type="hidden" id="type" name="type" value="1"/><br/>
+            <input type="hidden" id="type" name="type" value="2"/><br/>
             <tr>
                 <td class="search_th "><label class="control-label">单  号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
@@ -21,9 +21,10 @@
                     <select name="state" class="form-control">
                         <option value="">--选择状态--</option>
                         <option value="100">待审核</option>
-                        <option value="200">待反馈</option>
-                        <option value="300">已转化</option>
-                        <option value="400">已完结</option>
+                        <option value="200">待指派</option>
+                        <option value="300">待施工</option>
+                        <option value="400">待竣工</option>
+                        <option value="500">已完成</option>
                         <option value="600">未通过</option>
                     </select>
                 </td>
@@ -48,6 +49,7 @@
             <tr>
                 <td class="search_th "><label class="control-label">企业名字：</label></td>
                 <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
+
             </tr>
 
         </table>
@@ -185,13 +187,16 @@
                         state = "待审核";
                         break;
                     case 200:
-                        state = "待反馈";
+                        state = "待指派";
                         break;
                     case 300:
-                        state = "已转化";
+                        state = "待施工";
                         break;
                     case 400:
-                        state = "已完结";
+                        state = "待竣工";
+                        break;
+                    case 500:
+                        state = "已完成";
                         break;
                     case 600:
                         state = "未通过";

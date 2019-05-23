@@ -25,6 +25,9 @@
         <result column="approval_person" property="approvalPerson"/>
         <result column="approval_note" property="approvalNote"/>
         <result column="approval_time" property="approvalTime"/>
+        <result column="feedback_person" property="feedbackPerson"/>
+        <result column="feedback_note" property="feedbackNote"/>
+        <result column="feedback_time" property="feedbackTime"/>
         <result column="assign_person" property="assignPerson"/>
         <result column="assign_time" property="assignTime"/>
         <result column="build_person" property="buildPerson"/>
@@ -37,25 +40,56 @@
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
         <result column="create_name" property="createName"/>
+        <result column="meal_id" property="mealId"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_num" property="modelNum"/>
+        <result column="poe_id" property="poeId"/>
+        <result column="poe_num" property="poeNum"/>
+        <result column="storage_id" property="storageId"/>
+        <result column="storage_num" property="storageNum"/>
+        <result column="meal_wifi_id" property="mealWifiId"/>
+        <result column="model_wifi_id" property="modelWifiId"/>
+        <result column="model_wifi_num" property="modelWifiNum"/>
+        <result column="poe_wifi_id" property="poeWifiId"/>
+        <result column="poe_wifi_num" property="poeWifiNum"/>
+        <result column="storage_wifi_id" property="storageWifiId"/>
+        <result column="storage_wifi_num" property="storageWifiNum"/>
     </resultMap>
 
     <!-- sj_order table all fields -->
     <sql id="Base_Column_List">
-        id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name
+        id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,
+        address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,
+        approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,
+        date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,
+        build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,
+        completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,
+        date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
+        feedback_person,feedback_note,feedback_time,meal_id,model_id,model_num,poe_id,poe_num,
+        storage_id,storage_num,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,
+        storage_wifi_id,storage_wifi_num
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object">
         insert into sj_order
-        (id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,completed_phone,completed_time,create_time,create_userid,create_name)
+        (id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,
+        person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,
+        assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,
+        completed_phone,completed_time,create_time,create_userid,create_name,feedback_person,
+        feedback_note,feedback_time)
         values
-        (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},#{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},#{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},#{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},now(),#{createUserid},#{createName})
+        (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},
+        #{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
+        #{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},
+        #{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},
+        now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime})
     </insert>
 
     <!-- 根据id，修改记录-->
     <update id="update" parameterType="Object">
         update sj_order 
-        set 
+        set
             id=#{id},
             order_no=#{orderNo},
             type=#{type},
@@ -76,6 +110,9 @@
             approval_person=#{approvalPerson},
             approval_note=#{approvalNote},
             approval_time=#{approvalTime},
+            feedback_person=#{feedbackPerson},
+            feedback_note=#{feedbackNote},
+            feedback_time=#{feedbackTime},
             assign_person=#{assignPerson},
             assign_time=#{assignTime},
             build_person=#{buildPerson},
@@ -86,7 +123,21 @@
             completed_phone=#{completedPhone},
             completed_time=#{completedTime},
             create_time=#{createTime},
-            create_userid=#{createUserid}
+            create_userid=#{createUserid},
+            meal_id=#{mealId},
+            model_id=#{modelId},
+            model_num=#{modelNum},
+            poe_id=#{poeId},
+            poe_num=#{poeNum},
+            storage_id=#{storageId},
+            storage_num=#{storageNum},
+            meal_wifi_id=#{mealWifiId},
+            model_wifi_id=#{modelWifiId},
+            model_wifi_num=#{modelWifiNum},
+            poe_wifi_id=#{poeWifiId},
+            poe_wifi_num=#{poeWifiNum},
+            storage_wifi_id=#{storageWifiId},
+            storage_wifi_num=#{storageWifiNum}
         where id=#{id}
     </update>
 
@@ -336,13 +387,20 @@
         </if>
         <if test="type != null and type != ''">
             and type = #{type}
-        </if>
-        <if test="state != null and state != ''">
-            <if test="state == 300">
-                and state in ('200','300','400')
+            <if test="type == 1">
+                <if test="state != null and state != ''">
+                    and state = #{state}
+                </if>
             </if>
-            <if test="state != 300">
-                and state = #{state}
+            <if test="type == 2">
+                <if test="state != null and state != ''">
+                    <if test="state == 300">
+                        and state in ('200','300','400')
+                    </if>
+                    <if test="state != 300">
+                        and state = #{state}
+                    </if>
+                </if>
             </if>
         </if>
         <if test="companyName != null and companyName != ''">

@@ -11,8 +11,8 @@
 
             <form id="againOrderSearchForm" method="post" class="form-horizontal">
                 <label class="col-sm-3 control-label">筛选条件</label><br/>
-                <input type="hidden" id="orderId" name="orderId"/><br/>
-                <input type="hidden" id="projectIds" name="projectIds"/><br/>
+                <input type="hidden" id="orderId" name="orderId" value="${orderId }"/><br/>
+                <input type="hidden" id="projectIds" name="projectIds" value="${projectIds }"/><br/>
                 <div class="form-group">
                     <input type="hidden" id="addAreas" name="addAreas">
                     <label for="addArea" class="col-sm-3 control-label"><span style="color:red">*</span> 地址</label>
@@ -188,7 +188,7 @@
                             $("#addMissAgainOrderBtn").click();
                         });
                     } else {
-                        AlertText.tips("d_alert", "提示", "错误");
+                        AlertText.tips("d_alert", "提示", result.resultMessage);
                         clean();
                         return false;
                     }

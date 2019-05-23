@@ -3,29 +3,20 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
-import com.common.paginate.Page;
 import com.common.util.ConverterUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.*;
 
-import com.kuaixiu.sjUser.entity.ConstructionCompany;
-import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
-import com.kuaixiu.sjUser.entity.SjWorker;
-import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.SjUserService;
-import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -50,13 +41,7 @@ public class SjOrderService extends BaseService<SjOrder> {
     @Autowired
     private SjUserService sjUserService;
     @Autowired
-    private OrderContractPictureService orderContractPictureService;
-    @Autowired
-    private ConstructionCompanyService constructionCompanyService;
-    @Autowired
-    private SjWorkerService sjWorkerService;
-    @Autowired
-    private ApprovalNoteService approvalNoteService;
+    private SjRegisterFormService registerFormService;
 
 
     public SjOrderMapper<SjOrder> getDao() {
@@ -119,10 +104,18 @@ public class SjOrderService extends BaseService<SjOrder> {
         if (o.getType() == 2) {
             jsonObject.put("ap", o.getSingle());
             jsonObject.put("monitor", o.getGroupNet());
+        } else {
+            if (o.getState() > 200) {
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(), null);
+                jsonObject.put("feedbackPerson", sjUser.getName() + "/" + sjUser.getLoginId());
+                jsonObject.put("feedbackTime", o.getFeedbackTime());
+                jsonObject.put("feedbackNote", o.getFeedbackNote());
+            }
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
-            jsonObject.put("approvalPerson", o.getApprovalPerson());
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(), null);
+            jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
         }
@@ -194,6 +187,29 @@ public class SjOrderService extends BaseService<SjOrder> {
         return fristSpell;
     }
 
+
+    public void setWifi(Integer type, SjOrder order) {
+        if (type == 1) {
+            SjRegisterForm registerForm = registerFormService.getDao().queryBy4Id(order.getStorageId(),
+                    order.getPoeId(), order.getModelId(), order.getMealId());
+            if (registerForm != null) {
+                order.setMealName(registerForm.getMealName());
+                order.setModelName(registerForm.getModelName());
+                order.setPoeName(registerForm.getPoeName());
+                order.setStorageName(registerForm.getStorageName());
+            }
+        } else {
+            SjRegisterForm registerForm = registerFormService.getDao().queryBy4Id(order.getStorageWifiId(),
+                    order.getPoeWifiId(), order.getModelWifiId(), order.getMealWifiId());
+            if (registerForm != null) {
+                order.setMealWifiName(registerForm.getMealName());
+                order.setModelWifiName(registerForm.getModelName());
+                order.setPoeWifiName(registerForm.getPoeName());
+                order.setStorageWifiName(registerForm.getStorageName());
+            }
+        }
+    }
+
     /**
      * 1://审批人 2://指派人 3://施工人 4://竣工人
      *
@@ -217,5 +233,49 @@ public class SjOrderService extends BaseService<SjOrder> {
                 break;
         }
         return stayPerson;
+    }
+
+    public Integer setOrderType(Integer num, Integer type) {
+        Integer ordertype = null;
+        if (type == 2) {
+            switch (num) {
+                case 1:
+                    break;
+                case 2:
+                    ordertype = 100;
+                    break;
+                case 3:
+                    ordertype = 600;
+                    break;
+                case 4:
+                    ordertype = 300;
+                    break;
+                case 5:
+                    ordertype = 500;
+                    break;
+            }
+        } else {
+            switch (num) {
+                case 1:
+                    break;
+                case 2:
+                    ordertype = 100;
+                    break;
+                case 3:
+                    ordertype = 200;
+                    break;
+                case 4:
+                    ordertype = 300;
+                    break;
+                case 5:
+                    ordertype = 400;
+                    break;
+                case 6:
+                    ordertype = 600;
+                    break;
+            }
+        }
+
+        return ordertype;
     }
 }

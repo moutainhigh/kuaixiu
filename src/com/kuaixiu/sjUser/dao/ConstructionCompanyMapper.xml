@@ -52,14 +52,14 @@
     <update id="updatePersonAddNum" parameterType="Object" >
         update sj_construction_company
         set
-        end_order_num=end_order_num+1
+        person_num=person_num+1
         where login_id=#{loginId}
     </update>
 
     <update id="updatePersonCutNum" parameterType="Object" >
         update sj_construction_company
         set
-        end_order_num=end_order_num-1
+        person_num=person_num-1
         where login_id=#{loginId}
     </update>
 
@@ -72,6 +72,11 @@
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from sj_construction_company where id = #{id}
+    </select>
+
+    <select id="queryByLoginId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_construction_company where login_id=#{loginId}
     </select>
 
     <!-- 查询列表无分页 -->
@@ -151,7 +156,7 @@
             </foreach>
         </if>
         <if test="project != null and project != ''" >
-            and project = #{project}
+            and project like CONCAT('%', #{project}, '%')
         </if>
         <if test="personNum != null and personNum != ''" >
             and person_num = #{personNum}
@@ -164,12 +169,15 @@
 
 
     <!-- 查询列表 带分页 -->
-    <select id="queryCompanyListForPage" resultMap="BaseResultMap"  parameterType="Object">
-        select c.login_id loginId,u.`name` companyName,c.province,c.city,c.area,c.address_detail addressDetail,c.person,c.phone
-        ,c.project,u.create_time createTime,c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
+    <select id="queryCompanyListForPage" resultType="Map"  parameterType="Object">
+        select u.login_id loginId,u.`name` companyName,c.province,c.city,c.area,
+        c.address_detail addressDetail,c.person,c.phone,
+        c.project,date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
+        c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
         from sj_construction_company c
-        LEFT JOIN sj_user u ON c.login_id=u.login_id
+        LEFT JOIN sj_user u ON c.login_id=u.id
         where 1=1
+        and u.is_del=0
         <if test="companyName != null and companyName != ''" >
             and u.`name` like CONCAT('%', #{companyName}, '%')
         </if>

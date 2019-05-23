@@ -3,6 +3,7 @@ package com.kuaixiu.sjUser.dao;
 import com.common.base.dao.BaseDao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * SjWorker Mapper
@@ -14,6 +15,8 @@ import java.util.List;
 public interface SjWorkerMapper<T> extends BaseDao<T> {
 
     List<T> queryByCompanyId(String companId);
+
+    List<Map<String,String>> queryWorkerListForPage(T t);
 }
 
 

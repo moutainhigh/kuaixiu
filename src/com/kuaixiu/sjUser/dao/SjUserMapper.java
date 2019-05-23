@@ -3,6 +3,8 @@ package com.kuaixiu.sjUser.dao;
 import com.common.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * User Mapper
  *
@@ -15,6 +17,12 @@ public interface SjUserMapper<T> extends BaseDao<T> {
     T queryByLoginId(@Param("loginId") String loginId, @Param("type") Integer type);
 
     T queryByName(@Param("name")String name, @Param("type") Integer type);
+    //注销
+    int updateCancel1(@Param("loginId") String loginId, @Param("type") Integer type);
+    //恢复
+    int updateCancel0(@Param("loginId") String loginId, @Param("type") Integer type);
+
+    List<T> queryByType(@Param("type") Integer type);
 }
 
 

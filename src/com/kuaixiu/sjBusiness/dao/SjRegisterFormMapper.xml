@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjRegisterFormMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjRegisterForm" >
+        <result column="id" property="id"/>
+        <result column="meal_id" property="mealId"/>
+        <result column="meal_name" property="mealName"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="poe_id" property="poeId"/>
+        <result column="poe_name" property="poeName"/>
+        <result column="storage_id" property="storageId"/>
+        <result column="storage_name" property="storageName"/>
+    </resultMap>
+    
+    <!-- sj_register_form table all fields -->
+    <sql id="Base_Column_List" >
+        id,meal_id,meal_name,model_id,model_name,poe_id,poe_name,storage_id,storage_name
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_register_form
+        (id,meal_id,meal_name,model_id,model_name,poe_id,poe_name,storage_id,storage_name)
+        values
+        (#{id},#{mealId},#{mealName},#{modelId},#{modelName},#{poeId},#{poeName},#{storageId},#{storageName})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_register_form 
+        set 
+            id=#{id},
+            meal_id=#{mealId},
+            meal_name=#{mealName},
+            model_id=#{modelId},
+            model_name=#{modelName},
+            poe_id=#{poeId},
+            poe_name=#{poeName},
+            storage_id=#{storageId},
+            storage_name=#{storageName}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_register_form where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_register_form where id = #{id}
+    </select>
+
+    <select id="queryByNull"  resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT meal_id,meal_name
+        from sj_register_form
+    </select>
+    <select id="queryByMealId"  resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT model_id,model_name
+        from sj_register_form where meal_id=#{mealId}
+    </select>
+    <select id="queryByModelId"  resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT poe_id,poe_name
+        from sj_register_form where model_id=#{modelId} and meal_id=#{mealId}
+    </select>
+    <select id="queryByPoeId"  resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT storage_id,storage_name
+        from sj_register_form where poe_id=#{poeId} and model_id=#{modelId} and meal_id=#{mealId}
+    </select>
+
+    <select id="queryBy4Id"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_register_form
+        where storage_id=#{storageId}
+        and poe_id=#{poeId}
+        and model_id=#{modelId}
+        and meal_id=#{mealId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_register_form
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mealId != null and mealId != ''" >
+            and meal_id = #{mealId}
+        </if>
+        <if test="mealName != null and mealName != ''" >
+            and meal_name = #{mealName}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and model_id = #{modelId}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="poeId != null and poeId != ''" >
+            and poe_id = #{poeId}
+        </if>
+        <if test="poeName != null and poeName != ''" >
+            and poe_name = #{poeName}
+        </if>
+        <if test="storageId != null and storageId != ''" >
+            and storage_id = #{storageId}
+        </if>
+        <if test="storageName != null and storageName != ''" >
+            and storage_name = #{storageName}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_register_form
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mealId != null and mealId != ''" >
+            and meal_id = #{mealId}
+        </if>
+        <if test="mealName != null and mealName != ''" >
+            and meal_name = #{mealName}
+        </if>
+        <if test="modelId != null and modelId != ''" >
+            and model_id = #{modelId}
+        </if>
+        <if test="modelName != null and modelName != ''" >
+            and model_name = #{modelName}
+        </if>
+        <if test="poeId != null and poeId != ''" >
+            and poe_id = #{poeId}
+        </if>
+        <if test="poeName != null and poeName != ''" >
+            and poe_name = #{poeName}
+        </if>
+        <if test="storageId != null and storageId != ''" >
+            and storage_id = #{storageId}
+        </if>
+        <if test="storageName != null and storageName != ''" >
+            and storage_name = #{storageName}
+        </if>
+    </select>
+
+</mapper>   

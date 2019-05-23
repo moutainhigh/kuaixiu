@@ -56,7 +56,33 @@
         select
         <include refid="Base_Column_List"/>
         from sj_user where id = #{id}
+        and is_del=0
     </select>
+
+    <select id="queryByType" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_user where  type=#{type}
+        and is_del=0
+    </select>
+
+    <update id="updateCancel1" parameterType="Object">
+        update sj_user
+        set
+        is_cancel=1
+        where login_id=#{loginId}
+        and type=#{type}
+        and is_del=0
+    </update>
+
+    <update id="updateCancel0" parameterType="Object">
+        update sj_user
+        set
+        is_cancel=0
+        where login_id=#{loginId}
+        and type=#{type}
+        and is_del=0
+    </update>
 
     <select id="queryByLoginId" resultMap="BaseResultMap" parameterType="Object">
         select
