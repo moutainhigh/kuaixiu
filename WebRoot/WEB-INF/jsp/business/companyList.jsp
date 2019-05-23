@@ -62,11 +62,8 @@
                     <div class="am-btn-group am-btn-group-sm m20">
                         <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 开始查找
                         </button>
-                        <button onclick="addBtnClick(1);" type="button" class="am-btn am-btn-default"><span
+                        <button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span
                                 class="am-icon-plus"></span> 企业新增
-                        </button>
-                        <button onclick="addBtnClick(2);" type="button" class="am-btn am-btn-default"><span
-                                class="am-icon-plus"></span> 员工新增
                         </button>
                     </div>
                 </div>
@@ -113,18 +110,11 @@
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
-    function addBtnClick(type) {
-        if(type==1){
+    function addBtnClick() {
             $("#modal-insertCompanyView").html("");
             $("#modal-insertCompanyView").load("${ctx}/sj/order/toRegisterCompany.do", function () {
                 func_after_model_load(this);
             });
-        }else{
-            $("#modal-insertWorkerView").html("");
-            $("#modal-insertWorkerView").load("${ctx}/sj/order/toRegisterWorker.do", function () {
-                func_after_model_load(this);
-            });
-        }
 
     }
 

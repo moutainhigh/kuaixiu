@@ -15,6 +15,17 @@
 
 
         </table>
+        <div class="form-group">
+            <div class="am-u-sm-12 am-u-md-6">
+                <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-sm m20">
+                        <button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span
+                                class="am-icon-plus"></span> 员工新增
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -47,9 +58,17 @@
 <div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
 </div>
 <!-- 新增弹窗 end -->
+<div id="modal-insertWorkerView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
+    function addBtnClick() {
+            $("#modal-insertWorkerView").html("");
+            $("#modal-insertWorkerView").load("${ctx}/sj/order/toRegisterWorker.do", function () {
+                func_after_model_load(this);
+            });
+    }
 
     $("#query_startTime").datetimepicker({
         format: "yyyy-mm-dd",
