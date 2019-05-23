@@ -78,6 +78,7 @@
                 <th class="fontWeight_normal tdwidth80">创建时间</th>
                 <th class="fontWeight_normal tdwidth50">类型</th>
                 <th class="fontWeight_normal tdwidth90">提交人/账号</th>
+                <th class="fontWeight_normal tdwidth90">CRM编号</th>
                 <th class="fontWeight_normal tdwidth90">企业名字</th>
                 <th class="fontWeight_normal table-title tdwidth80">企业负责人/电话</th>
                 <th class="fontWeight_normal tdwidth100">需求</th>
@@ -131,6 +132,7 @@
         {"data": "strCreateTime", "class": ""},
         {"data": "type", "class": ""},
         {"data": "createUserid", "class": ""},
+        {"data": "crmNo", "class": ""},
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
         {"data": "projectNames", "class": ""},
