@@ -8,34 +8,59 @@
         </div>
         <div class="modal-body">
             <form id="insertRegisterForm" method="post" class="form-horizontal">
-                <input type="hidden" id="orderId" name="orderId" value="${orderId}"/><br/>
-
+                <input type="hidden" id="orderId" name="orderId" value="${sjOrder.id}"/><br/>
+                <input type="hidden" id="isWifi" name="isWifi" value="${isWifi}"/><br/>
                 <div class="form-group">
                     <label for="mealId" class="col-sm-3 control-label"><span style="color:red">*</span> 套餐名字</label>
                     <div class="col-sm-9">
-                        <select id="mealId" name="mealId" onchange="registerFormChange(1,this.value);"
-                                class="form-control">
-                            <option value="">--请选择--</option>
-                            <c:forEach items="${registerForms }" var="item" varStatus="i">
-                                <option value="${item.mealId }">${item.mealName }</option>
-                            </c:forEach>
-                        </select>
+                        <input type="hidden" id="mealId" name="mealId" value="${registerForm.mealId}"
+                               class="form-control">
+                        <input type="text" id="mealIdView" disabled="disabled" name="mealIdView" value="${registerForm.mealName}"
+                               class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="modelId" class="col-sm-3 control-label"><span style="color:red">*</span>
-                        监控型号/无线wifi</label>
+                        <c:if test="${registerForm.mealId==1}">
+                            监控型号
+                        </c:if>
+                        <c:if test="${registerForm.mealId==2}">
+                            无线wifi
+                        </c:if>
+                    </label>
                     <div class="col-sm-9">
                         <select id="modelId" name="modelId" onchange="registerFormChange(2,this.value);"
                                 class="form-control">
                             <option value="">--请选择--</option>
+                            <c:if test="${isWifi==1}">
+                                <c:forEach items="${modelL}" var="item" varStatus="i">
+                                    <option value="${item.modelId }" ${item.modelId == sjOrder.modelId ? 'selected="selected"' : '' }>${item.modelName }</option>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${isWifi==2}">
+                                <c:forEach items="${modelL}" var="item" varStatus="i">
+                                    <option value="${item.modelId }" ${item.modelId == sjOrder.modelWifiId ? 'selected="selected"' : '' }>${item.modelName }</option>
+                                </c:forEach>
+                            </c:if>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="modelNum" class="col-sm-3 control-label"><span style="color:red">*</span> 监控型号/无线wifi 个数</label>
+                    <label for="modelNum" class="col-sm-3 control-label"><span style="color:red">*</span>
+                        <c:if test="${registerForm.mealId==1}">
+                            监控型号
+                        </c:if>
+                        <c:if test="${registerForm.mealId==2}">
+                            无线wifi
+                        </c:if>
+                        个数</label>
                     <div class="col-sm-9">
-                        <input type="text" id="modelNum" name="modelNum" class="form-control">
+                        <c:if test="${isWifi==1}">
+                            <input type="text" id="modelNum" value="${sjOrder.modelNum}" name="modelNum" class="form-control">
+                        </c:if>
+                        <c:if test="${isWifi==2}">
+                            <input type="text" id="modelNum" value="${sjOrder.modelWifiNum}" name="modelNum" class="form-control">
+                        </c:if>
                     </div>
                 </div>
                 <div class="form-group">
@@ -44,28 +69,71 @@
                         <select id="poeId" name="poeId" onchange="registerFormChange(3,this.value);"
                                 class="form-control">
                             <option value="">--请选择--</option>
+                            <c:if test="${isWifi==1}">
+                                <c:forEach items="${poeL }" var="item" varStatus="i">
+                                    <option value="${item.poeId }" ${item.poeId == sjOrder.poeId ? 'selected="selected"' : '' }>${item.poeName }</option>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${isWifi==2}">
+                                <c:forEach items="${poeL }" var="item" varStatus="i">
+                                    <option value="${item.poeId }" ${item.poeId == sjOrder.poeWifiId ? 'selected="selected"' : '' }>${item.poeName }</option>
+                                </c:forEach>
+                            </c:if>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="poeNum" class="col-sm-3 control-label"><span style="color:red">*</span> POE 个数</label>
                     <div class="col-sm-9">
-                        <input type="text" id="poeNum" name="poeNum" class="form-control">
+                        <c:if test="${isWifi==1}">
+                            <input type="text" id="poeNum" value="${sjOrder.poeNum}" name="poeNum" class="form-control">
+                        </c:if>
+                        <c:if test="${isWifi==2}">
+                            <input type="text" id="poeNum" value="${sjOrder.poeWifiNum}" name="poeNum" class="form-control">
+                        </c:if>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="storageId" class="col-sm-3 control-label"><span style="color:red">*</span> 存储/NET/网关/路由</label>
+                    <label for="storageId" class="col-sm-3 control-label"><span style="color:red">*</span>
+                        <c:if test="${registerForm.mealId==1}">
+                            存储
+                        </c:if>
+                        <c:if test="${registerForm.mealId==2}">
+                            NET/网关/路由
+                        </c:if>
+                        </label>
                     <div class="col-sm-9">
                         <select id="storageId" name="storageId" class="form-control">
                             <option value="">--请选择--</option>
+                            <c:if test="${isWifi==1}">
+                                <c:forEach items="${storageL }" var="item" varStatus="i">
+                                    <option value="${item.storageId }" ${item.storageId == sjOrder.storageId ? 'selected="selected"' : '' }>${item.storageName }</option>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${isWifi==2}">
+                                <c:forEach items="${storageL }" var="item" varStatus="i">
+                                    <option value="${item.storageId }" ${item.storageId == sjOrder.storageWifiId ? 'selected="selected"' : '' }>${item.storageName }</option>
+                                </c:forEach>
+                            </c:if>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="storageNum" class="col-sm-3 control-label"><span style="color:red">*</span> 存储/NET/网关/路由
+                    <label for="storageNum" class="col-sm-3 control-label"><span style="color:red">*</span>
+                        <c:if test="${registerForm.mealId==1}">
+                            存储
+                        </c:if>
+                        <c:if test="${registerForm.mealId==2}">
+                            NET/网关/路由
+                        </c:if>
                         个数</label>
                     <div class="col-sm-9">
-                        <input type="text" id="storageNum" name="storageNum" class="form-control">
+                        <c:if test="${isWifi==1}">
+                            <input type="text" id="storageNum" value="${sjOrder.storageNum}" name="storageNum" class="form-control">
+                        </c:if>
+                        <c:if test="${isWifi==2}">
+                            <input type="text" id="storageNum" value="${sjOrder.storageWifiNum}" name="storageNum" class="form-control">
+                        </c:if>
                     </div>
                 </div>
                 <button type="submit" class="hide" id="addRegisterFormSubmitBtn"></button>
@@ -75,7 +143,8 @@
             <button type="button" id="addRegisterFormSaveBtn" class="btn modal-btn"><span
                     class="am-icon-save icon-save"></span>提交
             </button>
-            <button type="button" id="addRegisterFormMissBtn" class="btn modal-btn" data-dismiss="modal" aria-label="Close">
+            <button type="button" id="addRegisterFormMissBtn" class="btn modal-btn" data-dismiss="modal"
+                    aria-label="Close">
                 <span class="am-icon-close icon-close"></span>取消
             </button>
         </div>
@@ -88,6 +157,11 @@
     //表单验证
     $(document).ready(function () {
         insertValidatorForm();
+        var modelNum = $("#modelNum").val();
+        if(modelNum==null){
+            var mealId = $("#mealId").val();
+            registerFormChange(1, mealId);
+        }
     });
 
     //初始化表单
@@ -119,6 +193,10 @@
                         validators: {
                             notEmpty: {
                                 message: "不能为空"
+                            },
+                            regexp : {
+                                regexp : /^\d+$/,
+                                message : '请输入正确数字'
                             }
                         }
                     },
@@ -133,6 +211,10 @@
                         validators: {
                             notEmpty: {
                                 message: "不能为空"
+                            },
+                            regexp : {
+                                regexp : /^\d+$/,
+                                message : '请输入正确数字'
                             }
                         }
                     },
@@ -147,6 +229,10 @@
                         validators: {
                             notEmpty: {
                                 message: "不能为空"
+                            },
+                            regexp : {
+                                regexp : /^\d+$/,
+                                message : '请输入正确数字'
                             }
                         }
                     }
@@ -173,6 +259,8 @@
                         $("#orderDetailApprovalButton").attr("disabled", false);
                         //重置表单数据
                         document.getElementById("insertRegisterForm").reset();
+                        var orderId = $("#orderId").val();
+                        func_reload_page("${ctx}/sj/order/detail.do?id=" + orderId);
                     } else {
                         //保存失败
                         alert(data.resultMessage);
@@ -207,6 +295,7 @@
         $("#addRegisterFormSubmitBtn").click();
     });
 
+
     function registerFormChange(type, id) {
         var body = null;
         if (type) {
@@ -218,11 +307,11 @@
             } else if (type == 2) {
                 $("#poeId option[value!='']").remove();
                 $("#storageId option[value!='']").remove();
-                var mealId = $('#mealId option:selected').val();
+                var mealId = $("#mealId").val();
                 body = {modelId: id, mealId: mealId};
             } else if (type == 3) {
                 $("#storageId option[value!='']").remove();
-                var mealId = $('#mealId option:selected').val();
+                var mealId = $("#mealId").val();
                 var modelId = $('#modelId option:selected').val();
                 body = {poeId: id, mealId: mealId, modelId: modelId};
             }

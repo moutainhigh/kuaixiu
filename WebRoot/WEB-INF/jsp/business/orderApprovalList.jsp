@@ -3,7 +3,7 @@
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg">订单管理</strong> /
-        <small>商机单列表查询</small>
+        <small>商机审核单列表查询</small>
     </div>
 </div>
 
@@ -13,20 +13,12 @@
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
             <input type="hidden" id="type" name="type" value="1"/><br/>
+            <input type="hidden" id="state" name="state" value="100"/><br/>
             <tr>
                 <td class="search_th "><label class="control-label">单  号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
-                <td class="search_th"><label class="control-label">状   态：</label></td>
-                <td class="search_td">
-                    <select name="state" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="100">待审核</option>
-                        <option value="200">待反馈</option>
-                        <option value="300">已转化</option>
-                        <option value="400">已完结</option>
-                        <option value="600">未通过</option>
-                    </select>
-                </td>
+                <td class="search_th "><label class="control-label">企业名字：</label></td>
+                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
             </tr>
 
 
@@ -44,10 +36,6 @@
 
                 <td class="search_th"><label class="control-label">提交人/账号：</label></td>
                 <td class="search_td"><input type="text" name="createUser" class="form-control"></td>
-            </tr>
-            <tr>
-                <td class="search_th "><label class="control-label">企业名字：</label></td>
-                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
             </tr>
 
         </table>

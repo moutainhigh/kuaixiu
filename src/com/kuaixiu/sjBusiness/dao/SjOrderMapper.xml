@@ -47,6 +47,13 @@
         <result column="poe_num" property="poeNum"/>
         <result column="storage_id" property="storageId"/>
         <result column="storage_num" property="storageNum"/>
+        <result column="meal_wifi_id" property="mealWifiId"/>
+        <result column="model_wifi_id" property="modelWifiId"/>
+        <result column="model_wifi_num" property="modelWifiNum"/>
+        <result column="poe_wifi_id" property="poeWifiId"/>
+        <result column="poe_wifi_num" property="poeWifiNum"/>
+        <result column="storage_wifi_id" property="storageWifiId"/>
+        <result column="storage_wifi_num" property="storageWifiNum"/>
     </resultMap>
 
     <!-- sj_order table all fields -->
@@ -59,7 +66,8 @@
         completed_phone,date_format(`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
         feedback_person,feedback_note,feedback_time,meal_id,model_id,model_num,poe_id,poe_num,
-        storage_id,storage_num
+        storage_id,storage_num,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,
+        storage_wifi_id,storage_wifi_num
     </sql>
 
     <!-- 插入记录 -->
@@ -122,7 +130,14 @@
             poe_id=#{poeId},
             poe_num=#{poeNum},
             storage_id=#{storageId},
-            storage_num=#{storageNum}
+            storage_num=#{storageNum},
+            meal_wifi_id=#{mealWifiId},
+            model_wifi_id=#{modelWifiId},
+            model_wifi_num=#{modelWifiNum},
+            poe_wifi_id=#{poeWifiId},
+            poe_wifi_num=#{poeWifiNum},
+            storage_wifi_id=#{storageWifiId},
+            storage_wifi_num=#{storageWifiNum}
         where id=#{id}
     </update>
 

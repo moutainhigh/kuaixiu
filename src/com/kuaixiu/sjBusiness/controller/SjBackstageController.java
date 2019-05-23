@@ -84,10 +84,24 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
+    @RequestMapping(value = "/sj/order/approvalList")
+    public ModelAndView approvalList(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        String returnView = "business/orderApprovalList";
+        return new ModelAndView(returnView);
+    }
+
     @RequestMapping(value = "/sj/order/list2")
     public ModelAndView list2(HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
         String returnView = "business/order2List";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/approvalList2")
+    public ModelAndView approvalList2(HttpServletRequest request,
+                              HttpServletResponse response) throws Exception {
+        String returnView = "business/order2ApprovalList";
         return new ModelAndView(returnView);
     }
 
@@ -256,6 +270,20 @@ public class SjBackstageController extends BaseController {
         if (sjOrder.getType() == 1) {
             returnView = "business/detail2";
         } else {
+            String projectIds = sjOrder.getProjectId();
+            if (projectIds.contains("1") && projectIds.contains("2")) {
+                orderService.setWifi(1,sjOrder);
+                orderService.setWifi(2,sjOrder);
+                request.setAttribute("isWifi", 0);
+            } else if (projectIds.contains("1")) {
+                orderService.setWifi(1,sjOrder);
+                request.setAttribute("isWifi", 1);
+            } else if (projectIds.contains("2")) {
+                orderService.setWifi(2,sjOrder);
+                request.setAttribute("isWifi", 2);
+            }else{
+                request.setAttribute("isWifi", 4);
+            }
             returnView = "business/detail";
         }
 
@@ -390,20 +418,8 @@ public class SjBackstageController extends BaseController {
             String provinceId = request.getParameter("addProvince");
             String cityId = request.getParameter("addCity");
             String areaId = request.getParameter("addCounty");
-            String streetId = request.getParameter("addStreet");
             String project = request.getParameter("projectIds");
-//            List<String> projects = new ArrayList<>();
-//            if (StringUtils.isNotEmpty(project)) {
-//                if (project.contains(",")) {
-//                    String[] projectIds1 = project.split(",");
-//                    for (int i = 0; i < projectIds1.length; i++) {
-//                        String project1 = projectIds1[i];
-//                        projects.add(project1);
-//                    }
-//                }
-//            }
             ConstructionCompany constructionCompany = new ConstructionCompany();
-//            constructionCompany.setQueryStatusArray(projects);
             constructionCompany.setProject(project);
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
@@ -597,12 +613,9 @@ public class SjBackstageController extends BaseController {
                 sjWorker.setBuildingNum(0);
                 sjWorkerService.add(sjWorker);
 
-//                SjUser sjUser2 = sjUserService.getDao().queryByLoginId(companyId, 3);
                 companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
             }
-
             SmsSendUtil.sjRegisterUserSend(sjUser);
-
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -738,7 +751,6 @@ public class SjBackstageController extends BaseController {
                         break;
                 }
             }
-
             //login_id,name,phone,city_company_id,management_unit_id,branch_office_id,
             // contract_body_id,marketing_no,create_time,is_cancel
             List<Map<String, String>> customerDetails = customerDetailService.getDao().queryCustomerListForPage(customerDetail);
@@ -751,6 +763,7 @@ public class SjBackstageController extends BaseController {
                 companies.put("endNum", String.valueOf(endNum));
                 int ingNum = customerDetailService.getDao().queryIngByLoginIdState(companies.get("login_id"), null);
                 companies.put("ingNum", String.valueOf(ingNum));
+                orderService.setAscription(companies);
             }
             page.setData(customerDetails);
         } catch (Exception e) {
@@ -770,15 +783,39 @@ public class SjBackstageController extends BaseController {
     public ModelAndView registerForm(HttpServletRequest request,
                                      HttpServletResponse response) {
         String orderId = request.getParameter("orderId");
+        String isWifi = request.getParameter("isWifi");
         List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(null, null, null);
-        request.setAttribute("registerForms", registerForms);
-        request.setAttribute("orderId", orderId);
+        for (SjRegisterForm registerForm : registerForms) {
+            if (String.valueOf(registerForm.getMealId()).equals(isWifi)) {
+                request.setAttribute("registerForm", registerForm);
+            }
+        }
+        SjOrder sjOrder = orderService.queryById(orderId);
+        List<SjRegisterForm> modelL=null;
+        List<SjRegisterForm> poeL=null;
+        List<SjRegisterForm> storageL=null;
+        if(isWifi.equals("1")){
+            modelL = registerFormService.getSjRegisterForms(null, null, 1);
+            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelId(), 1);
+            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeId(), sjOrder.getModelId(), 1);
+        }else if(isWifi.equals("2")){
+            modelL = registerFormService.getSjRegisterForms(null, null, 2);
+            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelWifiId(), 2);
+            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeWifiId(), sjOrder.getModelWifiId(), 2);
+        }
+        request.setAttribute("modelL", modelL);
+        request.setAttribute("poeL", poeL);
+        request.setAttribute("storageL", storageL);
+
+        request.setAttribute("isWifi", isWifi);
+        request.setAttribute("sjOrder", sjOrder);
         String returnView = "business/registerForm";
         return new ModelAndView(returnView);
     }
 
     /**
      * 获取登记单信息
+     *
      * @param request
      * @param response
      * @return
@@ -816,6 +853,7 @@ public class SjBackstageController extends BaseController {
 
     /**
      * 录单
+     *
      * @param request
      * @param response
      * @return
@@ -828,6 +866,7 @@ public class SjBackstageController extends BaseController {
         ResultData result = new ResultData();
         try {
             String orderId = request.getParameter("orderId");
+            String isWifi = request.getParameter("isWifi");
             Integer storageId = Integer.valueOf(request.getParameter("storageId"));
             Integer storageNum = Integer.valueOf(request.getParameter("storageNum"));
             Integer poeId = Integer.valueOf(request.getParameter("poeId"));
@@ -835,14 +874,24 @@ public class SjBackstageController extends BaseController {
             Integer modelId = Integer.valueOf(request.getParameter("modelId"));
             Integer modelNum = Integer.valueOf(request.getParameter("modelNum"));
             Integer mealId = Integer.valueOf(request.getParameter("mealId"));
-            SjOrder sjOrder=orderService.queryById(orderId);
-            sjOrder.setMealId(mealId);
-            sjOrder.setModelId(modelId);
-            sjOrder.setModelNum(modelNum);
-            sjOrder.setPoeId(poeId);
-            sjOrder.setPoeNum(poeNum);
-            sjOrder.setStorageId(storageId);
-            sjOrder.setStorageNum(storageNum);
+            SjOrder sjOrder = orderService.queryById(orderId);
+            if (isWifi.equals("1")) {
+                sjOrder.setMealId(mealId);
+                sjOrder.setModelId(modelId);
+                sjOrder.setModelNum(modelNum);
+                sjOrder.setPoeId(poeId);
+                sjOrder.setPoeNum(poeNum);
+                sjOrder.setStorageId(storageId);
+                sjOrder.setStorageNum(storageNum);
+            } else {
+                sjOrder.setMealWifiId(mealId);
+                sjOrder.setModelWifiId(modelId);
+                sjOrder.setModelWifiNum(modelNum);
+                sjOrder.setPoeWifiId(poeId);
+                sjOrder.setPoeWifiNum(poeNum);
+                sjOrder.setStorageWifiId(storageId);
+                sjOrder.setStorageWifiNum(storageNum);
+            }
             orderService.saveUpdate(sjOrder);
             getResult(result, null, true, "0", "成功");
         } catch (Exception e) {

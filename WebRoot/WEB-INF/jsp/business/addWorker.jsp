@@ -3,7 +3,7 @@
 <div class="modal-backdrop fade in"></div>
 <div class="modal-dialog" style="width: 700px;">
   <div class="modal-content">
-    <div class="modal-title"><span>新增企业单位</span>
+    <div class="modal-title"><span>新增员工</span>
       <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
     </div>
     <div class="modal-body">
@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="companyId" class="col-sm-3 control-label"><span style="color:red">*</span> 所属连锁商账号</label>
+          <label for="companyId" class="col-sm-3 control-label"><span style="color:red">*</span> 所属企业名字</label>
           <div class="col-sm-9">
             <select id="companyId" name="companyId" class="form-control">
               <option value="">--请选择--</option>

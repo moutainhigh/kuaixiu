@@ -3,31 +3,22 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
-import com.common.paginate.Page;
 import com.common.util.ConverterUtil;
-import com.common.util.DateUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.*;
 
-import com.kuaixiu.sjUser.entity.ConstructionCompany;
-import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
-import com.kuaixiu.sjUser.entity.SjWorker;
-import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.SjUserService;
-import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -51,13 +42,13 @@ public class SjOrderService extends BaseService<SjOrder> {
     @Autowired
     private SjUserService sjUserService;
     @Autowired
-    private OrderContractPictureService orderContractPictureService;
+    private AreaContractBodyService contractBodyService;
     @Autowired
-    private ConstructionCompanyService constructionCompanyService;
+    private AreaBranchOfficeService branchOfficeService;
     @Autowired
-    private SjWorkerService sjWorkerService;
+    private AreaManagementUnitService managementUnitService;
     @Autowired
-    private ApprovalNoteService approvalNoteService;
+    private AreaCityCompanyService cityCompanyService;
 
 
     public SjOrderMapper<SjOrder> getDao() {
@@ -122,16 +113,16 @@ public class SjOrderService extends BaseService<SjOrder> {
             jsonObject.put("monitor", o.getGroupNet());
         } else {
             if (o.getState() > 200) {
-                SjUser sjUser=sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(),null);
-                jsonObject.put("feedbackPerson", sjUser.getName()+"/"+sjUser.getLoginId());
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(), null);
+                jsonObject.put("feedbackPerson", sjUser.getName() + "/" + sjUser.getLoginId());
                 jsonObject.put("feedbackTime", o.getFeedbackTime());
                 jsonObject.put("feedbackNote", o.getFeedbackNote());
             }
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
-            SjUser sjUser=sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(),null);
-            jsonObject.put("approvalPerson", sjUser.getName()+"/"+sjUser.getLoginId());
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(), null);
+            jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
         }
@@ -201,6 +192,50 @@ public class SjOrderService extends BaseService<SjOrder> {
         Address city = addressService.queryByAreaId(cityId);
         fristSpell += ConverterUtil.getFirstSpellForAreaName(city.getArea());
         return fristSpell;
+    }
+
+
+
+    public void setAscription(Map<String, String> companies) {
+
+        String city_company_id = companies.get("city_company_id");
+        String management_unit_id = companies.get("management_unit_id");
+        String branch_office_id = companies.get("branch_office_id");
+        String contract_body_id = companies.get("contract_body_id");
+        if (StringUtils.isNotBlank(contract_body_id)) {
+            AreaContractBody contractBody = contractBodyService.queryById(contract_body_id);
+            companies.put("ascription", contractBody.getContractBody());
+        } else if (StringUtils.isNotBlank(branch_office_id)) {
+            AreaBranchOffice branchOffice = branchOfficeService.queryById(contract_body_id);
+            companies.put("ascription", branchOffice.getBranchOffice());
+        } else if (StringUtils.isNotBlank(management_unit_id)) {
+            AreaManagementUnit managementUnit = managementUnitService.queryById(management_unit_id);
+            companies.put("ascription", managementUnit.getManagementUnit());
+        } else if (StringUtils.isNotBlank(city_company_id)) {
+            AreaCityCompany cityCompany = cityCompanyService.queryById(city_company_id);
+            companies.put("ascription", cityCompany.getCityCompany());
+        }
+    }
+
+    @Autowired
+    private SjRegisterFormService registerFormService;
+
+    public void setWifi(Integer type,SjOrder order){
+        if(type==1){
+            SjRegisterForm registerForm=registerFormService.getDao().queryBy4Id(order.getStorageId(),
+                    order.getPoeId(),order.getModelId(),order.getMealId());
+            order.setMealName(registerForm.getMealName());
+            order.setModelName(registerForm.getModelName());
+            order.setPoeName(registerForm.getPoeName());
+            order.setStorageName(registerForm.getStorageName());
+        }else{
+            SjRegisterForm registerForm=registerFormService.getDao().queryBy4Id(order.getStorageWifiId(),
+                    order.getPoeWifiId(),order.getModelWifiId(),order.getMealWifiId());
+            order.setMealWifiName(registerForm.getMealName());
+            order.setModelWifiName(registerForm.getModelName());
+            order.setPoeWifiName(registerForm.getPoeName());
+            order.setStorageWifiName(registerForm.getStorageName());
+        }
     }
 
     /**

@@ -21,7 +21,7 @@
                     <select name="state" class="form-control">
                         <option value="">--选择状态--</option>
                         <option value="100">待审核</option>
-                        <option value="200">带指派</option>
+                        <option value="200">待指派</option>
                         <option value="300">待施工</option>
                         <option value="400">待竣工</option>
                         <option value="500">已完成</option>

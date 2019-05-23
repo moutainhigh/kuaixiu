@@ -69,7 +69,7 @@
         from sj_register_form where model_id=#{modelId} and meal_id=#{mealId}
     </select>
     <select id="queryByPoeId"  resultMap="BaseResultMap" parameterType="Object">
-        select storage_id,storage_name
+        select DISTINCT storage_id,storage_name
         from sj_register_form where poe_id=#{poeId} and model_id=#{modelId} and meal_id=#{mealId}
     </select>
 

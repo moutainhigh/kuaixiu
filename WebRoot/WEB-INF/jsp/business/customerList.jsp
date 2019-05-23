@@ -71,6 +71,7 @@
                 </th>
                 <th class="fontWeight_normal tdwidth100">姓名/手机号</th>
                 <th class="fontWeight_normal tdwidth80">归属</th>
+                <th class="fontWeight_normal tdwidth80">归属名字</th>
                 <th class="fontWeight_normal tdwidth50">营销工号</th>
                 <th class="fontWeight_normal tdwidth90">注册时间</th>
                 <th class="fontWeight_normal tdwidth90">提交订单数量</th>
@@ -128,6 +129,7 @@
         {"data": "id", "class": " center"},
         {"data": "name", "class": ""},
         {"data": "city_company_id", "class": ""},
+        {"data": "ascription", "class": ""},
         {"data": "marketing_no", "class": ""},
         {"data": "create_time", "class": ""},
         {"data": "totalNum", "class": ""},

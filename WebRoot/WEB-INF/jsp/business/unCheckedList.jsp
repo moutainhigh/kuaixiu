@@ -15,14 +15,16 @@
             <tr>
                 <td class="search_th "><label class="control-label">单 号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
-                <td class="search_th"><label class="control-label">类 型：</label></td>
-                <td class="search_td">
-                    <select name="type" class="form-control">
-                        <option value="">--选择状态--</option>
-                        <option value="1">商机</option>
-                        <option value="2">派单</option>
-                    </select>
-                </td>
+                <td class="search_th "><label class="control-label">企业名字：</label></td>
+                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
+                <%--<td class="search_th"><label class="control-label">类 型：</label></td>--%>
+                <%--<td class="search_td">--%>
+                    <%--<select name="type" class="form-control">--%>
+                        <%--<option value="">--选择状态--</option>--%>
+                        <%--<option value="1">商机</option>--%>
+                        <%--<option value="2">派单</option>--%>
+                    <%--</select>--%>
+                <%--</td>--%>
             </tr>
 
 
@@ -42,8 +44,6 @@
                 <td class="search_td"><input type="text" name="createUser" class="form-control"></td>
             </tr>
             <tr>
-                <td class="search_th "><label class="control-label">企业名字：</label></td>
-                <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
                 <input type="hidden" id="state" name="state" value="200"/><br/>
                 <input type="hidden" id="isAssign" name="isAssign" value="1"/><br/>
             </tr>

@@ -75,6 +75,9 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>联系人/电话：${sjOrder.person }/${sjOrder.phone }</h4>
                     </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>CRM编号：${sjOrder.crmNo }</h4>
+                    </div><!-- /.col -->
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">

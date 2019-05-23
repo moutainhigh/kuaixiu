@@ -9,7 +9,7 @@
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">商机订单管理</a></strong>
         /
         <small>订单详情</small>
-        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_to_back();">返回</a></strong>
+        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_detail_to_back();">返回</a></strong>
     </div>
 </div>
 
@@ -110,6 +110,119 @@
                 </div><!-- /.row -->
             </td>
         </tr>
+
+        <c:if test="${isWifi!=4}">
+            <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>录单信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <c:if test="${isWifi==1||isWifi==0}">
+                                <button onclick="registerForm('${sjOrder.id}',1);"
+                                        class="am-btn am-btn-default search_btn" type="button">
+                                    <c:if test="${sjOrder.mealId!=0}">
+                                        云监控编辑录单
+                                    </c:if>
+                                    <c:if test="${sjOrder.mealId==0}">
+                                        云监控录单
+                                    </c:if>
+                                </button>
+                            </c:if>
+                            <c:if test="${isWifi==2||isWifi==0}">
+                                <button onclick="registerForm('${sjOrder.id}',2);"
+                                        class="am-btn am-btn-default search_btn" type="button">
+                                    <c:if test="${sjOrder.mealWifiId!=0}">
+                                        云wifi编辑录单
+                                    </c:if>
+                                    <c:if test="${sjOrder.mealWifiId==0}">
+                                        云wifi录单
+                                    </c:if>
+                                </button>
+                            </c:if>
+                        </div>
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+            <c:if test="${sjOrder.mealId!=0}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>云监控信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>监控型号：${sjOrder.modelName }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>监控型号个数：${sjOrder.modelNum }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>poe：${sjOrder.poeName }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>poe个数：${sjOrder.poeNum }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>存储：${sjOrder.storageName }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>存储个数：${sjOrder.storageNum }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+            </c:if>
+            <c:if test="${sjOrder.mealWifiId!=0}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>云wifi信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>无线wifi：${sjOrder.modelWifiName }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>无线wifi个数：${sjOrder.modelWifiNum }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>poe：${sjOrder.poeWifiName }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>poe个数：${sjOrder.poeWifiNum }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>NET/网关/路由：${sjOrder.storageWifiName }</h4>
+                            </div><!-- /.col -->
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <h4>NET/网关/路由个数：${sjOrder.storageWifiNum }</h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+            </c:if>
+        </c:if>
         <c:if test="${sjOrder.state==100}">
             <tr>
                 <td colspan="3" class="tr-space"></td>
@@ -122,27 +235,18 @@
                 <td class="td-info">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                        <button onclick="registerForm('${sjOrder.id}');" class="am-btn am-btn-default search_btn" type="button"> 录单
-                        </button>
-                        </div>
-                    </div><!-- /.row -->
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <textarea name="note" id="note" cols="79" rows="5" placeholder="请输入审批备注"></textarea>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
 
                     <div class="index_but">
-                        <button onclick="orderCancel('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn" type="button"> 不同意
+                        <button onclick="orderCancel('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn"
+                                type="button"> 不同意
                         </button>
-                        <button id="orderDetailApprovalButton" onclick="orderCancel('${sjOrder.id}','1');" disabled="disabled" class="am-btn am-btn-default search_btn" type="button"> 同意
+                        <button id="orderDetailApprovalButton" onclick="orderCancel('${sjOrder.id}','1');"
+                                class="am-btn am-btn-default search_btn" type="button"> 同意
                         </button>
-                        <%--<a href="javascript:void(0);" onclick="orderCancel('${sjOrder.id}','2');"--%>
-                           <%--class="btn-cancel">不同意</a>--%>
-                        <%--<a href="javascript:void (0);" onclick="orderCancel('${sjOrder.id}','1');"--%>
-                           <%--class="btn-confirm">同意</a>--%>
                     </div>
-
                 </td>
             </tr>
         </c:if>
@@ -284,12 +388,16 @@
         </c:if>
     </table>
 </div>
-<div id="modal-registerFormView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div id="modal-registerFormView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     style="display: none;">
 </div>
 <!-- /am-g -->
 <script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     function toList() {
+        func_reload_page("${ctx}/sj/order/list2.do");
+    }
+    function func_detail_to_back() {
         func_reload_page("${ctx}/sj/order/list2.do");
     }
 
@@ -305,9 +413,9 @@
             scrollbar: false,
             title: "图片预览", //不显示标题
             content: imgHtml //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
-//            cancel: function () {
-//                layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });
-//            }
+            // cancel: function () {
+            // layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });
+            // }
         });
     }
 
@@ -335,9 +443,9 @@
         });
     }
 
-    function registerForm(orderId) {
+    function registerForm(orderId, isWifi) {
         $("#modal-registerFormView").html("");
-        $("#modal-registerFormView").load("${ctx}/sj/order/registerForm.do?orderId="+orderId, function () {
+        $("#modal-registerFormView").load("${ctx}/sj/order/registerForm.do?orderId=" + orderId + "&isWifi=" + isWifi, function () {
             func_after_model_load(this);
         });
     }
