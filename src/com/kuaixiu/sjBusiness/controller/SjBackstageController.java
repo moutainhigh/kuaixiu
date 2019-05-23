@@ -1,12 +1,19 @@
 package com.kuaixiu.sjBusiness.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjBusiness.service.*;
+import com.kuaixiu.sjSetMeal.entity.SjPoe;
+import com.kuaixiu.sjSetMeal.entity.SjSaveNet;
+import com.kuaixiu.sjSetMeal.entity.SjSetMeal;
+import com.kuaixiu.sjSetMeal.entity.SjWifiMonitorType;
+import com.kuaixiu.sjSetMeal.service.SjPoeService;
+import com.kuaixiu.sjSetMeal.service.SjSaveNetService;
+import com.kuaixiu.sjSetMeal.service.SjSetMealService;
+import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
 import com.kuaixiu.sjUser.entity.*;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
@@ -67,7 +74,13 @@ public class SjBackstageController extends BaseController {
     @Autowired
     private ConstructionCompanyService companyService;
     @Autowired
-    private SjRegisterFormService registerFormService;
+    private SjSetMealService sjSetMealService;
+    @Autowired
+    private SjWifiMonitorTypeService sjWifiMonitorTypeService;
+    @Autowired
+    private SjPoeService sjPoeService;
+    @Autowired
+    private SjSaveNetService sjSaveNetService;
 
     /**
      * 订单列表
@@ -783,28 +796,29 @@ public class SjBackstageController extends BaseController {
                                      HttpServletResponse response) {
         String orderId = request.getParameter("orderId");
         String isWifi = request.getParameter("isWifi");
-        List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(null, null, null);
-        for (SjRegisterForm registerForm : registerForms) {
-            if (String.valueOf(registerForm.getMealId()).equals(isWifi)) {
-                request.setAttribute("registerForm", registerForm);
-            }
-        }
+
         SjOrder sjOrder = orderService.queryById(orderId);
-        List<SjRegisterForm> modelL=null;
-        List<SjRegisterForm> poeL=null;
-        List<SjRegisterForm> storageL=null;
-        if(isWifi.equals("1")){
-            modelL = registerFormService.getSjRegisterForms(null, null, 1);
-            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelId(), 1);
-            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeId(), sjOrder.getModelId(), 1);
-        }else if(isWifi.equals("2")){
-            modelL = registerFormService.getSjRegisterForms(null, null, 2);
-            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelWifiId(), 2);
-            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeWifiId(), sjOrder.getModelWifiId(), 2);
-        }
-        request.setAttribute("modelL", modelL);
-        request.setAttribute("poeL", poeL);
-        request.setAttribute("storageL", storageL);
+        Long mealId=Long.valueOf(isWifi);
+        SjSetMeal sjSetMeal=new SjSetMeal();
+        sjSetMeal.setId(mealId);
+        List<SjSetMeal> sjSetMeals=sjSetMealService.queryList(sjSetMeal);
+
+        SjWifiMonitorType wifiMonitorType=new SjWifiMonitorType();
+        wifiMonitorType.setMealId(mealId);
+        List<SjWifiMonitorType> wifiMonitorTypes=sjWifiMonitorTypeService.queryList(wifiMonitorType);
+
+        SjPoe sjPoe=new SjPoe();
+        sjPoe.setMealId(mealId);
+        List<SjPoe> sjPoes= sjPoeService.queryList(sjPoe);
+
+        SjSaveNet sjSaveNet=new SjSaveNet();
+        sjSaveNet.setMealId(mealId);
+        List<SjSaveNet> sjSaveNets=sjSaveNetService.queryList(sjSaveNet);
+
+        request.setAttribute("sjSetMeal", sjSetMeals.get(0));
+        request.setAttribute("modelL", wifiMonitorTypes);
+        request.setAttribute("poeL", sjPoes);
+        request.setAttribute("storageL", sjSaveNets);
 
         request.setAttribute("isWifi", isWifi);
         request.setAttribute("sjOrder", sjOrder);
@@ -812,43 +826,43 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    /**
-     * 获取登记单信息
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/sj/order/getRegisterForm")
-    @ResponseBody
-    public ResultData getRegisterForm(HttpServletRequest request,
-                                      HttpServletResponse response) throws Exception {
-        ResultData result = new ResultData();
-        try {
-            String strPoeId = request.getParameter("poeId");
-            String strModelId = request.getParameter("modelId");
-            String strMealId = request.getParameter("mealId");
-            Integer poeId = null;
-            Integer modelId = null;
-            Integer mealId = null;
-            if (StringUtils.isNotBlank(strMealId)) {
-                mealId = Integer.valueOf(strMealId);
-            }
-            if (StringUtils.isNotBlank(strModelId)) {
-                modelId = Integer.valueOf(strModelId);
-            }
-            if (StringUtils.isNotBlank(strPoeId)) {
-                poeId = Integer.valueOf(strPoeId);
-            }
-            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
-            getResult(result, registerForms, true, "0", "成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-        }
-        return result;
-    }
+//    /**
+//     * 获取登记单信息
+//     *
+//     * @param request
+//     * @param response
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "/sj/order/getRegisterForm")
+//    @ResponseBody
+//    public ResultData getRegisterForm(HttpServletRequest request,
+//                                      HttpServletResponse response) throws Exception {
+//        ResultData result = new ResultData();
+//        try {
+//            String strPoeId = request.getParameter("poeId");
+//            String strModelId = request.getParameter("modelId");
+//            String strMealId = request.getParameter("mealId");
+//            Integer poeId = null;
+//            Integer modelId = null;
+//            Integer mealId = null;
+//            if (StringUtils.isNotBlank(strMealId)) {
+//                mealId = Integer.valueOf(strMealId);
+//            }
+//            if (StringUtils.isNotBlank(strModelId)) {
+//                modelId = Integer.valueOf(strModelId);
+//            }
+//            if (StringUtils.isNotBlank(strPoeId)) {
+//                poeId = Integer.valueOf(strPoeId);
+//            }
+//            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
+//            getResult(result, registerForms, true, "0", "成功");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error(e.getMessage());
+//        }
+//        return result;
+//    }
 
     /**
      * 录单

@@ -145,7 +145,7 @@
     </select>
 
     <select id="queryCustomerListForPage" resultType="Map" parameterType="Object">
-        select u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
+        select c.id,u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
         c.contract_body_id,
         if(c.contract_body_id is null,if(c.branch_office_id is null,if(c.management_unit_id is null,
         ac.city_company,CONCAT(am.management_unit)),CONCAT(am.management_unit,'/',ab.branch_office)),
@@ -192,7 +192,7 @@
     </select>
 
     <select id="queryCustomerList" resultType="Map" parameterType="Object">
-        select u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
+        select c.id,u.login_id,u.name,u.phone,c.city_company_id,c.management_unit_id,c.branch_office_id,
         c.contract_body_id,
         if(c.contract_body_id is null,if(c.branch_office_id is null,if(c.management_unit_id is null,
         ac.city_company,CONCAT(am.management_unit)),CONCAT(am.management_unit,'/',ab.branch_office)),
@@ -206,6 +206,12 @@
         LEFT JOIN sj_area_contract_body ao ON ao.id=c.contract_body_id
         where 1=1
         and u.is_del=0
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and c.id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="phone != null and phone != ''">
             and u.`phone` like CONCAT('%', #{phone}, '%')
         </if>

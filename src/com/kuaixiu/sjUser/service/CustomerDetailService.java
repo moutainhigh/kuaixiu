@@ -146,6 +146,11 @@ public class CustomerDetailService extends BaseService<CustomerDetail> {
         String queryEndTime = MapUtils.getString(params, "query_endTime");
         String marketingNo = MapUtils.getString(params, "marketingNo");
         CustomerDetail customerDetail = new CustomerDetail();
+        String idStr = MapUtils.getString(params, "ids");
+        if(StringUtils.isNotBlank(idStr)) {
+            String[] ids = StringUtils.split(idStr, ",");
+            customerDetail.setQueryIds(Arrays.asList(ids));
+        }
         if (StringUtils.isNotBlank(namePhone)) {
             if (orderService.isNumeric(namePhone)) {
                 customerDetail.setPhone(namePhone);
