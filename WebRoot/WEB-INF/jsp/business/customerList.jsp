@@ -70,7 +70,7 @@
                                                                type="checkbox"/>序号
                 </th>
                 <th class="fontWeight_normal tdwidth100">姓名/手机号</th>
-                <th class="fontWeight_normal tdwidth80">归属</th>
+                <%--<th class="fontWeight_normal tdwidth80">归属</th>--%>
                 <th class="fontWeight_normal tdwidth80">归属名字</th>
                 <th class="fontWeight_normal tdwidth50">营销工号</th>
                 <th class="fontWeight_normal tdwidth90">注册时间</th>
@@ -128,8 +128,8 @@
     dto.setColumns([
         {"data": "id", "class": " center"},
         {"data": "name", "class": ""},
-        {"data": "city_company_id", "class": ""},
-        {"data": "ascription", "class": ""},
+//        {"data": "city_company_id", "class": ""},
+        {"data": "type_name", "class": ""},
         {"data": "marketing_no", "class": ""},
         {"data": "create_time", "class": ""},
         {"data": "totalNum", "class": ""},
@@ -157,26 +157,6 @@
             targets: 1,
             render: function (data, type, row, meta) {
                 return row.name + "/<br/>" + row.phone;
-            }
-        },
-        {//复选框
-            targets: 2,
-            render: function (data, type, row, meta) {
-                if (row.city_company_id != null) {
-                    if (row.management_unit_id == null) {
-                        return "市公司";
-                    } else {
-                        if (row.branch_office_id == null) {
-                            return "经营单元";
-                        } else {
-                            if (row.contract_body_id == null) {
-                                return "支局";
-                            } else {
-                                return "承包体";
-                            }
-                        }
-                    }
-                }
             }
         },
         {

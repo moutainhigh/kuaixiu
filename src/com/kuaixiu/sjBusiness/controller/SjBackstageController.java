@@ -763,7 +763,6 @@ public class SjBackstageController extends BaseController {
                 companies.put("endNum", String.valueOf(endNum));
                 int ingNum = customerDetailService.getDao().queryIngByLoginIdState(companies.get("login_id"), null);
                 companies.put("ingNum", String.valueOf(ingNum));
-                orderService.setAscription(companies);
             }
             page.setData(customerDetails);
         } catch (Exception e) {

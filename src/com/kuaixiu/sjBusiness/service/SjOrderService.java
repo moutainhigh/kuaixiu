@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -41,14 +40,6 @@ public class SjOrderService extends BaseService<SjOrder> {
     private OrderCompanyPictureService orderCompanyPictureService;
     @Autowired
     private SjUserService sjUserService;
-    @Autowired
-    private AreaContractBodyService contractBodyService;
-    @Autowired
-    private AreaBranchOfficeService branchOfficeService;
-    @Autowired
-    private AreaManagementUnitService managementUnitService;
-    @Autowired
-    private AreaCityCompanyService cityCompanyService;
     @Autowired
     private SjRegisterFormService registerFormService;
 
@@ -194,36 +185,6 @@ public class SjOrderService extends BaseService<SjOrder> {
         Address city = addressService.queryByAreaId(cityId);
         fristSpell += ConverterUtil.getFirstSpellForAreaName(city.getArea());
         return fristSpell;
-    }
-
-
-    public void setAscription(Map<String, String> companies) {
-
-        String city_company_id = String.valueOf(companies.get("city_company_id"));
-        String management_unit_id = String.valueOf(companies.get("management_unit_id"));
-        String branch_office_id = String.valueOf(companies.get("branch_office_id"));
-        String contract_body_id = String.valueOf(companies.get("contract_body_id"));
-        if (StringUtils.isNotBlank(contract_body_id)) {
-            AreaContractBody contractBody = contractBodyService.queryById(contract_body_id);
-            if (contractBody != null) {
-                companies.put("ascription", contractBody.getContractBody());
-            }
-        } else if (StringUtils.isNotBlank(branch_office_id)) {
-            AreaBranchOffice branchOffice = branchOfficeService.queryById(branch_office_id);
-            if (branchOffice != null) {
-                companies.put("ascription", branchOffice.getBranchOffice());
-            }
-        } else if (StringUtils.isNotBlank(management_unit_id)) {
-            AreaManagementUnit managementUnit = managementUnitService.queryById(management_unit_id);
-            if (managementUnit != null) {
-                companies.put("ascription", managementUnit.getManagementUnit());
-            }
-        } else if (StringUtils.isNotBlank(city_company_id)) {
-            AreaCityCompany cityCompany = cityCompanyService.queryById(city_company_id);
-            if (cityCompany != null) {
-                companies.put("ascription", cityCompany.getCityCompany());
-            }
-        }
     }
 
 
