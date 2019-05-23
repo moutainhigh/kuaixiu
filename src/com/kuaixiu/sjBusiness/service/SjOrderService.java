@@ -49,6 +49,8 @@ public class SjOrderService extends BaseService<SjOrder> {
     private AreaManagementUnitService managementUnitService;
     @Autowired
     private AreaCityCompanyService cityCompanyService;
+    @Autowired
+    private SjRegisterFormService registerFormService;
 
 
     public SjOrderMapper<SjOrder> getDao() {
@@ -197,27 +199,33 @@ public class SjOrderService extends BaseService<SjOrder> {
 
     public void setAscription(Map<String, String> companies) {
 
-        String city_company_id = companies.get("city_company_id");
-        String management_unit_id = companies.get("management_unit_id");
-        String branch_office_id = companies.get("branch_office_id");
-        String contract_body_id = companies.get("contract_body_id");
+        String city_company_id = String.valueOf(companies.get("city_company_id"));
+        String management_unit_id = String.valueOf(companies.get("management_unit_id"));
+        String branch_office_id = String.valueOf(companies.get("branch_office_id"));
+        String contract_body_id = String.valueOf(companies.get("contract_body_id"));
         if (StringUtils.isNotBlank(contract_body_id)) {
             AreaContractBody contractBody = contractBodyService.queryById(contract_body_id);
-            companies.put("ascription", contractBody.getContractBody());
+            if (contractBody != null) {
+                companies.put("ascription", contractBody.getContractBody());
+            }
         } else if (StringUtils.isNotBlank(branch_office_id)) {
-            AreaBranchOffice branchOffice = branchOfficeService.queryById(contract_body_id);
-            companies.put("ascription", branchOffice.getBranchOffice());
+            AreaBranchOffice branchOffice = branchOfficeService.queryById(branch_office_id);
+            if (branchOffice != null) {
+                companies.put("ascription", branchOffice.getBranchOffice());
+            }
         } else if (StringUtils.isNotBlank(management_unit_id)) {
             AreaManagementUnit managementUnit = managementUnitService.queryById(management_unit_id);
-            companies.put("ascription", managementUnit.getManagementUnit());
+            if (managementUnit != null) {
+                companies.put("ascription", managementUnit.getManagementUnit());
+            }
         } else if (StringUtils.isNotBlank(city_company_id)) {
             AreaCityCompany cityCompany = cityCompanyService.queryById(city_company_id);
-            companies.put("ascription", cityCompany.getCityCompany());
+            if (cityCompany != null) {
+                companies.put("ascription", cityCompany.getCityCompany());
+            }
         }
     }
 
-    @Autowired
-    private SjRegisterFormService registerFormService;
 
     public void setWifi(Integer type, SjOrder order) {
         if (type == 1) {
