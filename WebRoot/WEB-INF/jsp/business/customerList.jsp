@@ -51,9 +51,9 @@
                     <div class="am-btn-group am-btn-group-sm m20">
                         <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 开始查找
                         </button>
-                        <%--<button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span--%>
-                                <%--class="am-icon-plus"></span> 新增--%>
-                        <%--</button>--%>
+                        <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
+                                class="am-icon-file-excel-o"></span> 导出
+                        </button>
                     </div>
                 </div>
             </div>
@@ -267,5 +267,23 @@
                 }
             });
         });
+    }
+
+    /**
+     * 导出数据
+     */
+    function expDataExcel() {
+        var params = "";
+        var array = $("#searchForm").serializeArray();
+        $.each(array, function () {
+            params += "&" + this.name + "=" + this.value;
+        });
+        var ids = "";
+        $("input[name='item_check_btn']").each(function () {
+            if (this.checked) {
+                ids += this.value + ",";
+            }
+        });
+        window.open("${ctx}/sj/file/download.do?fileId=31&ids=" + ids + params, "导出");
     }
 </script>
