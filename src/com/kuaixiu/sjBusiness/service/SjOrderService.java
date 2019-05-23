@@ -195,7 +195,6 @@ public class SjOrderService extends BaseService<SjOrder> {
     }
 
 
-
     public void setAscription(Map<String, String> companies) {
 
         String city_company_id = companies.get("city_company_id");
@@ -220,21 +219,25 @@ public class SjOrderService extends BaseService<SjOrder> {
     @Autowired
     private SjRegisterFormService registerFormService;
 
-    public void setWifi(Integer type,SjOrder order){
-        if(type==1){
-            SjRegisterForm registerForm=registerFormService.getDao().queryBy4Id(order.getStorageId(),
-                    order.getPoeId(),order.getModelId(),order.getMealId());
-            order.setMealName(registerForm.getMealName());
-            order.setModelName(registerForm.getModelName());
-            order.setPoeName(registerForm.getPoeName());
-            order.setStorageName(registerForm.getStorageName());
-        }else{
-            SjRegisterForm registerForm=registerFormService.getDao().queryBy4Id(order.getStorageWifiId(),
-                    order.getPoeWifiId(),order.getModelWifiId(),order.getMealWifiId());
-            order.setMealWifiName(registerForm.getMealName());
-            order.setModelWifiName(registerForm.getModelName());
-            order.setPoeWifiName(registerForm.getPoeName());
-            order.setStorageWifiName(registerForm.getStorageName());
+    public void setWifi(Integer type, SjOrder order) {
+        if (type == 1) {
+            SjRegisterForm registerForm = registerFormService.getDao().queryBy4Id(order.getStorageId(),
+                    order.getPoeId(), order.getModelId(), order.getMealId());
+            if (registerForm != null) {
+                order.setMealName(registerForm.getMealName());
+                order.setModelName(registerForm.getModelName());
+                order.setPoeName(registerForm.getPoeName());
+                order.setStorageName(registerForm.getStorageName());
+            }
+        } else {
+            SjRegisterForm registerForm = registerFormService.getDao().queryBy4Id(order.getStorageWifiId(),
+                    order.getPoeWifiId(), order.getModelWifiId(), order.getMealWifiId());
+            if (registerForm != null) {
+                order.setMealWifiName(registerForm.getMealName());
+                order.setModelWifiName(registerForm.getModelName());
+                order.setPoeWifiName(registerForm.getPoeName());
+                order.setStorageWifiName(registerForm.getStorageName());
+            }
         }
     }
 
