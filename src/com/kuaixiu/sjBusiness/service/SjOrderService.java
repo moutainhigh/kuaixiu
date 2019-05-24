@@ -204,11 +204,11 @@ public class SjOrderService extends BaseService<SjOrder> {
 
 
     public void setWifi(Integer type, SjOrder order) {
-        SjSetMeal sjSetMeal=sjSetMealService.queryById(order.getMealId());
-        SjWifiMonitorType wifiMonitorType=sjWifiMonitorTypeService.queryById(order.getModelId());
-        SjPoe sjPoe=sjPoeService.queryById(order.getPoeId());
-        SjSaveNet sjSaveNet=sjSaveNetService.queryById(order.getStorageId());
         if (type == 1) {
+            SjSetMeal sjSetMeal=sjSetMealService.queryById(order.getMealId());
+            SjWifiMonitorType wifiMonitorType=sjWifiMonitorTypeService.queryById(order.getModelId());
+            SjPoe sjPoe=sjPoeService.queryById(order.getPoeId());
+            SjSaveNet sjSaveNet=sjSaveNetService.queryById(order.getStorageId());
             if (sjSetMeal != null) {
                 order.setMealName(sjSetMeal.getMealName());
             }
@@ -222,6 +222,10 @@ public class SjOrderService extends BaseService<SjOrder> {
                 order.setStorageName(sjSaveNet.getSaveNetName());
             }
         } else {
+            SjSetMeal sjSetMeal=sjSetMealService.queryById(order.getMealWifiId());
+            SjWifiMonitorType wifiMonitorType=sjWifiMonitorTypeService.queryById(order.getModelWifiId());
+            SjPoe sjPoe=sjPoeService.queryById(order.getPoeWifiId());
+            SjSaveNet sjSaveNet=sjSaveNetService.queryById(order.getStorageWifiId());
             if (sjSetMeal != null) {
                 order.setMealWifiName(sjSetMeal.getMealName());
             }

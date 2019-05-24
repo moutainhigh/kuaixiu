@@ -114,7 +114,7 @@
             </td>
         </tr>
 
-        <c:if test="${isWifi!=4 && (loginUserType==4||loginUserType==1)}">
+        <c:if test="${isWifi!=4}">
             <c:if test="${loginUserType==4||loginUserType==1}">
                 <td colspan="3" class="tr-space"></td>
                 </tr>
