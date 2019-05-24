@@ -24,6 +24,7 @@ import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -99,7 +100,7 @@ public class SjBackstageController extends BaseController {
 
     @RequestMapping(value = "/sj/order/approvalList")
     public ModelAndView approvalList(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+                                     HttpServletResponse response) throws Exception {
         String returnView = "business/orderApprovalList";
         return new ModelAndView(returnView);
     }
@@ -113,7 +114,7 @@ public class SjBackstageController extends BaseController {
 
     @RequestMapping(value = "/sj/order/approvalList2")
     public ModelAndView approvalList2(HttpServletRequest request,
-                              HttpServletResponse response) throws Exception {
+                                      HttpServletResponse response) throws Exception {
         String returnView = "business/order2ApprovalList";
         return new ModelAndView(returnView);
     }
@@ -285,16 +286,16 @@ public class SjBackstageController extends BaseController {
         } else {
             String projectIds = sjOrder.getProjectId();
             if (projectIds.contains("1") && projectIds.contains("2")) {
-                orderService.setWifi(1,sjOrder);
-                orderService.setWifi(2,sjOrder);
+                orderService.setWifi(1, sjOrder);
+                orderService.setWifi(2, sjOrder);
                 request.setAttribute("isWifi", 0);
             } else if (projectIds.contains("1")) {
-                orderService.setWifi(1,sjOrder);
+                orderService.setWifi(1, sjOrder);
                 request.setAttribute("isWifi", 1);
             } else if (projectIds.contains("2")) {
-                orderService.setWifi(2,sjOrder);
+                orderService.setWifi(2, sjOrder);
                 request.setAttribute("isWifi", 2);
-            }else{
+            } else {
                 request.setAttribute("isWifi", 4);
             }
             returnView = "business/detail";
@@ -798,22 +799,22 @@ public class SjBackstageController extends BaseController {
         String isWifi = request.getParameter("isWifi");
 
         SjOrder sjOrder = orderService.queryById(orderId);
-        Long mealId=Long.valueOf(isWifi);
-        SjSetMeal sjSetMeal=new SjSetMeal();
+        Long mealId = Long.valueOf(isWifi);
+        SjSetMeal sjSetMeal = new SjSetMeal();
         sjSetMeal.setId(mealId);
-        List<SjSetMeal> sjSetMeals=sjSetMealService.queryList(sjSetMeal);
+        List<SjSetMeal> sjSetMeals = sjSetMealService.queryList(sjSetMeal);
 
-        SjWifiMonitorType wifiMonitorType=new SjWifiMonitorType();
+        SjWifiMonitorType wifiMonitorType = new SjWifiMonitorType();
         wifiMonitorType.setMealId(mealId);
-        List<SjWifiMonitorType> wifiMonitorTypes=sjWifiMonitorTypeService.queryList(wifiMonitorType);
+        List<SjWifiMonitorType> wifiMonitorTypes = sjWifiMonitorTypeService.queryList(wifiMonitorType);
 
-        SjPoe sjPoe=new SjPoe();
+        SjPoe sjPoe = new SjPoe();
         sjPoe.setMealId(mealId);
-        List<SjPoe> sjPoes= sjPoeService.queryList(sjPoe);
+        List<SjPoe> sjPoes = sjPoeService.queryList(sjPoe);
 
-        SjSaveNet sjSaveNet=new SjSaveNet();
+        SjSaveNet sjSaveNet = new SjSaveNet();
         sjSaveNet.setMealId(mealId);
-        List<SjSaveNet> sjSaveNets=sjSaveNetService.queryList(sjSaveNet);
+        List<SjSaveNet> sjSaveNets = sjSaveNetService.queryList(sjSaveNet);
 
         request.setAttribute("sjSetMeal", sjSetMeals.get(0));
         request.setAttribute("modelL", wifiMonitorTypes);

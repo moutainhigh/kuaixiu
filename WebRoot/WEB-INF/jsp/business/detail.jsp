@@ -280,6 +280,26 @@
                 </td>
             </tr>
         </c:if>
+        <c:if test="${sjOrder.state>200 && isWifi!=4}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>指派信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button onclick="constructionList('${sjOrder.id}');" class="am-btn am-btn-default search_btn"
+                                    type="button">施工单导出
+                            </button>
+                        </div>
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+        </c:if>
         <c:if test="${sjOrder.state==300}">
             <tr>
                 <td colspan="3" class="tr-space"></td>
@@ -451,5 +471,9 @@
         $("#modal-registerFormView").load("${ctx}/sj/order/registerForm.do?orderId=" + orderId + "&isWifi=" + isWifi, function () {
             func_after_model_load(this);
         });
+    }
+
+    function constructionList(orderId) {
+        window.open("${ctx}/sj/file/download.do?fileId=32&orderId=" + orderId, "导出");
     }
 </script>
