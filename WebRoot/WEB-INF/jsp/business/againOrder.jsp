@@ -29,7 +29,7 @@
                                 class="form-control-inline">
                             <option value="">--请选择--</option>
                             <c:forEach items="${cityL }" var="item" varStatus="i">
-                                <option value="${item.areaId }" ${item.areaId == 1213 ? 'selected="selected"' : '' }>${item.area }</option>
+                                <option value="${item.areaId }" ${item.areaId == 1158 ? 'selected="selected"' : '' }>${item.area }</option>
                             </c:forEach>
                         </select>
 

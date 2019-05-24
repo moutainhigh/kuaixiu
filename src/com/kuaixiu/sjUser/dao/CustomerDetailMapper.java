@@ -18,7 +18,7 @@ public interface CustomerDetailMapper<T> extends BaseDao<T> {
     T queryByLoginId(@Param("loginId")Integer loginId);
 
     List<Map<String,String>> queryCustomerListForPage(T t);
-
+    List<Map<String,Object>> queryCustomerList(T t);
     int queryByLoginIdState(@Param("loginId")String loginId,@Param("state")String state);
     int queryIngByLoginIdState(@Param("loginId")String loginId,@Param("state")String state);
 }

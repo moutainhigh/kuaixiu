@@ -45,23 +45,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Controller基类
  */
 public class BaseController {
-	
-	@Autowired
+
+    @Autowired
     private CouponService couponService;
-	@Autowired
-	private LoginUserService loginUserService;
+    @Autowired
+    private LoginUserService loginUserService;
 
     @Autowired
     private CodeService codeService;
 
     private static final String DEFAULT_ENCODING = "UTF-8";
-    
-    private static final Logger log=Logger.getLogger(BaseController.class);
+
+    private static final Logger log = Logger.getLogger(BaseController.class);
     /**
      * JSON_TYPE
      */
@@ -74,7 +76,7 @@ public class BaseController {
      * TEXT_TYPE
      */
     public static final String TEXT_TYPE = "text/plain";
-    
+
     /**
      * 返回成功失败key
      */
@@ -101,8 +103,8 @@ public class BaseController {
      */
     public static final String EXCEPTION_ERROR_STR = "加载数据失败,请稍后重试";
     // 定义允许上传的文件扩展名
-    private String Ext_Name ="jpg,jpeg,png";
-    
+    private String Ext_Name = "jpg,jpeg,png";
+
     /**
      * 取得参数转成Long.
      *
@@ -162,6 +164,7 @@ public class BaseController {
 
     /**
      * 以Json格式输出
+     *
      * @param response
      * @param result
      * @throws IOException
@@ -194,6 +197,7 @@ public class BaseController {
 
     /**
      * 输出html json串
+     *
      * @param response
      * @param result
      * @throws IOException
@@ -206,10 +210,11 @@ public class BaseController {
         out.write(JSON.toJSONString(result, mapping, SerializerFeature.WriteMapNullValue));
         out.flush();
     }
-    
+
 
     /**
      * 输出html json串
+     *
      * @param response
      * @param result
      * @throws IOException
@@ -225,6 +230,7 @@ public class BaseController {
 
     private static final SerializeConfig mapping = new SerializeConfig();
     private static String dateFormat = "yyyy-MM-dd HH:mm:ss";
+
     static {
         mapping.put(Date.class, new SimpleDateFormatSerializer(dateFormat));
     }
@@ -269,209 +275,219 @@ public class BaseController {
     protected SjSessionUser getSjCurrentUser(HttpServletRequest request) {
         return (SjSessionUser) request.getSession().getAttribute(SystemConstant.SESSION_SJ_USER_KEY);
     }
-    
+
     /**
      * 验证用户当前access_token
      */
     protected void getLoginUser(HttpServletRequest request) {
-    	String token=request.getParameter("access_token");
-    	log.info("当前用户token："+token+"  sessionToken："+request.getSession().getAttribute("accessToken"));
-    	if(token==null){
-    		throw new SystemException(ApiResultConstant.resultCode_str_2003, ApiResultConstant.resultCode_2003);
-    	}else if(!token.equals((String)request.getSession().getAttribute("accessToken"))){
-    		throw new SystemException(ApiResultConstant.resultCode_str_2005, ApiResultConstant.resultCode_2005);
-    	}
+        String token = request.getParameter("access_token");
+        log.info("当前用户token：" + token + "  sessionToken：" + request.getSession().getAttribute("accessToken"));
+        if (token == null) {
+            throw new SystemException(ApiResultConstant.resultCode_str_2003, ApiResultConstant.resultCode_2003);
+        } else if (!token.equals((String) request.getSession().getAttribute("accessToken"))) {
+            throw new SystemException(ApiResultConstant.resultCode_str_2005, ApiResultConstant.resultCode_2005);
+        }
     }
-    
+
     /**
      * 通过原始数据流获取浏览器的请求数据
      */
-    protected String getRequestPayload(HttpServletRequest req) {  
-        StringBuilder sb = new StringBuilder();  
-        BufferedReader reader=null;
-        try{  
-        	     reader = req.getReader();
-                 char[]buff = new char[1024];  
-                 int len;  
-                 while((len = reader.read(buff)) != -1) {  
-                          sb.append(buff,0, len);  
-                 }  
-        }catch (IOException e) {  
-                 e.printStackTrace();  
-        }finally{
-        	try {
-				if(reader!=null){
-					reader.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+    protected String getRequestPayload(HttpServletRequest req) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = null;
+        try {
+            reader = req.getReader();
+            char[] buff = new char[1024];
+            int len;
+            while ((len = reader.read(buff)) != -1) {
+                sb.append(buff, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return sb.toString();  
-}  
-    
+        return sb.toString();
+    }
+
     /**
      * 获取当前请求的params参数
      */
-    protected JSONObject getPrarms(HttpServletRequest request){
-    	String param=request.getParameter("params");
-    	log.info("request："+param);
-    	if(param==null){
-    		throw new SystemException(ApiResultConstant.resultCode_str_1001, ApiResultConstant.resultCode_1001);
-    	}
-    	JSONObject params=JSONObject.parseObject(param);
-    	return params;
+    protected JSONObject getPrarms(HttpServletRequest request) {
+        String param = request.getParameter("params");
+        log.info("request：" + param);
+        if (param == null) {
+            throw new SystemException(ApiResultConstant.resultCode_str_1001, ApiResultConstant.resultCode_1001);
+        }
+        JSONObject params = JSONObject.parseObject(param);
+        params = filter(params);
+        return params;
     }
 
+    public JSONObject filter(JSONObject params) {
+        for (String key : params.keySet()) {
+            Object object = params.get(key);
+            String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(object.toString());
+            object=m.replaceAll("").trim();
+            params.put(key,object);
+        }
+        return params;
+    }
 
     /**
      * 判断是否非空字符串  为空返回SystemException
+     *
      * @param param
      * @return
      */
-    protected String getUseString(String param){
-        if(StringUtils.isBlank(param)){
-            throw new SystemException(param+"不能为空");
+    protected String getUseString(String param) {
+        if (StringUtils.isBlank(param)) {
+            throw new SystemException(param + "不能为空");
         }
         return param;
     }
-    
-    
+
+
     /**
      * 获取请求路径
+     *
      * @param request
      * @return
      * @author: lijx
      * @CreateDate: 2016-10-15 下午5:46:06
      */
-    protected String getRequestUrl(HttpServletRequest request){
-        return request.getScheme()+"://"+request.getServerName() + request.getRequestURI() + ";jsessionid=" + request.getSession().getId() + "?" + request.getQueryString();
+    protected String getRequestUrl(HttpServletRequest request) {
+        return request.getScheme() + "://" + request.getServerName() + request.getRequestURI() + ";jsessionid=" + request.getSession().getId() + "?" + request.getQueryString();
     }
-    
+
     /**
-     * 获取协议 域名（主机+端口）  项目名称 路径   
+     * 获取协议 域名（主机+端口）  项目名称 路径
      * http://localhost:8080/kuaixiu   或
      * http://m-super.com
      */
-    protected String getProjectUrl(HttpServletRequest request){
-    	StringBuffer url=request.getRequestURL(); 
-		String path=request.getServletPath(); 
-		int a=url.indexOf(path); 
-		String linkUrl=url.substring(0,a);
-		return linkUrl;
+    protected String getProjectUrl(HttpServletRequest request) {
+        StringBuffer url = request.getRequestURL();
+        String path = request.getServletPath();
+        int a = url.indexOf(path);
+        String linkUrl = url.substring(0, a);
+        return linkUrl;
     }
-    
-    
-    
+
+
     /**
      * 得到tomcat路径  如E:\tomcat\apache-tomcat-8.0.46
+     *
      * @param path
      * @return
      */
-    protected String serverPath(String path){
-    	int a=path.lastIndexOf("/");   
-	       int b=path.lastIndexOf("\\");
-	       String realPath="";
-	       if(a>0){
-	    	   String tip=path.substring(0,a);
-	    	   String tips=tip.substring(0,tip.lastIndexOf("/"));
-	    	   realPath=tips.substring(0,tips.lastIndexOf("/"));
-	       }else if(b>0){
-	    	   String tip=path.substring(0,b);
-	    	   String tips=tip.substring(0,tip.lastIndexOf("\\"));
-	    	   realPath=tips.substring(0,tips.lastIndexOf("\\"));
-	       }
-	       return realPath;
+    protected String serverPath(String path) {
+        int a = path.lastIndexOf("/");
+        int b = path.lastIndexOf("\\");
+        String realPath = "";
+        if (a > 0) {
+            String tip = path.substring(0, a);
+            String tips = tip.substring(0, tip.lastIndexOf("/"));
+            realPath = tips.substring(0, tips.lastIndexOf("/"));
+        } else if (b > 0) {
+            String tip = path.substring(0, b);
+            String tips = tip.substring(0, tip.lastIndexOf("\\"));
+            realPath = tips.substring(0, tips.lastIndexOf("\\"));
+        }
+        return realPath;
     }
-    
-    
+
+
     /**
      * 保存文件
      */
-    protected String getPath(HttpServletRequest request,String file,String URLPath){
-    	String fileName="";                   //上传的文件名
-    	String path="";                       //存储路径
-    	try {
-			//转化request
-			MultipartHttpServletRequest rm=(MultipartHttpServletRequest) request;
-			MultipartFile mfile=rm.getFile(file);                             //获得前端页面传来的文件
-			byte[] bfile=mfile.getBytes();                                    //获得文件的字节数组
-			if(bfile.length==0){
-				log.info("未上传图片");
-				return "";
-			}
-			fileName=mfile.getOriginalFilename();                             //获得文件名
-			 // 处理获取到的上传文件的文件名的路径部分，只保留文件名部分
-			fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
-			
-			// 得到上传文件的扩展名
-			String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-			// 检查扩展名
-			if(!Ext_Name.contains(fileExt)){
-			    throw new SystemException("上传文件扩展名是不允许的扩展名：" + fileExt);
-			}else{
-			//保存文件
-			     path=saveFile(bfile,fileName,request,URLPath);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	return path;
+    protected String getPath(HttpServletRequest request, String file, String URLPath) {
+        String fileName = "";                   //上传的文件名
+        String path = "";                       //存储路径
+        try {
+            //转化request
+            MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
+            MultipartFile mfile = rm.getFile(file);                             //获得前端页面传来的文件
+            byte[] bfile = mfile.getBytes();                                    //获得文件的字节数组
+            if (bfile.length == 0) {
+                log.info("未上传图片");
+                return "";
+            }
+            fileName = mfile.getOriginalFilename();                             //获得文件名
+            // 处理获取到的上传文件的文件名的路径部分，只保留文件名部分
+            fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+
+            // 得到上传文件的扩展名
+            String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+            // 检查扩展名
+            if (!Ext_Name.contains(fileExt)) {
+                throw new SystemException("上传文件扩展名是不允许的扩展名：" + fileExt);
+            } else {
+                //保存文件
+                path = saveFile(bfile, fileName, request, URLPath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return path;
     }
-    
-    
-    
+
+
     /**
      * 保存图片文件到设定的文件夹  并得到保存文件的路径  此处指tomcat目录下和webapp同级的images文件夹
      * 返回字符串为网络访问url
      */
-    protected String saveFile(byte[] bfile,String fileName,HttpServletRequest request,String upload) {
-    	//定义文件输出流   保存图片等文件时应在tomcat server.xml配置文件中配置对应的静态路径
-    	//这样才能访问项目外的资源  此处我们默认在apache目录下建一个images的文件夹用来存放图片
+    protected String saveFile(byte[] bfile, String fileName, HttpServletRequest request, String upload) {
+        //定义文件输出流   保存图片等文件时应在tomcat server.xml配置文件中配置对应的静态路径
+        //这样才能访问项目外的资源  此处我们默认在apache目录下建一个images的文件夹用来存放图片
         String path = "/" + SystemConstant.IMAGE_PATH;
-        if(StringUtils.isBlank(upload)) {
+        if (StringUtils.isBlank(upload)) {
             String savePath = request.getServletContext().getRealPath("");
             String serverPath = serverPath(savePath);              //得到服务器位置
             upload = serverPath + path;                       //保存图片的位置
         }
-         File saveFileDir = new File(upload);
-         if (!saveFileDir.exists()) {
-             // 创建目录
-             saveFileDir.mkdirs();
-         }
-    	     OutputStream out=null;
-    	try {
-			out=new FileOutputStream(new File(upload,fileName));
-			path=path+"/"+fileName;
-			out.write(bfile);
-			out.flush();			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			if(out!=null){
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-    	path=getProjectUrl(request)+path;
-    	return path;
-    	
+        File saveFileDir = new File(upload);
+        if (!saveFileDir.exists()) {
+            // 创建目录
+            saveFileDir.mkdirs();
+        }
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(new File(upload, fileName));
+            path = path + "/" + fileName;
+            out.write(bfile);
+            out.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        path = getProjectUrl(request) + path;
+        return path;
+
     }
 
     /**
      * 判断文件大小
      *
-     * @param len
-     *            文件长度
-     * @param size
-     *            限制大小
-     * @param unit
-     *            限制单位（B,K,M,G）
+     * @param len  文件长度
+     * @param size 限制大小
+     * @param unit 限制单位（B,K,M,G）
      * @return
      */
     protected boolean checkFileSize(Long len, int size, String unit) {
@@ -492,11 +508,10 @@ public class BaseController {
     }
 
     /**
-     *
      * @param arr 原图片2进制流
      * @return
      */
-    public byte[] imageCompress(byte[] arr,MultipartFile mfile){
+    public byte[] imageCompress(byte[] arr, MultipartFile mfile) {
         byte[] byteArray = null;
 
         String fileName = mfile.getOriginalFilename();                             //获得文件名
@@ -518,44 +533,46 @@ public class BaseController {
         return byteArray;
 
     }
-    
+
     /**
      * 获取验证码并保存到session
+     *
      * @param request
      * @return
      * @CreateDate: 2016-9-13 下午8:24:41
      */
-    protected String getRandomCode(HttpServletRequest request){
+    protected String getRandomCode(HttpServletRequest request) {
         String randomCode = SmsSendUtil.randomCode();
         request.getSession().setAttribute(SystemConstant.SESSION_RANDOM_CODE, randomCode);
         return randomCode;
     }
-    
+
 
     /**
      * 获取验证码并保存到session
+     *
      * @param request
      * @return
      * @CreateDate: 2016-9-13 下午8:24:41
      */
-    protected String getRandomCode(HttpServletRequest request, String key){
+    protected String getRandomCode(HttpServletRequest request, String key) {
         String randomCode = SmsSendUtil.randomCode();
         request.getSession().setAttribute(SystemConstant.SESSION_RANDOM_CODE + key, randomCode);
         //保存验证码到数据库
         Code code = codeService.queryById(key);
-        if(code==null){
-            code=new Code();
+        if (code == null) {
+            code = new Code();
             code.setCode(randomCode);
             code.setMobile(key);
             codeService.add(code);
-        }else{
+        } else {
             code.setCode(randomCode);
             code.setUpdateTime(new Date());
             codeService.saveUpdate(code);
         }
         return randomCode;
     }
-    
+
 //    /**
 //     * 获取验证码并保存到session
 //     * @param request
@@ -577,33 +594,34 @@ public class BaseController {
 
     /**
      * 获取验证码
+     *
      * @param request
      * @return
      * @CreateDate: 2016-9-13 下午8:24:41
      */
-    protected boolean checkRandomCode(HttpServletRequest request, String key, String checkCode){
+    protected boolean checkRandomCode(HttpServletRequest request, String key, String checkCode) {
         //万能验证码
-        if("140789".equals(checkCode)){
+        if ("140789".equals(checkCode)) {
             return true;
         }
         Code code = codeService.queryById(key);
         String randomCode = code.getCode();
-        if(StringUtils.isBlank(randomCode)){
+        if (StringUtils.isBlank(randomCode)) {
             return false;
-        }
-        else if(randomCode.equals(checkCode)){
+        } else if (randomCode.equals(checkCode)) {
             return true;
         }
         return false;
     }
-    
+
     /**
      * 移除验证码
+     *
      * @param request
      * @param key
      * @CreateDate: 2016-9-16 下午11:51:21
      */
-    public void removeRandomCode(HttpServletRequest request, String key){
+    public void removeRandomCode(HttpServletRequest request, String key) {
         request.getSession().setAttribute(SystemConstant.SESSION_RANDOM_CODE + key, null);
     }
 
@@ -623,9 +641,8 @@ public class BaseController {
                 String key = iter.next();
                 String value = request.getParameter(key);
                 try {
-                    value = java.net.URLDecoder.decode(value.trim(),"utf-8");
-                }
-                catch (Exception e) {
+                    value = java.net.URLDecoder.decode(value.trim(), "utf-8");
+                } catch (Exception e) {
 
                 }
 
@@ -670,16 +687,13 @@ public class BaseController {
             String responseBody = postMethod.getResponseBodyAsString();
 
             return StringUtils.isEmpty(responseBody) ? "" : responseBody;
-        }
-        catch (HttpException e) {
+        } catch (HttpException e) {
             e.printStackTrace();
             throw new SystemException("发生致命的异常，可能是协议不对或者返回的内容有问题");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             throw new SystemException("发生网络异常");
-        }
-        finally {
+        } finally {
             //释放连接
             postMethod.releaseConnection();
         }
@@ -710,16 +724,16 @@ public class BaseController {
      * @throws Exception
      */
     public Page getPageByRequest(HttpServletRequest request) throws Exception {
-    	 //记录起始索引
+        //记录起始索引
         String start = request.getParameter("start");
-        String pageStatus=request.getParameter("pageStatus");//用来判定是否搜索查询
-        if(StringUtils.isBlank(start)){
+        String pageStatus = request.getParameter("pageStatus");//用来判定是否搜索查询
+        if (StringUtils.isBlank(start)) {
             start = "0";
         }
-        if(StringUtil.isNotBlank(pageStatus)){
-        	if(pageStatus.equals("1")){
-        		start="0";
-        	}
+        if (StringUtil.isNotBlank(pageStatus)) {
+            if (pageStatus.equals("1")) {
+                start = "0";
+            }
         }
         //数据长度，每页记录数
         String pageSize = request.getParameter("length");
@@ -728,82 +742,81 @@ public class BaseController {
         dt.setStart(Integer.valueOf(start));
         if (StringUtils.isBlank(pageSize)) {
             dt.setPageSize(SystemConstant.DEFAULT_PAGE_SIZE);
-        }
-        else {
+        } else {
             dt.setPageSize(Integer.valueOf(pageSize));
         }
 
         return dt;
     }
-    
+
     /**
-     *  Json接受数据模式 分页
+     * Json接受数据模式 分页
      */
-    public Page getPageByRequestParams(String start,String pageSize) throws Exception {
+    public Page getPageByRequestParams(String start, String pageSize) throws Exception {
         //记录起始索引
-        if(StringUtils.isBlank(start)||start.equals("0")){
+        if (StringUtils.isBlank(start) || start.equals("0")) {
             start = "1";
         }
         //数据长度，每页记录数
         Page dt = new Page();
-        dt.setStart(Integer.valueOf(start)-1);
+        dt.setStart(Integer.valueOf(start) - 1);
         if (StringUtils.isBlank(pageSize)) {
             dt.setPageSize(SystemConstant.DEFAULT_PAGE_SIZE);
-        }
-        else {
+        } else {
             dt.setPageSize(Integer.valueOf(pageSize));
         }
 
         return dt;
     }
-    
-    /**    
-    * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址,   
-    * 可是，如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP值，究竟哪个才是真正的用户端的真实IP呢？    
-    * 答案是取X-Forwarded-For中第一个非unknown的有效IP字符串。    
-    * 如：X-Forwarded-For：192.168.1.110, 192.168.1.120, 192.168.1.130,    
-    * 192.168.1.100    
-    * 用户真实IP为： 192.168.1.110    
-    * @param request    
-    * @return    
-    */  
-    public static String getIpAddress(HttpServletRequest request) {     
-        String ip = request.getHeader("x-forwarded-for"); 
+
+    /**
+     * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址,
+     * 可是，如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP值，究竟哪个才是真正的用户端的真实IP呢？
+     * 答案是取X-Forwarded-For中第一个非unknown的有效IP字符串。
+     * 如：X-Forwarded-For：192.168.1.110, 192.168.1.120, 192.168.1.130,
+     * 192.168.1.100
+     * 用户真实IP为： 192.168.1.110
+     *
+     * @param request
+     * @return
+     */
+    public static String getIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
         //log.info("x-forwarded-for:"+ ip);
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {   
-            ip = request.getHeader("Proxy-Client-IP");     
-        }     
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
         //log.info("Proxy-Client-IP:"+ ip);
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {       
-            ip = request.getHeader("WL-Proxy-Client-IP");     
-        }     
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
         //log.info("WL-Proxy-Client-IP:"+ ip);
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {       
-            ip = request.getHeader("HTTP_CLIENT_IP");     
-        }     
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
         //log.info("HTTP_CLIENT_IP:"+ ip);
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {       
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");     
-        }     
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
         //log.info("HTTP_X_FORWARDED_FOR:"+ ip);
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {       
-            ip = request.getRemoteAddr();     
-        }     
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
         //log.info("getRemoteAddr:"+ ip);
         //log.info("getRemoteAddr():"+ request.getRemoteAddr());
-        if (ip != null || ip.indexOf(", ") > 0){
+        if (ip != null || ip.indexOf(", ") > 0) {
             String[] ips = ip.split(", ");
             for (String i : ips) {
-                if(i != null && i.length() > 0 && !"unknown".equalsIgnoreCase(i)){
+                if (i != null && i.length() > 0 && !"unknown".equalsIgnoreCase(i)) {
                     ip = i;
                     break;
                 }
             }
         }
         //log.info("ip:"+ ip);
-        return ip;   
-    } 
-    
+        return ip;
+    }
+
     /**
      * 检查优惠码是否存在
      * 1、获取手机号码
@@ -819,193 +832,179 @@ public class BaseController {
      * 11、如果不存在错误次数加一，累计错误次数加一
      * 12、如果错误次数是否大于限制次数，连续输错5次锁定半个小时，连续输错10次锁定一天
      * 13、如果是则判断历史错误次数，根据历史错误次数锁定优惠码查询时间，累计错误20次锁定一天
-     * 
+     *
      * @param request
      * @return
-     * @throws ParseException 
+     * @throws ParseException
      */
-    public Coupon checkCouponExisit(HttpServletRequest request) throws ParseException{
-    	//获取手机号
+    public Coupon checkCouponExisit(HttpServletRequest request) throws ParseException {
+        //获取手机号
         String mobile = request.getParameter("mobile");
         //获取手机号
         String checkCode = request.getParameter("checkCode");
         //验证手机号和验证码
-        if(!checkRandomCode(request,mobile,checkCode)){
+        if (!checkRandomCode(request, mobile, checkCode)) {
             throw new SystemException("手机号或验证码输入错误");
         }
         //获取上下文
         ServletContext sc = request.getSession().getServletContext();
         Object obj = sc.getAttribute(mobile + "_coupon");
         CouponLock cl = null;
-        if(obj == null){
-        	cl = new CouponLock();
-        	cl.setMobile(mobile);
-        	sc.setAttribute(mobile + "_coupon", cl);
-        }else{
-        	cl = (CouponLock)obj;
+        if (obj == null) {
+            cl = new CouponLock();
+            cl.setMobile(mobile);
+            sc.setAttribute(mobile + "_coupon", cl);
+        } else {
+            cl = (CouponLock) obj;
         }
         //获取当前日期
         String nowDay = DateUtil.getNowyyyyMMdd();
         String nowTime = DateUtil.getDateyyyyMMddHHmmss(new Date());
         //判断日期如果不是当天清空错误数据
-        if(!nowDay.equals(cl.getNowDay())){
-        	cl.setNowDay(nowDay);
-        	cl.setErrCount(0);
-        	cl.setHisErrCount(0);
-        	cl.setLock(false);
-        	cl.setBeginLockTime(null);
-        	cl.setEndLockTime(null);
+        if (!nowDay.equals(cl.getNowDay())) {
+            cl.setNowDay(nowDay);
+            cl.setErrCount(0);
+            cl.setHisErrCount(0);
+            cl.setLock(false);
+            cl.setBeginLockTime(null);
+            cl.setEndLockTime(null);
         }
         //是否锁定
-        if(cl.isLock()){
-        	if(nowTime.compareTo(cl.getEndLockTime()) < 0){
-        		throw new SystemException("对不起亲，因为您输入优惠码错误次数过多，已被锁定，请稍后再试");
-        	}
-        	else {
-            	cl.setLock(false);
-            	cl.setBeginLockTime(null);
-            	cl.setEndLockTime(null);
-        	}
+        if (cl.isLock()) {
+            if (nowTime.compareTo(cl.getEndLockTime()) < 0) {
+                throw new SystemException("对不起亲，因为您输入优惠码错误次数过多，已被锁定，请稍后再试");
+            } else {
+                cl.setLock(false);
+                cl.setBeginLockTime(null);
+                cl.setEndLockTime(null);
+            }
         }
         //校验当天优惠码输入错误次数
         //获取优惠码
         String couponCode = request.getParameter("couponCode");
-        if(StringUtils.isBlank(couponCode)){
-        	throw new SystemException("请填写优惠码");
+        if (StringUtils.isBlank(couponCode)) {
+            throw new SystemException("请填写优惠码");
         }
         Coupon c = couponService.queryByCode(couponCode);
-        if(c == null){
-        	cl.setErrCount(cl.getErrCount() + 1);
-        	cl.setHisErrCount(cl.getHisErrCount() + 1);
-        	if(cl.getErrCount() == 5){
-        		//连续输错五次锁定半小时
-        		cl.setLock(true);
-        		cl.setBeginLockTime(nowTime);
-        		cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddMinute(30)));
-        		throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
-        	}
-        	else if(cl.getErrCount() >= 10 || cl.getHisErrCount() > 20){
-        		//锁定一天
-        		cl.setLock(true);
-        		cl.setBeginLockTime(nowTime);
-        		cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddHour(24)));
-        		throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
-        	}
-        	throw new SystemException("优惠码不存在");
-        }
-        else if(c.getIsUse() == 1){
-        	throw new SystemException("优惠码已使用");
-        }
-        else if(c.getIsDel() == 1){
-        	throw new SystemException("优惠码已作废");
-        }
-        else{
-        	//清空错误次数
-        	cl.setErrCount(0);
+        if (c == null) {
+            cl.setErrCount(cl.getErrCount() + 1);
+            cl.setHisErrCount(cl.getHisErrCount() + 1);
+            if (cl.getErrCount() == 5) {
+                //连续输错五次锁定半小时
+                cl.setLock(true);
+                cl.setBeginLockTime(nowTime);
+                cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddMinute(30)));
+                throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
+            } else if (cl.getErrCount() >= 10 || cl.getHisErrCount() > 20) {
+                //锁定一天
+                cl.setLock(true);
+                cl.setBeginLockTime(nowTime);
+                cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddHour(24)));
+                throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
+            }
+            throw new SystemException("优惠码不存在");
+        } else if (c.getIsUse() == 1) {
+            throw new SystemException("优惠码已使用");
+        } else if (c.getIsDel() == 1) {
+            throw new SystemException("优惠码已作废");
+        } else {
+            //清空错误次数
+            cl.setErrCount(0);
         }
         return c;
     }
-    
-    
-    
-    
-    
+
+
     /**
-     *  用户端检测优惠码
+     * 用户端检测优惠码
      */
-    public Coupon userCheckCouponExisit(HttpServletRequest request,JSONObject params) throws ParseException{
-    	String mobile=params.getString("mobile");
-    	String checkCode=params.getString("checkCode");
-    	String couponCode=params.getString("couponCode");
-    	if(!checkRandomCode(request,mobile,checkCode)){
+    public Coupon userCheckCouponExisit(HttpServletRequest request, JSONObject params) throws ParseException {
+        String mobile = params.getString("mobile");
+        String checkCode = params.getString("checkCode");
+        String couponCode = params.getString("couponCode");
+        if (!checkRandomCode(request, mobile, checkCode)) {
             throw new SystemException("手机号或验证码输入错误");
         }
-    	 //获取上下文
+        //获取上下文
         ServletContext sc = request.getSession().getServletContext();
         Object obj = sc.getAttribute(mobile + "_coupon");
         CouponLock cl = null;
-        if(obj == null){
-        	cl = new CouponLock();
-        	cl.setMobile(mobile);
-        	sc.setAttribute(mobile + "_coupon", cl);
-        }else{
-        	cl = (CouponLock)obj;
+        if (obj == null) {
+            cl = new CouponLock();
+            cl.setMobile(mobile);
+            sc.setAttribute(mobile + "_coupon", cl);
+        } else {
+            cl = (CouponLock) obj;
         }
         //获取当前日期
         String nowDay = DateUtil.getNowyyyyMMdd();
         String nowTime = DateUtil.getDateyyyyMMddHHmmss(new Date());
         //判断日期如果不是当天清空错误数据
-        if(!nowDay.equals(cl.getNowDay())){
-        	cl.setNowDay(nowDay);
-        	cl.setErrCount(0);
-        	cl.setHisErrCount(0);
-        	cl.setLock(false);
-        	cl.setBeginLockTime(null);
-        	cl.setEndLockTime(null);
+        if (!nowDay.equals(cl.getNowDay())) {
+            cl.setNowDay(nowDay);
+            cl.setErrCount(0);
+            cl.setHisErrCount(0);
+            cl.setLock(false);
+            cl.setBeginLockTime(null);
+            cl.setEndLockTime(null);
         }
         //是否锁定
-        if(cl.isLock()){
-        	if(nowTime.compareTo(cl.getEndLockTime()) < 0){
-        		throw new SystemException("对不起亲，因为您输入优惠码错误次数过多，已被锁定，请稍后再试");
-        	}
-        	else {
-            	cl.setLock(false);
-            	cl.setBeginLockTime(null);
-            	cl.setEndLockTime(null);
-        	}
+        if (cl.isLock()) {
+            if (nowTime.compareTo(cl.getEndLockTime()) < 0) {
+                throw new SystemException("对不起亲，因为您输入优惠码错误次数过多，已被锁定，请稍后再试");
+            } else {
+                cl.setLock(false);
+                cl.setBeginLockTime(null);
+                cl.setEndLockTime(null);
+            }
         }
         //校验当天优惠码输入错误次数
         //获取优惠码
-        if(StringUtils.isBlank(couponCode)){
-        	throw new SystemException("请填写优惠码");
+        if (StringUtils.isBlank(couponCode)) {
+            throw new SystemException("请填写优惠码");
         }
         Coupon c = couponService.queryByCode(couponCode);
-        if(c == null){
-        	cl.setErrCount(cl.getErrCount() + 1);
-        	cl.setHisErrCount(cl.getHisErrCount() + 1);
-        	if(cl.getErrCount() == 5){
-        		//连续输错五次锁定半小时
-        		cl.setLock(true);
-        		cl.setBeginLockTime(nowTime);
-        		cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddMinute(30)));
-        		throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
-        	}
-        	else if(cl.getErrCount() >= 10 || cl.getHisErrCount() > 20){
-        		//锁定一天
-        		cl.setLock(true);
-        		cl.setBeginLockTime(nowTime);
-        		cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddHour(24)));
-        		throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
-        	}
-        	throw new SystemException("优惠码不存在");
-        }
-        else if(c.getIsUse() == 1){
-        	throw new SystemException("优惠码已使用");
-        }
-        else if(c.getIsDel() == 1){
-        	throw new SystemException("优惠码已作废");
-        }
-        else{
-        	//清空错误次数
-        	cl.setErrCount(0);
+        if (c == null) {
+            cl.setErrCount(cl.getErrCount() + 1);
+            cl.setHisErrCount(cl.getHisErrCount() + 1);
+            if (cl.getErrCount() == 5) {
+                //连续输错五次锁定半小时
+                cl.setLock(true);
+                cl.setBeginLockTime(nowTime);
+                cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddMinute(30)));
+                throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
+            } else if (cl.getErrCount() >= 10 || cl.getHisErrCount() > 20) {
+                //锁定一天
+                cl.setLock(true);
+                cl.setBeginLockTime(nowTime);
+                cl.setEndLockTime(DateUtil.getDateyyyyMMddHHmmss(DateUtil.getDateAddHour(24)));
+                throw new SystemException("亲，您输入优惠码错误次数过多，已被锁定，请稍后再试");
+            }
+            throw new SystemException("优惠码不存在");
+        } else if (c.getIsUse() == 1) {
+            throw new SystemException("优惠码已使用");
+        } else if (c.getIsDel() == 1) {
+            throw new SystemException("优惠码已作废");
+        } else {
+            //清空错误次数
+            cl.setErrCount(0);
         }
         return c;
     }
-
 
 
     /**
      * 验证参数是否为空
      */
-    protected String get(String code){
-        if(StringUtils.isBlank(code)){
+    protected String get(String code) {
+        if (StringUtils.isBlank(code)) {
             throw new SystemException("参数不完整！");
         }
         return code;
     }
 
 
-    public ResultData getResult(ResultData result,Object object,Boolean isTrue,String code,String message){
+    public ResultData getResult(ResultData result, Object object, Boolean isTrue, String code, String message) {
         result.setResultMessage(message);
         result.setResultCode(code);
         result.setSuccess(isTrue);
@@ -1013,7 +1012,7 @@ public class BaseController {
         return result;
     }
 
-    public ResultData getSjResult(ResultData result,Object object,Boolean isTrue,String code,String msg,String message){
+    public ResultData getSjResult(ResultData result, Object object, Boolean isTrue, String code, String msg, String message) {
         result.setMsg(msg);
         result.setResultMessage(message);
         result.setResultCode(code);

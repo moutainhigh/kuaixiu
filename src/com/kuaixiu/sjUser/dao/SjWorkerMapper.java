@@ -16,6 +16,8 @@ public interface SjWorkerMapper<T> extends BaseDao<T> {
 
     List<T> queryByCompanyId(String companId);
 
+    T queryByloginId(Integer LoginId);
+
     List<Map<String,String>> queryWorkerListForPage(T t);
 }
 

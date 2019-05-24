@@ -244,10 +244,10 @@ public class FileDownloadController extends BaseController{
             inputStream.close();
         }
         catch (FileNotFoundException e) {
-            logger.error("FileDownload_FileNotFoundException", e);
+//            logger.error("FileDownload_FileNotFoundException", e);
         }
         catch (IOException e) {
-            logger.error("FileDownload_IOException", e);
+//            logger.error("FileDownload_IOException", e);
         }
         return null;
     }

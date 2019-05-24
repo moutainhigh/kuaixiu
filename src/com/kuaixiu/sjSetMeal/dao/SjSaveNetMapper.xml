@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjSetMeal.dao.SjSaveNetMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjSetMeal.entity.SjSaveNet" >
+        <result column="id" property="id"/>
+        <result column="meal_id" property="mealId"/>
+        <result column="save_net_name" property="saveNetName"/>
+    </resultMap>
+    
+    <!-- sj_save_net table all fields -->
+    <sql id="Base_Column_List" >
+        id,meal_id,save_net_name
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_save_net
+        (id,meal_id,save_net_name)
+        values
+        (#{id},#{mealId},#{saveNetName})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_save_net 
+        set 
+            id=#{id},
+            meal_id=#{mealId},
+            save_net_name=#{saveNetName}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_save_net where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_save_net where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_save_net
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mealId != null and mealId != ''" >
+            and meal_id = #{mealId}
+        </if>
+        <if test="saveNetName != null and saveNetName != ''" >
+            and save_net_name = #{saveNetName}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_save_net
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mealId != null and mealId != ''" >
+            and meal_id = #{mealId}
+        </if>
+        <if test="saveNetName != null and saveNetName != ''" >
+            and save_net_name = #{saveNetName}
+        </if>
+    </select>
+
+</mapper>   

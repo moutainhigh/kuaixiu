@@ -8,6 +8,14 @@ import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.*;
 
+import com.kuaixiu.sjSetMeal.entity.SjPoe;
+import com.kuaixiu.sjSetMeal.entity.SjSaveNet;
+import com.kuaixiu.sjSetMeal.entity.SjSetMeal;
+import com.kuaixiu.sjSetMeal.entity.SjWifiMonitorType;
+import com.kuaixiu.sjSetMeal.service.SjPoeService;
+import com.kuaixiu.sjSetMeal.service.SjSaveNetService;
+import com.kuaixiu.sjSetMeal.service.SjSetMealService;
+import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.basic.address.entity.Address;
@@ -41,7 +49,13 @@ public class SjOrderService extends BaseService<SjOrder> {
     @Autowired
     private SjUserService sjUserService;
     @Autowired
-    private SjRegisterFormService registerFormService;
+    private SjSetMealService sjSetMealService;
+    @Autowired
+    private SjWifiMonitorTypeService sjWifiMonitorTypeService;
+    @Autowired
+    private SjPoeService sjPoeService;
+    @Autowired
+    private SjSaveNetService sjSaveNetService;
 
 
     public SjOrderMapper<SjOrder> getDao() {
@@ -188,24 +202,41 @@ public class SjOrderService extends BaseService<SjOrder> {
     }
 
 
+
     public void setWifi(Integer type, SjOrder order) {
         if (type == 1) {
-            SjRegisterForm registerForm = registerFormService.getDao().queryBy4Id(order.getStorageId(),
-                    order.getPoeId(), order.getModelId(), order.getMealId());
-            if (registerForm != null) {
-                order.setMealName(registerForm.getMealName());
-                order.setModelName(registerForm.getModelName());
-                order.setPoeName(registerForm.getPoeName());
-                order.setStorageName(registerForm.getStorageName());
+            SjSetMeal sjSetMeal=sjSetMealService.queryById(order.getMealId());
+            SjWifiMonitorType wifiMonitorType=sjWifiMonitorTypeService.queryById(order.getModelId());
+            SjPoe sjPoe=sjPoeService.queryById(order.getPoeId());
+            SjSaveNet sjSaveNet=sjSaveNetService.queryById(order.getStorageId());
+            if (sjSetMeal != null) {
+                order.setMealName(sjSetMeal.getMealName());
+            }
+            if(wifiMonitorType!=null){
+                order.setModelName(wifiMonitorType.getMonitorTypeWifiName());
+            }
+            if(sjPoe!=null){
+                order.setPoeName(sjPoe.getPoeName());
+            }
+            if(sjSaveNet!=null){
+                order.setStorageName(sjSaveNet.getSaveNetName());
             }
         } else {
-            SjRegisterForm registerForm = registerFormService.getDao().queryBy4Id(order.getStorageWifiId(),
-                    order.getPoeWifiId(), order.getModelWifiId(), order.getMealWifiId());
-            if (registerForm != null) {
-                order.setMealWifiName(registerForm.getMealName());
-                order.setModelWifiName(registerForm.getModelName());
-                order.setPoeWifiName(registerForm.getPoeName());
-                order.setStorageWifiName(registerForm.getStorageName());
+            SjSetMeal sjSetMeal=sjSetMealService.queryById(order.getMealWifiId());
+            SjWifiMonitorType wifiMonitorType=sjWifiMonitorTypeService.queryById(order.getModelWifiId());
+            SjPoe sjPoe=sjPoeService.queryById(order.getPoeWifiId());
+            SjSaveNet sjSaveNet=sjSaveNetService.queryById(order.getStorageWifiId());
+            if (sjSetMeal != null) {
+                order.setMealWifiName(sjSetMeal.getMealName());
+            }
+            if(wifiMonitorType!=null){
+                order.setModelWifiName(wifiMonitorType.getMonitorTypeWifiName());
+            }
+            if(sjPoe!=null){
+                order.setPoeWifiName(sjPoe.getPoeName());
+            }
+            if(sjSaveNet!=null){
+                order.setStorageWifiName(sjSaveNet.getSaveNetName());
             }
         }
     }

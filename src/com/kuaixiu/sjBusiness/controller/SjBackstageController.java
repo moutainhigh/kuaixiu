@@ -1,12 +1,20 @@
 package com.kuaixiu.sjBusiness.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
+import com.common.util.MD5Util;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjBusiness.service.*;
+import com.kuaixiu.sjSetMeal.entity.SjPoe;
+import com.kuaixiu.sjSetMeal.entity.SjSaveNet;
+import com.kuaixiu.sjSetMeal.entity.SjSetMeal;
+import com.kuaixiu.sjSetMeal.entity.SjWifiMonitorType;
+import com.kuaixiu.sjSetMeal.service.SjPoeService;
+import com.kuaixiu.sjSetMeal.service.SjSaveNetService;
+import com.kuaixiu.sjSetMeal.service.SjSetMealService;
+import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
 import com.kuaixiu.sjUser.entity.*;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
@@ -17,6 +25,7 @@ import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,7 +76,13 @@ public class SjBackstageController extends BaseController {
     @Autowired
     private ConstructionCompanyService companyService;
     @Autowired
-    private SjRegisterFormService registerFormService;
+    private SjSetMealService sjSetMealService;
+    @Autowired
+    private SjWifiMonitorTypeService sjWifiMonitorTypeService;
+    @Autowired
+    private SjPoeService sjPoeService;
+    @Autowired
+    private SjSaveNetService sjSaveNetService;
 
     /**
      * 订单列表
@@ -86,7 +101,7 @@ public class SjBackstageController extends BaseController {
 
     @RequestMapping(value = "/sj/order/approvalList")
     public ModelAndView approvalList(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+                                     HttpServletResponse response) throws Exception {
         String returnView = "business/orderApprovalList";
         return new ModelAndView(returnView);
     }
@@ -100,7 +115,7 @@ public class SjBackstageController extends BaseController {
 
     @RequestMapping(value = "/sj/order/approvalList2")
     public ModelAndView approvalList2(HttpServletRequest request,
-                              HttpServletResponse response) throws Exception {
+                                      HttpServletResponse response) throws Exception {
         String returnView = "business/order2ApprovalList";
         return new ModelAndView(returnView);
     }
@@ -143,6 +158,13 @@ public class SjBackstageController extends BaseController {
             String state = request.getParameter("state");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
             SjOrder sjOrder = new SjOrder();
+            SjSessionUser sjSessionUser=getSjCurrentUser(request);
+            if(sjSessionUser.getType()==3){
+                sjOrder.setAssignCompanyId(sjSessionUser.getUserId());
+            }
+            if(sjSessionUser.getType()==8){
+                sjOrder.setAssignWorkerId(sjSessionUser.getUserId());
+            }
             sjOrder.setIsAssign(isAssign);
             sjOrder.setOrderNo(orderNo);
             if (StringUtils.isNotBlank(type)) {
@@ -203,6 +225,11 @@ public class SjBackstageController extends BaseController {
         try {
             //获取查询条件
             SjWorker sjWorker = new SjWorker();
+            SjSessionUser sjSessionUser=getSjCurrentUser(request);
+            if(sjSessionUser.getType()==3){
+                SjUser sjUser=sjUserService.getDao().queryByLoginId(sjSessionUser.getUserId(),3);
+                sjWorker.setCompanyLoginId(String.valueOf(sjUser.getId()));
+            }
             sjWorker.setPage(page);
             List<Map<String, String>> sjWorkers = sjWorkerService.getDao().queryWorkerListForPage(sjWorker);
             for (Map<String, String> worker : sjWorkers) {
@@ -272,16 +299,16 @@ public class SjBackstageController extends BaseController {
         } else {
             String projectIds = sjOrder.getProjectId();
             if (projectIds.contains("1") && projectIds.contains("2")) {
-                orderService.setWifi(1,sjOrder);
-                orderService.setWifi(2,sjOrder);
+                orderService.setWifi(1, sjOrder);
+                orderService.setWifi(2, sjOrder);
                 request.setAttribute("isWifi", 0);
             } else if (projectIds.contains("1")) {
-                orderService.setWifi(1,sjOrder);
+                orderService.setWifi(1, sjOrder);
                 request.setAttribute("isWifi", 1);
             } else if (projectIds.contains("2")) {
-                orderService.setWifi(2,sjOrder);
+                orderService.setWifi(2, sjOrder);
                 request.setAttribute("isWifi", 2);
-            }else{
+            } else {
                 request.setAttribute("isWifi", 4);
             }
             returnView = "business/detail";
@@ -468,6 +495,7 @@ public class SjBackstageController extends BaseController {
             }
             SjWorker sjWorker = sjWorkers.get(0);
             SjUser sjUser = sjUserService.getDao().queryById(sjWorker.getLoginId());
+            SjUser companyUser = sjUserService.getDao().queryById(userId);
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
@@ -479,6 +507,8 @@ public class SjBackstageController extends BaseController {
             SjUser sjUser1 = sjUserService.getDao().queryById(sjWorker.getCompanyLoginId());
             sjOrder.setBuildCompany(sjUser1.getName());
             sjOrder.setBuildPhone(sjUser.getPhone());
+            sjOrder.setAssignWorkerId(sjUser.getLoginId());
+            sjOrder.setAssignCompanyId(companyUser.getLoginId());
             orderService.saveUpdate(sjOrder);
             //工人接单数量加一
             sjWorker.setBuildingNum(sjWorker.getBuildingNum() + 1);
@@ -549,7 +579,7 @@ public class SjBackstageController extends BaseController {
             sjUser.setName(name);
             sjUser.setPhone(phone);
             String pwd = phone.substring(phone.length() - 6);
-            sjUser.setPassword(pwd);
+            sjUser.setPassword(MD5Util.encodePassword(pwd));
 
             if ("1".equals(type)) {
                 if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(provinceId)
@@ -615,7 +645,7 @@ public class SjBackstageController extends BaseController {
 
                 companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
             }
-            SmsSendUtil.sjRegisterUserSend(sjUser);
+            SmsSendUtil.sjRegisterUserSend(sjUser,pwd);
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -783,28 +813,29 @@ public class SjBackstageController extends BaseController {
                                      HttpServletResponse response) {
         String orderId = request.getParameter("orderId");
         String isWifi = request.getParameter("isWifi");
-        List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(null, null, null);
-        for (SjRegisterForm registerForm : registerForms) {
-            if (String.valueOf(registerForm.getMealId()).equals(isWifi)) {
-                request.setAttribute("registerForm", registerForm);
-            }
-        }
+
         SjOrder sjOrder = orderService.queryById(orderId);
-        List<SjRegisterForm> modelL=null;
-        List<SjRegisterForm> poeL=null;
-        List<SjRegisterForm> storageL=null;
-        if(isWifi.equals("1")){
-            modelL = registerFormService.getSjRegisterForms(null, null, 1);
-            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelId(), 1);
-            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeId(), sjOrder.getModelId(), 1);
-        }else if(isWifi.equals("2")){
-            modelL = registerFormService.getSjRegisterForms(null, null, 2);
-            poeL = registerFormService.getSjRegisterForms(null, sjOrder.getModelWifiId(), 2);
-            storageL = registerFormService.getSjRegisterForms(sjOrder.getPoeWifiId(), sjOrder.getModelWifiId(), 2);
-        }
-        request.setAttribute("modelL", modelL);
-        request.setAttribute("poeL", poeL);
-        request.setAttribute("storageL", storageL);
+        Long mealId = Long.valueOf(isWifi);
+        SjSetMeal sjSetMeal = new SjSetMeal();
+        sjSetMeal.setId(mealId);
+        List<SjSetMeal> sjSetMeals = sjSetMealService.queryList(sjSetMeal);
+
+        SjWifiMonitorType wifiMonitorType = new SjWifiMonitorType();
+        wifiMonitorType.setMealId(mealId);
+        List<SjWifiMonitorType> wifiMonitorTypes = sjWifiMonitorTypeService.queryList(wifiMonitorType);
+
+        SjPoe sjPoe = new SjPoe();
+        sjPoe.setMealId(mealId);
+        List<SjPoe> sjPoes = sjPoeService.queryList(sjPoe);
+
+        SjSaveNet sjSaveNet = new SjSaveNet();
+        sjSaveNet.setMealId(mealId);
+        List<SjSaveNet> sjSaveNets = sjSaveNetService.queryList(sjSaveNet);
+
+        request.setAttribute("sjSetMeal", sjSetMeals.get(0));
+        request.setAttribute("modelL", wifiMonitorTypes);
+        request.setAttribute("poeL", sjPoes);
+        request.setAttribute("storageL", sjSaveNets);
 
         request.setAttribute("isWifi", isWifi);
         request.setAttribute("sjOrder", sjOrder);
@@ -812,43 +843,43 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    /**
-     * 获取登记单信息
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/sj/order/getRegisterForm")
-    @ResponseBody
-    public ResultData getRegisterForm(HttpServletRequest request,
-                                      HttpServletResponse response) throws Exception {
-        ResultData result = new ResultData();
-        try {
-            String strPoeId = request.getParameter("poeId");
-            String strModelId = request.getParameter("modelId");
-            String strMealId = request.getParameter("mealId");
-            Integer poeId = null;
-            Integer modelId = null;
-            Integer mealId = null;
-            if (StringUtils.isNotBlank(strMealId)) {
-                mealId = Integer.valueOf(strMealId);
-            }
-            if (StringUtils.isNotBlank(strModelId)) {
-                modelId = Integer.valueOf(strModelId);
-            }
-            if (StringUtils.isNotBlank(strPoeId)) {
-                poeId = Integer.valueOf(strPoeId);
-            }
-            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
-            getResult(result, registerForms, true, "0", "成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-        }
-        return result;
-    }
+//    /**
+//     * 获取登记单信息
+//     *
+//     * @param request
+//     * @param response
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "/sj/order/getRegisterForm")
+//    @ResponseBody
+//    public ResultData getRegisterForm(HttpServletRequest request,
+//                                      HttpServletResponse response) throws Exception {
+//        ResultData result = new ResultData();
+//        try {
+//            String strPoeId = request.getParameter("poeId");
+//            String strModelId = request.getParameter("modelId");
+//            String strMealId = request.getParameter("mealId");
+//            Integer poeId = null;
+//            Integer modelId = null;
+//            Integer mealId = null;
+//            if (StringUtils.isNotBlank(strMealId)) {
+//                mealId = Integer.valueOf(strMealId);
+//            }
+//            if (StringUtils.isNotBlank(strModelId)) {
+//                modelId = Integer.valueOf(strModelId);
+//            }
+//            if (StringUtils.isNotBlank(strPoeId)) {
+//                poeId = Integer.valueOf(strPoeId);
+//            }
+//            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
+//            getResult(result, registerForms, true, "0", "成功");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error(e.getMessage());
+//        }
+//        return result;
+//    }
 
     /**
      * 录单
@@ -917,12 +948,24 @@ public class SjBackstageController extends BaseController {
             String type = request.getParameter("type");//角色类型
             String loginId = request.getParameter("loginId");
             String isCancel = request.getParameter("isCancel");//是否注销   1注销   0恢复
+            ConstructionCompany company=new ConstructionCompany();
+            if(Integer.valueOf(type)==8){
+                SjUser sjUser=sjUserService.getDao().queryByLoginId(loginId,8);
+                SjWorker sjWorker=sjWorkerService.getDao().queryByloginId(sjUser.getId());
+                company=companyService.getDao().queryByLoginId(Integer.valueOf(sjWorker.getCompanyLoginId()));
+                companyService.saveUpdate(company);
+            }
             if ("1".equals(isCancel)) {
                 sjUserService.getDao().updateCancel1(loginId, Integer.valueOf(type));
+                company.setPersonNum(company.getPersonNum()-1);
                 getSjResult(result, null, true, "0", null, "注销成功");
             } else {
                 sjUserService.getDao().updateCancel0(loginId, Integer.valueOf(type));
+                company.setPersonNum(company.getPersonNum()+1);
                 getSjResult(result, null, true, "0", null, "恢复成功");
+            }
+            if(Integer.valueOf(type)==8){
+                companyService.saveUpdate(company);
             }
 
         } catch (Exception e) {

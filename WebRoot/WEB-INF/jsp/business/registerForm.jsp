@@ -13,33 +13,32 @@
                 <div class="form-group">
                     <label for="mealId" class="col-sm-3 control-label"><span style="color:red">*</span> 套餐名字</label>
                     <div class="col-sm-9">
-                        <input type="hidden" id="mealId" name="mealId" value="${registerForm.mealId}"
+                        <input type="hidden" id="mealId" name="mealId" value="${sjSetMeal.id}"
                                class="form-control">
-                        <input type="text" id="mealIdView" disabled="disabled" name="mealIdView" value="${registerForm.mealName}"
+                        <input type="text" id="mealIdView" disabled="disabled" name="mealIdView" value="${sjSetMeal.mealName}"
                                class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="modelId" class="col-sm-3 control-label"><span style="color:red">*</span>
-                        <c:if test="${registerForm.mealId==1}">
+                        <c:if test="${isWifi==1}">
                             监控型号
                         </c:if>
-                        <c:if test="${registerForm.mealId==2}">
+                        <c:if test="${isWifi==2}">
                             无线wifi
                         </c:if>
                     </label>
                     <div class="col-sm-9">
-                        <select id="modelId" name="modelId" onchange="registerFormChange(2,this.value);"
-                                class="form-control">
+                        <select id="modelId" name="modelId" class="form-control">
                             <option value="">--请选择--</option>
                             <c:if test="${isWifi==1}">
                                 <c:forEach items="${modelL}" var="item" varStatus="i">
-                                    <option value="${item.modelId }" ${item.modelId == sjOrder.modelId ? 'selected="selected"' : '' }>${item.modelName }</option>
+                                    <option value="${item.id }" ${item.id == sjOrder.modelId ? 'selected="selected"' : '' }>${item.monitorTypeWifiName }</option>
                                 </c:forEach>
                             </c:if>
                             <c:if test="${isWifi==2}">
                                 <c:forEach items="${modelL}" var="item" varStatus="i">
-                                    <option value="${item.modelId }" ${item.modelId == sjOrder.modelWifiId ? 'selected="selected"' : '' }>${item.modelName }</option>
+                                    <option value="${item.id }" ${item.id == sjOrder.modelWifiId ? 'selected="selected"' : '' }>${item.monitorTypeWifiName }</option>
                                 </c:forEach>
                             </c:if>
                         </select>
@@ -47,10 +46,10 @@
                 </div>
                 <div class="form-group">
                     <label for="modelNum" class="col-sm-3 control-label"><span style="color:red">*</span>
-                        <c:if test="${registerForm.mealId==1}">
+                        <c:if test="${isWifi==1}">
                             监控型号
                         </c:if>
-                        <c:if test="${registerForm.mealId==2}">
+                        <c:if test="${isWifi==2}">
                             无线wifi
                         </c:if>
                         个数</label>
@@ -66,17 +65,16 @@
                 <div class="form-group">
                     <label for="poeId" class="col-sm-3 control-label"><span style="color:red">*</span> POE</label>
                     <div class="col-sm-9">
-                        <select id="poeId" name="poeId" onchange="registerFormChange(3,this.value);"
-                                class="form-control">
+                        <select id="poeId" name="poeId" class="form-control">
                             <option value="">--请选择--</option>
                             <c:if test="${isWifi==1}">
                                 <c:forEach items="${poeL }" var="item" varStatus="i">
-                                    <option value="${item.poeId }" ${item.poeId == sjOrder.poeId ? 'selected="selected"' : '' }>${item.poeName }</option>
+                                    <option value="${item.id }" ${item.id == sjOrder.poeId ? 'selected="selected"' : '' }>${item.poeName }</option>
                                 </c:forEach>
                             </c:if>
                             <c:if test="${isWifi==2}">
                                 <c:forEach items="${poeL }" var="item" varStatus="i">
-                                    <option value="${item.poeId }" ${item.poeId == sjOrder.poeWifiId ? 'selected="selected"' : '' }>${item.poeName }</option>
+                                    <option value="${item.id }" ${item.id == sjOrder.poeWifiId ? 'selected="selected"' : '' }>${item.poeName }</option>
                                 </c:forEach>
                             </c:if>
                         </select>
@@ -95,10 +93,10 @@
                 </div>
                 <div class="form-group">
                     <label for="storageId" class="col-sm-3 control-label"><span style="color:red">*</span>
-                        <c:if test="${registerForm.mealId==1}">
+                        <c:if test="${isWifi==1}">
                             存储
                         </c:if>
-                        <c:if test="${registerForm.mealId==2}">
+                        <c:if test="${isWifi==2}">
                             NET/网关/路由
                         </c:if>
                         </label>
@@ -107,12 +105,12 @@
                             <option value="">--请选择--</option>
                             <c:if test="${isWifi==1}">
                                 <c:forEach items="${storageL }" var="item" varStatus="i">
-                                    <option value="${item.storageId }" ${item.storageId == sjOrder.storageId ? 'selected="selected"' : '' }>${item.storageName }</option>
+                                    <option value="${item.id }" ${item.id == sjOrder.storageId ? 'selected="selected"' : '' }>${item.saveNetName }</option>
                                 </c:forEach>
                             </c:if>
                             <c:if test="${isWifi==2}">
                                 <c:forEach items="${storageL }" var="item" varStatus="i">
-                                    <option value="${item.storageId }" ${item.storageId == sjOrder.storageWifiId ? 'selected="selected"' : '' }>${item.storageName }</option>
+                                    <option value="${item.id }" ${item.id == sjOrder.storageWifiId ? 'selected="selected"' : '' }>${item.saveNetName }</option>
                                 </c:forEach>
                             </c:if>
                         </select>
@@ -120,10 +118,10 @@
                 </div>
                 <div class="form-group">
                     <label for="storageNum" class="col-sm-3 control-label"><span style="color:red">*</span>
-                        <c:if test="${registerForm.mealId==1}">
+                        <c:if test="${isWifi==1}">
                             存储
                         </c:if>
-                        <c:if test="${registerForm.mealId==2}">
+                        <c:if test="${isWifi==2}">
                             NET/网关/路由
                         </c:if>
                         个数</label>
@@ -157,11 +155,6 @@
     //表单验证
     $(document).ready(function () {
         insertValidatorForm();
-        var modelNum = $("#modelNum").val();
-        if(modelNum==null){
-            var mealId = $("#mealId").val();
-            registerFormChange(1, mealId);
-        }
     });
 
     //初始化表单
@@ -295,55 +288,54 @@
         $("#addRegisterFormSubmitBtn").click();
     });
 
-
-    function registerFormChange(type, id) {
-        var body = null;
-        if (type) {
-            if (type == 1) {
-                $("#modelId option[value!='']").remove();
-                $("#poeId option[value!='']").remove();
-                $("#storageId option[value!='']").remove();
-                body = {mealId: id};
-            } else if (type == 2) {
-                $("#poeId option[value!='']").remove();
-                $("#storageId option[value!='']").remove();
-                var mealId = $("#mealId").val();
-                body = {modelId: id, mealId: mealId};
-            } else if (type == 3) {
-                $("#storageId option[value!='']").remove();
-                var mealId = $("#mealId").val();
-                var modelId = $('#modelId option:selected').val();
-                body = {poeId: id, mealId: mealId, modelId: modelId};
-            }
-            if (id) {
-                var url = AppConfig.ctx + "/sj/order/getRegisterForm.do";
-                $.get(url, body, function (result) {
-                    if (!result.success) {
-                        return false;
-                    }
-                    var json = result.result;
-                    var select_html = '';
-                    if (json.length > 0) {
-                        for (a in json) {
-                            if (type == 1) {
-                                select_html += '<option value="' + json[a]['modelId'] + '">' + json[a]['modelName'] + '</option>';
-                            } else if (type == 2) {
-                                select_html += '<option value="' + json[a]['poeId'] + '">' + json[a]['poeName'] + '</option>';
-                            } else if (type == 3) {
-                                select_html += '<option value="' + json[a]['storageId'] + '">' + json[a]['storageName'] + '</option>';
-                            }
-                        }
-                    }
-                    if (type == 1) {
-                        $("#modelId").append(select_html);
-                    } else if (type == 2) {
-                        $("#poeId").append(select_html);
-                    } else if (type == 3) {
-                        $("#storageId").append(select_html);
-                    }
-                });
-            }
-        }
-
-    }
+//
+//    function registerFormChange(type, id) {
+//        var body = null;
+//        if (type) {
+//            if (type == 1) {
+//                $("#modelId option[value!='']").remove();
+//                $("#poeId option[value!='']").remove();
+//                $("#storageId option[value!='']").remove();
+//                body = {mealId: id};
+//            } else if (type == 2) {
+//                $("#poeId option[value!='']").remove();
+//                $("#storageId option[value!='']").remove();
+//                var mealId = $("#mealId").val();
+//                body = {modelId: id, mealId: mealId};
+//            } else if (type == 3) {
+//                $("#storageId option[value!='']").remove();
+//                var mealId = $("#mealId").val();
+//                var modelId = $('#modelId option:selected').val();
+//                body = {poeId: id, mealId: mealId, modelId: modelId};
+//            }
+//            if (id) {
+//                var url = AppConfig.ctx + "/sj/order/getRegisterForm.do";
+//                $.get(url, body, function (result) {
+//                    if (!result.success) {
+//                        return false;
+//                    }
+//                    var json = result.result;
+//                    var select_html = '';
+//                    if (json.length > 0) {
+//                        for (a in json) {
+//                            if (type == 1) {
+//                                select_html += '<option value="' + json[a]['modelId'] + '">' + json[a]['modelName'] + '</option>';
+//                            } else if (type == 2) {
+//                                select_html += '<option value="' + json[a]['poeId'] + '">' + json[a]['poeName'] + '</option>';
+//                            } else if (type == 3) {
+//                                select_html += '<option value="' + json[a]['storageId'] + '">' + json[a]['storageName'] + '</option>';
+//                            }
+//                        }
+//                    }
+//                    if (type == 1) {
+//                        $("#modelId").append(select_html);
+//                    } else if (type == 2) {
+//                        $("#poeId").append(select_html);
+//                    } else if (type == 3) {
+//                        $("#storageId").append(select_html);
+//                    }
+//                });
+//            }
+//        }
+//    }
 </script>
