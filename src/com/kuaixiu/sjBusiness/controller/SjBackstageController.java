@@ -16,10 +16,7 @@ import com.kuaixiu.sjSetMeal.service.SjSaveNetService;
 import com.kuaixiu.sjSetMeal.service.SjSetMealService;
 import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
 import com.kuaixiu.sjUser.entity.*;
-import com.kuaixiu.sjUser.service.ConstructionCompanyService;
-import com.kuaixiu.sjUser.service.CustomerDetailService;
-import com.kuaixiu.sjUser.service.SjUserService;
-import com.kuaixiu.sjUser.service.SjWorkerService;
+import com.kuaixiu.sjUser.service.*;
 import com.system.api.entity.ResultData;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
@@ -552,6 +549,9 @@ public class SjBackstageController extends BaseController {
     }
 
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @RequestMapping(value = "/sj/order/register")
     @ResponseBody
     public ResultData register(HttpServletRequest request,
@@ -645,6 +645,7 @@ public class SjBackstageController extends BaseController {
 
                 companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
             }
+
             SmsSendUtil.sjRegisterUserSend(sjUser,pwd);
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
