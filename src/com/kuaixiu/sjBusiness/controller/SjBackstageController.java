@@ -3,6 +3,7 @@ package com.kuaixiu.sjBusiness.controller;
 import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
+import com.common.util.MD5Util;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjBusiness.service.*;
@@ -157,6 +158,13 @@ public class SjBackstageController extends BaseController {
             String state = request.getParameter("state");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
             SjOrder sjOrder = new SjOrder();
+            SjSessionUser sjSessionUser=getSjCurrentUser(request);
+            if(sjSessionUser.getType()==3){
+                sjOrder.setAssignCompanyId(sjSessionUser.getUserId());
+            }
+            if(sjSessionUser.getType()==8){
+                sjOrder.setAssignWorkerId(sjSessionUser.getUserId());
+            }
             sjOrder.setIsAssign(isAssign);
             sjOrder.setOrderNo(orderNo);
             if (StringUtils.isNotBlank(type)) {
@@ -217,6 +225,11 @@ public class SjBackstageController extends BaseController {
         try {
             //获取查询条件
             SjWorker sjWorker = new SjWorker();
+            SjSessionUser sjSessionUser=getSjCurrentUser(request);
+            if(sjSessionUser.getType()==3){
+                SjUser sjUser=sjUserService.getDao().queryByLoginId(sjSessionUser.getUserId(),3);
+                sjWorker.setCompanyLoginId(String.valueOf(sjUser.getId()));
+            }
             sjWorker.setPage(page);
             List<Map<String, String>> sjWorkers = sjWorkerService.getDao().queryWorkerListForPage(sjWorker);
             for (Map<String, String> worker : sjWorkers) {
@@ -482,6 +495,7 @@ public class SjBackstageController extends BaseController {
             }
             SjWorker sjWorker = sjWorkers.get(0);
             SjUser sjUser = sjUserService.getDao().queryById(sjWorker.getLoginId());
+            SjUser companyUser = sjUserService.getDao().queryById(userId);
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
@@ -493,6 +507,8 @@ public class SjBackstageController extends BaseController {
             SjUser sjUser1 = sjUserService.getDao().queryById(sjWorker.getCompanyLoginId());
             sjOrder.setBuildCompany(sjUser1.getName());
             sjOrder.setBuildPhone(sjUser.getPhone());
+            sjOrder.setAssignWorkerId(sjUser.getLoginId());
+            sjOrder.setAssignCompanyId(companyUser.getLoginId());
             orderService.saveUpdate(sjOrder);
             //工人接单数量加一
             sjWorker.setBuildingNum(sjWorker.getBuildingNum() + 1);
@@ -563,7 +579,7 @@ public class SjBackstageController extends BaseController {
             sjUser.setName(name);
             sjUser.setPhone(phone);
             String pwd = phone.substring(phone.length() - 6);
-            sjUser.setPassword(pwd);
+            sjUser.setPassword(MD5Util.encodePassword(pwd));
 
             if ("1".equals(type)) {
                 if (StringUtils.isBlank(name) || StringUtils.isBlank(person) || StringUtils.isBlank(provinceId)
@@ -629,7 +645,7 @@ public class SjBackstageController extends BaseController {
 
                 companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
             }
-            SmsSendUtil.sjRegisterUserSend(sjUser);
+            SmsSendUtil.sjRegisterUserSend(sjUser,pwd);
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
             e.printStackTrace();

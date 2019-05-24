@@ -114,7 +114,7 @@
             </td>
         </tr>
 
-        <c:if test="${isWifi!=4}">
+        <c:if test="${isWifi!=4 && (loginUserType==4||loginUserType==1)}">
             <td colspan="3" class="tr-space"></td>
             </tr>
             <tr>
@@ -280,13 +280,13 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${sjOrder.state>200 && isWifi!=4}">
+        <c:if test="${sjOrder.state>200 && isWifi!=4 && sjOrder.state!=600}">
             <tr>
                 <td colspan="3" class="tr-space"></td>
             </tr>
             <tr>
                 <td class="td-title">
-                    <h4>指派信息：</h4>
+                    <h4>施工信息：</h4>
                 </td>
                 <td class="td-space"></td>
                 <td class="td-info">

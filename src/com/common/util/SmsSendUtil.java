@@ -625,11 +625,11 @@ public class SmsSendUtil {
      * @param user
      * @return
      */
-    public static boolean sjRegisterUserSend(SjUser user) {
+    public static boolean sjRegisterUserSend(SjUser user,String pwd) {
         StringBuffer content = new StringBuffer();
         content.append("商机后台注册:用户：").append(user.getName());
         content.append("账号为").append(user.getLoginId());
-        content.append("密码为").append(user.getPassword());
+        content.append("密码为").append(pwd);
         return sendSmsThread(user.getPhone(), content.toString());
     }
 

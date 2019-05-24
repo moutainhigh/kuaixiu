@@ -4,6 +4,7 @@ import com.common.base.service.BaseService;
 import com.common.importExcel.ExcelUtil;
 import com.common.importExcel.ImportError;
 import com.common.importExcel.ImportReport;
+import com.common.util.MD5Util;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.SjCode;
 import com.kuaixiu.sjBusiness.entity.SjProject;
@@ -166,7 +167,7 @@ public class SjUserService extends BaseService<SjUser> {
         for (SjUser sjUser : list) {
             //发送短信
             try {
-                SmsSendUtil.sjRegisterUserSend(sjUser);
+                SmsSendUtil.sjRegisterUserSend(sjUser,sjUser.getPwd());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -231,7 +232,8 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setName(c.getCompanyName());
             sjUser.setPhone(c.getPhone());
             String pwd = c.getPhone().substring(c.getPhone().length() - 6);
-            sjUser.setPassword(pwd);
+            sjUser.setPwd(pwd);
+            sjUser.setPassword(MD5Util.encodePassword(pwd));
             this.add(sjUser);
 
             SjUser sjUser1 = this.getDao().queryByLoginId(sjUser.getLoginId(), 3);
@@ -440,7 +442,8 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setName(s.getName());
             sjUser.setPhone(s.getPhone());
             String pwd = s.getPhone().substring(s.getPhone().length() - 6);
-            sjUser.setPassword(pwd);
+            sjUser.setPwd(pwd);
+            sjUser.setPassword(MD5Util.encodePassword(pwd));
             sjUser.setType(8);
             this.add(sjUser);
 

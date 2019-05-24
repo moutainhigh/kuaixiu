@@ -54,6 +54,8 @@
         <result column="poe_wifi_num" property="poeWifiNum"/>
         <result column="storage_wifi_id" property="storageWifiId"/>
         <result column="storage_wifi_num" property="storageWifiNum"/>
+        <result column="assign_company_id" property="assignCompanyId"/>
+        <result column="assign_worker_id" property="assignWorkerId"/>
     </resultMap>
 
     <!-- sj_order table all fields -->
@@ -67,7 +69,7 @@
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
         feedback_person,feedback_note,feedback_time,meal_id,model_id,model_num,poe_id,poe_num,
         storage_id,storage_num,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,
-        storage_wifi_id,storage_wifi_num
+        storage_wifi_id,storage_wifi_num,assign_company_id,assign_worker_id
     </sql>
 
     <!-- 插入记录 -->
@@ -77,13 +79,14 @@
         person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,
         assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,
         completed_phone,completed_time,create_time,create_userid,create_name,feedback_person,
-        feedback_note,feedback_time)
+        feedback_note,feedback_time,assign_company_id,assign_worker_id)
         values
         (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},
         #{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
         #{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},
         #{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},
-        now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime})
+        now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime},#{assignCompanyId}
+        ,#{assignWorkerId})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -137,7 +140,9 @@
             poe_wifi_id=#{poeWifiId},
             poe_wifi_num=#{poeWifiNum},
             storage_wifi_id=#{storageWifiId},
-            storage_wifi_num=#{storageWifiNum}
+            storage_wifi_num=#{storageWifiNum},
+            assign_company_id=#{assignCompanyId},
+            assign_worker_id=#{assignWorkerId}
         where id=#{id}
     </update>
 
@@ -170,6 +175,12 @@
         </if>
         <if test="orderNo != null and orderNo != ''">
             and order_no = #{orderNo}
+        </if>
+        <if test="assignCompanyId != null and assignCompanyId != ''">
+            and assign_company_id = #{assignCompanyId}
+        </if>
+        <if test="assignWorkerId != null and assignWorkerId != ''">
+            and assign_worker_id = #{assignWorkerId}
         </if>
         <if test="type != null and type != ''">
             and type = #{type}
@@ -365,6 +376,12 @@
         <if test="createName != null and createName != ''">
             and create_name like CONCAT('%', #{createName}, '%')
         </if>
+        <if test="assignCompanyId != null and assignCompanyId != ''">
+            and assign_company_id = #{assignCompanyId}
+        </if>
+        <if test="assignWorkerId != null and assignWorkerId != ''">
+            and assign_worker_id = #{assignWorkerId}
+        </if>
         <if test="isAssign != null and isAssign != ''">
             ORDER BY approval_time DESC
         </if>
@@ -441,6 +458,12 @@
         </if>
         <if test="approvalPerson != null and approvalPerson != ''">
             and approval_person = #{approvalPerson}
+        </if>
+        <if test="assignCompanyId != null and assignCompanyId != ''">
+            and assign_company_id = #{assignCompanyId}
+        </if>
+        <if test="assignWorkerId != null and assignWorkerId != ''">
+            and assign_worker_id = #{assignWorkerId}
         </if>
         <if test="approvalNote != null and approvalNote != ''">
             and approval_note = #{approvalNote}
