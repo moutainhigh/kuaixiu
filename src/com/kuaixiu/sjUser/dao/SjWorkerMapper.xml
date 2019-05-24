@@ -55,6 +55,12 @@
         and is_del=0
     </select>
 
+    <select id="queryByloginId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_worker where login_id=#{loginId}
+        and is_del=0
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select

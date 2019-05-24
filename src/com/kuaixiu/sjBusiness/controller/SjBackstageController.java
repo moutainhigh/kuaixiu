@@ -951,7 +951,8 @@ public class SjBackstageController extends BaseController {
             ConstructionCompany company=new ConstructionCompany();
             if(Integer.valueOf(type)==8){
                 SjUser sjUser=sjUserService.getDao().queryByLoginId(loginId,8);
-                company=companyService.getDao().queryByLoginId(sjUser.getId());
+                SjWorker sjWorker=sjWorkerService.getDao().queryByloginId(sjUser.getId());
+                company=companyService.getDao().queryByLoginId(Integer.valueOf(sjWorker.getCompanyLoginId()));
                 companyService.saveUpdate(company);
             }
             if ("1".equals(isCancel)) {
