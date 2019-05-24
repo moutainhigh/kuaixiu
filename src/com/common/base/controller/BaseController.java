@@ -325,21 +325,16 @@ public class BaseController {
         if (param == null) {
             throw new SystemException(ApiResultConstant.resultCode_str_1001, ApiResultConstant.resultCode_1001);
         }
+        param=filter(param);
         JSONObject params = JSONObject.parseObject(param);
-        params = filter(params);
         return params;
     }
 
-    public JSONObject filter(JSONObject params) {
-        for (String key : params.keySet()) {
-            Object object = params.get(key);
-            String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
-            Pattern p = Pattern.compile(regEx);
-            Matcher m = p.matcher(object.toString());
-            object=m.replaceAll("").trim();
-            params.put(key,object);
-        }
-        return params;
+    public String filter(String param) {
+        String regEx = "[`~!@#$%^&*()+=|';'.<>/?~！@#￥%……&*（）——+|【】‘；：”“’。，、？]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(param);
+        return m.replaceAll("").trim();
     }
 
     /**
