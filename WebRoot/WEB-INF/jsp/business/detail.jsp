@@ -115,42 +115,44 @@
         </tr>
 
         <c:if test="${isWifi!=4 && (loginUserType==4||loginUserType==1)}">
-            <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>录单信息：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <c:if test="${isWifi==1||isWifi==0}">
-                                <button onclick="registerForm('${sjOrder.id}',1);"
-                                        class="am-btn am-btn-default search_btn" type="button">
-                                    <c:if test="${sjOrder.mealId!=0}">
-                                        云监控编辑录单
-                                    </c:if>
-                                    <c:if test="${sjOrder.mealId==0}">
-                                        云监控录单
-                                    </c:if>
-                                </button>
-                            </c:if>
-                            <c:if test="${isWifi==2||isWifi==0}">
-                                <button onclick="registerForm('${sjOrder.id}',2);"
-                                        class="am-btn am-btn-default search_btn" type="button">
-                                    <c:if test="${sjOrder.mealWifiId!=0}">
-                                        云wifi编辑录单
-                                    </c:if>
-                                    <c:if test="${sjOrder.mealWifiId==0}">
-                                        云wifi录单
-                                    </c:if>
-                                </button>
-                            </c:if>
-                        </div>
-                    </div><!-- /.row -->
-                </td>
-            </tr>
+            <c:if test="${loginUserType==4||loginUserType==1}">
+                <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>录单信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <c:if test="${isWifi==1||isWifi==0}">
+                                    <button onclick="registerForm('${sjOrder.id}',1);"
+                                            class="am-btn am-btn-default search_btn" type="button">
+                                        <c:if test="${sjOrder.mealId!=0}">
+                                            云监控编辑录单
+                                        </c:if>
+                                        <c:if test="${sjOrder.mealId==0}">
+                                            云监控录单
+                                        </c:if>
+                                    </button>
+                                </c:if>
+                                <c:if test="${isWifi==2||isWifi==0}">
+                                    <button onclick="registerForm('${sjOrder.id}',2);"
+                                            class="am-btn am-btn-default search_btn" type="button">
+                                        <c:if test="${sjOrder.mealWifiId!=0}">
+                                            云wifi编辑录单
+                                        </c:if>
+                                        <c:if test="${sjOrder.mealWifiId==0}">
+                                            云wifi录单
+                                        </c:if>
+                                    </button>
+                                </c:if>
+                            </div>
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+            </c:if>
             <c:if test="${sjOrder.mealId!=0}">
                 <tr>
                     <td colspan="3" class="tr-space"></td>
@@ -292,7 +294,8 @@
                 <td class="td-info">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button onclick="constructionList('${sjOrder.id}');" class="am-btn am-btn-default search_btn"
+                            <button onclick="constructionList('${sjOrder.id}');"
+                                    class="am-btn am-btn-default search_btn"
                                     type="button">施工单导出
                             </button>
                         </div>
