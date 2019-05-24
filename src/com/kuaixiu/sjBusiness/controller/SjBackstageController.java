@@ -948,12 +948,23 @@ public class SjBackstageController extends BaseController {
             String type = request.getParameter("type");//角色类型
             String loginId = request.getParameter("loginId");
             String isCancel = request.getParameter("isCancel");//是否注销   1注销   0恢复
+            ConstructionCompany company=new ConstructionCompany();
+            if(Integer.valueOf(type)==8){
+                SjUser sjUser=sjUserService.getDao().queryByLoginId(loginId,8);
+                company=companyService.getDao().queryByLoginId(sjUser.getId());
+                companyService.saveUpdate(company);
+            }
             if ("1".equals(isCancel)) {
                 sjUserService.getDao().updateCancel1(loginId, Integer.valueOf(type));
+                company.setPersonNum(company.getPersonNum()-1);
                 getSjResult(result, null, true, "0", null, "注销成功");
             } else {
                 sjUserService.getDao().updateCancel0(loginId, Integer.valueOf(type));
+                company.setPersonNum(company.getPersonNum()+1);
                 getSjResult(result, null, true, "0", null, "恢复成功");
+            }
+            if(Integer.valueOf(type)==8){
+                companyService.saveUpdate(company);
             }
 
         } catch (Exception e) {

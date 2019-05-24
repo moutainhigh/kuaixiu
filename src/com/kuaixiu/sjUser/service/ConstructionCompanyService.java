@@ -169,7 +169,7 @@ public class ConstructionCompanyService extends BaseService<ConstructionCompany>
             HSSFCell cell = rowFour.createCell(i+1);
             cell.setCellValue(titles4[i]);
         }
-        if(sjOrder.getPoeWifiId() - 1+1==number){
+        if(sjOrder.getPoeWifiId() - 1==number){
             HSSFCell cell01 = rowFour.createCell(3);
             cell01.setCellValue(sjOrder.getPoeWifiNum());
         }
@@ -177,7 +177,7 @@ public class ConstructionCompanyService extends BaseService<ConstructionCompany>
         HSSFRow rowFive = sheet.createRow(number);
         HSSFCell cell3 = rowFive.createCell(2);
         cell3.setCellValue("千兆云监控5口PEO注入器30元/月");
-        if(sjOrder.getPoeWifiId() - 1+1==number){
+        if(sjOrder.getPoeWifiId() - 1==number){
             HSSFCell cell01 = rowThree.createCell(3);
             cell01.setCellValue(sjOrder.getPoeWifiNum());
         }
@@ -185,7 +185,7 @@ public class ConstructionCompanyService extends BaseService<ConstructionCompany>
         HSSFRow rowSix = sheet.createRow(number);
         HSSFCell cell4 = rowSix.createCell(2);
         cell4.setCellValue("千兆云监控8口PEO注入器70元/月");
-        if(sjOrder.getPoeWifiId() - 1+1==number){
+        if(sjOrder.getPoeWifiId() - 1==number){
             HSSFCell cell01 = rowSix.createCell(3);
             cell01.setCellValue(sjOrder.getPoeWifiNum());
         }
@@ -193,7 +193,7 @@ public class ConstructionCompanyService extends BaseService<ConstructionCompany>
         HSSFRow rowSeven= sheet.createRow(number);
         HSSFCell cell5 = rowSeven.createCell(2);
         cell5.setCellValue("千兆云监控16口PEO注入器80元/月");
-        if(sjOrder.getPoeWifiId() - 1+1==number){
+        if(sjOrder.getPoeWifiId() - 1==number){
             HSSFCell cell01 = rowSeven.createCell(3);
             cell01.setCellValue(sjOrder.getPoeWifiNum());
         }
