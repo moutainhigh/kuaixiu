@@ -927,10 +927,36 @@ private SjVirtualTeamService virtualTeamService;
             String id = request.getParameter("id");
             SjOrder sjOrder = orderService.queryById(id);
             SjSessionUser su = getSjCurrentUser(request);
-            sjOrder.setState(500);
+            sjOrder.setState(400);
             sjOrder.setCompletedPerson(su.getUserId());
             sjOrder.setCompletedTime(new Date());
             sjOrder.setStayPerson(orderService.setStayPerson(4));
+            orderService.saveUpdate(sjOrder);
+
+            getSjResult(result, null, true, "0", null, "获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 完成
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/endOrder")
+    @ResponseBody
+    public ResultData endOrder(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String id = request.getParameter("id");
+            SjOrder sjOrder = orderService.queryById(id);
+            sjOrder.setState(500);
             orderService.saveUpdate(sjOrder);
 
             getSjResult(result, null, true, "0", null, "获取成功");

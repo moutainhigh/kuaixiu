@@ -282,27 +282,7 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${sjOrder.state>200 && isWifi!=4 && sjOrder.state!=600}">
-            <tr>
-                <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>施工信息：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button onclick="constructionList('${sjOrder.id}');"
-                                    class="am-btn am-btn-default search_btn"
-                                    type="button">施工单导出
-                            </button>
-                        </div>
-                    </div><!-- /.row -->
-                </td>
-            </tr>
-        </c:if>
+
         <c:if test="${sjOrder.state==300}">
             <tr>
                 <td colspan="3" class="tr-space"></td>
@@ -332,112 +312,154 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${sjOrder.type==2}">
-            <c:if test="${sjOrder.state==400 ||sjOrder.state==500}">
-                <tr>
-                    <td colspan="3" class="tr-space"></td>
-                </tr>
-                <tr>
-                    <td class="td-title">
-                        <h4>指派信息：</h4>
-                    </td>
-                    <td class="td-space"></td>
-                    <td class="td-info">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h4>指派人：${sjOrder.assignPerson }</h4>
-                            </div><!-- /.col -->
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h4>审批时间：<fmt:formatDate value="${sjOrder.assignTime }"
-                                                         pattern="yyyy-MM-dd HH:mm:ss"/></h4>
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tr-space"></td>
-                </tr>
-                <tr>
-                    <td class="td-title">
-                        <h4>指派信息：</h4>
-                    </td>
-                    <td class="td-space"></td>
-                    <td class="td-info">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <h4>待施工人：${sjOrder.buildPerson}</h4>
-                            </div><!-- /.col -->
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <h4>单位：${sjOrder.buildCompany }</h4>
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h4>审批时间：<fmt:formatDate value="${sjOrder.endTime }"
-                                                         pattern="yyyy-MM-dd HH:mm:ss"/></h4>
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </td>
-                </tr>
-                <c:if test="${sjOrder.state==400}">
-                    <c:if test="${loginUserType==8||loginUserType==1}">
-                        <tr>
-                            <td colspan="3" class="tr-space"></td>
-                        </tr>
-                        <tr>
-                            <td class="td-title">
-                                <h4>竣工信息：</h4>
-                            </td>
-                            <td class="td-space"></td>
-                            <td class="td-info">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <form enctype="multipart/form-data" id="uploadForm">
-                                            <input class="col-sm-9" type="file" name="file" id="pic_img"
-                                                   accept="image/*"
-                                                   onchange="imgChange(this);"/>
-                                            <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
-                                                    class="am-btn am-btn-default search_btn"
-                                                    type="button">点击上传
-                                            </button>
-                                            <button id="contract" onclick="submitContract('${sjOrder.id}');"
-                                                    class="am-btn am-btn-default search_btn" type="button"> 竣工
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div><!-- /.row -->
-                            </td>
-                        </tr>
-                    </c:if>
+        <c:if test="${sjOrder.state==400 ||sjOrder.state==500}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>指派信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>指派人：${sjOrder.assignPerson }</h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>审批时间：<fmt:formatDate value="${sjOrder.assignTime }"
+                                                     pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+        </c:if>
+        <c:if test="${sjOrder.state>200 && isWifi!=4 && sjOrder.state!=600}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>工单导出：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button onclick="constructionList('${sjOrder.id}');"
+                                    class="am-btn am-btn-default search_btn"
+                                    type="button">施工单导出
+                            </button>
+                        </div>
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+        </c:if>
+        <c:if test="${sjOrder.state==400 ||sjOrder.state==500}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>施工信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>待施工人：${sjOrder.buildPerson}</h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>单位：${sjOrder.buildCompany }</h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>完成时间：<fmt:formatDate value="${sjOrder.endTime }"
+                                                     pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+            <c:if test="${sjOrder.state==300}">
+                <c:if test="${loginUserType==8||loginUserType==1}">
+                    <tr>
+                        <td colspan="3" class="tr-space"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-title">
+                            <h4>竣工信息：</h4>
+                        </td>
+                        <td class="td-space"></td>
+                        <td class="td-info">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <form enctype="multipart/form-data" id="uploadForm">
+                                        <input class="col-sm-9" type="file" name="file" id="pic_img"
+                                               accept="image/*"
+                                               onchange="imgChange(this);"/>
+                                        <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
+                                                class="am-btn am-btn-default search_btn"
+                                                type="button">点击上传
+                                        </button>
+                                        <button id="contract" onclick="submitContract('${sjOrder.id}');"
+                                                class="am-btn am-btn-default search_btn" type="button"> 竣工
+                                        </button>
+                                    </form>
+                                </div>
+                            </div><!-- /.row -->
+                        </td>
+                    </tr>
                 </c:if>
             </c:if>
-            <c:if test="${sjOrder.state==500}">
+        </c:if>
+        <c:if test="${sjOrder.state==500}">
+            <tr>
+                <td colspan="3" class="tr-space"></td>
+            </tr>
+            <tr>
+                <td class="td-title">
+                    <h4>竣工信息：</h4>
+                </td>
+                <td class="td-space"></td>
+                <td class="td-info">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>竣工人：${sjOrder.completedPerson }</h4>
+                        </div><!-- /.col -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>竣工时间：<fmt:formatDate value="${sjOrder.completedTime }"
+                                                     pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>合同图片：
+                                <c:forEach items="${contractPictures }" var="item" varStatus="i">
+                                    <img src="${item.contractPictureUrl}" width="260" height="180"/>
+                                </c:forEach>
+                            </h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </td>
+            </tr>
+            <c:if test="${loginUserType==1}">
                 <tr>
                     <td colspan="3" class="tr-space"></td>
                 </tr>
                 <tr>
                     <td class="td-title">
-                        <h4>竣工信息：</h4>
+                        <h4>完成操作：</h4>
                     </td>
                     <td class="td-space"></td>
                     <td class="td-info">
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h4>竣工人：${sjOrder.completedPerson }</h4>
-                            </div><!-- /.col -->
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h4>竣工时间：<fmt:formatDate value="${sjOrder.completedTime }"
-                                                         pattern="yyyy-MM-dd HH:mm:ss"/></h4>
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h4>合同图片：
-                                    <c:forEach items="${contractPictures }" var="item" varStatus="i">
-                                        <img src="${item.contractPictureUrl}" width="260" height="180"/>
-                                    </c:forEach>
-                                </h4>
-                            </div><!-- /.col -->
+                                <button onclick="endOrder('${sjOrder.id}');"
+                                        class="am-btn am-btn-default search_btn"
+                                        type="button">完成
+                                </button>
+                            </div>
                         </div><!-- /.row -->
                     </td>
                 </tr>
@@ -453,8 +475,8 @@
 <script type="text/javascript">
 
     function upContractImage(orderNo, id) {
-        var formData = new FormData($("#uploadForm")[0])  //创建一个forData
-        formData.append('img', $('#pic_img')[0].files[0]) //把file添加进去  name命名为img
+        var formData = new FormData($("#uploadForm")[0]) //创建一个forData
+        formData.append('img', $('#pic_img')[0].files[0]) //把file添加进去 name命名为img
         formData.append('orderNo', orderNo)
         var url_ = AppConfig.ctx + "/sj/order/upContractImage.do";
         $.ajax({
@@ -468,6 +490,31 @@
             success: function (result) {
                 if (result.success) {
                     AlertText.tips("d_alert", "提示", "上传成功", function () {
+                        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
+                    });
+                } else {
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                }
+            },
+            error: function () {
+                AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
+            }
+        })
+    }
+
+    function endOrder(id) {
+        var url_ = AppConfig.ctx + "/sj/order/endOrder.do";
+        $.ajax({
+            url: url_,
+            data: {order: id},
+            type: "POST",
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.success) {
+                    AlertText.tips("d_alert", "提示", "操作层高", function () {
                         func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
                     });
                 } else {
