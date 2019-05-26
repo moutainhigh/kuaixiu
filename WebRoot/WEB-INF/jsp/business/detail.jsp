@@ -381,36 +381,59 @@
                     </div><!-- /.row -->
                 </td>
             </tr>
-            <c:if test="${sjOrder.state==300}">
-                <c:if test="${loginUserType==8||loginUserType==1}">
-                    <tr>
-                        <td colspan="3" class="tr-space"></td>
-                    </tr>
-                    <tr>
-                        <td class="td-title">
-                            <h4>竣工信息：</h4>
-                        </td>
-                        <td class="td-space"></td>
-                        <td class="td-info">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <form enctype="multipart/form-data" id="uploadForm">
-                                        <input class="col-sm-9" type="file" name="file" id="pic_img"
-                                               accept="image/*"
-                                               onchange="imgChange(this);"/>
-                                        <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
-                                                class="am-btn am-btn-default search_btn"
-                                                type="button">点击上传
-                                        </button>
-                                        <button id="contract" onclick="submitContract('${sjOrder.id}');"
-                                                class="am-btn am-btn-default search_btn" type="button"> 竣工
-                                        </button>
-                                    </form>
-                                </div>
-                            </div><!-- /.row -->
-                        </td>
-                    </tr>
-                </c:if>
+        </c:if>
+        <c:if test="${sjOrder.state==300}">
+            <c:if test="${loginUserType==8||loginUserType==1}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>竣工信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <form enctype="multipart/form-data" id="uploadForm">
+                                    <input class="col-sm-12" type="file" name="file" id="pic_img"
+                                           accept="image/*"
+                                           onchange="imgChange(this);"/>
+                                    <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
+                                            class="am-btn am-btn-default search_btn"
+                                            type="button">点击上传
+                                    </button>
+                                    <button id="contract" onclick="submitContract('${sjOrder.id}');"
+                                            class="am-btn am-btn-default search_btn" type="button"> 竣工
+                                    </button>
+                                </form>
+                            </div>
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
+            </c:if>
+        </c:if>
+        <c:if test="${sjOrder.state==400}">
+            <c:if test="${loginUserType==1}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>完成操作：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button onclick="endOrder('${sjOrder.id}');"
+                                        class="am-btn am-btn-default search_btn"
+                                        type="button">完成
+                                </button>
+                            </div>
+                        </div><!-- /.row -->
+                    </td>
+                </tr>
             </c:if>
         </c:if>
         <c:if test="${sjOrder.state==500}">
@@ -436,34 +459,15 @@
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <h4>合同图片：
                                 <c:forEach items="${contractPictures }" var="item" varStatus="i">
-                                    <img src="${item.contractPictureUrl}" width="260" height="180"/>
+                                    <img src="${item.contractPictureUrl}" class="layui-upload-img"
+                                         onclick="zoomImage('${item.contractPictureUrl}')" width="90" height="80"/>
                                 </c:forEach>
                             </h4>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </td>
             </tr>
-            <c:if test="${loginUserType==1}">
-                <tr>
-                    <td colspan="3" class="tr-space"></td>
-                </tr>
-                <tr>
-                    <td class="td-title">
-                        <h4>完成操作：</h4>
-                    </td>
-                    <td class="td-space"></td>
-                    <td class="td-info">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <button onclick="endOrder('${sjOrder.id}');"
-                                        class="am-btn am-btn-default search_btn"
-                                        type="button">完成
-                                </button>
-                            </div>
-                        </div><!-- /.row -->
-                    </td>
-                </tr>
-            </c:if>
+
         </c:if>
     </table>
 </div>
@@ -506,15 +510,12 @@
         var url_ = AppConfig.ctx + "/sj/order/endOrder.do";
         $.ajax({
             url: url_,
-            data: {order: id},
+            data: {id: id},
             type: "POST",
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
+            dataType: "json",
             success: function (result) {
                 if (result.success) {
-                    AlertText.tips("d_alert", "提示", "操作层高", function () {
+                    AlertText.tips("d_alert", "提示", "操作成功", function () {
                         func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
                     });
                 } else {
