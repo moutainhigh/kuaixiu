@@ -21,6 +21,7 @@ import com.system.api.entity.ResultData;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
+import com.system.constant.SystemConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
@@ -80,6 +81,8 @@ public class SjBackstageController extends BaseController {
     private SjPoeService sjPoeService;
     @Autowired
     private SjSaveNetService sjSaveNetService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 订单列表
@@ -313,7 +316,8 @@ public class SjBackstageController extends BaseController {
 
         return new ModelAndView(returnView);
     }
-
+@Autowired
+private SjVirtualTeamService virtualTeamService;
 
     /**
      * 订单审批
@@ -352,6 +356,11 @@ public class SjBackstageController extends BaseController {
             approvalNote.setOrderNo(sjOrder.getOrderNo());
             approvalNote.setNote(note);
             approvalNoteService.add(approvalNote);
+
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(su.getUserId(),null);
+            CustomerDetail customerDetail=customerDetailService.getDao().queryByLoginId(sjUser.getId());
+            SjVirtualTeam virtualTeam=virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
+            SmsSendUtil.sjApprovalSend(virtualTeam,sjOrder.getOrderNo());
 
             getSjResult(result, null, true, "0", null, "获取成功");
         } catch (Exception e) {
@@ -401,6 +410,8 @@ public class SjBackstageController extends BaseController {
         }
         return result;
     }
+
+
 
     @RequestMapping(value = "/sj/order/toAssign")
     public ModelAndView add(HttpServletRequest request,
@@ -484,15 +495,15 @@ public class SjBackstageController extends BaseController {
         SjSessionUser su = getSjCurrentUser(request);
         try {
             String orderId = request.getParameter("orderId");
-            String userId = request.getParameter("userId");
+            String companyId = request.getParameter("userId");
 
-            List<SjWorker> sjWorkers = sjWorkerService.getDao().queryByCompanyId(userId);
+            List<SjWorker> sjWorkers = sjWorkerService.getDao().queryByCompanyId(companyId);
             if (CollectionUtils.isEmpty(sjWorkers)) {
                 return getSjResult(result, null, false, "0", null, "该单位没有员工");
             }
             SjWorker sjWorker = sjWorkers.get(0);
             SjUser sjUser = sjUserService.getDao().queryById(sjWorker.getLoginId());
-            SjUser companyUser = sjUserService.getDao().queryById(userId);
+            SjUser companyUser = sjUserService.getDao().queryById(companyId);
             SjOrder sjOrder = orderService.queryById(orderId);
 
             sjOrder.setState(300);
@@ -510,6 +521,9 @@ public class SjBackstageController extends BaseController {
             //工人接单数量加一
             sjWorker.setBuildingNum(sjWorker.getBuildingNum() + 1);
             sjWorkerService.saveUpdate(sjWorker);
+
+            SmsSendUtil.sjAssignOrderSend(companyUser.getPhone(),sjOrder.getOrderNo(),1);
+            SmsSendUtil.sjAssignOrderSend(companyUser.getPhone(),sjOrder.getOrderNo(),2);
 
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
@@ -549,9 +563,13 @@ public class SjBackstageController extends BaseController {
     }
 
 
-    @Autowired
-    private UserRoleService userRoleService;
-
+    /**
+     * 用户注册
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/sj/order/register")
     @ResponseBody
     public ResultData register(HttpServletRequest request,
@@ -615,16 +633,29 @@ public class SjBackstageController extends BaseController {
                 company.setEndOrderNum(0);
                 company.setPersonNum(0);
                 constructionCompanyService.add(company);
+                UserRole userRole=new UserRole();
+                userRole.setLoginId(sjUser.getLoginId());
+                userRole.setRoleId("COMPANY");
+                userRoleService.add(userRole);
             }
             if ("2".equals(type)) {
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(3);
                 sjUserService.add(sjUser);
+                UserRole userRole=new UserRole();
+                userRole.setLoginId(sjUser.getLoginId());
+                userRole.setRoleId("APPROVAL");
+                userRoleService.add(userRole);
             }
             if ("3".equals(type)) {
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(4);
                 sjUserService.add(sjUser);
+
+                UserRole userRole=new UserRole();
+                userRole.setLoginId(sjUser.getLoginId());
+                userRole.setRoleId("ASSIGN");
+                userRoleService.add(userRole);
             }
             if ("4".equals(type)) {
                 if (StringUtils.isBlank(companyId)) {
@@ -644,6 +675,11 @@ public class SjBackstageController extends BaseController {
                 sjWorkerService.add(sjWorker);
 
                 companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
+
+                UserRole userRole=new UserRole();
+                userRole.setLoginId(sjUser.getLoginId());
+                userRole.setRoleId("WORKER");
+                userRoleService.add(userRole);
             }
 
             SmsSendUtil.sjRegisterUserSend(sjUser,pwd);
@@ -844,44 +880,66 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-//    /**
-//     * 获取登记单信息
-//     *
-//     * @param request
-//     * @param response
-//     * @return
-//     * @throws Exception
-//     */
-//    @RequestMapping(value = "/sj/order/getRegisterForm")
-//    @ResponseBody
-//    public ResultData getRegisterForm(HttpServletRequest request,
-//                                      HttpServletResponse response) throws Exception {
-//        ResultData result = new ResultData();
-//        try {
-//            String strPoeId = request.getParameter("poeId");
-//            String strModelId = request.getParameter("modelId");
-//            String strMealId = request.getParameter("mealId");
-//            Integer poeId = null;
-//            Integer modelId = null;
-//            Integer mealId = null;
-//            if (StringUtils.isNotBlank(strMealId)) {
-//                mealId = Integer.valueOf(strMealId);
-//            }
-//            if (StringUtils.isNotBlank(strModelId)) {
-//                modelId = Integer.valueOf(strModelId);
-//            }
-//            if (StringUtils.isNotBlank(strPoeId)) {
-//                poeId = Integer.valueOf(strPoeId);
-//            }
-//            List<SjRegisterForm> registerForms = registerFormService.getSjRegisterForms(poeId, modelId, mealId);
-//            getResult(result, registerForms, true, "0", "成功");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.error(e.getMessage());
-//        }
-//        return result;
-//    }
+    /**
+     * 上传合同照片
+     *
+     * @param request
+     * @param response
+     * @return
+             * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/upContractImage")
+    @ResponseBody
+    public ResultData upContractImage(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String orderNo = request.getParameter("orderNo");
+            //获取图片，保存图片到webapp同级inages/sj_images
+            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "sj_images" + System.getProperty("file.separator") + "sj_contract";
+            String logoPath = getPath(request, "file", savePath);             //图片路径
+            String imageUrl = getProjectUrl(request) + "/images/sj_images/sj_contract/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            System.out.println("图片路径：" + savePath);
+            OrderContractPicture contractPicture=new OrderContractPicture();
+            contractPicture.setOrderNo(orderNo);
+            contractPicture.setContractPictureUrl(imageUrl);
+            orderContractPictureService.add(contractPicture);
+            getSjResult(result, imageUrl, true, "0", null, "上传成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+    /**
+     * 竣工
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/contract")
+    @ResponseBody
+    public ResultData contract(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String id = request.getParameter("id");
+            SjOrder sjOrder = orderService.queryById(id);
+            SjSessionUser su = getSjCurrentUser(request);
+            sjOrder.setState(500);
+            sjOrder.setCompletedPerson(su.getUserId());
+            sjOrder.setCompletedTime(new Date());
+            sjOrder.setStayPerson(orderService.setStayPerson(4));
+            orderService.saveUpdate(sjOrder);
 
+            getSjResult(result, null, true, "0", null, "获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
     /**
      * 录单
      *

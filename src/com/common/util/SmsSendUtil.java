@@ -9,6 +9,7 @@ import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBManager;
 import com.kuaixiu.order.entity.ReworkOrder;
+import com.kuaixiu.sjBusiness.entity.SjVirtualTeam;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
 import org.apache.commons.lang3.StringUtils;
@@ -631,6 +632,30 @@ public class SmsSendUtil {
         content.append("账号为").append(user.getLoginId());
         content.append("密码为").append(pwd);
         return sendSmsThread(user.getPhone(), content.toString());
+    }
+
+    public static boolean sjApprovalSend(SjVirtualTeam virtualTeam,String ordelNo) {
+        StringBuffer content = new StringBuffer();
+        content.append("商机后台审核:订单：").append(ordelNo);
+        content.append("审核已通过");
+        return sendSmsThread(virtualTeam.getPhone(), content.toString());
+    }
+
+    /**
+     * 商机指派订单发送短信
+     * @param phone
+     * @param orderNo
+     * @return
+     */
+    public static boolean sjAssignOrderSend(String phone,String orderNo,Integer type) {
+        StringBuffer content = new StringBuffer();
+        content.append("商机后台订单指派:订单号：").append(orderNo);
+        if(type==1){
+            content.append("该订单已指派给您企业下员工");
+        }else{
+            content.append("该订单已指派给您");
+        }
+        return sendSmsThread(phone, content.toString());
     }
 
 

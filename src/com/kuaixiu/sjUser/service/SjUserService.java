@@ -16,6 +16,7 @@ import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
 
 import com.kuaixiu.sjUser.entity.SjWorker;
+import com.kuaixiu.sjUser.entity.UserRole;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
@@ -67,6 +68,8 @@ public class SjUserService extends BaseService<SjUser> {
     private SjOrderService orderService;
     @Autowired
     private SjProjectService sjProjectService;
+    @Autowired
+    private UserRoleService userRoleService;
 
 
     public SjUserMapper<SjUser> getDao() {
@@ -252,6 +255,11 @@ public class SjUserService extends BaseService<SjUser> {
             companyService.add(company);
 
             users.add(sjUser);
+
+            UserRole userRole=new UserRole();
+            userRole.setLoginId(sjUser.getLoginId());
+            userRole.setRoleId("COMPANY");
+            userRoleService.add(userRole);
         }
         return users;
     }
@@ -458,6 +466,11 @@ public class SjUserService extends BaseService<SjUser> {
             sjWorkerService.add(sjWorker);
 
             companyService.getDao().updatePersonAddNum(sjUser1.getId());
+
+            UserRole userRole=new UserRole();
+            userRole.setLoginId(sjUser.getLoginId());
+            userRole.setRoleId("WORKER");
+            userRoleService.add(userRole);
         }
     }
 

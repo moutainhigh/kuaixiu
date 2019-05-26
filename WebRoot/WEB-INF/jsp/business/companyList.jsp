@@ -83,6 +83,7 @@
                 <th class="fontWeight_normal tdwidth100">单位名字</th>
                 <th class="fontWeight_normal tdwidth80">单位地址</th>
                 <th class="fontWeight_normal tdwidth50">区域</th>
+                <th class="fontWeight_normal tdwidth50">登录号</th>
                 <th class="fontWeight_normal tdwidth90">对接人/电话</th>
                 <th class="fontWeight_normal tdwidth90">施工项目</th>
                 <th class="fontWeight_normal table-title tdwidth80">注册时间</th>
@@ -151,6 +152,7 @@
         {"data": "companyName", "class": ""},
         {"data": "address", "class": ""},
         {"data": "areaAddress", "class": ""},
+        {"data": "loginId", "class": ""},
         {"data": "person", "class": ""},
         {"data": "projectName", "class": ""},
         {"data": "createTime", "class": ""},
@@ -174,7 +176,7 @@
             }
         },
         {
-            targets: 4,
+            targets: 5,
             render: function (data, type, row, meta) {
                 return row.person+"/<br/>"+row.phone;
             }

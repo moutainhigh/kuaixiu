@@ -379,6 +379,37 @@
                         </div><!-- /.row -->
                     </td>
                 </tr>
+                <c:if test="${sjOrder.state==400}">
+                    <c:if test="${loginUserType==8||loginUserType==1}">
+                        <tr>
+                            <td colspan="3" class="tr-space"></td>
+                        </tr>
+                        <tr>
+                            <td class="td-title">
+                                <h4>竣工信息：</h4>
+                            </td>
+                            <td class="td-space"></td>
+                            <td class="td-info">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <form enctype="multipart/form-data" id="uploadForm">
+                                            <input class="col-sm-9" type="file" name="file" id="pic_img"
+                                                   accept="image/*"
+                                                   onchange="imgChange(this);"/>
+                                            <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
+                                                    class="am-btn am-btn-default search_btn"
+                                                    type="button">点击上传
+                                            </button>
+                                            <button id="contract" onclick="submitContract('${sjOrder.id}');"
+                                                    class="am-btn am-btn-default search_btn" type="button"> 竣工
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div><!-- /.row -->
+                            </td>
+                        </tr>
+                    </c:if>
+                </c:if>
             </c:if>
             <c:if test="${sjOrder.state==500}">
                 <tr>
@@ -420,6 +451,36 @@
 <!-- /am-g -->
 <script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+
+    function upContractImage(orderNo, id) {
+        var formData = new FormData($("#uploadForm")[0])  //创建一个forData
+        formData.append('img', $('#pic_img')[0].files[0]) //把file添加进去  name命名为img
+        formData.append('orderNo', orderNo)
+        var url_ = AppConfig.ctx + "/sj/order/upContractImage.do";
+        $.ajax({
+            url: url_,
+            data: formData,
+            type: "POST",
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.success) {
+                    AlertText.tips("d_alert", "提示", "上传成功", function () {
+                        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
+                    });
+                } else {
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                }
+            },
+            error: function () {
+                AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
+            }
+        })
+    }
+
+
     function toList() {
         func_reload_page("${ctx}/sj/order/list2.do");
     }
@@ -473,6 +534,28 @@
         $("#modal-registerFormView").html("");
         $("#modal-registerFormView").load("${ctx}/sj/order/registerForm.do?orderId=" + orderId + "&isWifi=" + isWifi, function () {
             func_after_model_load(this);
+        });
+    }
+
+    function submitContract(id) {
+        var url_ = AppConfig.ctx + "/sj/order/contract.do";
+        $.ajax({
+            url: url_,
+            type: "POST",
+            data: {id: id},
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    AlertText.tips("d_alert", "提示", "竣工成功", function () {
+                        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
+                    });
+                } else {
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                }
+            },
+            error: function () {
+                AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
+            }
         });
     }
 
