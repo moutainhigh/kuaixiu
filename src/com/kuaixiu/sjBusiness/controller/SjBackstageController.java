@@ -359,10 +359,12 @@ private SjVirtualTeamService virtualTeamService;
             approvalNote.setNote(note);
             approvalNoteService.add(approvalNote);
 
-//            SjUser sjUser=sjUserService.getDao().queryByLoginId(su.getUserId(),null);
-//            CustomerDetail customerDetail=customerDetailService.getDao().queryByLoginId(sjUser.getId());
-//            SjVirtualTeam virtualTeam=virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
-//            SmsSendUtil.sjApprovalSend(virtualTeam,sjOrder.getOrderNo());
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(),null);
+            CustomerDetail customerDetail=customerDetailService.getDao().queryByLoginId(sjUser.getId());
+            SjVirtualTeam virtualTeam=virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
+            if(virtualTeam!=null){
+                SmsSendUtil.sjApprovalSend(virtualTeam,sjOrder.getOrderNo());
+            }
 
             getSjResult(result, null, true, "0", null, "获取成功");
         } catch (Exception e) {

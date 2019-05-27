@@ -124,9 +124,11 @@
                     </div><!-- /.row -->
 
                     <div class="index_but">
-                        <button onclick="orderCancel('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn" type="button"> 不同意
+                        <button onclick="orderCancel('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn"
+                                type="button"> 不同意
                         </button>
-                        <button  onclick="orderCancel('${sjOrder.id}','1');" class="am-btn am-btn-default search_btn" type="button"> 同意
+                        <button onclick="orderCancel('${sjOrder.id}','1');" class="am-btn am-btn-default search_btn"
+                                type="button"> 同意
                         </button>
                     </div>
 
@@ -160,31 +162,36 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${sjOrder.state==200}">
-            <tr>
-                <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>反馈信息：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <textarea name="feedNote" id="feedNote" cols="79" rows="5" placeholder="请输入反馈备注"></textarea>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
+        <c:if test="${loginUserType==6}">
+            <c:if test="${sjOrder.state==200}">
+                <tr>
+                    <td colspan="3" class="tr-space"></td>
+                </tr>
+                <tr>
+                    <td class="td-title">
+                        <h4>反馈信息：</h4>
+                    </td>
+                    <td class="td-space"></td>
+                    <td class="td-info">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <textarea name="feedNote" id="feedNote" cols="79" rows="5"
+                                          placeholder="请输入反馈备注"></textarea>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
 
-                    <div class="index_but">
-                        <button onclick="orderFeedBack('${sjOrder.id}','1');" class="am-btn am-btn-default search_btn" type="button"> 转化
-                        </button>
-                        <button onclick="orderFeedBack('${sjOrder.id}','2');" class="am-btn am-btn-default search_btn" type="button"> 完结
-                        </button>
-                    </div>
+                        <div class="index_but">
+                            <button onclick="orderFeedBack('${sjOrder.id}','1');"
+                                    class="am-btn am-btn-default search_btn" type="button"> 转化
+                            </button>
+                            <button onclick="orderFeedBack('${sjOrder.id}','2');"
+                                    class="am-btn am-btn-default search_btn" type="button"> 完结
+                            </button>
+                        </div>
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            </c:if>
         </c:if>
         <c:if test="${sjOrder.state==300||sjOrder.state==400}">
             <tr>
