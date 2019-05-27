@@ -398,7 +398,8 @@
                                 <form enctype="multipart/form-data" id="uploadForm">
                                     <input class="col-sm-12" type="file" name="file" id="pic_img"
                                            accept="image/*"
-                                           onchange="imgChange(this);"/>
+                                           <%--onchange="contractImgChange(this);"--%>
+                                           />
                                     <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
                                             class="am-btn am-btn-default search_btn"
                                             type="button">点击上传
@@ -409,12 +410,22 @@
                                 </form>
                             </div>
                         </div><!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h4>合同图片：
+                                    <c:forEach items="${contractPictures }" var="item" varStatus="i">
+                                        <img src="${item.contractPictureUrl}" class="layui-upload-img"
+                                             onclick="zoomImage('${item.contractPictureUrl}')" width="90" height="80"/>
+                                    </c:forEach>
+                                </h4>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
                     </td>
                 </tr>
             </c:if>
         </c:if>
         <c:if test="${sjOrder.state==400}">
-            <c:if test="${loginUserType==1}">
+            <c:if test="${loginUserType==1 || loginUserType==3 ||loginUserType==8}">
                 <tr>
                     <td colspan="3" class="tr-space"></td>
                 </tr>
@@ -477,6 +488,40 @@
 <!-- /am-g -->
 <script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+
+    // 选择图片显示
+    function contractImgChange(obj) {
+        var fileUrl = obj.value;
+        if (!/.(gif|jpg|jpeg|png|GIF|JPG|bmp)$/.test(fileUrl)) {
+            AlertText.tips("d_alert", "提示", "图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
+            return false;
+        } else {
+            if (((obj.files[0].size).toFixed(2)) >= (200 * 1024)) {
+                AlertText.tips("d_alert", "提示", "请上传小于200K的图片");
+                return false;
+            } else {
+                var file = document.getElementById("file");
+                var imgUrl = window.URL.createObjectURL(file.files[0]);
+                var image = new Image();
+                image.src = imgUrl;
+                image.onload = function () {
+                    //加载图片获取图片真实宽度和高度
+                    var width = image.width;
+                    var height = image.height;
+                    if (width < 751 && height < 493) {
+                        var img = document.getElementById('imghead');
+                        img.setAttribute('src', imgUrl); // 修改img标签src属性值
+                        $("#preview").show();
+                    } else {
+                        var msg = "文件尺寸应小于：750*492！,当前图片" + width + "*" + height;
+                        AlertText.tips("d_alert", "提示", msg);
+                        file.value = "";
+                        return false;
+                    }
+                };
+            }
+        }
+    }
 
     function upContractImage(orderNo, id) {
         var formData = new FormData($("#uploadForm")[0]) //创建一个forData
