@@ -21,7 +21,7 @@
         insert into sj_user_role
         (id,login_id,role_id,create_time)
         values
-        (#{id},#{loginId},#{roleId},#{createTime})
+        (#{id},#{loginId},#{roleId},now())
     </insert>
 
     <!-- 根据id，修改记录-->

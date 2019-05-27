@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjVirtualTeamMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjVirtualTeam" >
+        <result column="id" property="id"/>
+        <result column="management_unit_id" property="managementUnitId"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="post" property="post"/>
+        <result column="office_num" property="officeNum"/>
+    </resultMap>
+    
+    <!-- sj_virtual_team table all fields -->
+    <sql id="Base_Column_List" >
+        id,management_unit_id,name,phone,post,office_num
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_virtual_team
+        (id,management_unit_id,name,phone,post,office_num)
+        values
+        (#{id},#{managementUnitId},#{name},#{phone},#{post},#{officeNum})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_virtual_team 
+        set 
+            id=#{id},
+            management_unit_id=#{managementUnitId},
+            name=#{name},
+            phone=#{phone},
+            post=#{post},
+            office_num=#{officeNum}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_virtual_team where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_virtual_team where id = #{id}
+    </select>
+
+    <select id="queryByUnitId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_virtual_team where management_unit_id=#{managementUnitId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_virtual_team
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''" >
+            and management_unit_id = #{managementUnitId}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="phone != null and phone != ''" >
+            and phone = #{phone}
+        </if>
+        <if test="post != null and post != ''" >
+            and post = #{post}
+        </if>
+        <if test="officeNum != null and officeNum != ''" >
+            and office_num = #{officeNum}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_virtual_team
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="managementUnitId != null and managementUnitId != ''" >
+            and management_unit_id = #{managementUnitId}
+        </if>
+        <if test="name != null and name != ''" >
+            and name = #{name}
+        </if>
+        <if test="phone != null and phone != ''" >
+            and phone = #{phone}
+        </if>
+        <if test="post != null and post != ''" >
+            and post = #{post}
+        </if>
+        <if test="officeNum != null and officeNum != ''" >
+            and office_num = #{officeNum}
+        </if>
+    </select>
+
+</mapper>   
