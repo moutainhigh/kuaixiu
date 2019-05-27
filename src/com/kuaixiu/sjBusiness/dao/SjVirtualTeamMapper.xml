@@ -6,6 +6,7 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjVirtualTeam" >
         <result column="id" property="id"/>
+        <result column="login_id" property="loginId"/>
         <result column="management_unit_id" property="managementUnitId"/>
         <result column="name" property="name"/>
         <result column="phone" property="phone"/>
@@ -15,15 +16,15 @@
     
     <!-- sj_virtual_team table all fields -->
     <sql id="Base_Column_List" >
-        id,management_unit_id,name,phone,post,office_num
+        id,login_id,management_unit_id,name,phone,post,office_num
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_virtual_team
-        (id,management_unit_id,name,phone,post,office_num)
+        (id,login_id,management_unit_id,name,phone,post,office_num)
         values
-        (#{id},#{managementUnitId},#{name},#{phone},#{post},#{officeNum})
+        (#{id},#{loginId},#{managementUnitId},#{name},#{phone},#{post},#{officeNum})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -31,6 +32,7 @@
         update sj_virtual_team 
         set 
             id=#{id},
+            login_id=#{loginId},
             management_unit_id=#{managementUnitId},
             name=#{name},
             phone=#{phone},

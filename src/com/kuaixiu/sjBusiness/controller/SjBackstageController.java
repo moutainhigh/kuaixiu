@@ -158,12 +158,15 @@ public class SjBackstageController extends BaseController {
             String state = request.getParameter("state");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
             SjOrder sjOrder = new SjOrder();
-            SjSessionUser sjSessionUser=getSjCurrentUser(request);
-            if(sjSessionUser.getType()==3){
+            SjSessionUser sjSessionUser = getSjCurrentUser(request);
+            if (sjSessionUser.getType() == 3) {
                 sjOrder.setAssignCompanyId(sjSessionUser.getUserId());
             }
-            if(sjSessionUser.getType()==8){
+            if (sjSessionUser.getType() == 8) {
                 sjOrder.setAssignWorkerId(sjSessionUser.getUserId());
+            }
+            if (sjSessionUser.getType() == 6) {
+                sjOrder.setStayPerson(sjSessionUser.getUserId());
             }
             sjOrder.setIsAssign(isAssign);
             sjOrder.setOrderNo(orderNo);
@@ -225,9 +228,9 @@ public class SjBackstageController extends BaseController {
         try {
             //获取查询条件
             SjWorker sjWorker = new SjWorker();
-            SjSessionUser sjSessionUser=getSjCurrentUser(request);
-            if(sjSessionUser.getType()==3){
-                SjUser sjUser=sjUserService.getDao().queryByLoginId(sjSessionUser.getUserId(),3);
+            SjSessionUser sjSessionUser = getSjCurrentUser(request);
+            if (sjSessionUser.getType() == 3) {
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjSessionUser.getUserId(), 3);
                 sjWorker.setCompanyLoginId(String.valueOf(sjUser.getId()));
             }
             sjWorker.setPage(page);
@@ -289,7 +292,7 @@ public class SjBackstageController extends BaseController {
                 sjOrder.setCompletedPerson(user);
             }
             List<OrderContractPicture> contractPictures = orderContractPictureService.getDao().queryByOrderNo(sjOrder.getOrderNo());
-            if(CollectionUtils.isNotEmpty(contractPictures)){
+            if (CollectionUtils.isNotEmpty(contractPictures)) {
                 request.setAttribute("contractPictures", contractPictures);
             }
         }
@@ -297,6 +300,8 @@ public class SjBackstageController extends BaseController {
         request.setAttribute("companyPictures", companyPictures);
         String returnView = "";
         if (sjOrder.getType() == 1) {
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjOrder.getFeedbackPerson(),null);
+            sjOrder.setFeedbackPerson(sjUser.getLoginId()+"/"+sjUser.getName());
             returnView = "business/detail2";
         } else {
             String projectIds = sjOrder.getProjectId();
@@ -318,8 +323,9 @@ public class SjBackstageController extends BaseController {
 
         return new ModelAndView(returnView);
     }
-@Autowired
-private SjVirtualTeamService virtualTeamService;
+
+    @Autowired
+    private SjVirtualTeamService virtualTeamService;
 
     /**
      * 订单审批
@@ -351,20 +357,24 @@ private SjVirtualTeamService virtualTeamService;
             } else if ("2".equals(isPast)) {
                 sjOrder.setState(600);
             }
-            sjOrder.setStayPerson(orderService.setStayPerson(2));
+
+            if(sjOrder.getType()==1){
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(), null);
+                CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(sjUser.getId());
+                SjVirtualTeam virtualTeam = virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
+                SjUser sjUser1 = sjUserService.queryById(virtualTeam.getLoginId());
+                sjOrder.setStayPerson(sjUser1.getLoginId());
+                SmsSendUtil.sjApprovalSend(virtualTeam, sjOrder.getOrderNo());
+            }else{
+                sjOrder.setStayPerson(orderService.setStayPerson(2));
+            }
+
             orderService.saveUpdate(sjOrder);
 
             ApprovalNote approvalNote = new ApprovalNote();
             approvalNote.setOrderNo(sjOrder.getOrderNo());
             approvalNote.setNote(note);
             approvalNoteService.add(approvalNote);
-
-            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(),null);
-            CustomerDetail customerDetail=customerDetailService.getDao().queryByLoginId(sjUser.getId());
-            SjVirtualTeam virtualTeam=virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
-            if(virtualTeam!=null){
-                SmsSendUtil.sjApprovalSend(virtualTeam,sjOrder.getOrderNo());
-            }
 
             getSjResult(result, null, true, "0", null, "获取成功");
         } catch (Exception e) {
@@ -404,7 +414,6 @@ private SjVirtualTeamService virtualTeamService;
             } else if ("2".equals(isPast)) {
                 sjOrder.setState(400);
             }
-            sjOrder.setStayPerson(su.getUserId());
             orderService.saveUpdate(sjOrder);
 
             getSjResult(result, null, true, "0", null, "反馈成功");
@@ -414,7 +423,6 @@ private SjVirtualTeamService virtualTeamService;
         }
         return result;
     }
-
 
 
     @RequestMapping(value = "/sj/order/toAssign")
@@ -526,8 +534,8 @@ private SjVirtualTeamService virtualTeamService;
             sjWorker.setBuildingNum(sjWorker.getBuildingNum() + 1);
             sjWorkerService.saveUpdate(sjWorker);
 
-            SmsSendUtil.sjAssignOrderSend(companyUser.getPhone(),sjOrder.getOrderNo(),1);
-            SmsSendUtil.sjAssignOrderSend(companyUser.getPhone(),sjOrder.getOrderNo(),2);
+            SmsSendUtil.sjAssignOrderSend(companyUser.getPhone(), sjOrder.getOrderNo(), 1);
+            SmsSendUtil.sjAssignOrderSend(companyUser.getPhone(), sjOrder.getOrderNo(), 2);
 
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
@@ -569,6 +577,7 @@ private SjVirtualTeamService virtualTeamService;
 
     /**
      * 用户注册
+     *
      * @param request
      * @param response
      * @return
@@ -637,7 +646,7 @@ private SjVirtualTeamService virtualTeamService;
                 company.setEndOrderNum(0);
                 company.setPersonNum(0);
                 constructionCompanyService.add(company);
-                UserRole userRole=new UserRole();
+                UserRole userRole = new UserRole();
                 userRole.setLoginId(sjUser.getLoginId());
                 userRole.setRoleId("COMPANY");
                 userRoleService.add(userRole);
@@ -646,7 +655,7 @@ private SjVirtualTeamService virtualTeamService;
                 sjUser.setLoginId(SeqUtil.getNext("sj"));
                 sjUser.setType(3);
                 sjUserService.add(sjUser);
-                UserRole userRole=new UserRole();
+                UserRole userRole = new UserRole();
                 userRole.setLoginId(sjUser.getLoginId());
                 userRole.setRoleId("APPROVAL");
                 userRoleService.add(userRole);
@@ -656,7 +665,7 @@ private SjVirtualTeamService virtualTeamService;
                 sjUser.setType(4);
                 sjUserService.add(sjUser);
 
-                UserRole userRole=new UserRole();
+                UserRole userRole = new UserRole();
                 userRole.setLoginId(sjUser.getLoginId());
                 userRole.setRoleId("ASSIGN");
                 userRoleService.add(userRole);
@@ -680,13 +689,13 @@ private SjVirtualTeamService virtualTeamService;
 
                 companyService.getDao().updatePersonAddNum(Integer.valueOf(companyId));
 
-                UserRole userRole=new UserRole();
+                UserRole userRole = new UserRole();
                 userRole.setLoginId(sjUser.getLoginId());
                 userRole.setRoleId("WORKER");
                 userRoleService.add(userRole);
             }
 
-            SmsSendUtil.sjRegisterUserSend(sjUser,pwd);
+            SmsSendUtil.sjRegisterUserSend(sjUser, pwd);
             getSjResult(result, null, true, "0", null, "指派成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -890,12 +899,12 @@ private SjVirtualTeamService virtualTeamService;
      * @param request
      * @param response
      * @return
-             * @throws Exception
+     * @throws Exception
      */
     @RequestMapping(value = "/sj/order/upContractImage")
     @ResponseBody
     public ResultData upContractImage(HttpServletRequest request,
-                                   HttpServletResponse response) throws Exception {
+                                      HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             String orderNo = request.getParameter("orderNo");
@@ -904,7 +913,7 @@ private SjVirtualTeamService virtualTeamService;
             String logoPath = getPath(request, "file", savePath);             //图片路径
             String imageUrl = getProjectUrl(request) + "/images/sj_images/sj_contract/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
-            OrderContractPicture contractPicture=new OrderContractPicture();
+            OrderContractPicture contractPicture = new OrderContractPicture();
             contractPicture.setOrderNo(orderNo);
             contractPicture.setContractPictureUrl(imageUrl);
             orderContractPictureService.add(contractPicture);
@@ -915,8 +924,10 @@ private SjVirtualTeamService virtualTeamService;
         }
         return result;
     }
+
     /**
      * 竣工
+     *
      * @param request
      * @param response
      * @return
@@ -947,6 +958,7 @@ private SjVirtualTeamService virtualTeamService;
 
     /**
      * 完成
+     *
      * @param request
      * @param response
      * @return
@@ -971,6 +983,7 @@ private SjVirtualTeamService virtualTeamService;
         }
         return result;
     }
+
     /**
      * 录单
      *
@@ -1038,23 +1051,23 @@ private SjVirtualTeamService virtualTeamService;
             String type = request.getParameter("type");//角色类型
             String loginId = request.getParameter("loginId");
             String isCancel = request.getParameter("isCancel");//是否注销   1注销   0恢复
-            ConstructionCompany company=new ConstructionCompany();
-            if(Integer.valueOf(type)==8){
-                SjUser sjUser=sjUserService.getDao().queryByLoginId(loginId,8);
-                SjWorker sjWorker=sjWorkerService.getDao().queryByloginId(sjUser.getId());
-                company=companyService.getDao().queryByLoginId(Integer.valueOf(sjWorker.getCompanyLoginId()));
+            ConstructionCompany company = new ConstructionCompany();
+            if (Integer.valueOf(type) == 8) {
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(loginId, 8);
+                SjWorker sjWorker = sjWorkerService.getDao().queryByloginId(sjUser.getId());
+                company = companyService.getDao().queryByLoginId(Integer.valueOf(sjWorker.getCompanyLoginId()));
                 companyService.saveUpdate(company);
             }
             if ("1".equals(isCancel)) {
                 sjUserService.getDao().updateCancel1(loginId, Integer.valueOf(type));
-                company.setPersonNum(company.getPersonNum()-1);
+                company.setPersonNum(company.getPersonNum() - 1);
                 getSjResult(result, null, true, "0", null, "注销成功");
             } else {
                 sjUserService.getDao().updateCancel0(loginId, Integer.valueOf(type));
-                company.setPersonNum(company.getPersonNum()+1);
+                company.setPersonNum(company.getPersonNum() + 1);
                 getSjResult(result, null, true, "0", null, "恢复成功");
             }
-            if(Integer.valueOf(type)==8){
+            if (Integer.valueOf(type) == 8) {
                 companyService.saveUpdate(company);
             }
 
@@ -1080,6 +1093,15 @@ private SjVirtualTeamService virtualTeamService;
                                           HttpServletResponse response) throws Exception {
 
         String returnView = "business/importWorker";
+        return new ModelAndView(returnView);
+    }
+
+    //虚拟团队导入
+    @RequestMapping(value = "/sj/virtualTeam/importIndex")
+    public ModelAndView importVirtualTeamIndex(HttpServletRequest request,
+                                               HttpServletResponse response) throws Exception {
+
+        String returnView = "business/importVirtualTeam";
         return new ModelAndView(returnView);
     }
 
@@ -1157,6 +1179,52 @@ private SjVirtualTeamService virtualTeamService;
                     errorMsg.append("导入文件格式错误！只能导入excel文件！");
                 } else {
                     sjUserService.importExcel(myfile, report, getCurrentUser(request), 2);
+                    resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
+                    resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
+                }
+            } else {
+                errorMsg.append("导入文件为空");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorMsg.append("导入失败");
+            resultMap.put(RESULTMAP_KEY_MSG, "导入失败");
+        }
+        request.setAttribute("report", report);
+        resultMap.put(RESULTMAP_KEY_DATA, report);
+        renderJson(response, resultMap);
+    }
+
+
+    /**
+     * fileUpload:企业单位注册导入.
+     *
+     * @param myfile   上传的文件
+     * @param request  请求实体
+     * @param response 返回实体
+     * @throws IOException 异常信息
+     * @date 2016-5-9
+     * @author
+     */
+    @RequestMapping(value = "/sj/virtualTeam/import")
+    public void doImportVirtualTeam(
+            @RequestParam("fileInput") MultipartFile myfile,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        // 返回结果，默认失败
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
+        ImportReport report = new ImportReport();
+        StringBuffer errorMsg = new StringBuffer();
+        try {
+            if (myfile != null && StringUtils.isNotBlank(myfile.getOriginalFilename())) {
+                String fileName = myfile.getOriginalFilename();
+                //扩展名
+                String extension = FilenameUtils.getExtension(fileName);
+                if (!extension.equalsIgnoreCase("xls")) {
+                    errorMsg.append("导入文件格式错误！只能导入excel文件！");
+                } else {
+                    sjUserService.importExcel(myfile, report, getCurrentUser(request), 3);
                     resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
                     resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
                 }

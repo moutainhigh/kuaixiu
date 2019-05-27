@@ -44,6 +44,11 @@
         from sj_area_management_unit where id = #{id}
     </select>
 
+    <select id="queryByName"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_area_management_unit where management_unit=#{managementUnit}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
