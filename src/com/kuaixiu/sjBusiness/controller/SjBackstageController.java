@@ -300,8 +300,8 @@ public class SjBackstageController extends BaseController {
         request.setAttribute("companyPictures", companyPictures);
         String returnView = "";
         if (sjOrder.getType() == 1) {
-            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjOrder.getFeedbackPerson(),null);
-            sjOrder.setFeedbackPerson(sjUser.getLoginId()+"/"+sjUser.getName());
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getFeedbackPerson(), null);
+            sjOrder.setFeedbackPerson(sjUser.getLoginId() + "/" + sjUser.getName());
             returnView = "business/detail2";
         } else {
             String projectIds = sjOrder.getProjectId();
@@ -358,14 +358,14 @@ public class SjBackstageController extends BaseController {
                 sjOrder.setState(600);
             }
 
-            if(sjOrder.getType()==1){
+            if (sjOrder.getType() == 1) {
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(), null);
                 CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(sjUser.getId());
                 SjVirtualTeam virtualTeam = virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
                 SjUser sjUser1 = sjUserService.queryById(virtualTeam.getLoginId());
                 sjOrder.setStayPerson(sjUser1.getLoginId());
                 SmsSendUtil.sjApprovalSend(virtualTeam, sjOrder.getOrderNo());
-            }else{
+            } else {
                 sjOrder.setStayPerson(orderService.setStayPerson(2));
             }
 
@@ -485,6 +485,30 @@ public class SjBackstageController extends BaseController {
                 company.setCompanyName(sjUser.getName());
             }
             page.setData(companies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.renderJson(response, page);
+    }
+
+    @RequestMapping(value = "/sj/order/toVirtualTeam")
+    public ModelAndView toVirtualTeam(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        String returnView = "business/virtualTeamList";
+        return new ModelAndView(returnView);
+    }
+
+    @RequestMapping(value = "/sj/order/queryVirtualTeamForPage")
+    public void queryVirtualTeamForPage(HttpServletRequest request,
+                                        HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        try {
+            //获取查询条件
+            SjVirtualTeam virtualTeam = new SjVirtualTeam();
+            virtualTeam.setPage(page);
+            //t.id,t.login_id,t.management_unit_id,t.name,phone,t.post,t.office_num,m.management_unit,loginId
+            List<Map> virtualTeams = virtualTeamService.getDao().queryListMapForPage(virtualTeam);
+            page.setData(virtualTeams);
         } catch (Exception e) {
             e.printStackTrace();
         }
