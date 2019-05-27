@@ -313,6 +313,11 @@ public class RecycleNewController extends BaseController {
             String items = params.getString("items");
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
+            String source = params.getString("fm");//来源
+            
+            if(StringUtils.isBlank(source)){
+                throw new SystemException("来源为空");
+            }
 
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
@@ -359,7 +364,7 @@ public class RecycleNewController extends BaseController {
                 if (StringUtils.isNotBlank(openId) || StringUtils.isNotBlank(loginMobile)) {
                     MyExecutor myExecutor = new MyExecutor();
                     myExecutor.fun(j, openId, loginMobile, items, productId, selectBrandId,
-                            selectBrandName, selectModelName, price, recycleCheckItemsService);
+                            selectBrandName, selectModelName, price, source, recycleCheckItemsService);
                 }
             }
 
@@ -576,7 +581,7 @@ public class RecycleNewController extends BaseController {
             String province = params.getString("province");
             String city = params.getString("city");
             String area = params.getString("area");
-            String address = params.getString("address");
+            String address = filter(params.getString("address"));
             String recycleType = params.getString("recycleType");   //支付类型 1支付宝收款  2话费充值
             String payMobile = params.getString("payMobile");
             String imagePath = params.getString("imagePath");

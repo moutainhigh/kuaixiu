@@ -18,12 +18,13 @@
         <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
         <result column="login_mobile" jdbcType="VARCHAR" property="loginMobile"/>
         <result column="quote_id" jdbcType="VARCHAR" property="quoteId"/>
+        <result column="source" jdbcType="INTEGER" property="source"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
     id, wechat_id, brand, wechat_model, recycle_model, product_id, items, in_time, last_price, 
-    price, update_time,brand_id,model_id,mobile,login_mobile,quote_id
+    price, update_time,brand_id,model_id,mobile,login_mobile,quote_id,source
   </sql>
 
     <!-- 根据微信用户id查询记录 -->
@@ -46,7 +47,7 @@
         (
         id, wechat_id, brand,
         wechat_model, recycle_model, product_id,items,
-        in_time,last_price,brand_id,model_id,mobile,quote_id,
+        in_time,last_price,brand_id,model_id,mobile,quote_id,source,
         <if test="loginMobile!=null and loginMobile!=''">
             login_mobile,
         </if>
@@ -56,7 +57,7 @@
         #{brand,jdbcType=VARCHAR},
         #{wechatModel,jdbcType=VARCHAR}, #{recycleModel,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR},
         #{items,jdbcType=VARCHAR},now(), #{lastPrice,jdbcType=DECIMAL},#{brandId,jdbcType=VARCHAR},
-        #{modelId,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{quoteId,jdbcType=VARCHAR},
+        #{modelId,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{quoteId,jdbcType=VARCHAR},#{source,jdbcType=INTEGER},
         <if test="loginMobile!=null and loginMobile!=''">
             #{loginMobile,jdbcType=VARCHAR},
         </if>
@@ -77,6 +78,7 @@
             last_price = #{lastPrice,jdbcType=DECIMAL},
             price = #{price,jdbcType=DECIMAL},
             quote_id=#{quoteId,jdbcType=VARCHAR},
+            source=#{source,jdbcType=INTEGER},
             <if test="loginMobile!=null and loginMobile!=''">
                 login_mobile=#{loginMobile,jdbcType=VARCHAR},
             </if>
@@ -96,7 +98,8 @@
 		product_id = #{productId,jdbcType=VARCHAR},
 		items = #{items,jdbcType=VARCHAR},
 		last_price = #{lastPrice,jdbcType=DECIMAL},
-		price = #{price,jdbcType=DECIMAL}
+		price = #{price,jdbcType=DECIMAL},
+		source=#{source,jdbcType=INTEGER}
 		where wechat_id=#{wechatId}
   </update>
 
@@ -157,10 +160,11 @@
     <select id="queryTestListForPage" resultType="Map"
             parameterType="Object">
         select
-        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
+        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,c.source,f.name,
         c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id,t.record_result
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
+        LEFT JOIN hs_from_system f ON f.id=c.source
         where c.login_mobile not in(
         select o.mobile from kx_recycle_order o
         where EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile)
@@ -168,20 +172,23 @@
         and not EXISTS(select 1 from kx_recycle_test_record where recycle_id=o.id)
         )
         and CHAR_LENGTH(c.product_id) &lt;= 10
+        <if test="source != null and source != ''">
+            and c.source =#{source}
+        </if>
         <if test="brandId != null and brandId != ''">
-            and brand_id =#{brandId}
+            and c.brand_id =#{brandId}
         </if>
         <if test="productId != null and productId != ''">
-            and product_id =#{productId}
+            and c.product_id =#{productId}
         </if>
         <if test="loginMobile != null and loginMobile != ''">
-            and login_mobile =#{loginMobile}
+            and c.login_mobile =#{loginMobile}
         </if>
         <if test="queryStartTime != null and queryStartTime != ''">
-            and create_time &gt;= #{queryStartTime}
+            and c.in_time &gt;= #{queryStartTime}
         </if>
         <if test="queryEndTime != null and queryEndTime != ''">
-            and create_time &lt;= #{queryEndTime}
+            and c.in_time &lt;= #{queryEndTime}
         </if>
         <if test="isOrder == 1">
             and t.recycle_id is null

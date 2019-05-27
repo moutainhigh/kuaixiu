@@ -325,13 +325,12 @@ public class BaseController {
         if (param == null) {
             throw new SystemException(ApiResultConstant.resultCode_str_1001, ApiResultConstant.resultCode_1001);
         }
-//        param=filter(param);
         JSONObject params = JSONObject.parseObject(param);
         return params;
     }
 
     public String filter(String param) {
-        String regEx = "[`~!@#$%^&*()+=|';'.<>?~！@#￥%……&*（）——+|【】‘；：”“’。，、？]";
+        String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(param);
         return m.replaceAll("").trim();

@@ -67,6 +67,8 @@ public class RecycleTestController extends BaseController {
     private RecycleTestService recycleTestService;
     @Autowired
     private RecycleCheckItemsService recycleCheckItemsService;
+    @Autowired
+    private RecycleSystemService recycleSystemService;
 
     /**
      * 基础访问接口地址
@@ -105,6 +107,8 @@ public class RecycleTestController extends BaseController {
         //对得到结果进行解密
         jsonResult = getResult(AES.Decrypt(getResult));
         JSONArray jsonArray = jsonResult.getJSONArray("datainfo");
+        List<RecycleSystem> systems=recycleSystemService.queryList(null);
+        request.setAttribute("systems", systems);
         request.setAttribute("brands", jsonArray);
         String returnView = "recycle/testList";
         return new ModelAndView(returnView);
@@ -186,6 +190,9 @@ public class RecycleTestController extends BaseController {
         }
         if (StringUtils.isNotBlank(isVisit)) {
             checkItem.setIsVisit(isVisit);
+        }
+        if(StringUtils.isNotBlank(channel)){
+            checkItem.setSource(Integer.valueOf(channel));
         }
         checkItem.setPage(page);
         List<Map> checkItems = checkItemsService.getDao().queryTestListForPage(checkItem);

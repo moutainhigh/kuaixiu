@@ -16,7 +16,7 @@ public class MyExecutor {
 
     public void fun(JSONObject j, String openId, String loginMobile, String items,
                     String productId, String selectBrandId, String selectBrandName,
-                    String selectModelName, String price,RecycleCheckItemsService recycleCheckItemsService) throws Exception {
+                    String selectModelName, String price,String source,RecycleCheckItemsService recycleCheckItemsService) throws Exception {
 
         executor.submit(new Runnable() {
 
@@ -40,6 +40,7 @@ public class MyExecutor {
                         RecycleCheckItems checkItems = list.get(0);
                         t.setLastPrice(checkItems.getPrice());
                     }
+                    t.setSource(Integer.valueOf(source));
                     t.setItems(items);
                     t.setPrice(new BigDecimal(price));
                     t.setProductId(productId);

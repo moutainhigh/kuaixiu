@@ -48,31 +48,32 @@ public class RecycleCheckItems extends BaseEntity{
 
     /** 本次检测价格*/
     private BigDecimal price;
-
     /** 记录更新时间*/
     private Date updateTime;
-
 	/**
 	 * 回收品牌id
 	 */
 	private String brandId;
-
 	/**
 	 * 手机号
 	 */
 	private String mobile;
-
 	/**
 	 * 回收产品id
 	 */
     private String modelId;
-    //回收询价流水编号
-    private String quoteId;
-
+	/**
+	 * 回收询价流水编号
+	 */
+	private String quoteId;
 	/**
 	 * 登录手机号
 	 */
 	private String loginMobile;
+	/**
+	 * 来源
+	 */
+	private Integer source;
 	//是否成单    传参
 	private String isOrder;
 	//是否回访    传参
@@ -220,5 +221,13 @@ public class RecycleCheckItems extends BaseEntity{
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public Integer getSource() {
+		return source;
+	}
+
+	public void setSource(Integer source) {
+		this.source = source;
 	}
 }
