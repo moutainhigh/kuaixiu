@@ -45,6 +45,7 @@
             </tr>
             <tr>
                 <input type="hidden" id="state" name="state" value="200"/><br/>
+                <input type="hidden" id="type" name="type" value="2"/><br/>
                 <input type="hidden" id="isAssign" name="isAssign" value="1"/><br/>
             </tr>
 

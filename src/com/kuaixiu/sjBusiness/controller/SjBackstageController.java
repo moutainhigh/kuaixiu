@@ -283,13 +283,15 @@ public class SjBackstageController extends BaseController {
             String user = sjUserService.userIdToUserIdName(sjOrder.getBuildPerson());
             sjOrder.setBuildPerson(user);
         }
-        if (sjOrder.getState() == 500) {
+        if (sjOrder.getState() >= 300) {
             if (sjOrder.getCompletedPerson() != null) {
                 String user = sjUserService.userIdToUserIdName(sjOrder.getCompletedPerson());
                 sjOrder.setCompletedPerson(user);
             }
             List<OrderContractPicture> contractPictures = orderContractPictureService.getDao().queryByOrderNo(sjOrder.getOrderNo());
-            request.setAttribute("contractPictures", contractPictures);
+            if(CollectionUtils.isNotEmpty(contractPictures)){
+                request.setAttribute("contractPictures", contractPictures);
+            }
         }
         request.setAttribute("sjOrder", sjOrder);
         request.setAttribute("companyPictures", companyPictures);
@@ -357,10 +359,12 @@ private SjVirtualTeamService virtualTeamService;
             approvalNote.setNote(note);
             approvalNoteService.add(approvalNote);
 
-            SjUser sjUser=sjUserService.getDao().queryByLoginId(su.getUserId(),null);
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(),null);
             CustomerDetail customerDetail=customerDetailService.getDao().queryByLoginId(sjUser.getId());
             SjVirtualTeam virtualTeam=virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
-            SmsSendUtil.sjApprovalSend(virtualTeam,sjOrder.getOrderNo());
+            if(virtualTeam!=null){
+                SmsSendUtil.sjApprovalSend(virtualTeam,sjOrder.getOrderNo());
+            }
 
             getSjResult(result, null, true, "0", null, "获取成功");
         } catch (Exception e) {
@@ -424,7 +428,7 @@ private SjVirtualTeamService virtualTeamService;
             //获取市地址
             List<Address> cityL = addressService.queryByPid("15");
             //获取区县地址
-            List<Address> areal = addressService.queryByPid("1213");
+            List<Address> areal = addressService.queryByPid("1158");
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("cityL", cityL);
             request.setAttribute("areal", areal);
@@ -929,7 +933,7 @@ private SjVirtualTeamService virtualTeamService;
             SjSessionUser su = getSjCurrentUser(request);
             sjOrder.setState(400);
             sjOrder.setCompletedPerson(su.getUserId());
-            sjOrder.setCompletedTime(new Date());
+            sjOrder.setEndTime(new Date());
             sjOrder.setStayPerson(orderService.setStayPerson(4));
             orderService.saveUpdate(sjOrder);
 
@@ -957,6 +961,7 @@ private SjVirtualTeamService virtualTeamService;
             String id = request.getParameter("id");
             SjOrder sjOrder = orderService.queryById(id);
             sjOrder.setState(500);
+            sjOrder.setCompletedTime(new Date());
             orderService.saveUpdate(sjOrder);
 
             getSjResult(result, null, true, "0", null, "获取成功");
