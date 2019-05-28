@@ -11,6 +11,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface AreaManagementUnitMapper<T> extends BaseDao<T> {
 
+    T queryByName(String managementUnit);
 }
 
 

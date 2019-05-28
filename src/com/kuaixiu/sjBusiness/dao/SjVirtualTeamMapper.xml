@@ -6,6 +6,7 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjVirtualTeam" >
         <result column="id" property="id"/>
+        <result column="login_id" property="loginId"/>
         <result column="management_unit_id" property="managementUnitId"/>
         <result column="name" property="name"/>
         <result column="phone" property="phone"/>
@@ -15,15 +16,15 @@
     
     <!-- sj_virtual_team table all fields -->
     <sql id="Base_Column_List" >
-        id,management_unit_id,name,phone,post,office_num
+        id,login_id,management_unit_id,name,phone,post,office_num
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_virtual_team
-        (id,management_unit_id,name,phone,post,office_num)
+        (id,login_id,management_unit_id,name,phone,post,office_num)
         values
-        (#{id},#{managementUnitId},#{name},#{phone},#{post},#{officeNum})
+        (#{id},#{loginId},#{managementUnitId},#{name},#{phone},#{post},#{officeNum})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -31,6 +32,7 @@
         update sj_virtual_team 
         set 
             id=#{id},
+            login_id=#{loginId},
             management_unit_id=#{managementUnitId},
             name=#{name},
             phone=#{phone},
@@ -82,28 +84,30 @@
     </select>
     
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryListMapForPage" resultType="Map"  parameterType="Object">
         select
-        <include refid="Base_Column_List"/>
-        from sj_virtual_team
+        t.id,t.login_id,t.management_unit_id,t.name,t.phone,t.post,t.office_num,m.management_unit,u.login_id loginId
+        from sj_virtual_team t
+        LEFT JOIN sj_area_management_unit m ON t.management_unit_id=m.id
+        LEFT JOIN sj_user u ON u.id=t.login_id
         where 1=1
         <if test="id != null and id != ''" >
-            and id = #{id}
+            and t.id = #{id}
         </if>
         <if test="managementUnitId != null and managementUnitId != ''" >
-            and management_unit_id = #{managementUnitId}
+            and t.management_unit_id = #{managementUnitId}
         </if>
         <if test="name != null and name != ''" >
-            and name = #{name}
+            and t.name = #{name}
         </if>
         <if test="phone != null and phone != ''" >
-            and phone = #{phone}
+            and t.phone = #{phone}
         </if>
         <if test="post != null and post != ''" >
-            and post = #{post}
+            and t.post = #{post}
         </if>
         <if test="officeNum != null and officeNum != ''" >
-            and office_num = #{officeNum}
+            and t.office_num = #{officeNum}
         </if>
     </select>
 

@@ -6,11 +6,11 @@ import com.common.importExcel.ImportError;
 import com.common.importExcel.ImportReport;
 import com.common.util.MD5Util;
 import com.common.util.SmsSendUtil;
+import com.kuaixiu.sjBusiness.entity.AreaManagementUnit;
 import com.kuaixiu.sjBusiness.entity.SjCode;
 import com.kuaixiu.sjBusiness.entity.SjProject;
-import com.kuaixiu.sjBusiness.service.SjCodeService;
-import com.kuaixiu.sjBusiness.service.SjOrderService;
-import com.kuaixiu.sjBusiness.service.SjProjectService;
+import com.kuaixiu.sjBusiness.entity.SjVirtualTeam;
+import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.dao.SjUserMapper;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
@@ -206,6 +206,13 @@ public class SjUserService extends BaseService<SjUser> {
                         List<SjUser> sjUsers = saveCompanyData(list, su);
                         this.sendSms(sjUsers);
                     }
+                }else if (type == 3) {
+                    List<SjVirtualTeam> list = checkVirtualTeamData(workbook, report);
+                    if (report.isPass() && list.size() > 0) {
+                        //保存数据
+                        List<SjUser> sjUsers = saveVirtualTeamData(list, su);
+                        this.sendSms(sjUsers);
+                    }
                 }
             } else {
                 report.setContinueNext(false);
@@ -260,6 +267,35 @@ public class SjUserService extends BaseService<SjUser> {
             userRole.setLoginId(sjUser.getLoginId());
             userRole.setRoleId("COMPANY");
             userRoleService.add(userRole);
+        }
+        return users;
+    }
+
+    @Transactional
+    private List<SjUser> saveVirtualTeamData(List<SjVirtualTeam> virtualTeams, SessionUser su) {
+        List<SjUser> users = new ArrayList<>();
+        for (SjVirtualTeam c : virtualTeams) {
+            SjUser sjUser = new SjUser();
+            String fristSpell = "vt";
+            sjUser.setLoginId(SeqUtil.getNext(fristSpell));
+            sjUser.setType(6);
+            sjUser.setName(c.getName());
+            sjUser.setPhone(c.getPhone());
+            String pwd = c.getPhone().substring(c.getPhone().length() - 6);
+            sjUser.setPwd(pwd);
+            sjUser.setPassword(MD5Util.encodePassword(pwd));
+            this.add(sjUser);
+
+            SjUser sjUser1 = this.getDao().queryByLoginId(sjUser.getLoginId(), 6);
+            c.setLoginId(sjUser1.getId());
+            virtualTeamService.add(c);
+
+            UserRole userRole=new UserRole();
+            userRole.setLoginId(sjUser.getLoginId());
+            userRole.setRoleId("VIRTUALTEAM");
+            userRoleService.add(userRole);
+
+            users.add(sjUser);
         }
         return users;
     }
@@ -474,6 +510,8 @@ public class SjUserService extends BaseService<SjUser> {
         }
     }
 
+
+
     private List<SjUser> checkData(Workbook workbook, ImportReport report) {
         Sheet sheet = workbook.getSheetAt(0);
         int rowNum = sheet.getLastRowNum();
@@ -547,6 +585,77 @@ public class SjUserService extends BaseService<SjUser> {
             }
             sjUser.setCompanyName(companyName);
         }
+    }
+
+    @Autowired
+    private SjVirtualTeamService virtualTeamService;
+    @Autowired
+    private AreaManagementUnitService managementUnitService;
+
+    private List<SjVirtualTeam> checkVirtualTeamData(Workbook workbook, ImportReport report) {
+        Sheet sheet = workbook.getSheetAt(0);
+        int rowNum = sheet.getLastRowNum();
+        List<SjVirtualTeam> list = new ArrayList<SjVirtualTeam>();
+
+        for (int i = 1; i <= rowNum; i++) {
+            Row row = sheet.getRow(i);
+            if (row == null) {
+                continue;
+            }
+            SjVirtualTeam c = new SjVirtualTeam();
+            int col = 0;
+            String value = ExcelUtil.getCellValue(row, col);
+            if (StringUtils.isBlank(value)) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("经营单元错误");
+                error.setMessage("经营单元不能为空！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+
+            AreaManagementUnit unit=managementUnitService.getDao().queryByName(value);
+            if (unit == null) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("经营单元错误");
+                error.setMessage("该经营单元不存在！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+            c.setManagementUnitId(unit.getId());
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (StringUtils.isBlank(value) || value.length() > 32) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("姓名错误");
+                error.setMessage("姓名不能为空，长度不能超过32个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+            c.setName(value);
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (StringUtils.isBlank(value) || value.length() > 11) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("联系方式错误");
+                error.setMessage("手机号不能为空，长度不能超过11个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+            c.setPhone(value);
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            c.setPost(value);
+
+            list.add(c);
+        }
+        return list;
     }
 
     /**

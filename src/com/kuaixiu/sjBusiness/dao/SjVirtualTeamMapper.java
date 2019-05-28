@@ -2,6 +2,9 @@ package com.kuaixiu.sjBusiness.dao;
 
 import com.common.base.dao.BaseDao;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * SjVirtualTeam Mapper
  *
@@ -12,6 +15,8 @@ import com.common.base.dao.BaseDao;
 public interface SjVirtualTeamMapper<T> extends BaseDao<T> {
 
     T queryByUnitId(Integer managementUnitId);
+
+    List<Map> queryListMapForPage(T t);
 }
 
 
