@@ -314,11 +314,9 @@ public class RecycleNewController extends BaseController {
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
             Integer source = params.getInteger("fm");//来源
-
-            if (null == source || StringUtils.isBlank(productId) || StringUtils.isBlank(items)) {
+            if (StringUtils.isBlank(productId) || StringUtils.isBlank(items)) {
                 throw new SystemException("参数为空");
             }
-
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
             String[] itemses = items.split("\\|");
@@ -330,7 +328,6 @@ public class RecycleNewController extends BaseController {
                 }
             }
             items = sb.toString();
-
             JSONObject requestNews = new JSONObject();
             //调用接口需要加密的数据
             JSONObject code = new JSONObject();
