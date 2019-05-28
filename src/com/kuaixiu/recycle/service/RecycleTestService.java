@@ -344,9 +344,9 @@ public class RecycleTestService extends BaseService<RecycleTest> {
             row.createCell(5).setCellValue(map.get("login_mobile").toString());
         }
         if (map.get("login_mobile") == null) {
-            row.createCell(6).setCellValue("");
+            row.createCell(6).setCellValue("H5");
         } else {
-            row.createCell(6).setCellValue(map.get("login_mobile").toString());
+            row.createCell(6).setCellValue("集团欢GO抽奖");
         }
         if (map.get("recycle_id") == null) {
             row.createCell(7).setCellValue("否");
