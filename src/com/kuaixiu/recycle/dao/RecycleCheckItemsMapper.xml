@@ -159,10 +159,11 @@
     <select id="queryTestList" resultType="Map"
             parameterType="Object">
         select
-        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,
+        c.id,date_format(c.`in_time`,'%Y-%m-%d %H:%i:%s')createTime,c.brand_id,c.source,f.name,
         c.product_id,c.items,c.price,c.login_mobile,t.test_id,t.recycle_id,t.record_result
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
+        LEFT JOIN hs_from_system f ON f.id=c.source
         where c.login_mobile not in(
         select o.mobile from kx_recycle_order o
         where EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile)
@@ -170,6 +171,9 @@
         and not EXISTS(select 1 from kx_recycle_test_record where recycle_id=o.id)
         )
         and CHAR_LENGTH(c.product_id) &lt;= 10
+        <if test="source != null and source != ''">
+            and c.source =#{source}
+        </if>
         <if test="queryIds != null and queryIds.size() > 0" >
             and t.id in
             <foreach collection="queryIds" item="item" open="(" separator=", " close=")">

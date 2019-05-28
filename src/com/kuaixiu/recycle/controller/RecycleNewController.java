@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.*;
@@ -313,10 +314,7 @@ public class RecycleNewController extends BaseController {
             String items = params.getString("items");
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
-            Integer source = params.getInteger("fm");//来源
-            if (StringUtils.isBlank(productId) || StringUtils.isBlank(items)) {
-                throw new SystemException("参数为空");
-            }
+            Object source = params.get("fm");//来源
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
             String[] itemses = items.split("\\|");
@@ -336,9 +334,6 @@ public class RecycleNewController extends BaseController {
                 code.put("imei", imei);
             }
             code.put("items", items);
-            //session储存产品id 和检测项id用来后期下单保存到数据库
-            request.getSession().setAttribute("productId", productId);
-            request.getSession().setAttribute("recycleItems", items);
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
             //发起请求
@@ -347,16 +342,11 @@ public class RecycleNewController extends BaseController {
             jsonResult = getResult(AES.Decrypt(getResult));
             if (StringUtil.isNotBlank(jsonResult.getString("datainfo"))) {
                 JSONObject j = (JSONObject) jsonResult.get("datainfo");
-                j.put("quoteid", j.getString("quoteid"));
+                j.put("quoteid",j.getString("quoteid"));
                 String price = j.getString("price");
                 if (price.equals("0")) {
                     price = "5";
                 }
-                request.getSession().setAttribute(j.getString("quoteid"), price);
-                // 得到当前session中品牌名称  品牌id  机型名称
-                String selectBrandId = (String) request.getSession().getAttribute("selectBrandId");
-                String selectBrandName = (String) request.getSession().getAttribute("selectBrandName");
-                String selectModelName = (String) request.getSession().getAttribute("selectModelName");
                 //异步保存数据
                 if (StringUtils.isBlank(loginMobile)) {
                     Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_NEW_H5_PHONE);
@@ -365,16 +355,13 @@ public class RecycleNewController extends BaseController {
                         loginMobile = URLDecoder.decode(cookiePhone, "UTF-8");
                     }
                 }
-                if (StringUtils.isNotBlank(openId) || StringUtils.isNotBlank(loginMobile)) {
-                    MyExecutor myExecutor = new MyExecutor();
-                    myExecutor.fun(j, openId, loginMobile, items, productId, selectBrandId,
-                            selectBrandName, selectModelName, price, source, recycleCheckItemsService);
-                }
+                HttpSession session = request.getSession();
+                MyExecutor myExecutor = new MyExecutor();
+                myExecutor.fun(session, j, openId, loginMobile, items, productId,
+                        price, source, recycleCheckItemsService);
             }
 
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result,jsonResult,true,"0","");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {

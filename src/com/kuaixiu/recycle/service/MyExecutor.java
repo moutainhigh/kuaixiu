@@ -3,7 +3,12 @@ package com.kuaixiu.recycle.service;
 import com.alibaba.fastjson.JSONObject;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.RecycleCheckItems;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -12,18 +17,26 @@ import java.util.concurrent.Executors;
 
 public class MyExecutor {
 
+
     private ExecutorService executor = Executors.newCachedThreadPool();
 
-    public void fun(JSONObject j, String openId, String loginMobile, String items,
-                    String productId, String selectBrandId, String selectBrandName,
-                    String selectModelName, String price,Integer source,RecycleCheckItemsService recycleCheckItemsService) throws Exception {
+    public void fun(HttpSession session, JSONObject j, String openId, String loginMobile, String items,
+                    String productId, String price, Object source,
+                    RecycleCheckItemsService recycleCheckItemsService) throws Exception {
 
         executor.submit(new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
+                    session.setAttribute("productId", productId);
+                    session.setAttribute("recycleItems", items);
+                    session.setAttribute(j.getString("quoteid"), price);
+                    // 得到当前session中品牌名称  品牌id  机型名称
+                    String selectBrandId = (String) session.getAttribute("selectBrandId");
+                    String selectBrandName = (String) session.getAttribute("selectBrandName");
+                    String selectModelName = (String) session.getAttribute("selectModelName");
                     //新增
                     RecycleCheckItems t = new RecycleCheckItems();
                     RecycleCheckItems r = new RecycleCheckItems();
@@ -41,7 +54,10 @@ public class MyExecutor {
                         RecycleCheckItems checkItems = list.get(0);
                         t.setLastPrice(checkItems.getPrice());
                     }
-                    t.setSource(source);
+                    if (source != null) {
+                        t.setSource(Integer.valueOf(source.toString()));
+                    }
+
                     t.setItems(items);
                     t.setPrice(new BigDecimal(price));
                     t.setProductId(productId);

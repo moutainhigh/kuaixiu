@@ -269,7 +269,8 @@
                     "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
                     "items":itemsId,
                     "openId":openId,
-					"loginMobile":HappyGoMobile
+					"loginMobile":HappyGoMobile,
+					"fm":fm
                 },base = new Base64();
                 $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){

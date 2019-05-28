@@ -79,7 +79,7 @@
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <h4>地址：${sjOrder.address }</h4>
+                        <h4>地址：${sjOrder.address} ${sjOrder.addressDetail}</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
