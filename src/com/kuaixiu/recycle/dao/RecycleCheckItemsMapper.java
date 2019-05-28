@@ -18,6 +18,7 @@ public interface RecycleCheckItemsMapper<T> extends BaseDao<T>{
 	 */
 	int updateByWechatId(T t);
 
+	List<Map<String, Object>> queryTestList(T t);
 	List<Map> queryTestListForPage(T t);
 
 	T queryByTestId(@Param("id") String id);

@@ -85,6 +85,9 @@
                     <div class="am-btn-group am-btn-group-sm m20">
                         <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜 索
                         </button>
+                        <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
+                                class="am-icon-file-excel-o"></span> 导出
+                        </button>
                     </div>
                 </div>
             </div>
@@ -301,7 +304,7 @@
                 ids += this.value + ",";
             }
         });
-        window.open("${ctx}/file/download.do?fileId=14&ids=" + ids + params, "导出");
+        window.open("${ctx}/file/download.do?fileId=34&ids=" + ids + params, "导出");
     }
     /**
      * 查看订单详情
