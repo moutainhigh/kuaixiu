@@ -300,8 +300,12 @@ public class SjBackstageController extends BaseController {
         request.setAttribute("companyPictures", companyPictures);
         String returnView = "";
         if (sjOrder.getType() == 1) {
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getFeedbackPerson(), null);
-            sjOrder.setFeedbackPerson(sjUser.getLoginId() + "/" + sjUser.getName());
+            if (sjOrder.getFeedbackPerson() != null) {
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getFeedbackPerson(), null);
+                if (sjUser != null) {
+                    sjOrder.setFeedbackPerson(sjUser.getLoginId() + "/" + sjUser.getName());
+                }
+            }
             returnView = "business/detail2";
         } else {
             String projectIds = sjOrder.getProjectId();
