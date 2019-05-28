@@ -43,7 +43,7 @@
 
     <sql id="Base_Column_List">
     t.id, t.order_no, t.check_id, t.pay_ment_id,t.pay_refund_id,t.user_id, t.recycle_type,t.exchange_type,t.order_type, 
-    t.pay_mobile, t.product_name, t.percent, t.prepare_price, t.price,t.final_price,t.negotiation_price,t.source_type, t.is_del, t.order_status, t.in_time,
+    t.pay_mobile, t.product_name, t.percent, t.prepare_price, t.price,t.final_price,t.negotiation_price,t.source_type, t.is_del, t.order_status, date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
     t.update_time, t.take_time, t.image_path, t.detail, t.sf_order_no, t.customer_id,t.mobile, t.note,t.mail_type,t.wechat_openId,
     is_sale,increase_order_no,coupon_id
   </sql>
@@ -304,5 +304,79 @@
         order by in_time desc
     </select>
 
-
+    <select id="queryImportList" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        ,c.name name,c.address address,c.area area
+        from kx_recycle_order t
+        left join kx_recycle_customer c on t.customer_id = c.id
+        where t.is_del = 0
+        <if test="id != null and id != ''">
+            and t.id = #{id}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and t.id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="userId != null and userId != ''">
+            and t.user_id=#{userId}
+        </if>
+        <if test="checkId != null and checkId != ''">
+            and t.check_id=#{checkId}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and t.mobile=#{mobile}
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and t.order_no=#{orderNo}
+        </if>
+        <if test="productName != null and productName != ''">
+            and t.product_name=#{productName}
+        </if>
+        <if test="recycleType != null">
+            and t.recycle_type =#{recycleType}
+        </if>
+        <if test="exchangeType != null">
+            and t.exchange_type =#{exchangeType}
+        </if>
+        <if test="orderType != null">
+            and t.order_type =#{orderType}
+        </if>
+        <if test="orderStatus != null">
+            and t.order_status =#{orderStatus}
+        </if>
+        <if test="sfOrderNo != null">
+            and t.sf_order_no =#{sfOrderNo}
+        </if>
+        <if test="customerId != null">
+            and t.customer_id =#{customerId}
+        </if>
+        <if test="sourceType != null">
+            and t.source_type =#{sourceType}
+        </if>
+        <if test="mailType != null">
+            and t.mail_type =#{mailType}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and t.in_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and t.in_time &lt;= #{queryEndTime}
+        </if>
+        <if test="wechatOpenId != null">
+            and t.wechat_openId is not null
+        </if>
+        <if test="isSale != null">
+            and t.is_sale =#{isSale}
+        </if>
+        <if test="isCoupon != null and isCoupon != '' and isCoupon==0">
+            and t.coupon_id is NULL
+        </if>
+        <if test="isCoupon != null and isCoupon != '' and isCoupon==1">
+            and t.coupon_id is not NULL
+        </if>
+        order by in_time desc
+    </select>
 </mapper>

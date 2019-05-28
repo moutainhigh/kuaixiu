@@ -47,5 +47,7 @@ public interface RecycleOrderMapper<T> extends BaseDao<T>  {
 	 * @return
 	 */
 	T queryByIncreaseOrderNo(String t);
+
+	List<T> queryImportList(T t);
 	
 }

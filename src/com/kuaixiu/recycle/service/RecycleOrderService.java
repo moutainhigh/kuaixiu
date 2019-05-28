@@ -4,21 +4,30 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
+import com.common.paginate.Page;
 import com.common.util.AES;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.dao.RecycleOrderMapper;
-import com.kuaixiu.recycle.entity.CouponAddValue;
-import com.kuaixiu.recycle.entity.PushsfException;
-import com.kuaixiu.recycle.entity.RecycleCoupon;
-import com.kuaixiu.recycle.entity.RecycleOrder;
+import com.kuaixiu.recycle.entity.*;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
+import jodd.util.StringUtil;
+import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -125,14 +134,14 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
 
 
     //判断该订单来源确定是否使用加价券
-    public RecycleCoupon getCouponCode(String mobile, HttpServletRequest request, List<CouponAddValue> addValues,BigDecimal price) {
+    public RecycleCoupon getCouponCode(String mobile, HttpServletRequest request, List<CouponAddValue> addValues, BigDecimal price) {
         CouponAddValue addValue = new CouponAddValue();
         for (CouponAddValue addValue1 : addValues) {
-            if(price.intValue()>4000){
+            if (price.intValue() > 4000) {
                 if (addValue1.getPricingType() == 2) {
                     addValue = addValue1;
                 }
-            }else{
+            } else {
                 if (addValue1.getPricingType() == 1) {
                     addValue = addValue1;
                 }
@@ -278,12 +287,12 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
     }
 
     //根据订单价计算加价金额
-    public BigDecimal getAddCouponPrice(BigDecimal orderPrice){
+    public BigDecimal getAddCouponPrice(BigDecimal orderPrice) {
         //计算计价5%之前的原价
-        BigDecimal price=orderPrice.divide(new BigDecimal("105"),4,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
+        BigDecimal price = orderPrice.divide(new BigDecimal("105"), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
         //计算原价的10%额度
-        BigDecimal addCouponPrice=price.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("10"));
-        return addCouponPrice.setScale(0,BigDecimal.ROUND_HALF_UP);
+        BigDecimal addCouponPrice = price.divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("10"));
+        return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -358,5 +367,220 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             realTime = time;
         }
         return realTime;
+    }
+
+    @Autowired
+    private RecycleSystemService recycleSystemService;
+
+    /**
+     * 已Excel形式导出列表数据
+     *
+     * @param params
+     */
+    @SuppressWarnings("rawtypes")
+    public void expDataExcel(Map<String, Object> params) {
+        HttpServletResponse response = (HttpServletResponse) params.get("response");
+        //获取登录用户
+        SessionUser su = (SessionUser) params.get("user");
+        //获取查询条件
+        String orderNo = MapUtils.getString(params, "query_orderNo");
+        String status = MapUtils.getString(params, "query_orderStates");
+        String mobile = MapUtils.getString(params, "query_customerMobile");
+        String queryStartTime = MapUtils.getString(params, "query_startTime");
+        String queryEndTime = MapUtils.getString(params, "query_endTime");
+        String fromSystem = MapUtils.getString(params, "fromSystem");
+        String isCoupon = MapUtils.getString(params, "isCoupon");
+
+        RecycleCheckItems checkItem = new RecycleCheckItems();
+        String idStr = MapUtils.getString(params, "ids");
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(idStr)) {
+            String[] ids = org.apache.commons.lang3.StringUtils.split(idStr, ",");
+            checkItem.setQueryIds(Arrays.asList(ids));
+        }
+        RecycleOrder r = new RecycleOrder();
+        r.setOrderNo(orderNo);
+        if (StringUtils.isNotBlank(fromSystem)) {
+            r.setSourceType(Integer.valueOf(fromSystem));
+        }
+        if (StringUtil.isNotBlank(status)) {
+            r.setOrderStatus(Integer.parseInt(status));
+        }
+        r.setMobile(mobile);
+        r.setQueryStartTime(queryStartTime);
+        r.setQueryEndTime(queryEndTime);
+        r.setIsCoupon(isCoupon);
+        List<RecycleOrder> recycleOrders = this.getDao().queryImportList(r);
+        List<RecycleSystem> flist = recycleSystemService.queryList(null);
+        List<Map<String, Object>> maps = new ArrayList<>();
+        for (RecycleOrder o : recycleOrders) {
+            for (RecycleSystem system : flist) {
+                if (o.getSourceType() == system.getId()) {
+                    o.setFm(system.getName());  //系统来源
+                    break;
+                }
+            }
+            Map<String, Object> map = new BeanMap(o);
+            maps.add(map);
+        }
+
+
+        List<List<Map<String, Object>>> lists = new ArrayList<>();
+        int size = maps.size() / 10000;
+        List<String> listAgent = new ArrayList<>();
+        if (maps.size() < 10000) {
+            lists.add(maps);
+            listAgent.add("集合");
+        } else {
+            for (int i = 0; i < size; i++) {
+                List<Map<String, Object>> list = maps.subList(i * 10000, (i + 1) * 10000);
+                lists.add(list);
+                listAgent.add("集合" + i);
+            }
+            //余数
+            int lastSize = maps.size() - size * 10000;
+            List<Map<String, Object>> list = maps.subList(size * 10000, size * 10000 + lastSize);
+            lists.add(list);
+            listAgent.add("集合" + size);
+        }
+
+        //excel标题
+        String[] header = new String[]{"订单号", "订单状态", "联系人/手机号", "支付类型", "回收价格",
+                "订单来源", "使用加价券", "下单时间"};
+
+// 导出到多个sheet中--------------------------------------------------------------------------------开始
+        // 创建一个EXCEL
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 循环经销商，每个经销商一个sheet
+        for (int i = 0; i < listAgent.size(); i++) {
+            // 第 i 个sheet,以经销商命名
+            HSSFSheet sheet = wb.createSheet(listAgent.get(i).toString());
+            // 第i个sheet第二行为列名
+            HSSFRow rowFirst = sheet.createRow(0);
+            // 写标题
+            for (int j = 0; j < header.length; j++) {
+                // 获取第一行的每一个单元格
+                HSSFCell cell = rowFirst.createCell(j);
+                // 往单元格里面写入值
+                cell.setCellValue(header[j]);
+            }
+            for (int j = 0; j < lists.get(i).size(); j++) {
+                Map<?, ?> map = (Map<?, ?>) lists.get(i).get(j);
+                // 创建数据行，从第三行开始
+                HSSFRow row = sheet.createRow(j + 1);
+                // 设置对应单元格的值
+                getRow(row, map);
+            }
+        }
+        // 写出文件（path为文件路径含文件名）
+        OutputStream os = null;
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/x-download");
+            String filedisplay = "回收列表导出.xls";
+            //防止文件名含有中文乱码
+            filedisplay = new String(filedisplay.getBytes("gb2312"), "ISO8859-1");
+            response.setHeader("Content-Disposition", "attachment;filename=" + filedisplay);
+
+            os = response.getOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            System.out.println("导出文件出错了.....\n" + e.getMessage());
+        } finally {
+            try {
+                os.flush();
+                os.close();
+            } catch (IOException e) {
+                System.out.println("导出文件出错了.....\n" + e.getMessage());
+            }
+        }
+        // 导出到多个sheet中---------------------------------------------------------------------------------结束
+    }
+
+
+    private HSSFRow getRow(HSSFRow row, Map<?, ?> map) {
+        // 设置对应单元格的值
+        if (map.get("orderNo") == null) {
+            row.createCell(0).setCellValue("");
+        } else {
+            row.createCell(0).setCellValue(map.get("orderNo").toString());
+        }
+        if (map.get("orderStatus") == null) {
+            row.createCell(1).setCellValue("");
+        } else {
+            row.createCell(1).setCellValue(getState(Integer.valueOf(map.get("orderStatus").toString())));
+        }
+        if (map.get("name") == null && map.get("mobile") == null) {
+            row.createCell(2).setCellValue("");
+        } else if (map.get("name") != null && map.get("mobile") != null) {
+            row.createCell(2).setCellValue(map.get("name").toString() + "/" + map.get("mobile").toString());
+        } else if (map.get("name") != null) {
+            row.createCell(2).setCellValue(map.get("name").toString());
+        } else if (map.get("mobile") != null) {
+            row.createCell(2).setCellValue(map.get("mobile").toString());
+        }
+        if (map.get("exchangeType") == null) {
+            row.createCell(3).setCellValue("");
+        } else {
+            if ("1".equals(map.get("exchangeType").toString())) {
+                row.createCell(3).setCellValue("支付宝收款");
+            } else {
+                row.createCell(3).setCellValue("话费充值");
+            }
+        }
+        if (map.get("price") == null) {
+            row.createCell(4).setCellValue("");
+        } else {
+            row.createCell(4).setCellValue(map.get("price").toString());
+        }
+        if (map.get("fm") == null) {
+            row.createCell(5).setCellValue("");
+        } else {
+            row.createCell(5).setCellValue(map.get("fm").toString());
+        }
+        if (map.get("couponId") == null) {
+            row.createCell(6).setCellValue("否");
+        } else {
+            row.createCell(6).setCellValue("是");
+        }
+        if (map.get("inTime") == null) {
+            row.createCell(7).setCellValue("");
+        } else {
+            row.createCell(7).setCellValue(map.get("inTime").toString());
+        }
+        return row;
+    }
+
+    private String getState(Integer state) {
+        if (state == 0) {
+            return "订单已取消";
+        } else if (state == 1) {
+            return "创建订单";
+        } else if (state == 2) {
+            return "待客户发件";
+        } else if (state == 3) {
+            return "已发货待收件";
+        } else if (state == 4) {
+            return "门店收件";
+        } else if (state == 5) {
+            return "提交质检报告";
+        } else if (state == 6) {
+            return "需议价订单";
+        } else if (state == 7) {
+            return "议价结束";
+        } else if (state == 8) {
+            return "待支付订单";
+        } else if (state == 9) {
+            return "支付完成（结束）";
+        } else if (state == 10) {
+            return "预支付转账成功";
+        } else if (state == 11) {
+            return "预支付转账失败";
+        } else if (state == 12) {
+            return "支付尾款失败";
+        } else if (state == 13) {
+            return "扣款失败";
+        } else {
+            return " ";
+        }
     }
 }

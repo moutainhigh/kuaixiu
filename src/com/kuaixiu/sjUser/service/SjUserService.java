@@ -433,15 +433,6 @@ public class SjUserService extends BaseService<SjUser> {
 
             col++;
             areaName = ExcelUtil.getCellValue(row, col);
-            if (StringUtils.isBlank(areaName) || value.length() > 256) {
-                ImportError error = new ImportError();
-                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
-                error.setMsgType("地址信息错误");
-                error.setMessage("详细地址不能为空，长度不能超过256个字符！");
-                report.getErrorList().add(error);
-                report.setPass(false);
-                continue;
-            }
             c.setAddressDetail(areaName);
 
             col++;

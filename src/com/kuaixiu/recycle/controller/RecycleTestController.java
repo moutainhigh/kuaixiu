@@ -94,6 +94,7 @@ public class RecycleTestController extends BaseController {
     @RequestMapping(value = "recycle/recycleTestList")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
+        SessionUser su=getCurrentUser(request);
         JSONObject jsonResult = new JSONObject();
         String url = baseNewUrl + "getbrandlist";
         String categoryid = request.getParameter("categoryid");
@@ -108,6 +109,7 @@ public class RecycleTestController extends BaseController {
         jsonResult = getResult(AES.Decrypt(getResult));
         JSONArray jsonArray = jsonResult.getJSONArray("datainfo");
         List<RecycleSystem> systems=recycleSystemService.queryList(null);
+        request.setAttribute("userId", su.getUserId());
         request.setAttribute("systems", systems);
         request.setAttribute("brands", jsonArray);
         String returnView = "recycle/testList";

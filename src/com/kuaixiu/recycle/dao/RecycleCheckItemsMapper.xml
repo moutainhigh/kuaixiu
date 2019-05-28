@@ -164,12 +164,12 @@
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
         LEFT JOIN hs_from_system f ON f.id=c.source
-        where c.login_mobile not in(
+        where (c.login_mobile not in(
         select o.mobile from kx_recycle_order o
         where EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile)
         and EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile and in_time &lt;= o.in_time)
         and not EXISTS(select 1 from kx_recycle_test_record where recycle_id=o.id)
-        )
+        )or (c.login_mobile is null and c.wechat_id is null))
         and CHAR_LENGTH(c.product_id) &lt;= 10
         <if test="source != null and source != ''">
             and c.source =#{source}
@@ -219,12 +219,12 @@
         from kx_recycle_checkitems c
         LEFT JOIN kx_recycle_test_record t ON t.check_items_id=c.id
         LEFT JOIN hs_from_system f ON f.id=c.source
-        where c.login_mobile not in(
+        where (c.login_mobile not in(
         select o.mobile from kx_recycle_order o
         where EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile)
         and EXISTS(select 1 from kx_recycle_checkitems where login_mobile=o.mobile and in_time &lt;= o.in_time)
         and not EXISTS(select 1 from kx_recycle_test_record where recycle_id=o.id)
-        )
+        )or (c.login_mobile is null and c.wechat_id is null))
         and CHAR_LENGTH(c.product_id) &lt;= 10
         <if test="source != null and source != ''">
             and c.source =#{source}

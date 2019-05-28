@@ -29,16 +29,17 @@
             </tr>
 
             <tr>
-                <td class="search_th"><label class="control-label">品  牌 ：</label></td>
+                <td class="search_th"><label class="control-label">品 牌 ：</label></td>
                 <td class="search_td">
-                    <select name="brandId" class="form-control-inline" style="width: 420px;" onchange="brandChange(this.value);">
+                    <select name="brandId" class="form-control-inline" style="width: 420px;"
+                            onchange="brandChange(this.value);">
                         <option value="">--请选择--</option>
                         <c:forEach items="${brands}" var="item" varStatus="i">
                             <option value="${item.brandid }">${item.brandname}</option>
                         </c:forEach>
                     </select>
                 </td>
-                <td class="search_th"><label class="control-label">机  型 ：</label></td>
+                <td class="search_th"><label class="control-label">机 型 ：</label></td>
                 <td class="search_td">
                     <select id="modelId" name="productId" style="width: 420px;" class="form-control-inline">
                         <option value="">--请选择--</option>
@@ -87,9 +88,11 @@
                     <div class="am-btn-group am-btn-group-sm m20">
                         <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜 索
                         </button>
-                        <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
-                                class="am-icon-file-excel-o"></span> 导出
-                        </button>
+                        <c:if test="${userId eq 'kf018'||userId eq'admin'}">
+                            <button onclick="expDataExcel();" type="button" class="am-btn am-btn-default"><span
+                                    class="am-icon-file-excel-o"></span> 导出
+                            </button>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -128,19 +131,19 @@
     /**
      * 查看模型
      */
-    function brandChange(id){
+    function brandChange(id) {
         $("#modelId option[value!='']").remove();
-        if(id){
+        if (id) {
             var url = AppConfig.ctx + "/recycle/testGetModels.do";
-            $.get(url, {brandId: id}, function(result){
-                if(!result.success){
+            $.get(url, {brandId: id}, function (result) {
+                if (!result.success) {
                     return false;
                 }
                 var json = result.result;
                 var select_html = '';
-                if(json.length>0){
-                    for( a in json){
-                        select_html +='<option value="'+json[a]['productid']+'">'+json[a]['modelname']+'</option>';
+                if (json.length > 0) {
+                    for (a in json) {
+                        select_html += '<option value="' + json[a]['productid'] + '">' + json[a]['modelname'] + '</option>';
                     }
                 }
                 $("#modelId").append(select_html);
@@ -206,9 +209,9 @@
         {
             targets: -4,
             render: function (data, type, row, meta) {
-                if(row.name==null){
+                if (row.name == null) {
                     return "集团欢GO抽奖";
-                }else{
+                } else {
                     return row.name;
                 }
 
@@ -217,9 +220,9 @@
         {
             targets: -3,
             render: function (data, type, row, meta) {
-                if(row.recycle_id==null||row.recycle_id==""){
+                if (row.recycle_id == null || row.recycle_id == "") {
                     return "否";
-                }else{
+                } else {
                     return "是";
                 }
             }
@@ -227,9 +230,9 @@
         {
             targets: -2,
             render: function (data, type, row, meta) {
-                if(row.test_id==null||row.test_id==""){
+                if (row.test_id == null || row.test_id == "") {
                     return "待回访";
-                }else{
+                } else {
                     return "已回访";
                 }
             }
@@ -237,23 +240,23 @@
         {
             targets: -1,
             render: function (data, type, row, meta) {
-                if((row.recycle_id==null||row.recycle_id=="")&&row.record_result!=3){
+                if ((row.recycle_id == null || row.recycle_id == "") && row.record_result != 3) {
                     var context = {
                         func: [
                             {
                                 "name": "回访",
-                                "fn": "ReturnVisit(\'" + row.id + "\',\'"+row.product_name+"\')",
+                                "fn": "ReturnVisit(\'" + row.id + "\',\'" + row.product_name + "\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
                         ]
                     };
-                }else{
+                } else {
                     var context = {
                         func: [
                             {
                                 "name": "查看",
-                                "fn": "showTestDetail(\'" + row.id + "\',\'"+row.product_name+"\')",
+                                "fn": "showTestDetail(\'" + row.id + "\',\'" + row.product_name + "\')",
                                 "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
@@ -316,12 +319,12 @@
     /**
      * 查看订单详情
      */
-    function showTestDetail(id,product) {
-        func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + id+"&product="+product);
+    function showTestDetail(id, product) {
+        func_reload_page("${ctx}/recycle/recycleTestDetail.do?id=" + id + "&product=" + product);
     }
 
-    function ReturnVisit(id,product) {
-        func_reload_page("${ctx}/recycle/recycleTestRecord.do?id=" + id+"&product="+product);
+    function ReturnVisit(id, product) {
+        func_reload_page("${ctx}/recycle/recycleTestRecord.do?id=" + id + "&product=" + product);
     }
 
 </script>

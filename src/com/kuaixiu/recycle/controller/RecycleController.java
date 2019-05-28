@@ -1381,9 +1381,14 @@ public class RecycleController extends BaseController {
      */
     @RequestMapping(value = "/recycle/list")
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        SessionUser su = getCurrentUser(request);
+        if(su==null){
+            throw new SystemException("您离开系统时间过长，请重新登录");
+        }
         RecycleSystem r = new RecycleSystem();
         r.setIsDel(0);
         List<RecycleSystem> list = recycleSystemService.queryList(r);
+        request.setAttribute("userId", su.getUserId());
         request.setAttribute("fromSystems", list);
         String returnView = "recycle/listForAdmin";
         return new ModelAndView(returnView);
@@ -1396,6 +1401,9 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/order/queryListForPage")
     public void queryListForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
+        if(su==null){
+            throw new SystemException("您离开系统时间过长，请重新登录");
+        }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
             throw new SystemException("对不起，您没有操作权限!");
         }
@@ -1442,6 +1450,9 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/order/detail")
     public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
+        if(su==null){
+            throw new SystemException("您离开系统时间过长，请重新登录");
+        }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
             throw new SystemException("对不起，您没有操作权限!");
         }
@@ -1498,6 +1509,9 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/preparePay")
     public void preparePay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
+        if(su==null){
+            throw new SystemException("您离开系统时间过长，请重新登录");
+        }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
             throw new SystemException("对不起，您没有操作权限!");
         }
@@ -1534,6 +1548,9 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/endPay")
     public void endPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
+        if(su==null){
+            throw new SystemException("您离开系统时间过长，请重新登录");
+        }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
             throw new SystemException("对不起，您没有操作权限!");
         }
@@ -1567,6 +1584,9 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/deductPay")
     public void deductPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
+        if(su==null){
+            throw new SystemException("您离开系统时间过长，请重新登录");
+        }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
             throw new SystemException("对不起，您没有操作权限!");
         }
