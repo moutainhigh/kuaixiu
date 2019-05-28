@@ -16,7 +16,7 @@ public class MyExecutor {
 
     public void fun(JSONObject j, String openId, String loginMobile, String items,
                     String productId, String selectBrandId, String selectBrandName,
-                    String selectModelName, String price,RecycleCheckItemsService recycleCheckItemsService) throws Exception {
+                    String selectModelName, String price,Integer source,RecycleCheckItemsService recycleCheckItemsService) throws Exception {
 
         executor.submit(new Runnable() {
 
@@ -35,11 +35,13 @@ public class MyExecutor {
                         r.setWechatId(openId);
                         t.setWechatId(openId);
                     }
+                    //查询上次检测记录
                     List<RecycleCheckItems> list = recycleCheckItemsService.queryList(r);
                     if (!list.isEmpty()) {
                         RecycleCheckItems checkItems = list.get(0);
                         t.setLastPrice(checkItems.getPrice());
                     }
+                    t.setSource(source);
                     t.setItems(items);
                     t.setPrice(new BigDecimal(price));
                     t.setProductId(productId);

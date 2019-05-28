@@ -51,7 +51,9 @@
                 <td class="search_td">
                     <select name="channel" class="form-control">
                         <option value="">--请选择--</option>
-                        <option value="">集团欢GO</option>
+                        <c:forEach items="${systems}" var="item" varStatus="i">
+                            <option value="${item.id }">${item.name}</option>
+                        </c:forEach>
                     </select>
                 </td>
 
@@ -182,7 +184,7 @@
         {"data": "product_name", "class": ""},
         {"data": "price", "class": ""},
         {"data": "login_mobile", "class": ""},
-        {"data": "login_mobile", "class": ""},
+        {"data": "name", "class": ""},
         {"data": "recycle_id", "class": ""},
         {"data": "test_id", "class": ""},
         {"defaultContent": "操作", "class": ""}
@@ -204,7 +206,12 @@
         {
             targets: -4,
             render: function (data, type, row, meta) {
+                if(row.name==null){
                     return "集团欢GO抽奖";
+                }else{
+                    return row.name;
+                }
+
             }
         },
         {
