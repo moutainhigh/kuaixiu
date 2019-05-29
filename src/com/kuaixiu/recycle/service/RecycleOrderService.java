@@ -6,6 +6,7 @@ import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.AES;
+import com.common.util.DateUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.dao.RecycleOrderMapper;
 import com.kuaixiu.recycle.entity.*;
@@ -545,7 +546,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         if (map.get("inTime") == null) {
             row.createCell(7).setCellValue("");
         } else {
-            row.createCell(7).setCellValue(map.get("inTime").toString());
+            row.createCell(7).setCellValue(DateUtil.getDateyyyyMMddHHmmss((Date) map.get("inTime")));
         }
         return row;
     }

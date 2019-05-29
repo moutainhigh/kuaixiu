@@ -43,7 +43,7 @@
 
     <sql id="Base_Column_List">
     t.id, t.order_no, t.check_id, t.pay_ment_id,t.pay_refund_id,t.user_id, t.recycle_type,t.exchange_type,t.order_type, 
-    t.pay_mobile, t.product_name, t.percent, t.prepare_price, t.price,t.final_price,t.negotiation_price,t.source_type, t.is_del, t.order_status, date_format(t.`in_time`,'%Y-%m-%d %H:%i:%s')in_time,
+    t.pay_mobile, t.product_name, t.percent, t.prepare_price, t.price,t.final_price,t.negotiation_price,t.source_type, t.is_del, t.order_status, t.in_time,
     t.update_time, t.take_time, t.image_path, t.detail, t.sf_order_no, t.customer_id,t.mobile, t.note,t.mail_type,t.wechat_openId,
     is_sale,increase_order_no,coupon_id
   </sql>
