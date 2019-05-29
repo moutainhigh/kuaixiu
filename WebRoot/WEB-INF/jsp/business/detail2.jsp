@@ -162,7 +162,7 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${loginUserType==6}">
+        <c:if test="${loginUserType==6 || loginUserType==1}">
             <c:if test="${sjOrder.state==200}">
                 <tr>
                     <td colspan="3" class="tr-space"></td>

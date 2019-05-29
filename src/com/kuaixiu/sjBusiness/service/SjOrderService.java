@@ -204,7 +204,7 @@ public class SjOrderService extends BaseService<SjOrder> {
 
 
     public void setWifi(Integer type, SjOrder order) {
-        if (type == 1) {
+        if (type == 2) {
             SjSetMeal sjSetMeal=sjSetMealService.queryById(order.getMealId());
             SjWifiMonitorType wifiMonitorType=sjWifiMonitorTypeService.queryById(order.getModelId());
             SjPoe sjPoe=sjPoeService.queryById(order.getPoeId());

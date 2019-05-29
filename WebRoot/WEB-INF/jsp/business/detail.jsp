@@ -126,7 +126,7 @@
                     <td class="td-info">
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <c:if test="${isWifi==1||isWifi==0}">
+                                <c:if test="${isWifi==2||isWifi==0}">
                                     <button onclick="registerForm('${sjOrder.id}',1);"
                                             class="am-btn am-btn-default search_btn" type="button">
                                         <c:if test="${sjOrder.mealId!=0}">
@@ -137,7 +137,7 @@
                                         </c:if>
                                     </button>
                                 </c:if>
-                                <c:if test="${isWifi==2||isWifi==0}">
+                                <c:if test="${isWifi==1||isWifi==0}">
                                     <button onclick="registerForm('${sjOrder.id}',2);"
                                             class="am-btn am-btn-default search_btn" type="button">
                                         <c:if test="${sjOrder.mealWifiId!=0}">

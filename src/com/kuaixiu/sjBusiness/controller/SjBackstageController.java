@@ -309,15 +309,13 @@ public class SjBackstageController extends BaseController {
             returnView = "business/detail2";
         } else {
             String projectIds = sjOrder.getProjectId();
+            orderService.setWifi(1, sjOrder);
+            orderService.setWifi(2, sjOrder);
             if (projectIds.contains("1") && projectIds.contains("2")) {
-                orderService.setWifi(1, sjOrder);
-                orderService.setWifi(2, sjOrder);
                 request.setAttribute("isWifi", 0);
             } else if (projectIds.contains("1")) {
-                orderService.setWifi(1, sjOrder);
                 request.setAttribute("isWifi", 1);
             } else if (projectIds.contains("2")) {
-                orderService.setWifi(2, sjOrder);
                 request.setAttribute("isWifi", 2);
             } else {
                 request.setAttribute("isWifi", 4);

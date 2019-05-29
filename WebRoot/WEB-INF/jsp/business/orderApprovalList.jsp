@@ -14,8 +14,11 @@
         <table id="searchTable">
             <input type="hidden" id="type" name="type" value="1"/><br/>
             <input type="hidden" id="state" name="state" value="100"/><br/>
+            <c:if test="${loginUserType==6}">
+                <input type="hidden" id="state" name="state" value="200"/><br/>
+            </c:if>
             <tr>
-                <td class="search_th "><label class="control-label">单  号 ：</label></td>
+                <td class="search_th "><label class="control-label">单 号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
                 <td class="search_th "><label class="control-label">企业名字：</label></td>
                 <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
@@ -155,13 +158,13 @@
         {
             targets: 4,
             render: function (data, type, row, meta) {
-                return row.createName+"/<br/>"+row.createUserid;
+                return row.createName + "/<br/>" + row.createUserid;
             }
         },
         {
             targets: -4,
             render: function (data, type, row, meta) {
-                    return row.person+"/<br/>"+row.phone;
+                return row.person + "/<br/>" + row.phone;
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
