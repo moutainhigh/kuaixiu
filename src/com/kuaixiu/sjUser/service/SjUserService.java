@@ -259,6 +259,7 @@ public class SjUserService extends BaseService<SjUser> {
             company.setProject(c.getProject());
             company.setPersonNum(0);
             company.setEndOrderNum(0);
+            company.setServiceArea(c.getServiceArea());
             companyService.add(company);
 
             users.add(sjUser);
@@ -462,6 +463,49 @@ public class SjUserService extends BaseService<SjUser> {
                 }
             }
             c.setProject(areaName);
+
+            col++;
+            areaName = ExcelUtil.getCellValue(row, col);
+            if (StringUtils.isBlank(areaName) ) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("服务区域错误");
+                error.setMessage("服务区域不能为空！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            }
+            if (areaName.contains(",")) {
+                String[] serviceAreas = areaName.split(",");
+                StringBuilder sb=new StringBuilder();
+                for (int p = 0; p < serviceAreas.length; p++) {
+                    String serviceArea = serviceAreas[p];
+                    addr = addressService.queryLikeByAreaAndPid(serviceArea, c.getCity());
+                    if (addr == null) {
+                        ImportError error = new ImportError();
+                        error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                        error.setMsgType("服务区域错误");
+                        error.setMessage("服务区域" + serviceArea + "未找到！");
+                        report.getErrorList().add(error);
+                        report.setPass(false);
+                    }
+                    sb.append(addr.getAreaId());
+                    sb.append(",");
+                }
+                c.setServiceArea(sb.toString());
+            }else{
+                addr = addressService.queryLikeByAreaAndPid(areaName, c.getCity());
+                if (addr == null) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("服务区域错误");
+                    error.setMessage("服务区域" + areaName + "未找到！");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                }
+                c.setServiceArea(addr.getAreaId());
+            }
+
             list.add(c);
         }
         return list;

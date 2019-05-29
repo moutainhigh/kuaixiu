@@ -63,6 +63,11 @@
         select <include refid="Base_Column_List" />
         from sys_address where pid = #{pid} and area = #{area} limit 1
     </select>
+
+    <select id="queryLikeByAreaAndPid"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sys_address where pid = #{pid} and area like CONCAT('%', #{area}, '%') limit 1
+    </select>
     
     <!-- 根据上级地址查询  -->
     <select id="queryByPid"  resultMap="BaseResultMap" parameterType="Object">

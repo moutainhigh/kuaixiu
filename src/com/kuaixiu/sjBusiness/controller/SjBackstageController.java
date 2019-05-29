@@ -472,7 +472,7 @@ public class SjBackstageController extends BaseController {
             constructionCompany.setProject(project);
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
-            constructionCompany.setArea(areaId);
+            constructionCompany.setServiceArea(areaId);
             constructionCompany.setPage(page);
             List<ConstructionCompany> companies = constructionCompanyService.queryListForPage(constructionCompany);
             for (ConstructionCompany company : companies) {
@@ -578,8 +578,10 @@ public class SjBackstageController extends BaseController {
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
             List<SjProject> projects = projectService.queryList(null);
+            List<Address> countyList = addressService.queryByPid("1158");
             request.setAttribute("projects", projects);
             request.setAttribute("provinceL", provinceL);
+            request.setAttribute("countyList", countyList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -624,6 +626,7 @@ public class SjBackstageController extends BaseController {
             String cityId = request.getParameter("addCity");
             String areaId = request.getParameter("addCounty");
             String addressDetail = request.getParameter("addAddress");
+            String[] countyList = request.getParameterValues("countyList");
             String[] projectIds = request.getParameterValues("projects");
             String companyId = request.getParameter("companyId");//企业Id
             if (StringUtils.isBlank(type) || StringUtils.isBlank(phone)) {
@@ -652,6 +655,11 @@ public class SjBackstageController extends BaseController {
                     sb.append(projectIds[i]);
                     sb.append(",");
                 }
+                StringBuilder sb1 = new StringBuilder();
+                for (int i = 0; i < countyList.length; i++) {
+                    sb1.append(countyList[i]);
+                    sb1.append(",");
+                }
 
                 String fristSpell = orderService.getFristSpell(provinceId, cityId);
                 sjUser.setLoginId(SeqUtil.getNext(fristSpell));
@@ -667,6 +675,7 @@ public class SjBackstageController extends BaseController {
                 company.setArea(areaId);
                 company.setAddressDetail(addressDetail);
                 company.setProject(sb.toString());
+                company.setServiceArea(sb1.toString());
                 company.setPerson(person);
                 company.setPhone(phone);
                 company.setEndOrderNum(0);
@@ -791,7 +800,25 @@ public class SjBackstageController extends BaseController {
                 } else {
                     company.put("address", province + city + area + company.get("addressDetail").toString());
                 }
-                company.put("areaAddress", province + city + area);
+                if(company.get("service_area")!=null){
+                    String serviceArea=company.get("service_area").toString();
+                    StringBuilder sb=new StringBuilder();
+                    if(serviceArea.contains(",")){
+                        String[] serviceAreas=serviceArea.split(",");
+                        for(int i=0;i<serviceAreas.length;i++){
+                            Address address=addressService.queryByAreaId(serviceAreas[i]);
+                            sb.append(address.getArea());
+                            sb.append(",");
+                        }
+                    }else{
+                        Address address=addressService.queryByAreaId(serviceArea);
+                        sb.append(address.getArea());
+                    }
+                    company.put("serviceArea", sb.toString());
+                }else{
+                    company.put("serviceArea", "");
+                }
+
                 List<String> projects1 = orderService.getProject(company.get("project").toString());
                 String projectName = orderService.listToString(projects1);
                 company.put("projectName", projectName);

@@ -50,7 +50,10 @@ public class AddressService extends BaseService<Address> {
     public Address queryByAreaAndPid(String area, String pid){
         return getDao().queryByAreaAndPid(area, pid);
     }
-    
+    public Address queryLikeByAreaAndPid(String area, String pid){
+        return getDao().queryLikeByAreaAndPid(area, pid);
+    }
+
     /**
      * 根据上级地址查询 
      * @param pid

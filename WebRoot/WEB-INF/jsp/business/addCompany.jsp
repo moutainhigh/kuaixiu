@@ -53,6 +53,16 @@
           </div>
         </div>
         <div class="form-group">
+          <label for="countyList" name="countyList" class="col-sm-3 control-label">服务区域</label>
+          <div class="col-sm-9">
+            <c:forEach items="${countyList }" var="item" varStatus="i">
+              <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
+                <input type="checkbox" name="countyList" value="${item.areaId }"> ${item.area }
+              </label>
+            </c:forEach>
+          </div>
+        </div>
+        <div class="form-group">
           <label for="projects" class="col-sm-3 control-label">产品需求</label>
           <div class="col-sm-9">
             <c:forEach items="${projects }" var="item" varStatus="i">

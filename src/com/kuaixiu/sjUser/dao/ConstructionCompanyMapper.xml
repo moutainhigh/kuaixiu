@@ -16,19 +16,20 @@
         <result column="project" property="project"/>
         <result column="person_num" property="personNum"/>
         <result column="end_order_num" property="endOrderNum"/>
+        <result column="service_area" property="serviceArea"/>
     </resultMap>
     
     <!-- sj_construction_company table all fields -->
     <sql id="Base_Column_List" >
-        id,login_id,province,city,area,address_detail,person,phone,project,person_num,end_order_num
+        id,login_id,province,city,area,address_detail,person,phone,project,person_num,end_order_num,service_area
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into sj_construction_company
-        (id,login_id,province,city,area,address_detail,person,phone,project,person_num,end_order_num)
+        (id,login_id,province,city,area,address_detail,person,phone,project,person_num,end_order_num,service_area)
         values
-        (#{id},#{loginId},#{province},#{city},#{area},#{addressDetail},#{person},#{phone},#{project},#{personNum},#{endOrderNum})
+        (#{id},#{loginId},#{province},#{city},#{area},#{addressDetail},#{person},#{phone},#{project},#{personNum},#{endOrderNum},#{serviceArea})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -45,7 +46,8 @@
             phone=#{phone},
             project=#{project},
             person_num=#{personNum},
-            end_order_num=#{endOrderNum}
+            end_order_num=#{endOrderNum},
+            service_area=#{serviceArea}
         where id=#{id}
     </update>
 
@@ -126,6 +128,9 @@
         <include refid="Base_Column_List"/>
         from sj_construction_company
         where 1=1
+        <if test="serviceArea != null and serviceArea != ''" >
+            and service_area like CONCAT('%', #{serviceArea}, '%')
+        </if>
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -173,7 +178,8 @@
         select u.login_id loginId,u.`name` companyName,c.province,c.city,c.area,
         c.address_detail addressDetail,c.person,c.phone,
         c.project,date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')createTime,
-        c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel
+        c.person_num personNum,c.end_order_num endOrderNum,u.is_cancel isCancel,
+        c.service_area
         from sj_construction_company c
         LEFT JOIN sj_user u ON c.login_id=u.id
         where 1=1

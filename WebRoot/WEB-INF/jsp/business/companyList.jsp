@@ -151,7 +151,7 @@
         {"data": "id", "class": " center"},
         {"data": "companyName", "class": ""},
         {"data": "address", "class": ""},
-        {"data": "areaAddress", "class": ""},
+        {"data": "serviceArea", "class": ""},
         {"data": "loginId", "class": ""},
         {"data": "person", "class": ""},
         {"data": "projectName", "class": ""},

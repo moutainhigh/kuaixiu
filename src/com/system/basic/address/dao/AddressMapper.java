@@ -32,7 +32,8 @@ public interface AddressMapper<T> extends BaseDao<T> {
      * @CreateDate: 2016-11-7 下午11:41:37
      */
     Address queryByAreaAndPid(@Param("area")String area, @Param("pid")String pid);
-    
+
+    Address queryLikeByAreaAndPid(@Param("area")String area, @Param("pid")String pid);
     /**
      * 根据上级地址查询 
      * @param pid

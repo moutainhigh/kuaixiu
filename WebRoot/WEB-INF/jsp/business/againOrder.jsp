@@ -40,10 +40,6 @@
                                 <option value="${item.areaId }" ${item.areaId == shop.county ? 'selected="selected"' : '' }>${item.area }</option>
                             </c:forEach>
                         </select>
-
-                        <select id="addStreet" name="addStreet" class="form-control-inline" style="display: none;">
-                            <option value="">--请选择--</option>
-                        </select>
                     </div>
                 </div>
                 <button type="submit" class="hide" id="againOrderBtn"></button>
