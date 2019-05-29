@@ -13,7 +13,9 @@
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
             <input type="hidden" id="type" name="type" value="1"/><br/>
-            <input type="hidden" id="state" name="state" value="100"/><br/>
+            <c:if test="${loginUserType!=6}">
+                <input type="hidden" id="state" name="state" value="100"/><br/>
+            </c:if>
             <c:if test="${loginUserType==6}">
                 <input type="hidden" id="state" name="state" value="200"/><br/>
             </c:if>
