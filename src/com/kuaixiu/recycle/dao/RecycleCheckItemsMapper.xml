@@ -172,10 +172,15 @@
         )or (c.login_mobile is null and c.wechat_id is null))
         and CHAR_LENGTH(c.product_id) &lt;= 10
         <if test="source != null and source != ''">
-            and c.source =#{source}
+            <if test="source == 10">
+                and (source='10' or source is null)
+            </if>
+            <if test="source != 10">
+                and c.source =#{source}
+            </if>
         </if>
-        <if test="queryIds != null and queryIds.size() > 0" >
-            and t.id in
+        <if test="queryIds != null and queryIds.size() > 0">
+            and c.id in
             <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
                 #{item}
             </foreach>
@@ -227,7 +232,12 @@
         )or (c.login_mobile is null and c.wechat_id is null))
         and CHAR_LENGTH(c.product_id) &lt;= 10
         <if test="source != null and source != ''">
-            and c.source =#{source}
+            <if test="source == 10">
+                and (source='10' or source is null)
+            </if>
+            <if test="source != 10">
+                and c.source =#{source}
+            </if>
         </if>
         <if test="brandId != null and brandId != ''">
             and c.brand_id =#{brandId}

@@ -311,9 +311,6 @@
         from kx_recycle_order t
         left join kx_recycle_customer c on t.customer_id = c.id
         where t.is_del = 0
-        <if test="id != null and id != ''">
-            and t.id = #{id}
-        </if>
         <if test="queryIds != null and queryIds.size() > 0" >
             and t.id in
             <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
