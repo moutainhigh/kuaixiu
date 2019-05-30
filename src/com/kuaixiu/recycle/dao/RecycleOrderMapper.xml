@@ -146,6 +146,13 @@
         from kx_recycle_order t where t.mobile=#{mobile} and t.is_del=0 and t.zhima_status not in(0,2);
     </select>
 
+    <select id="queryCountByMobile" resultMap="BaseResultMap" parameterType="Object">
+        select
+        COUNT(1)
+        from kx_recycle_order t
+        where t.mobile=#{mobile} and t.is_del=0;
+    </select>
+
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">

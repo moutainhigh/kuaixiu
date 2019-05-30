@@ -599,6 +599,9 @@ public class BaseController {
             return true;
         }
         Code code = codeService.queryById(key);
+        if (code == null) {
+            return false;
+        }
         String randomCode = code.getCode();
         if (StringUtils.isBlank(randomCode)) {
             return false;

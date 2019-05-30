@@ -281,6 +281,9 @@ public class SystemConstant {
      * 多少单一次计费
      */
     public static final String RECYCLE_BASENUMBER = SystemUtil.getSysCfgProperty("recycle_base_number");
+
+    public static final String RECYCLE_COUPON_BATCH = SystemUtil.getSysCfgProperty("recycle_coupon_batch");
+
     /**
      * 默认回收机型图片地址
      */
@@ -522,5 +525,6 @@ public class SystemConstant {
 //     * 测试环境接收微信支付通知回调地址
 //     */
 //    public static final String WECHAT_PAY_NOTIFY_URL = SystemUtil.getSysCfgProperty("wechat.ceshi.pay.notify_url");
+
 
 }

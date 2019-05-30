@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycleCoupon.dao.HsUserActivityCouponMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycleCoupon.entity.HsUserActivityCoupon" >
+        <result column="id" property="id"/>
+        <result column="user_phone" property="userPhone"/>
+        <result column="source" property="source"/>
+        <result column="acvity_id" property="acvityId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- hs_user_activity_coupon table all fields -->
+    <sql id="Base_Column_List" >
+        id,user_phone,source,acvity_id,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_user_activity_coupon
+        (id,user_phone,source,acvity_id,create_time)
+        values
+        (#{id},#{userPhone},#{source},#{acvityId},#{createTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_user_activity_coupon 
+        set 
+            id=#{id},
+            user_phone=#{userPhone},
+            source=#{source},
+            acvity_id=#{acvityId},
+            create_time=#{createTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_user_activity_coupon where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_user_activity_coupon where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_user_activity_coupon
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="userPhone != null and userPhone != ''" >
+            and user_phone = #{userPhone}
+        </if>
+        <if test="source != null and source != ''" >
+            and source = #{source}
+        </if>
+        <if test="acvityId != null and acvityId != ''" >
+            and acvity_id = #{acvityId}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_user_activity_coupon
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="userPhone != null and userPhone != ''" >
+            and user_phone = #{userPhone}
+        </if>
+        <if test="source != null and source != ''" >
+            and source = #{source}
+        </if>
+        <if test="acvityId != null and acvityId != ''" >
+            and acvity_id = #{acvityId}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+
+</mapper>   

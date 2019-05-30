@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycleCoupon.dao.HsActivityCouponRoleMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole" >
+        <result column="id" property="id"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="coupon_name" property="couponName"/>
+        <result column="pricing_Type" property="pricingType"/>
+        <result column="coupon_price" property="couponPrice"/>
+        <result column="upper_limit" property="upperLimit"/>
+        <result column="subtraction_price" property="subtractionPrice"/>
+        <result column="rule_description" property="ruleDescription"/>
+        <result column="note" property="note"/>
+        <result column="add_price_upper" property="addPriceUpper"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="activity_end_time" property="activityEndTime"/>
+    </resultMap>
+    
+    <!-- hs_activity_coupon_role table all fields -->
+    <sql id="Base_Column_List" >
+        id,activity_id,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,date_format(`activity_end_time`,'%Y-%m-%d %H:%i:%s')activity_end_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_activity_coupon_role
+        (id,activity_id,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,activity_end_time)
+        values
+        (#{id},#{activityId},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},#{beginTime},#{endTime},#{activityEndTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_activity_coupon_role 
+        set 
+            id=#{id},
+            activity_id=#{activityId},
+            coupon_name=#{couponName},
+            pricing_Type=#{pricingType},
+            coupon_price=#{couponPrice},
+            upper_limit=#{upperLimit},
+            subtraction_price=#{subtractionPrice},
+            rule_description=#{ruleDescription},
+            note=#{note},
+            add_price_upper=#{addPriceUpper},
+            begin_time=#{beginTime},
+            end_time=#{endTime},
+            activity_end_time=#{activityEndTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_activity_coupon_role where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon_role where id = #{id}
+    </select>
+
+    <select id="queryByActivityId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon_role where activity_id=#{activityId}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_activity_coupon_role
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityId != null and activityId != ''" >
+            and activity_id = #{activityId}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and coupon_name = #{couponName}
+        </if>
+        <if test="pricingType != null and pricingType != ''" >
+            and pricing_Type = #{pricingType}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and coupon_price = #{couponPrice}
+        </if>
+        <if test="upperLimit != null and upperLimit != ''" >
+            and upper_limit = #{upperLimit}
+        </if>
+        <if test="subtractionPrice != null and subtractionPrice != ''" >
+            and subtraction_price = #{subtractionPrice}
+        </if>
+        <if test="ruleDescription != null and ruleDescription != ''" >
+            and rule_description = #{ruleDescription}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="addPriceUpper != null and addPriceUpper != ''" >
+            and add_price_upper = #{addPriceUpper}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime != ''" >
+            and activity_end_time = #{activityEndTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_activity_coupon_role
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityId != null and activityId != ''" >
+            and activity_id = #{activityId}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and coupon_name = #{couponName}
+        </if>
+        <if test="pricingType != null and pricingType != ''" >
+            and pricing_Type = #{pricingType}
+        </if>
+        <if test="couponPrice != null and couponPrice != ''" >
+            and coupon_price = #{couponPrice}
+        </if>
+        <if test="upperLimit != null and upperLimit != ''" >
+            and upper_limit = #{upperLimit}
+        </if>
+        <if test="subtractionPrice != null and subtractionPrice != ''" >
+            and subtraction_price = #{subtractionPrice}
+        </if>
+        <if test="ruleDescription != null and ruleDescription != ''" >
+            and rule_description = #{ruleDescription}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="addPriceUpper != null and addPriceUpper != ''" >
+            and add_price_upper = #{addPriceUpper}
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            and begin_time = #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime != ''" >
+            and activity_end_time = #{activityEndTime}
+        </if>
+    </select>
+
+</mapper>   

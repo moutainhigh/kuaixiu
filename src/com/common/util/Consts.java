@@ -20,4 +20,7 @@ public interface Consts {
 
     //商机登录手机号  key
     public static final String COOKIE_SJ_PHONE = "__sj";
+
+    //回收登录手机号
+    public static final String COOKIE_HS_PHONE = "__hs";
 }

@@ -91,4 +91,6 @@ public interface RecycleCouponMapper<T> extends BaseDao<T> {
      */
     int couponCodeUpdate(T t);
 
+    List<T> queryCouponListForPage(T t);
+
 }

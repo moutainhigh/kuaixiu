@@ -206,7 +206,7 @@ public class ConstructionCompanyService extends BaseService<ConstructionCompany>
         }
         if(sjOrder.getStorageWifiId()+1==number){
             HSSFCell cell01 = rowEight.createCell(3);
-            cell01.setCellValue(sjOrder.getPoeWifiNum());
+            cell01.setCellValue(sjOrder.getStorageWifiNum());
         }
         number=number+1;
         HSSFRow rowNien= sheet.createRow(number);
@@ -214,7 +214,7 @@ public class ConstructionCompanyService extends BaseService<ConstructionCompany>
         cell6.setCellValue("B类NET（100人-500人以下）200元/月");
         if(sjOrder.getStorageWifiId()+1==number){
             HSSFCell cell01 = rowNien.createCell(3);
-            cell01.setCellValue(sjOrder.getPoeWifiNum());
+            cell01.setCellValue(sjOrder.getStorageWifiNum());
         }
 
         number=number+1;

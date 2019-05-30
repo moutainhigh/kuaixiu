@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.recycleCoupon.dao.HsActivityCouponMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.recycleCoupon.entity.HsActivityCoupon" >
+        <result column="id" property="id"/>
+        <result column="activity_label" property="activityLabel"/>
+        <result column="source" property="source"/>
+        <result column="is_default" property="isDefault"/>
+        <result column="is_del" property="isDel"/>
+        <result column="head_url" property="headUrl"/>
+        <result column="head_height" property="headHeight"/>
+        <result column="head_wide" property="headWide"/>
+        <result column="margin_height" property="marginHeight"/>
+        <result column="margin_wide" property="marginWide"/>
+        <result column="center_url" property="centerUrl"/>
+        <result column="centercolor_value" property="centercolorValue"/>
+        <result column="center_height" property="centerHeight"/>
+        <result column="center_wide" property="centerWide"/>
+        <result column="activity_role" property="activityRole"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+
+    <!-- hs_activity_coupon table all fields -->
+    <sql id="Base_Column_List" >
+        id,activity_label,source,is_default,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,centercolor_value,center_height,center_wide,activity_role,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_activity_coupon
+        (id,activity_label,source,is_default,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,centercolor_value,center_height,center_wide,activity_role,create_time,create_userid,update_time,update_userid)
+        values
+        (#{id},#{activityLabel},#{source},#{isDefault},#{isDel},#{headUrl},#{headHeight},#{headWide},#{marginHeight},#{marginWide},#{centerUrl},#{centercolorValue},#{centerHeight},#{centerWide},#{activityRole},#{createTime},#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_activity_coupon 
+        set 
+            id=#{id},
+            activity_label=#{activityLabel},
+            source=#{source},
+            is_default=#{isDefault},
+            is_del=#{isDel},
+            head_url=#{headUrl},
+            head_height=#{headHeight},
+            head_wide=#{headWide},
+            margin_height=#{marginHeight},
+            margin_wide=#{marginWide},
+            center_url=#{centerUrl},
+            centercolor_value=#{centercolorValue},
+            center_height=#{centerHeight},
+            center_wide=#{centerWide},
+            activity_role=#{activityRole},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=#{updateTime},
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_activity_coupon where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon where id = #{id}
+    </select>
+
+    <select id="queryBySource"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon
+        where source=#{source}
+        and is_default=1
+        and is_del=0
+    </select>
+
+    <select id="queryBySourceActivityLabel"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon
+        where source=#{source}
+        and activity_label=#{activityLabel}
+        and is_default=1
+        and is_del=0
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_activity_coupon
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityLabel != null and activityLabel != ''" >
+            and activity_label = #{activityLabel}
+        </if>
+        <if test="source != null and source != ''" >
+            and source = #{source}
+        </if>
+        <if test="isDefault != null and isDefault != ''" >
+            and is_default = #{isDefault}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="headUrl != null and headUrl != ''" >
+            and head_url = #{headUrl}
+        </if>
+        <if test="headHeight != null and headHeight != ''" >
+            and head_height = #{headHeight}
+        </if>
+        <if test="headWide != null and headWide != ''" >
+            and head_wide = #{headWide}
+        </if>
+        <if test="marginHeight != null and marginHeight != ''" >
+            and margin_height = #{marginHeight}
+        </if>
+        <if test="marginWide != null and marginWide != ''" >
+            and margin_wide = #{marginWide}
+        </if>
+        <if test="centerUrl != null and centerUrl != ''" >
+            and center_url = #{centerUrl}
+        </if>
+        <if test="centercolorValue != null and centercolorValue != ''" >
+            and centercolor_value = #{centercolorValue}
+        </if>
+        <if test="centerHeight != null and centerHeight != ''" >
+            and center_height = #{centerHeight}
+        </if>
+        <if test="centerWide != null and centerWide != ''" >
+            and center_wide = #{centerWide}
+        </if>
+        <if test="activityRole != null and activityRole != ''" >
+            and activity_role = #{activityRole}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_activity_coupon
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="activityLabel != null and activityLabel != ''" >
+            and activity_label = #{activityLabel}
+        </if>
+        <if test="source != null and source != ''" >
+            and source = #{source}
+        </if>
+        <if test="isDefault != null and isDefault != ''" >
+            and is_default = #{isDefault}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="headUrl != null and headUrl != ''" >
+            and head_url = #{headUrl}
+        </if>
+        <if test="headHeight != null and headHeight != ''" >
+            and head_height = #{headHeight}
+        </if>
+        <if test="headWide != null and headWide != ''" >
+            and head_wide = #{headWide}
+        </if>
+        <if test="marginHeight != null and marginHeight != ''" >
+            and margin_height = #{marginHeight}
+        </if>
+        <if test="marginWide != null and marginWide != ''" >
+            and margin_wide = #{marginWide}
+        </if>
+        <if test="centerUrl != null and centerUrl != ''" >
+            and center_url = #{centerUrl}
+        </if>
+        <if test="centercolorValue != null and centercolorValue != ''" >
+            and centercolor_value = #{centercolorValue}
+        </if>
+        <if test="centerHeight != null and centerHeight != ''" >
+            and center_height = #{centerHeight}
+        </if>
+        <if test="centerWide != null and centerWide != ''" >
+            and center_wide = #{centerWide}
+        </if>
+        <if test="activityRole != null and activityRole != ''" >
+            and activity_role = #{activityRole}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+
+</mapper>   

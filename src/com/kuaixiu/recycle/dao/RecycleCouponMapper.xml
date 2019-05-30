@@ -291,6 +291,23 @@
         order by t.create_time desc,t.coupon_code
     </select>
 
+    <select id="queryCouponListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_coupon t
+        where 1=1
+        <if test="endTime != null and endTime != ''">
+            and t.end_time &lt;= now()
+        </if>
+        <if test="isUse != null">
+            and t.is_use = #{isUse}
+            and t.end_time &gt;= now()
+        </if>
+        receive_mobile=#{receiveMobile}
+        and t.is_del=0
+        order by t.create_time desc
+    </select>
+
     <!-- 根据加价券编码修改记录-->
     <update id="updateForUse" parameterType="Object">
     	update hs_coupon
