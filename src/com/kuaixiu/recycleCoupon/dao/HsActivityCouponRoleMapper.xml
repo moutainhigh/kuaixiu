@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole" >
         <result column="id" property="id"/>
         <result column="activity_id" property="activityId"/>
+        <result column="name_label" property="nameLabel"/>
         <result column="coupon_name" property="couponName"/>
         <result column="pricing_Type" property="pricingType"/>
         <result column="coupon_price" property="couponPrice"/>
@@ -18,19 +19,23 @@
         <result column="begin_time" property="beginTime"/>
         <result column="end_time" property="endTime"/>
         <result column="activity_end_time" property="activityEndTime"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
     
     <!-- hs_activity_coupon_role table all fields -->
     <sql id="Base_Column_List" >
-        id,activity_id,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,date_format(`activity_end_time`,'%Y-%m-%d %H:%i:%s')activity_end_time
+        id,activity_id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,
+        subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,
+        date_format(`activity_end_time`,'%Y-%m-%d %H:%i:%s')activity_end_time,
+        date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_activity_coupon_role
-        (id,activity_id,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,activity_end_time)
+        (id,activity_id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,activity_end_time,create_time)
         values
-        (#{id},#{activityId},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},#{beginTime},#{endTime},#{activityEndTime})
+        (#{id},#{activityId},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},#{beginTime},#{endTime},#{activityEndTime},now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -39,6 +44,7 @@
         set 
             id=#{id},
             activity_id=#{activityId},
+            name_label=#{nameLabel},
             coupon_name=#{couponName},
             pricing_Type=#{pricingType},
             coupon_price=#{couponPrice},
@@ -114,6 +120,7 @@
         <if test="activityEndTime != null and activityEndTime != ''" >
             and activity_end_time = #{activityEndTime}
         </if>
+        order by create_time desc
     </select>
     
     <!-- 查询列表 带分页 -->
@@ -161,6 +168,7 @@
         <if test="activityEndTime != null and activityEndTime != ''" >
             and activity_end_time = #{activityEndTime}
         </if>
+        order by create_time desc
     </select>
 
 </mapper>   

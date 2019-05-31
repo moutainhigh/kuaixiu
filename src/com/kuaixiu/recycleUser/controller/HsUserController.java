@@ -5,14 +5,12 @@ import com.common.base.controller.BaseController;
 import com.common.util.SmsSendUtil;
 import com.common.util.ValidatorUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.recycleUser.entity.HsUser;
 import com.kuaixiu.recycleUser.service.HsUserService;
 import com.system.api.entity.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,8 +25,6 @@ import java.io.IOException;
 @Controller
 public class HsUserController extends BaseController {
 
-    @Autowired
-    private HsUserService hsUserService;
 
     @RequestMapping("/recycle/sendSmsCode")
     @ResponseBody

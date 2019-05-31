@@ -13,7 +13,6 @@ import com.kuaixiu.recycleCoupon.service.HsActivityCouponService;
 import com.kuaixiu.recycleCoupon.service.HsUserActivityCouponService;
 import com.kuaixiu.recycleUser.entity.HsUser;
 import com.kuaixiu.recycleUser.service.HsUserService;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.system.api.entity.ResultData;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;

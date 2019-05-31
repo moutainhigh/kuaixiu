@@ -65,6 +65,25 @@
         where id=#{id}
     </update>
 
+    <select id="queryByIsDefault"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon where source=#{source} and is_default=1 and is_del=0
+    </select>
+
+    <update id="updateIsDefault1" parameterType="Object" >
+        update hs_activity_coupon
+        set
+        is_default=1
+        where id=#{id} and is_del=0
+    </update>
+
+    <update id="updateIsDefault0" parameterType="Object" >
+        update hs_activity_coupon
+        set
+        is_default=0
+        where id=#{id} and is_del=0
+    </update>
+
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
         delete from hs_activity_coupon where id = #{id}
@@ -73,7 +92,7 @@
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
-        from hs_activity_coupon where id = #{id}
+        from hs_activity_coupon where id = #{id} and is_del=0
     </select>
 
     <select id="queryBySource"  resultMap="BaseResultMap" parameterType="Object">
@@ -99,6 +118,7 @@
         <include refid="Base_Column_List"/>
         from hs_activity_coupon
         where 1=1
+        and is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -110,9 +130,6 @@
         </if>
         <if test="isDefault != null and isDefault != ''" >
             and is_default = #{isDefault}
-        </if>
-        <if test="isDel != null and isDel != ''" >
-            and is_del = #{isDel}
         </if>
         <if test="headUrl != null and headUrl != ''" >
             and head_url = #{headUrl}
@@ -164,6 +181,7 @@
         <include refid="Base_Column_List"/>
         from hs_activity_coupon
         where 1=1
+        and is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -175,9 +193,6 @@
         </if>
         <if test="isDefault != null and isDefault != ''" >
             and is_default = #{isDefault}
-        </if>
-        <if test="isDel != null and isDel != ''" >
-            and is_del = #{isDel}
         </if>
         <if test="headUrl != null and headUrl != ''" >
             and head_url = #{headUrl}

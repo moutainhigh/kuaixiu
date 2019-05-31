@@ -641,6 +641,14 @@ public class SmsSendUtil {
         return sendSmsThread(virtualTeam.getPhone(), content.toString());
     }
 
+    public static boolean submitRecycleOrder(String mobile) {
+        StringBuffer content = new StringBuffer();
+        content.append("订单提交成功，价格有效期10天，等待顺丰快递上门取件，" +
+                "收货地址 浙江省杭州市下城区武林广场电信营业厅三楼售后维修中心0571-87162535  ，" +
+                "寄出前请解除机器所有账号和密码（flyme，iCloud）等并取出手机卡和内存卡。");
+        return sendSmsThread(mobile, content.toString());
+    }
+
     /**
      * 商机指派订单发送短信
      * @param phone

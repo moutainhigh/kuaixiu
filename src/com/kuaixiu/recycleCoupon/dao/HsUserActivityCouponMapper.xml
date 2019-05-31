@@ -22,7 +22,7 @@
         insert into hs_user_activity_coupon
         (id,user_phone,source,acvity_id,create_time)
         values
-        (#{id},#{userPhone},#{source},#{acvityId},#{createTime})
+        (#{id},#{userPhone},#{source},#{acvityId},now())
     </insert>
 
     <!-- 根据id，修改记录-->

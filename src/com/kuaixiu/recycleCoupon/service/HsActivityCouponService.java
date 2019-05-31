@@ -96,10 +96,13 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
 
 
     public void saveUser(String phone) throws Exception {
-        HsUser hsUser = new HsUser();
-        hsUser.setId(UUID.randomUUID().toString().replace("-", ""));
-        hsUser.setPhone(phone);
-        userService.add(hsUser);
+        HsUser user = userService.getDao().queryByPhone(phone);
+        if (user == null) {
+            HsUser hsUser = new HsUser();
+            hsUser.setId(UUID.randomUUID().toString().replace("-", ""));
+            hsUser.setPhone(phone);
+            userService.add(hsUser);
+        }
     }
 
     public String checkCookiePhone(HttpServletRequest request) throws Exception {
@@ -165,14 +168,14 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         return jsonObject;
     }
 
-    public void receiveCoupon(String activityCouponId, String mobile)throws Exception {
-        List<HsActivityCouponRole> activityCouponRoles=activityCouponRoleService.getDao().queryByActivityId(activityCouponId);
-        for(HsActivityCouponRole activityCouponRole:activityCouponRoles){
+    public void receiveCoupon(String activityCouponId, String mobile) throws Exception {
+        List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.getDao().queryByActivityId(activityCouponId);
+        for (HsActivityCouponRole activityCouponRole : activityCouponRoles) {
             RecycleCoupon recycleCoupon = new RecycleCoupon();
             recycleCoupon.setBatchId(SystemConstant.RECYCLE_COUPON_BATCH);
             recycleCoupon.setCreateUserid("admin");
             recycleCoupon.setUpdateUserid("admin");
-            recycleCoupon.setId(UUID.randomUUID().toString().replace("-", "").substring(0,16));
+            recycleCoupon.setId(UUID.randomUUID().toString().replace("-", "").substring(0, 16));
             recycleCoupon.setCouponName(activityCouponRole.getCouponName());
             recycleCoupon.setPricingType(activityCouponRole.getPricingType());
             recycleCoupon.setRuleDescription(activityCouponRole.getRuleDescription());
@@ -190,6 +193,23 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
             recycleCoupon.setNote(activityCouponRole.getNote());
             recycleCoupon.setCouponCode(recycleCouponService.createNewCode());
             recycleCouponService.add(recycleCoupon);
+        }
+    }
+
+    //修改活动为默认显示活动
+    public void updateIsDefault(HsActivityCoupon hsActivityCoupon) {
+        HsActivityCoupon activityCoupon = getDao().queryByIsDefault(hsActivityCoupon.getSource());
+        if (activityCoupon != null) {
+            getDao().updateIsDefault0(activityCoupon.getId());
+        }
+        getDao().updateIsDefault1(hsActivityCoupon.getId());
+    }
+
+    public void activityAndCoupon(String activityId, String[] couponRoles) {
+        for (int i = 0; i < couponRoles.length; i++) {
+            HsActivityCouponRole activityCouponRole = activityCouponRoleService.queryById(couponRoles[i]);
+            activityCouponRole.setActivityId(activityId);
+            activityCouponRoleService.saveUpdate(activityCouponRole);
         }
     }
 }
