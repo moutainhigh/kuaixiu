@@ -66,8 +66,12 @@ public class HsActivityCouponController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "来源不能为空");
             }
             HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySource(source);
-            JSONObject jsonObject = hsActivityCouponService.actCoupon2Json(activityCoupon);
-            getSjResult(result, jsonObject, true, "0", null, "获取成功");
+            if(activityCoupon==null){
+                getSjResult(result, null, true, "0", null, "获取成功");
+            }else{
+                JSONObject jsonObject = hsActivityCouponService.actCoupon2Json(activityCoupon);
+                getSjResult(result, jsonObject, true, "0", null, "获取成功");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             getSjResult(result, null, false, "5", null, "系统异常请稍后再试");

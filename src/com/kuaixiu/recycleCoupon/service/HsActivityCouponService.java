@@ -150,6 +150,8 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         JSONArray jsonArray = new JSONArray();
         for (RecycleCoupon recycleCoupon : recycleCoupons) {
             JSONObject json = new JSONObject();
+            json.put("couponId", recycleCoupon.getId());
+            json.put("couponCode", recycleCoupon.getCouponCode());
             json.put("couponName", recycleCoupon.getCouponName());
             json.put("upperLimit", recycleCoupon.getUpperLimit());
             json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
@@ -170,7 +172,7 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
             recycleCoupon.setBatchId(SystemConstant.RECYCLE_COUPON_BATCH);
             recycleCoupon.setCreateUserid("admin");
             recycleCoupon.setUpdateUserid("admin");
-            recycleCoupon.setId(UUID.randomUUID().toString().replace("-", ""));
+            recycleCoupon.setId(UUID.randomUUID().toString().replace("-", "").substring(0,16));
             recycleCoupon.setCouponName(activityCouponRole.getCouponName());
             recycleCoupon.setPricingType(activityCouponRole.getPricingType());
             recycleCoupon.setRuleDescription(activityCouponRole.getRuleDescription());

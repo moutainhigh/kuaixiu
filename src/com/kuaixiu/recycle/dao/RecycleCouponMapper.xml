@@ -166,7 +166,7 @@
     </select>
 
     <!-- 查询个数  -->
-    <select id="queryCount" resultType="int" parameterType="Object">
+    <select id="queryCount" resultType="Integer" parameterType="Object">
         select count(1)
         from hs_coupon t
         where 1=1
@@ -303,7 +303,7 @@
             and t.is_use = #{isUse}
             and t.end_time &gt;= now()
         </if>
-        receive_mobile=#{receiveMobile}
+        and receive_mobile=#{receiveMobile}
         and t.is_del=0
         order by t.create_time desc
     </select>

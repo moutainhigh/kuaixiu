@@ -32,7 +32,9 @@ public class CookiesUtil {
      * @throws UnsupportedEncodingException 
      */
     public static void setCookie(HttpServletResponse response, String name, String value, String domainName, int maxAge) throws UnsupportedEncodingException {
-        value=URLEncoder.encode(value,"UTF-8");
+        if(StringUtils.isNotBlank(value)){
+            value=URLEncoder.encode(value,"UTF-8");
+        }
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         if (StringUtils.isBlank(domainName)){
