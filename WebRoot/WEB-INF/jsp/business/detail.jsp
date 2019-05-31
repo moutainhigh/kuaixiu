@@ -398,8 +398,8 @@
                                 <form enctype="multipart/form-data" id="uploadForm">
                                     <input class="col-sm-12" type="file" name="file" id="pic_img"
                                            accept="image/*"
-                                           <%--onchange="contractImgChange(this);"--%>
-                                           />
+                                        <%--onchange="contractImgChange(this);"--%>
+                                    />
                                     <button onclick="upContractImage('${sjOrder.orderNo}','${sjOrder.id}');"
                                             class="am-btn am-btn-default search_btn"
                                             type="button">点击上传
@@ -525,30 +525,36 @@
 
     function upContractImage(orderNo, id) {
         var formData = new FormData($("#uploadForm")[0]) //创建一个forData
-        formData.append('img', $('#pic_img')[0].files[0]) //把file添加进去 name命名为img
-        formData.append('orderNo', orderNo)
-        var url_ = AppConfig.ctx + "/sj/order/upContractImage.do";
-        $.ajax({
-            url: url_,
-            data: formData,
-            type: "POST",
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (result) {
-                if (result.success) {
-                    AlertText.tips("d_alert", "提示", "上传成功", function () {
-                        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
-                    });
-                } else {
-                    AlertText.tips("d_alert", "提示", result.resultMessage);
+        var image = $('#pic_img').get(0).files[0];
+        console.info(image);
+        if (image) {
+            formData.append('img', $('#pic_img')[0].files[0]) //把file添加进去 name命名为img
+            formData.append('orderNo', orderNo)
+            var url_ = AppConfig.ctx + "/sj/order/upContractImage.do";
+            $.ajax({
+                url: url_,
+                data: formData,
+                type: "POST",
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    if (result.success) {
+                        AlertText.tips("d_alert", "提示", "上传成功", function () {
+                            func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
+                        });
+                    } else {
+                        AlertText.tips("d_alert", "提示", result.resultMessage);
+                    }
+                },
+                error: function () {
+                    AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
                 }
-            },
-            error: function () {
-                AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
-            }
-        })
+            })
+        } else {
+            AlertText.tips("d_alert", "提示", "请选择上传文件！");
+        }
     }
 
     function endOrder(id) {

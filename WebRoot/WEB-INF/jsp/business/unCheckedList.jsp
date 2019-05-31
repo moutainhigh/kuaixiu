@@ -245,7 +245,7 @@
             }
         }
     ]);
-
+    dto.sScrollXInner = "100%";
     var myTable = $("#dt").DataTable(dto);
 
     /**
