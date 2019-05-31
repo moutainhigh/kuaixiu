@@ -158,7 +158,11 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
             json.put("couponName", recycleCoupon.getCouponName());
             json.put("upperLimit", recycleCoupon.getUpperLimit());
             json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
-            json.put("couponPrice", recycleCoupon.getCouponPrice());
+            if(recycleCoupon.getPricingType()==1){
+                json.put("couponPrice", recycleCoupon.getStrCouponPrice()+"%");
+            }else{
+                json.put("couponPrice", recycleCoupon.getStrCouponPrice());
+            }
             json.put("beginTime", recycleCoupon.getBeginTime());
             json.put("endTime", recycleCoupon.getEndTime());
             json.put("ruleDescription", recycleCoupon.getRuleDescription());
