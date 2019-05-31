@@ -215,8 +215,8 @@ public class SjOrderController extends BaseController {
             //将值转化为绝对值
             pageIndex = Math.abs(pageIndex);
             pageSize = Math.abs(pageSize);
-            page.setCurrentPage(pageIndex);
             page.setPageSize(pageSize);
+            page.setCurrentPage(pageIndex);
             sjOrder.setPage(page);
             sjOrder.setCreateUserid(phone);
             sjOrder.setType(type);

@@ -176,8 +176,8 @@ public class HsActivityCouponController extends BaseController {
             //将值转化为绝对值
             pageIndex = Math.abs(pageIndex);
             pageSize = Math.abs(pageSize);
-            page.setCurrentPage(pageIndex);
             page.setPageSize(pageSize);
+            page.setCurrentPage(pageIndex);
             recycleCoupon.setPage(page);
             recycleCoupon.setReceiveMobile(phone);
             if (state == 1) {
