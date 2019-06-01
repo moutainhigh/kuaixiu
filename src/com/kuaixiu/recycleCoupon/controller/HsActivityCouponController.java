@@ -61,13 +61,13 @@ public class HsActivityCouponController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             Integer source = params.getInteger("fm");
-            if (source==null) {
+            if (source == null) {
                 return getSjResult(result, null, false, "2", null, "来源不能为空");
             }
             HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySource(source);
-            if(activityCoupon==null){
+            if (activityCoupon == null) {
                 getSjResult(result, null, true, "0", null, "获取成功");
-            }else{
+            } else {
                 JSONObject jsonObject = hsActivityCouponService.actCoupon2Json(activityCoupon);
                 getSjResult(result, jsonObject, true, "0", null, "获取成功");
             }
@@ -198,8 +198,34 @@ public class HsActivityCouponController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/recycle/getHsCouponDetail")
+    @ResponseBody
+    public ResultData getHsCouponDetail(HttpServletRequest request,
+                                        HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String couponId = params.getString("couponId");
+
+            if (StringUtils.isBlank(couponId)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            RecycleCoupon recycleCoupon = recycleCouponService.queryById(couponId);
+            if (recycleCoupon == null) {
+                return getSjResult(result, null, false, "2", null, "id错误");
+            }
+            JSONObject jsonObject = hsActivityCouponService.recycleCouponDetail2Json(recycleCoupon);
+            getSjResult(result, jsonObject, true, "0", null, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
     /**
      * 用户活动领取加价券
+     *
      * @param request
      * @param response
      * @return
@@ -208,30 +234,30 @@ public class HsActivityCouponController extends BaseController {
     @RequestMapping(value = "/recycle/receiveActivityCoupon")
     @ResponseBody
     public ResultData receiveActivityCoupon(HttpServletRequest request,
-                                   HttpServletResponse response) throws Exception {
+                                            HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
             JSONObject params = getPrarms(request);
             Integer source = params.getInteger("fm");
             String activityLabel = params.getString("activityLabel");
             String phone = params.getString("phone");
-            if (source==null||StringUtils.isBlank(activityLabel)||StringUtils.isBlank(phone)) {
+            if (source == null || StringUtils.isBlank(activityLabel) || StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
-            HsActivityCoupon activityCoupon=hsActivityCouponService.getDao().queryBySourceActivityLabel(source,activityLabel);
-            if(activityCoupon==null){
+            HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySourceActivityLabel(source, activityLabel);
+            if (activityCoupon == null) {
                 return getSjResult(result, null, false, "1", null, "活动标识错误");
             }
-            HsUserActivityCoupon userActivityCoupon=new HsUserActivityCoupon();
+            HsUserActivityCoupon userActivityCoupon = new HsUserActivityCoupon();
             userActivityCoupon.setAcvityId(activityCoupon.getId());
             userActivityCoupon.setSource(source);
             userActivityCoupon.setUserPhone(phone);
-            List<HsUserActivityCoupon> userActivityCoupons=userActivityCouponService.queryList(userActivityCoupon);
-            if(CollectionUtils.isNotEmpty(userActivityCoupons)){
+            List<HsUserActivityCoupon> userActivityCoupons = userActivityCouponService.queryList(userActivityCoupon);
+            if (CollectionUtils.isNotEmpty(userActivityCoupons)) {
                 return getSjResult(result, null, false, "3", null, "您已领取过此加价券");
             }
-            hsActivityCouponService.receiveCoupon(activityCoupon.getId(),phone);
-            HsUserActivityCoupon userActivityCoupon1=new HsUserActivityCoupon();
+            hsActivityCouponService.receiveCoupon(activityCoupon.getId(), phone);
+            HsUserActivityCoupon userActivityCoupon1 = new HsUserActivityCoupon();
             userActivityCoupon1.setAcvityId(activityCoupon.getId());
             userActivityCoupon1.setSource(source);
             userActivityCoupon1.setUserPhone(phone);

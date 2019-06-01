@@ -8,6 +8,7 @@ import com.common.paginate.Page;
 import com.common.util.Base64Util;
 import com.common.util.Consts;
 import com.common.util.CookiesUtil;
+import com.common.util.DateUtil;
 import com.kuaixiu.recycle.entity.CouponAddValue;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.RecycleCouponService;
@@ -158,9 +159,9 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
             json.put("couponName", recycleCoupon.getCouponName());
             json.put("upperLimit", recycleCoupon.getUpperLimit());
             json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
-            if(recycleCoupon.getPricingType()==1){
-                json.put("couponPrice", recycleCoupon.getStrCouponPrice()+"%");
-            }else{
+            if (recycleCoupon.getPricingType() == 1) {
+                json.put("couponPrice", recycleCoupon.getStrCouponPrice() + "%");
+            } else {
                 json.put("couponPrice", recycleCoupon.getStrCouponPrice());
             }
             json.put("beginTime", recycleCoupon.getBeginTime());
@@ -170,6 +171,26 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         }
         jsonObject.put("Coupons", jsonArray);
         return jsonObject;
+    }
+
+    public JSONObject recycleCouponDetail2Json(RecycleCoupon recycleCoupon) {
+        JSONObject json = new JSONObject();
+        json.put("batchId",recycleCoupon.getBatchId());
+        json.put("couponId", recycleCoupon.getId());
+        json.put("couponCode", recycleCoupon.getCouponCode());
+        json.put("couponName", recycleCoupon.getCouponName());
+        json.put("couponType", recycleCoupon.getPricingType());
+        json.put("upperLimit", recycleCoupon.getUpperLimit());
+        json.put("addPriceUpper", recycleCoupon.getAddPriceUpper());
+        json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
+        json.put("couponPrice", recycleCoupon.getStrCouponPrice());
+        json.put("beginTime", recycleCoupon.getBeginTime());
+        json.put("endTime", recycleCoupon.getEndTime());
+        json.put("ruleDescription", recycleCoupon.getRuleDescription());
+        json.put("isUser", recycleCoupon.getIsUse());
+        json.put("userTime", DateUtil.getDateyyyyMMddHHmmss(recycleCoupon.getUseTime()));
+        json.put("note", recycleCoupon.getNote());
+        return json;
     }
 
     public void receiveCoupon(String activityCouponId, String mobile) throws Exception {
