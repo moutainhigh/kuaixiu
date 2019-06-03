@@ -280,7 +280,7 @@
                         <input id="phoneNum" class="popodlg-input" type="text" placeholder="请输入登录手机号码" />
                     </div>
                     <div class="input-item">
-                        <input id="codeNum" value="140789" class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
+                        <input id="codeNum" class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
                         <span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
                         <!--<span id="secondLabel" class="input-label info-box">60秒</span>-->
                     </div>
@@ -301,7 +301,7 @@
         $(function(){
             eCacheUtil.storage.cache(CacheKey.isSelect,false);
             eCacheUtil.storage.cache(CacheKey.happyGo,true);
-            eCacheUtil.storage.cache(CacheKey.discountInfoInfos,undefined)
+            eCacheUtil.storage.cache('discount_info_infos',undefined)
 
 
 			//TODO 从欢Go客户端加载当前页面

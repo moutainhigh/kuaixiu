@@ -55,10 +55,10 @@
 
                     <button id="restart">重新估价</button>
                 </p>
-                <p class="price-tip" id="showLogin">
+                <p class="price-tip" id="showLogin" style="display: none">
                     点击登录，立即加价 +10%
                 </p>
-                <p class="price-tip"  id="addInfo">
+                <p class="price-tip"  id="addInfo"  style="display: none">
                     <span></span>加价 +10%(30分钟内下单有效)
                 </p>
               <!--  <p class="ping1"><a href="javascript:;" onclick="Reassess();">重新评估</a></p>   -->
@@ -218,7 +218,7 @@
                         <input id="phoneNum" class="popodlg-input" type="text" placeholder="请输入登录手机号码" />
                     </div>
                     <div class="input-item">
-                        <input id="codeNum" value="140789" class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
+                        <input id="codeNum"  class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
                         <span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
                         <!--<span id="secondLabel" class="input-label info-box">60秒</span>-->
                     </div>
@@ -330,19 +330,25 @@
                             $.post(linkUrl+'/recycle/getHsCouponDetail.do',{params:JSON.stringify(searchDataParams)},
                                 function(data){
                                     if (data.success){
+
                                         $("#ticket-text").val(data.result.couponCode)
                                         if(data.result.couponType == 1) {
 
-                                            if(prePrice >= data.result.upperLimit) {
-                                                $('.price').html(prePrice + data.result.addPriceUpper);
+                                            if(prePrice >= data.result.subtractionPrice) {
+                                                if(Math.round(prePrice*data.result.couponPrice*0.01) <= data.result.upperLimit) {
+                                                    $('.price').html(prePrice +  Math.round(prePrice*data.result.couponPrice*0.01));
+                                                }else {
+                                                    $('.price').html(prePrice + data.result.upperLimit);
+                                                }
+
 
                                             }else {
-                                                $('.price').html(prePrice +  Math.round(prePrice*data.result.addPriceUpper));
+                                                $('.price').html(prePrice +  Math.round(prePrice*data.result.couponPrice*0.01));
                                             }
 
                                         }else if(data.result.couponType == 2) {
 
-                                            if(prePrice >= data.result.upperLimit) {
+                                            if(prePrice >= data.result.subtractionPrice) {
                                                 $('.price').html(prePrice + data.result.couponPrice);
 
                                             }else {
@@ -352,6 +358,13 @@
 
                                     }else{
                                         checkSubmitFlg = false;
+                                        // if(prePrice >= 2000) {
+                                        //     $('.price').html(prePrice + 200);
+                                        //
+                                        // }else {
+                                        //     $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                                        // }
+
                                     }
                                 })//
 
@@ -694,6 +707,14 @@
                 var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
                 var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
                 if(loginPhone || HappyGoMobile) {
+                    if(loginPhone) {
+                        $('#alipay2').val(loginPhone)
+                        $('#inputtel').val(loginPhone)
+                    }else if(HappyGoMobile){
+                        $('#alipay2').val(HappyGoMobile)
+                        $('#inputtel').val(loginPhone)
+                    }
+
                     $("#addInfo").show();
                     $("#showLogin").hide();
                     var initPrice = eCacheUtil.storage.getCache('initPrice')
@@ -707,25 +728,45 @@
                             function(data){
                                 if (data.success){
                                     if(data.result.couponType == 1) {
-                                        $("#ticket-text").val(data.result.couponCode)
-                                        if(prePrice >= data.result.upperLimit) {
-                                            $('.price').html(prePrice + 200);
+
+                                        if(prePrice >= data.result.subtractionPrice) {
+                                            if(Math.round(prePrice*data.result.couponPrice*0.01) <= data.result.upperLimit) {
+                                                $('.price').html(prePrice +  Math.round(prePrice*data.result.couponPrice*0.01));
+                                            }else {
+                                                $('.price').html(prePrice + data.result.upperLimit);
+                                            }
+
 
                                         }else {
-                                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                                            $('.price').html(prePrice +  Math.round(prePrice*data.result.couponPrice*0.01));
                                         }
 
                                     }else if(data.result.couponType == 2) {
 
+                                        if(prePrice >= data.result.subtractionPrice) {
+                                            $('.price').html(prePrice + data.result.couponPrice);
+
+                                        }else {
+                                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                                        }
                                     }
+
 
                                 }else{
                                     checkSubmitFlg = false;
                                 }
                             })//
 
+                    }else {
+                        if(prePrice >= 2000) {
+                            $('.price').html(prePrice + 200);
+
+                        }else {
+                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                        }
                     }
                 }else {
+
 
                     $("#addInfo").hide();
                     $("#showLogin").show();

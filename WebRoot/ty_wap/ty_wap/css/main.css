@@ -3643,6 +3643,7 @@ textarea:-moz-placeholder {
   top: 0.55rem;
   left: 0;
   width: 100%;
+  z-index: 100;
 }
 .discount_tab > div {
   width: 1rem;
@@ -3689,25 +3690,35 @@ textarea:-moz-placeholder {
 .discount_box.active  {
   color: #5386EE;
 }
+.discount-item {
+  position: relative;
+}
 .discount-item  > div:nth-child(1) {
   font-size: 0.3rem;
-
   font-weight: bold;
   padding: 0.3rem 0 0.18rem;
+  white-space: nowrap;
 }
 .discount-item  > div:nth-child(1) sub {
   font-size: 0.1rem;
+  width: 1rem;
 }
 .discount-item  > div:nth-child(2) {
-  text-align: center;
+  text-align: left;
+  white-space: nowrap;
   line-height: 0.4rem;
   padding-top: 0.3rem;
   flex: 1;
   color: #A2A2A2;
   font-size: 0.14rem;
+  width: 3rem;
+  overflow: visible;
 }
 .discount-item  > div:nth-child(3) {
   width: 0.8rem;
+  position: absolute;
+  right: 0;
+  top: 0.1rem;
 }
 .discount_box.active .discount-item div:nth-child(3) button {
   background:  #5386EE;

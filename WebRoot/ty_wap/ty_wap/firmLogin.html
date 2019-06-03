@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/resultQuery.css">
-    <title>优惠券查询</title>
+    <link rel="stylesheet" href="css/main.css?version=1.6.1">
+    <title>企业手机回收</title>
 </head>
-<body class="result-query">
-    <div class="query-box">
-		<div id="my-ticket-box" class="my-ticket-box">
-			<div class="tipinfo-box"><span>我的优惠券</span></div>
+<body>
+    <div class="firm-login-wrapper">
+		<div id="login-box" class="login-box">
+			<div class="tipinfo-box"><span>回收信息查询</span></div>
 			<div class="input-item">
 				<input id="phoneNum" type="text" placeholder="请输入手机号" />
 			</div>
@@ -26,14 +25,10 @@
 		</div>
 	</div>
 <script src="js/jquery.js"></script>
-<script src="js/util.js"></script>
-<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script src="js/common.js"></script>
 <script>
     $(function(){
 		var G = {};
-		G = window.G || {};
-		
-		var HappyGoMobile = eCacheUtil.storage.getCache( CacheKey.HappyGoMobile );
 		
 		function getRealPath(){
 			var pathName=location.pathname;  
@@ -44,8 +39,9 @@
 			if(linkUrl.indexOf(u)>0){
 				linkUrl='http://m-super.com';
 			}
-			return 'http://m-super.com';
+			return linkUrl;
 		}
+		
 		
 		//a.获取验证码
 		$('#getCodeBtn').click( function(){
@@ -66,6 +62,7 @@
 			var param = {
 				"mobile":phoneNum
 			}
+			 //TODO
 			 $.post(
 					 getRealPath()+"/wechat/sendSmsCode.do",
 				{
@@ -76,7 +73,7 @@
 						//启动计数定时器
 						startSecondCount();
 						//设置发送验证码的状态
-						$('#my-ticket-box').addClass( 'sending-code' );
+						$('#login-box').addClass( 'sending-code' );
 						
 					}else{
 						alert(data.resultMessage);
@@ -102,7 +99,7 @@
 					updateSecondCount();
 				}
 				else{
-					$('#my-ticket-box').removeClass( 'sending-code' );
+					$('#login-box').removeClass( 'sending-code' );
 				}
 			},1000 );
 			return ;
@@ -112,13 +109,18 @@
 		$('#queryBtn').click( function(){
 			var phoneNum = $('#phoneNum').val();
 			var codeNum = $('#codeNum').val();
-
-
-			if( phoneNum === '' ){	
+			
+			if( phoneNum === '' ){
 				alert( '手机号不能为空' );
 				$('#phoneNum').focus();
 				return ;
 			}
+			
+			//if(!isMobile.test( phoneNum )){
+			//	alert('请输入正确的手机号码');
+			//	$("#inputtel").focus();
+			//	return false;
+			//}
 			
 			if( codeNum === '' ){
 				alert( '验证码不能为空' );
@@ -126,43 +128,29 @@
 				return ;
 			}
 			
-			
-			
-			//向后台请求数据
+			//TODO 向后台请求数据
 			G.isPosting = true ;
 			
 			//a 登录
 			var param = {
 				"mobile":phoneNum,
-				"code":codeNum,
-				"batch":"S003"
+				"code":codeNum
 			};
 			$.post(
-				getRealPath()+"/recycleNew/queryPrizeBatch.do",
+					getRealPath()+"/recycleNew/login.do",
 				{
 					params:JSON.stringify(param)
 				},
 				function(data){
 					if ( data.success){
-						//将获奖信息缓存到缓存中
+						//获得验证码
+						var tokenId = data.result ;
 						if( window.localStorage ){
-							localStorage.setItem( 'prizeinfo' , JSON.stringify( data.result.prizeInfo ) );
-						};
-					
-						//把参加抽奖的手机号存起来
-						eCacheUtil.storage.cache(CacheKey.prizeMobile,phoneNum);
-						
-						var val="&phoneNum="+phoneNum;
-
-						if(HappyGoMobile == ''){
-					    	wx.miniProgram.reLaunch({url:'/pages/resultList/resultList'});
-				            wx.miniProgram.postMessage({ data: {val:val} });
-						}else{
-							//跳转到优惠券列表页面
-						  window.location.href = 'resultListHappy.html' ;
+							localStorage.setItem( 'tokenid' , tokenId );
+							localStorage.setItem( 'mobile' , phoneNum );
 						}
-					
-						 
+						//跳转到订单列表页面
+						window.location.href = 'firmPhoneList.html' ;
 						
 					}else{
 						alert(data.resultMessage);
@@ -171,7 +159,8 @@
 					G.isPosting = false ;
 				});
 			
-		});		
+		});
+		
     });    
 </script>
 </body>

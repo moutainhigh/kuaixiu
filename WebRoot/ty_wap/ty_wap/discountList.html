@@ -202,7 +202,7 @@
                                     str += '</div></div>';
                                     htmlStr = htmlStr + str;
                                 })
-                            }else {
+                            }else if(state == 2){
                                 discountList.forEach(item => {
                                     var str = '<div class="discount_box ">';
                                     str += '<div class="discount-item">';
@@ -213,7 +213,26 @@
                                     }
 
                                     str += '<div>（' + item.couponName +'）</div>';
-                                    str += '<div><button >立即使用</button></div>'
+                                    str += '<div><button >已使用</button></div>'
+                                    str += '</div>'
+                                    str += '<div class="discount-date">有效时间：'
+                                    str += item.beginTime + ' 至 ' + item.endTime;
+                                    str += '</div></div>';
+                                    htmlStr = htmlStr + str;
+                                })
+                            }
+                            else if(state == 3){
+                                discountList.forEach(item => {
+                                    var str = '<div class="discount_box ">';
+                                    str += '<div class="discount-item">';
+                                    if(item.couponPrice.toString().indexOf('%') > -1) {
+                                        str += '<div>'+ item.couponPrice +'</div>';
+                                    }else {
+                                        str += '<div><sub>￥</sub>'+ item.couponPrice +'</div>';
+                                    }
+
+                                    str += '<div>（' + item.couponName +'）</div>';
+                                    str += '<div><button >已过期</button></div>'
                                     str += '</div>'
                                     str += '<div class="discount-date">有效时间：'
                                     str += item.beginTime + ' 至 ' + item.endTime;
