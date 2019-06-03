@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+</head>
+<body>
+<div id="wrap" class="testWrap">
+    <div class="pageTitle">
+        <a href="javascript:window.history.back();">
+            <img src="img/icon_arrow.png" alt="">
+        </a>
+        <h3>个人中心</h3>
+    </div>
+    <div class="main">
+        <div class="person_header">
+            <div>
+                <div class="img-box">
+                    <img src="img/51_image.png" alt="">
+                </div>
+            </div>
+            <div>
+                <p>用户：</p>
+                <p id="userPhone"></p>
+            </div>
+            <div>
+                <button id="getUnlogin">退出登录</button>
+            </div>
+        </div>
+        <div class="main_list">
+            <div class="main_item" id="myOrder">
+                <img src="img/order_icon.png" alt="">我的订单  <span></span>
+            </div>
+            <div class="main_item" id="myDiscount">
+                <img src="img/add_icon.png" alt="">我的加券  <span></span>
+            </div>
+            <div class="main_item">
+                <img src="img/other_icon.png" alt="">我的其它券 <span></span>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="tipBox">
+        <div class="tipCon">
+            <div class="close"><a><img src="img/cuo.png" alt=""></a></div>
+            <div class="desc">
+                <img src="" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <!--遮盖层-->
+    <div id="mask_boxs">
+        <div id="mcon">
+            <img src="img/loadings.gif"/>
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<!--<script src="js/personalCenter.js"></script>-->
+
+<script>
+    function getUrlParam(key){
+        var url = window.location.search;
+        var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+        var result = url.substr(1).match(reg);
+        return result ? decodeURIComponent(result[2]) : null;
+    }
+
+    function setCacheData(key,keyName){
+        if(getUrlParam(keyName)!==null &&  getUrlParam(keyName) !== undefined && getUrlParam(keyName)!==''){
+            eCacheUtil.storage.cache(key,getUrlParam(keyName));
+        }
+    }
+
+    if (getUrlParam("productid")){
+        setCacheData(CacheKey.ProjectId,"productid");
+        setCacheData(CacheKey.OpenId,"openId");
+        setCacheData(CacheKey.ModelName,"modelName");
+        setCacheData(CacheKey.imgHref,"modelImageUrl");
+        setCacheData(CacheKey.LastPrice,"lastPrice");
+        setCacheData(CacheKey.source,"fm");
+        eCacheUtil.storage.cache(CacheKey.isSelect,false);
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var fm=eCacheUtil.storage.getCache(CacheKey.source);
+        if(isEmpty(fm)){
+            eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+        }
+        if(fm == 2 || fm == 9 || fm == 10){
+            document.title = '天翼回收';
+        }else{
+            document.title = '翼回收';
+        }
+
+        $("#myOrder").on('click',function () {
+            location.href='orderlist.html'
+        })
+
+        $("#myDiscount").on('click',function () {
+            location.href='discountList.html'
+        })
+        //推出登录
+        $("#getUnlogin").on('click',function () {
+            var phone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+            var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+            var params = {}
+            if(phone) {
+                params.phone = phone
+            }else {
+                params.phone = HappyGoMobile
+            }
+            $.post(linkUrl+'/recycle/loginOut.do',{params:JSON.stringify(params)},
+                function(data){
+                    if(data.success) {
+                        alertTip('退出成功');
+                        location.href='indexHappy.html'
+                        eCacheUtil.storage.cache(CacheKey.loginPhone,'undefined')
+
+                    }else {
+                        alertTip(data.resultMessage);
+                    }
+                    // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                })//
+
+        })
+
+        getPersonalInfo()
+    //    查询个人信息
+       function getPersonalInfo() {
+           var phone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+           var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+           var params = {};
+           if(phone) {
+               params.phone = phone
+           }else {
+               params.phone = HappyGoMobile
+           }
+
+           $.post(linkUrl+'/recycle/getUser.do',{params:JSON.stringify(params)},
+               function(data){
+                   if(data.success) {
+                       $("#mask_boxs").hide()
+                       var initPhone = data.result.phone.split('')
+                        initPhone.splice(3,4,'xxxx');
+                       var userPhone =  initPhone.join('')
+                      $("#userPhone").html(userPhone)
+                   }else {
+                       alertTip(data.resultMessage);
+                   }
+                   // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+               })//
+
+       }
+    })
+</script>
+
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>

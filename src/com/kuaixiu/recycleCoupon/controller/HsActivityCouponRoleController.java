@@ -81,6 +81,14 @@ public class HsActivityCouponRoleController extends BaseController {
         this.renderJson(response, page);
     }
 
+    @RequestMapping(value = "hsActivity/toAddCouponRole")
+    public ModelAndView toAddCouponRole(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+
+        String returnView = "hsActivity/createCouponRole";
+        return new ModelAndView(returnView);
+    }
+
     /**
      * 创建加价券规则
      *
@@ -96,17 +104,17 @@ public class HsActivityCouponRoleController extends BaseController {
             String nameLabel = request.getParameter("nameLabel");
             String couponName = request.getParameter("couponName");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
-            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额下限额度
+            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额
             String upperLimit = request.getParameter("upperLimit");//订单金额上限额度
             String addPriceUpper = request.getParameter("addPriceUpper");//加价金额上限
             String price = request.getParameter("price");//优惠券金额
             String description = request.getParameter("ruleDescription");//加价规则描述
-            String startTime = request.getParameter("startTime");//优惠券开始时间
-            String endTime = request.getParameter("endTime");//优惠券过期时间
+            String startTime = request.getParameter("validBeginTime");//优惠券开始时间
+            String endTime = request.getParameter("validEndTime");//优惠券过期时间
             String activityEndTime = request.getParameter("activityEndTime");//活动结束时间
             String note = request.getParameter("note");//优惠券备注
             if (StringUtils.isBlank(couponName) || StringUtils.isBlank(price) || StringUtils.isBlank(startTime)
-                    || StringUtils.isBlank(endTime) || StringUtils.isBlank(activityEndTime) || StringUtils.isBlank(pricingType)
+                    || StringUtils.isBlank(endTime) || StringUtils.isBlank(pricingType)
                     || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)) {
                 throw new SystemException("参数不完整");
             }
@@ -181,7 +189,7 @@ public class HsActivityCouponRoleController extends BaseController {
         List<HsActivityCouponRole> couponRoles = hsActivityCouponRoleService.queryList(null);
         request.setAttribute("recycleSystems", recycleSystems);
         request.setAttribute("couponRoles", couponRoles);
-        String returnView = "hsActivity/addActivity";
+        String returnView = "hsActivity/createHsActivity";
         return new ModelAndView(returnView);
     }
 
@@ -223,13 +231,13 @@ public class HsActivityCouponRoleController extends BaseController {
             System.out.println("图片路径：" + savePath);
             //中心加价券图片
             String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
-            String logoPath2 = getPath(request, "headFile", savePath);             //图片路径
+            String logoPath2 = getPath(request, "centerFile", savePath);             //图片路径
             String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath2);
             //添加活动
             HsActivityCoupon activityCoupon = new HsActivityCoupon();
             activityCoupon.setId(UUID.randomUUID().toString().replace("-", ""));
-            activityCoupon.setActivityLabel(SeqUtil.getNext("al"));
+            activityCoupon.setActivityLabel(SeqUtil.getNext("ayll"));
             activityCoupon.setSource(Integer.valueOf(source));
             activityCoupon.setHeadUrl(headUrl);
             activityCoupon.setHeadHeight(Integer.valueOf(headHeight));

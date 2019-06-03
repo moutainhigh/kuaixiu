@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,7 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
             json.put("upperLimit", recycleCoupon.getUpperLimit());
             json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
             if (recycleCoupon.getPricingType() == 1) {
-                json.put("couponPrice", recycleCoupon.getStrCouponPrice() + "%");
+                json.put("couponPrice", recycleCoupon.getStrCouponPrice().setScale(0, BigDecimal.ROUND_HALF_UP) + "%");
             } else {
                 json.put("couponPrice", recycleCoupon.getStrCouponPrice());
             }

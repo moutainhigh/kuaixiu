@@ -123,7 +123,7 @@ function getRealPath(){
 	if(linkUrl.indexOf(u)>0){
 		linkUrl='http://m-super.com';
 	}
-	return linkUrl;
+	return 'http://47.98.196.79';
 }
 //绝对路径
      var linkUrl=getRealPath();

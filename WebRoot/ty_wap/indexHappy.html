@@ -94,7 +94,7 @@
         <div class="main">
             <div class="header index1">
                 <a href="javascript:;"><img src="img/logo-go.png" alt=""><span>天翼回收</span></a>
-                <a href="orderlist.html"><img src="img/icon_order.png" alt="">我的订单</a>
+                <a href="javascript:;" id="login"><span id="isLogin">立即登录</span></a>
             </div>
             <div class="swiper-container">
                 <div class="banner">
@@ -112,11 +112,11 @@
                     </div>
                 </div>
             </div>
-			
+
 	      <!-- <div id="banner-image" class="image-box">
 				<img src="img/ty_banner.jpg" />
 			</div>  -->
-            
+
             <div id="recycle-btn" class="recyclePro">
                 <div class="title">
                 </div>
@@ -270,14 +270,39 @@
         <div class="footer">
             <a href="product.html" class="btn-large">我要卖手机</a>
         </div>
+
+        <!--start of 弹出对话框-->
+        <div id="popoDialog" class="popo-dialog hide">
+            <div id="phone-dialog-box" class="dialog-box">
+                <div class="dialog-title">登录</div>
+                <div class="dialog-body">
+                    <div class="input-item">
+                        <input id="phoneNum" class="popodlg-input" type="text" placeholder="请输入登录手机号码" />
+                    </div>
+                    <div class="input-item">
+                        <input id="codeNum" value="140789" class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
+                        <span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
+                        <!--<span id="secondLabel" class="input-label info-box">60秒</span>-->
+                    </div>
+                    <div class="input-item">
+                        <span id="doPrizeBtn" class="do-prize-btn">立刻登录</span>
+                    </div>
+                </div>
+                <span id="closePopoDialogBtn" class="close-btn">X</span>
+            </div>
+        </div>
+        <!--end of 弹出对话框-->
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/swiper.min.js"></script>
+    <script src="js/common.js"></script>
     <script src="js/util.js"></script>
     <script>
         $(function(){
             eCacheUtil.storage.cache(CacheKey.isSelect,false);
             eCacheUtil.storage.cache(CacheKey.happyGo,true);
+            eCacheUtil.storage.cache(CacheKey.discountInfoInfos,undefined)
+
 
 			//TODO 从欢Go客户端加载当前页面
 			//1. 获得ticket
@@ -287,20 +312,23 @@
 			//a 记录抽奖号码
 			if( fm == '10' ){
 				eCacheUtil.storage.cache( CacheKey.source, fm );
-				
+
 				//从欢Go客户端加载当前页面
 				if( ticket && ticket != '' ){
 					getMobileByTicket( ticket );
 				}
 				else{
 					alert( '请先用欢Go账号登录再操作' );
-				}	
+				}
 			}
 			else{
 				//良品价检测
 				eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
+
+                isLoginCheck();
+
 			}
-			
+
             var mySwiper = new Swiper('.swiper-container',{
                 wrapperClass : 'banner',
                 slideClass : 'slide-item',
@@ -323,13 +351,13 @@
             $('.brandCont .item').click(function(){
                 location.href = 'product.html?bid='+$(this).attr('data-bid');
             });
-			
+
 			//banner图片的单击事件
 			$('#banner-image').click( function(){
 				//TODO
 				location.href = 'manisPoster.html';
 			});
-			
+
 			//流程图的单击事件
 			$('#recycle-btn').click( function(){
 				//TODO
@@ -340,8 +368,69 @@
             $('.js-close-active').on('click',function(){
                 $('.dialog-active').hide()
             })
-			
-			
+            //关闭弹窗
+            $("#closePopoDialogBtn").on('click',function () {
+                $("#popoDialog").addClass('hide');
+            })
+
+            // 获取验证码
+            $("#getCodeBtn").on('click',function () {
+
+                if(!$("#phoneNum").val()) {
+                    alertTip('请输入手机号码');
+                    return false;
+                }else if(!(/^1[123456789]\d{9}$/.test($("#phoneNum").val()))) {
+                    alertTip('手机号码不正确，请重新输入');
+                    return false;
+                }else {
+                    var params = {
+                        phone: $("#phoneNum").val()
+                    }
+                    $.post(linkUrl+'/recycle/sendSmsCode.do',{params:JSON.stringify(params)},
+                        function(data){
+                            Countdown($("#getCodeBtn").get(0),60)
+                            if(data.success) {
+
+                            }else {
+                                alertTip(data.resultMessage);
+                            }
+                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                        })//
+                }
+            })
+
+            // 登录
+            $("#doPrizeBtn").on('click',function () {
+                if(!$("#phoneNum").val()) {
+                    alertTip('请输入手机号码');
+                    return false;
+                }else if(!(/^1[123456789]\d{9}$/.test($("#phoneNum").val()))) {
+                    alertTip('手机号码不正确，请重新输入');
+                    return false;
+                }else if(!$("#codeNum").val() || !$("#codeNum").val().trim() ){
+                    alertTip('请输入验证码');
+                    return false;
+                }else {
+                    var params = {
+                        phone: $("#phoneNum").val(),
+                        checkCode: $("#codeNum").val()
+                    }
+                    $.post(linkUrl+'/recycle/checkLogin.do',{params:JSON.stringify(params)},
+                        function(data){
+                            if(data.success) {
+                                eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
+                                isLoginCheck();
+                                $("#popoDialog").addClass('hide')
+                                alertTip('登录成功')
+                            }else {
+                                alertTip(data.resultMessage);
+                            }
+                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                        })//
+                }
+            })
+
+
 			//a.1 根据ticket获得手机号码
 			function getMobileByTicket( ticketCode ){
 				var param = {
@@ -356,12 +445,32 @@
 						if ( data.success){
 							 var phoneNum = data.result.mobile ;
 							  eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phoneNum);
+                                isLoginCheck()
 						}else{
 							alert(data.resultMessage);
 						}
 				});
 				return ;
 			}
+            function isLoginCheck() {
+                var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+                var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                if(loginPhone || HappyGoMobile) {
+                    $("#isLogin").html('个人中心')
+                }else {
+
+                    $("#isLogin").html('立即登录')
+                }
+                $("#login").on('click',function () {
+                    if(loginPhone || HappyGoMobile ) {
+                        location.href = 'personalCenter.html'
+                    }else {
+                        $("#popoDialog").removeClass('hide');
+                    }
+
+                })
+            }
+
         })
     </script>
 <!--站长统计-->

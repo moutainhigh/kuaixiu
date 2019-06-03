@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title></title>
+
+</head>
+<body>
+<div id="wrap" class="testWrap">
+    <div class="pageTitle">
+        <a href="javascript:window.history.back();">
+            <img src="img/icon_arrow.png" alt="">
+        </a>
+        <h3>我的加价劵</h3>
+    </div>
+    <div class="main" style="padding-bottom: 0.15rem;">
+        <div class="discount">
+            <div class="discount_tab">
+                <div class="active">未使用</div>
+                <div>已使用</div>
+                <div>已过期</div>
+            </div>
+            <div class="discount-box">
+                <!--<div class="discount_box active">-->
+                    <!--<div class="discount-item">-->
+                        <!--<div>-->
+                            <!--<sub>￥</sub>400-->
+                        <!--</div>-->
+                        <!--<div>-->
+                            <!--（满100元最高200元）-->
+                        <!--</div>-->
+                        <!--<div>-->
+                            <!--<button>立即使用</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="discount-date">-->
+                        <!--有效时间：2019-01-25 00：00 - 2019-07-24 23:59-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="discount_box">-->
+                    <!--<div class="discount-item">-->
+                        <!--<div><sub>￥</sub>400</div>-->
+                        <!--<div>（满100元最高200元）</div>-->
+                        <!--<div><button>立即使用</button></div>-->
+                    <!--</div>-->
+                    <!--<div class="discount-date">-->
+                        <!--有效时间：2019-01-25 00：00 - 2019-07-24 23:59-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="tipBox">
+        <div class="tipCon">
+            <div class="close"><a><img src="img/cuo.png" alt=""></a></div>
+            <div class="desc">
+                <img src="" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <!--遮盖层-->
+    <div id="mask_boxs">
+        <div id="mcon">
+             <img src="img/loadings.gif"/>
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/common.js"></script>
+<!--<script src="js/personalCenter.js"></script>-->
+
+<script>
+    function getUrlParam(key){
+        var url = window.location.search;
+        var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+        var result = url.substr(1).match(reg);
+        return result ? decodeURIComponent(result[2]) : null;
+    }
+
+    function setCacheData(key,keyName){
+        if(getUrlParam(keyName)!==null &&  getUrlParam(keyName) !== undefined && getUrlParam(keyName)!==''){
+            eCacheUtil.storage.cache(key,getUrlParam(keyName));
+        }
+    }
+
+    if (getUrlParam("productid")){
+        setCacheData(CacheKey.ProjectId,"productid");
+        setCacheData(CacheKey.OpenId,"openId");
+        setCacheData(CacheKey.ModelName,"modelName");
+        setCacheData(CacheKey.imgHref,"modelImageUrl");
+        setCacheData(CacheKey.LastPrice,"lastPrice");
+        setCacheData(CacheKey.source,"fm");
+        eCacheUtil.storage.cache(CacheKey.isSelect,false);
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var fm=eCacheUtil.storage.getCache(CacheKey.source);
+        if(isEmpty(fm)){
+            eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+        }
+        if(fm == 2 || fm == 9 || fm == 10){
+            document.title = '天翼回收';
+        }else{
+            document.title = '翼回收';
+        }
+
+        var discountList = [];
+
+        // 使用优惠券
+        $(".discount-box").on('click','.useDiscount',function () {
+            var id = $(this).attr('data-item');
+            if(id) {
+                eCacheUtil.storage.cache('discount_info_infos',id)
+                location.href = 'product.html'
+            }
+
+        })
+
+        var state = 1;
+        var pageIndex = 1;
+        var pageSize = 5;
+        var off_on = true;
+        //点击切换tab
+        $(".discount_tab  ").on('click','div',function () {
+            $(this).addClass('active').siblings('div').removeClass('active')
+            $('.discount-box').html('');
+            state = $(this).index() + 1;
+            discountList = [];
+            pageIndex = 1;
+
+            getDiscountList(1)
+        })
+
+
+
+        //    查询优惠券列表
+        getDiscountList(1)
+        function getDiscountList() {
+            var phone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+            var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+            var params = {};
+            if(phone) {
+                params.phone = phone
+            }else {
+                params.phone = HappyGoMobile
+            }
+            params.state = state;
+            params.pageIndex = pageIndex;
+            params.pageSize = pageSize;
+
+
+            $.post(linkUrl+'/recycle/getCouponList.do',{params:JSON.stringify(params)},
+                function(data){
+                    if(data.success) {
+                        $("#mask_boxs").hide();
+                        if(discountList.length == 0 && data.result.recordsTotal == 0) {
+                            $('.discount-box').html('<p class="baseline blue" style="text-align: center;line-height: 0.4rem;' +
+                                'color: #a2a2a2">——没有更多数据了！——</p>')
+                        }else if(discountList.length >= data.result.recordsTotal){
+                            $(".discount-box").find('.baseline').empty()
+                            $('.discount-box').append('<p class="baseline blue" style="text-align: center;line-height: 0.4rem;' +
+                                'color: #a2a2a2">——没有更多数据了！——</p>')
+                        }else {
+
+                            discountList = discountList.concat(data.result.Coupons);
+                            var htmlStr = '';
+                            if(state == 1) {
+                                discountList.forEach(item => {
+                                    var str = '<div class="discount_box active">';
+                                    str += '<div class="discount-item">';
+                                    if(item.couponPrice.toString().indexOf('%') > -1) {
+                                        str += '<div>'+ item.couponPrice +'</div>';
+                                    }else {
+                                        str += '<div><sub>￥</sub>'+ item.couponPrice +'</div>';
+                                    }
+                                    str += '<div>（' + item.couponName +'）</div>';
+                                    str += '<div><button class="useDiscount" data-item="'+ item.couponId +'">立即使用</button></div>'
+                                    str += '</div>'
+                                    str += '<div class="discount-date">有效时间：'
+                                    str += item.beginTime + ' 至 ' + item.endTime;
+                                    str += '</div></div>';
+                                    htmlStr = htmlStr + str;
+                                })
+                            }else {
+                                discountList.forEach(item => {
+                                    var str = '<div class="discount_box ">';
+                                    str += '<div class="discount-item">';
+                                    if(item.couponPrice.toString().indexOf('%') > -1) {
+                                        str += '<div>'+ item.couponPrice +'</div>';
+                                    }else {
+                                        str += '<div><sub>￥</sub>'+ item.couponPrice +'</div>';
+                                    }
+
+                                    str += '<div>（' + item.couponName +'）</div>';
+                                    str += '<div><button >立即使用</button></div>'
+                                    str += '</div>'
+                                    str += '<div class="discount-date">有效时间：'
+                                    str += item.beginTime + ' 至 ' + item.endTime;
+                                    str += '</div></div>';
+                                    htmlStr = htmlStr + str;
+                                })
+                            }
+                            $(".discount-box").find('.baseline').empty()
+                            $('.discount-box').html(htmlStr)
+                        }
+                        off_on = true;
+                    }else {
+                    }
+
+                    // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                })//
+
+        }
+
+        //滚动加载
+        $('.discount').scroll(function() {
+            //当时滚动条离底部10px时开始加载下一页的内容
+            if (($(this)[0].scrollTop + $(this)[0].offsetHeight + 30) >= $(this)[0].scrollHeight) {
+                //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+                if (off_on) {
+                    off_on = false;
+                    pageIndex = pageIndex + 1;
+                    getDiscountList(pageIndex);  //调用执行上面的加载方法
+                }
+            }
+        });
+    })
+</script>
+
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>
