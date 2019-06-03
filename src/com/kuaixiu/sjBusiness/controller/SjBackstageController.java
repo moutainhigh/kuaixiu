@@ -4,6 +4,7 @@ import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.MD5Util;
+import com.common.util.NOUtil;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjBusiness.service.*;
@@ -962,8 +963,9 @@ public class SjBackstageController extends BaseController {
         try {
             String orderNo = request.getParameter("orderNo");
             //获取图片，保存图片到webapp同级inages/sj_images
+            String imageName= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "sj_images" + System.getProperty("file.separator") + "sj_contract";
-            String logoPath = getPath(request, "file", savePath);             //图片路径
+            String logoPath = getPath(request, "file", savePath,imageName);             //图片路径
             String imageUrl = getProjectUrl(request) + "/images/sj_images/sj_contract/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
             OrderContractPicture contractPicture = new OrderContractPicture();

@@ -203,7 +203,7 @@ public class ActivityCompanyController extends BaseController {
 
             //获取图片，保存图片到webapp同级inages/activityCompany目录
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCompany" + System.getProperty("file.separator") + "hd_images";
-            String logoPath = getPath(request, "file", savePath);             //图片路径
+            String logoPath = getPath(request, "file", savePath,null);             //图片路径
             String imageUrl = getProjectUrl(request) + "/images/activityCompany/hd_images" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
 
@@ -287,7 +287,7 @@ public class ActivityCompanyController extends BaseController {
                 }
                 imageUrl = fileURL;
             } else {
-                String logoPath = getPath(request, "file", savePath);             //图片路径
+                String logoPath = getPath(request, "file", savePath,null);             //图片路径
                 imageUrl = getProjectUrl(request) + "/images/activityCompany/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             }
             System.out.println("图片路径：" + savePath);

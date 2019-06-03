@@ -108,6 +108,9 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-5 control-label">（两条规则之间用“|”隔开）</label><!--图片显示位置-->
+        </div>
+        <div class="form-group">
             <label for="isDefault" class="col-sm-2 control-label"><span style="color:red"></span>是否默认</label>
             <div class="col-sm-9">
                 <div class="oldToNew">

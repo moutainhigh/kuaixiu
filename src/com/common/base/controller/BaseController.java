@@ -402,7 +402,7 @@ public class BaseController {
     /**
      * 保存文件
      */
-    protected String getPath(HttpServletRequest request, String file, String URLPath) {
+    protected String getPath(HttpServletRequest request, String file, String URLPath,String imageName) {
         String fileName = "";                   //上传的文件名
         String path = "";                       //存储路径
         try {

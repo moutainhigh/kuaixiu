@@ -6,7 +6,7 @@
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">回收管理</a></strong>
         /
-        <small>生成加价券规则</small>
+        <small>创建加价券规则</small>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="isDefault" class="col-sm-3 control-label"><span style="color:red"></span>加价券类型</label>
+            <label for="pricingTypes" class="col-sm-2 control-label"><span style="color:red"></span>加价券类型</label>
             <div class="col-sm-9">
                 <div class="oldToNew">
                     <input name="pricingType" type="radio"  value="1"checked/>百分比加价
@@ -38,14 +38,14 @@
                 </div>
             </div>
         </div>
-        <div class="form-group" id="prices">
+        <div class="form-group" id="subtractionPrices">
             <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券金额</label>
             <div class="col-sm-9">
                 <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入优惠券金额">
             </div>
         </div>
 
-        <div class="form-group" id="projects">
+        <div class="form-group" id="upperLimits">
             <label for="upperLimit" class="col-sm-2 control-label"> 订单金额上限</label>
             <div class="col-sm-9">
                 <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">
@@ -69,7 +69,7 @@
                 <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="订单金额上限">
             </div>
         </div>
-        <div class="form-group" id="projects">
+        <div class="form-group" id="validBeginTimes">
             <input type="hidden" id="validBeginTime" name="validBeginTime"/>
             <input type="hidden" id="validEndTime" name="validEndTime"/>
             <label for="validTime" class="col-sm-2 control-label"><span style="color:red">*</span> 有效时间</label>
