@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="pricingTypes" class="col-sm-2 control-label"><span style="color:red"></span>加价券类型</label>
+            <label for="pricingTypes" class="col-sm-2 control-label"><span style="color:red">*</span>加价券类型</label>
             <div class="col-sm-9">
                 <div class="oldToNew">
                     <input name="pricingType" type="radio"  value="1"checked/>百分比加价
@@ -46,25 +46,25 @@
         </div>
 
         <div class="form-group" id="upperLimits">
-            <label for="upperLimit" class="col-sm-2 control-label"> 订单金额上限</label>
+            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>
             <div class="col-sm-9">
                 <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">
             </div>
         </div>
         <div class="form-group" id="addPriceUppers">
-            <label for="upperLimit" class="col-sm-2 control-label"> 加价额度上限</label>
+            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
             <div class="col-sm-9">
                 <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="订单金额上限">
             </div>
         </div>
         <div class="form-group" id="prices">
-            <label for="upperLimit" class="col-sm-2 control-label"> 加价额度</label>
+            <label for="upperLimit" class="col-sm-2 control-label"><span style="color:red">*</span> 加价额度</label>
             <div class="col-sm-9">
                 <input type="text" id="price" name="price" class="form-control" placeholder="订单金额上限">
             </div>
         </div>
         <div class="form-group" id="ruleDescriptions">
-            <label for="upperLimit" class="col-sm-2 control-label"> 规则描述</label>
+            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
             <div class="col-sm-9">
                 <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="订单金额上限">
             </div>
@@ -79,7 +79,7 @@
         </div>
 
         <div class="form-group" id="projects">
-            <label for="upperLimit" class="col-sm-2 control-label"> 备注</label>
+            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>备注</label>
             <div class="col-sm-9">
                 <input type="text" id="note" name="note" class="form-control" placeholder="备注">
             </div>

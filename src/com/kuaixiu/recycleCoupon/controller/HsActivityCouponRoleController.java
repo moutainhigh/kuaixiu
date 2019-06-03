@@ -220,8 +220,8 @@ public class HsActivityCouponRoleController extends BaseController {
 
             if (StringUtils.isBlank(source) || StringUtils.isBlank(headHeight) || StringUtils.isBlank(headWide) ||
                     StringUtils.isBlank(marginHeight) || StringUtils.isBlank(marginWide) || StringUtils.isBlank(centercolorValue) ||
-                    StringUtils.isBlank(centerHeight) || StringUtils.isBlank(centerWide) || activityRoles.length == 0 ||
-                    couponRoles.length == 0) {
+                    StringUtils.isBlank(centerHeight) || StringUtils.isBlank(centerWide) || activityRoles==null ||
+                    couponRoles == null) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             //头图
