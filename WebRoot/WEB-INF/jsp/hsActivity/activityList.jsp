@@ -79,7 +79,7 @@
     dto.setColumns([
         {"data": "id", "class": "center"},
         {"data": "activityLabel", "class": ""},
-        {"data": "source", "class": ""},
+        {"data": "sourceName", "class": ""},
         {"data": "isDefault", "class": ""},
         {"data": "headHeight", "class": ""},
         {"data": "headWide", "class": ""},

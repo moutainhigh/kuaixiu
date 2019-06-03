@@ -157,7 +157,6 @@ public class HsActivityCouponRoleController extends BaseController {
         String returnView = "hsActivity/activityList";
         return new ModelAndView(returnView);
     }
-
     /**
      * 活动列表
      *
@@ -171,6 +170,10 @@ public class HsActivityCouponRoleController extends BaseController {
         HsActivityCoupon activityCoupon = new HsActivityCoupon();
         activityCoupon.setPage(page);
         List<HsActivityCoupon> activityCoupons = hsActivityCouponService.queryListForPage(activityCoupon);
+        for(HsActivityCoupon activityCoupon1:activityCoupons){
+            String sourceName= systemService.queryById(activityCoupon1.getSource()).getName();
+            activityCoupon1.setSourceName(sourceName);
+        }
         page.setData(activityCoupons);
         this.renderJson(response, page);
     }
