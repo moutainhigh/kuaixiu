@@ -18,14 +18,14 @@
         <div class="form-group" id="nameLabels">
             <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 规则名称</label>
             <div class="col-sm-9">
-                <input type="text" id="nameLabel" name="nameLabel" class="form-control" placeholder="请输入优惠券名称">
+                <input type="text" id="nameLabel" name="nameLabel" class="form-control" placeholder="请输入规则名称">
             </div>
         </div>
 
         <div class="form-group" id="couponNames">
             <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券名称</label>
             <div class="col-sm-9">
-                <input type="text" id="couponName" name="couponName" class="form-control" placeholder="请输入优惠券名称">
+                <input type="text" id="couponName" name="couponName" class="form-control" placeholder="请输入加价券名称">
             </div>
         </div>
         <div class="form-group">
@@ -41,7 +41,7 @@
         <div class="form-group" id="subtractionPrices">
             <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券金额</label>
             <div class="col-sm-9">
-                <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入优惠券金额">
+                <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入加价券金额">
             </div>
         </div>
 
@@ -54,19 +54,19 @@
         <div class="form-group" id="addPriceUppers">
             <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
             <div class="col-sm-9">
-                <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="订单金额上限">
+                <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="加价额度上限">
             </div>
         </div>
         <div class="form-group" id="prices">
             <label for="upperLimit" class="col-sm-2 control-label"><span style="color:red">*</span> 加价额度</label>
             <div class="col-sm-9">
-                <input type="text" id="price" name="price" class="form-control" placeholder="订单金额上限">
+                <input type="text" id="price" name="price" class="form-control" placeholder="加价额度">
             </div>
         </div>
         <div class="form-group" id="ruleDescriptions">
             <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
             <div class="col-sm-9">
-                <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="订单金额上限">
+                <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="规则描述">
             </div>
         </div>
         <div class="form-group" id="validBeginTimes">
@@ -74,7 +74,7 @@
             <input type="hidden" id="validEndTime" name="validEndTime"/>
             <label for="validTime" class="col-sm-2 control-label"><span style="color:red">*</span> 有效时间</label>
             <div class="col-sm-9">
-                <input type="text" id="validTime" class="form-control" placeholder="请选择优惠券有效时间" readonly="readonly">
+                <input type="text" id="validTime" class="form-control" placeholder="请选择加价券有效时间" readonly="readonly">
             </div>
         </div>
 

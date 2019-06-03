@@ -74,7 +74,7 @@
             <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框宽度</label>
             <div class="col-sm-9">
                 <input type="text" style="width:400px;" id="marginWide" name="marginWide" class="form-control"
-                       placeholder="加价券边框高度">
+                       placeholder="加价券边框宽度">
             </div>
         </div>
         <div class="form-group">
@@ -82,7 +82,7 @@
             <div class="col-sm-9">
                 <input type="text" id="centercolorValue" style="width:400px;" name="centercolorValue"
                        class="form-control"
-                       placeholder="快修业务">
+                       placeholder="加价券图片色值">
             </div>
         </div>
         <div class="form-group">
@@ -90,7 +90,7 @@
             <div class="col-sm-9">
                 <input type="text" style="width:400px;" name="centerHeight" id="centerHeight"
                        class="form-control"
-                       placeholder="电信业务">
+                       placeholder="加价券图片高度">
             </div>
         </div>
         <div class="form-group">
@@ -98,7 +98,7 @@
             <div class="col-sm-9">
                 <input type="text" style="width:400px;" name="centerWide" id="centerWide"
                        class="form-control"
-                       placeholder="电信业务">
+                       placeholder="加价券图片宽度">
             </div>
         </div>
         <div class="form-group">
