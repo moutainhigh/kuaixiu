@@ -227,7 +227,7 @@
             }
         }
     ]);
-    dto.sScrollXInner = "130%";
+    dto.sScrollXInner = "100%";
     var myTable = $("#dt").DataTable(dto);
 
     /**

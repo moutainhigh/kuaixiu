@@ -801,22 +801,22 @@ public class SjBackstageController extends BaseController {
                 } else {
                     company.put("address", province + city + area + company.get("addressDetail").toString());
                 }
-                if(company.get("service_area")!=null){
-                    String serviceArea=company.get("service_area").toString();
-                    StringBuilder sb=new StringBuilder();
-                    if(serviceArea.contains(",")){
-                        String[] serviceAreas=serviceArea.split(",");
-                        for(int i=0;i<serviceAreas.length;i++){
-                            Address address=addressService.queryByAreaId(serviceAreas[i]);
+                if (company.get("service_area") != null) {
+                    String serviceArea = company.get("service_area").toString();
+                    StringBuilder sb = new StringBuilder();
+                    if (serviceArea.contains(",")) {
+                        String[] serviceAreas = serviceArea.split(",");
+                        for (int i = 0; i < serviceAreas.length; i++) {
+                            Address address = addressService.queryByAreaId(serviceAreas[i]);
                             sb.append(address.getArea());
                             sb.append(",");
                         }
-                    }else{
-                        Address address=addressService.queryByAreaId(serviceArea);
+                    } else {
+                        Address address = addressService.queryByAreaId(serviceArea);
                         sb.append(address.getArea());
                     }
                     company.put("serviceArea", sb.toString());
-                }else{
+                } else {
                     company.put("serviceArea", "");
                 }
 
@@ -1115,11 +1115,15 @@ public class SjBackstageController extends BaseController {
             }
             if ("1".equals(isCancel)) {
                 sjUserService.getDao().updateCancel1(loginId, Integer.valueOf(type));
-                company.setPersonNum(company.getPersonNum() - 1);
+                if (Integer.valueOf(type) == 8) {
+                    company.setPersonNum(company.getPersonNum() - 1);
+                }
                 getSjResult(result, null, true, "0", null, "注销成功");
             } else {
                 sjUserService.getDao().updateCancel0(loginId, Integer.valueOf(type));
-                company.setPersonNum(company.getPersonNum() + 1);
+                if (Integer.valueOf(type) == 8) {
+                    company.setPersonNum(company.getPersonNum() + 1);
+                }
                 getSjResult(result, null, true, "0", null, "恢复成功");
             }
             if (Integer.valueOf(type) == 8) {
