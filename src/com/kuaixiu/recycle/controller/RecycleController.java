@@ -1435,14 +1435,14 @@ public class RecycleController extends BaseController {
             if (StringUtils.isNotBlank(o.getCouponId())) {
                 RecycleCoupon recycleCoupon = recycleCouponService.queryById(o.getCouponId());
                 if (recycleCoupon.getPricingType() == 1) {
-                    if (!recycleCoupon.getStrCouponPrice().toString().equals("5")) {
+                    if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
                         if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
                             o.setPrice(o.getPrice().add(recycleCoupon.getAddPriceUpper()));
                         } else {
                             o.setPrice(o.getPrice().add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
                         }
                     } else {
-                        BigDecimal addCouponPrice = recycleOrderService.getHouAddCouponPrice(o.getPrice());
+                        BigDecimal addCouponPrice = recycleOrderService.getAddCouponPrice(o.getPrice());
                         if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice.intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
                             o.setPrice(o.getPrice().add(recycleCoupon.getAddPriceUpper()));
                         } else {
@@ -1486,17 +1486,21 @@ public class RecycleController extends BaseController {
         if (StringUtils.isNotBlank(o.getCouponId())) {
             recycleCoupon = recycleCouponService.queryById(o.getCouponId());
             if (recycleCoupon.getPricingType() == 1) {
-                if (!recycleCoupon.getStrCouponPrice().toString().equals("5")) {
+                if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
                     if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                        o.setPrice(o.getPrice().add(recycleCoupon.getAddPriceUpper()));
                         recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());
                     } else {
-                        recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString());
+                        o.setPrice(o.getPrice().add(o.getPrice().divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())));
+                        recycleCoupon.setCouponPrice(o.getPrice().divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice()).toString());
                     }
                 } else {
-                    BigDecimal addCouponPrice = recycleOrderService.getHouAddCouponPrice(o.getPrice());
+                    BigDecimal addCouponPrice = recycleOrderService.getAddCouponPrice(o.getPrice());
                     if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice.intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                        o.setPrice(o.getPrice().add(recycleCoupon.getAddPriceUpper()));
                         recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());
                     } else {
+                        o.setPrice(o.getPrice().add(addCouponPrice));
                         recycleCoupon.setCouponPrice(addCouponPrice.toString());
                     }
                 }
