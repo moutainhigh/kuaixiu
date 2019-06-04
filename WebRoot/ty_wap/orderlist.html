@@ -25,21 +25,21 @@
                 <a href="javascript:;">已完成</a>
                 <a href="javascript:;"> 已取消 </a>-->
             </div>
-             
+
             <div class="cont">
-               
+
             </div>
             <div id="template" class="order_list" style="display:none">
                 <div class="order_title">
                     <p>订单号：<span class="orderId"></span></p>
                     <p class="status color-red"></p>
                 </div>
-            
+
                 <section class="proRelated">
                     <div class="proInfor">
                         <div class="image"><img src="img/temp1.jpg" alt=""></div>
                         <div class="text">
-                            
+
                         </div>
                     </div>
                     <div class="priceBox">
@@ -47,7 +47,7 @@
                     </div>
                 </section>
             </div>
-            
+
         </div>
         <!--遮盖层-->
         <div id="mask_boxs">
@@ -62,13 +62,13 @@
             </div>
         </div>
         <!--错误提示end-->
-        
+
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
 	<script src="js/util.js"></script>
     <script>
-	
+
     	var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
 		var tip = GetQueryString('tip');
 		var fm = eCacheUtil.storage.getCache(CacheKey.source);
@@ -110,8 +110,18 @@
         });
 
         function searchOrderList(pIndex,orderStatus) {
+            var phoneNumber = '';
+            var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+            var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+            if(loginPhone || HappyGoMobile) {
+                if (loginPhone) {
+                    phoneNumber = loginPhone
+                } else if (HappyGoMobile) {
+                    phoneNumber = HappyGoMobile
+                }
+            }
             var params = {
-                contactphone:eCacheUtil.storage.getCache(CacheKey.loginPhone),
+                contactphone: phoneNumber,
                 pageindex:pIndex,
                 pagesize:"3",
                 processstatus:orderStatus
@@ -132,7 +142,7 @@
                 }else {
                     loading_hide();
                     alertTip(data.resultMessage);
-					 location.href = 'login.html';
+					 location.href = 'indexHappy.html';
                 }
             });
         }
@@ -153,13 +163,13 @@
                     item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
                 }
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
-				
+
 				if(n.processstatus == 204){
 				 $('.priceText',tmp).html("成交价"+"¥"+(n.orderprice).toFixed(2));
 				}else{
 				 $('.priceText',tmp).html("预估价"+"¥"+(n.orderprice).toFixed(2));
 				}
-        
+
                 //追加到对应区块
                 $(".cont").append(tmp);
             });
@@ -169,7 +179,7 @@
         $('.cont').scroll(function() {
             //当时滚动条离底部10px时开始加载下一页的内容
             if (($(this)[0].scrollTop + $(this)[0].offsetHeight + 30) >= $(this)[0].scrollHeight) {
-                //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）   
+                //这里用 [ off_on ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
                 if (off_on) {
                     off_on = false;
                     pIndex++;
@@ -178,7 +188,7 @@
                 }
             }
         });
-        
+
     </script>
 <!--站长统计-->
 <div style="display: none;">

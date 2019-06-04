@@ -21,9 +21,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,6 +106,28 @@ public class HsActivityCouponController extends BaseController {
             CookiesUtil.setCookie(response, Consts.COOKIE_HS_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
             hsActivityCouponService.saveUser(phone);
             getSjResult(result, null, true, "0", null, "登录成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("/recycle/isLogin")
+    @ResponseBody
+    public ResultData isLogin(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_HS_PHONE);
+            if (cookie == null || StringUtils.isBlank(cookie.getValue())) {
+                return getResult(result, null, false, "2", "请登录");
+            }
+            String cookiePhone = cookie.getValue();
+            String phoneBase64 = URLDecoder.decode(cookiePhone, "UTF-8");
+            String phone = Base64Util.getFromBase64(phoneBase64);
+            jsonObject.put("phone", phone);
+            getSjResult(result, jsonObject, true, "0", null, "已登录");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());

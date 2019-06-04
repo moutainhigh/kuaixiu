@@ -372,22 +372,18 @@
                             var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
                             var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
                             if(loginPhone || HappyGoMobile) {
-                                if( prePrice * 0.05 >= 200){
+                                if( prePrice * 0.1 >= 200){
                                     // $('.price-tip span').text(200);
                                     $('.price').html(prePrice + 200);
                                 }else{
                                     //$('.price-tip span').text(prePrice*0.1);
-                                    $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                                    $('.price').html(prePrice +  Math.round(prePrice*0.1));
                                 }
                             }else {
 
                                 $('.price').html(prePrice);
                             }
                         }
-
-
-
-
 
                       /*  if(  prePrice * 0.1 >= 200 ){
                             $('.price-tip span').text(200);
@@ -452,7 +448,18 @@
                             res = str.match(reg);
                         take_time = str.replace(res," ");
                     }
-                var params = {
+                var phoneNumber = '';
+                var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+                var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                if(loginPhone || HappyGoMobile) {
+                    if (loginPhone) {
+                        phoneNumber = loginPhone
+                    } else if (HappyGoMobile) {
+                        phoneNumber = HappyGoMobile
+                    }
+                }
+                    var params = {
+                    phone: phoneNumber,
                     quoteId:base.decode(eCacheUtil.storage.getCache(CacheKey.quoteId)),
                     customerName:$('#connect').val(),
                     mobile:$('#inputtel').val(),
@@ -701,7 +708,23 @@
 
     <script>
         $(function(){
-            isLoginCheck();
+
+            $.post(
+                getRealPath()+"/recycle/isLogin.do",
+                {
+
+                },
+                function(data){
+                    // console.log(data)
+                    if ( data.success){
+                        eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                    }else{
+
+                    }
+
+                    isLoginCheck();
+                });
+            // isLoginCheck();
             // 判断是否登录
             function isLoginCheck() {
                 var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
@@ -747,7 +770,7 @@
                                             $('.price').html(prePrice + data.result.couponPrice);
 
                                         }else {
-                                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                                            $('.price').html(prePrice +  Math.round(prePrice*0.1));
                                         }
                                     }
 
@@ -762,7 +785,7 @@
                             $('.price').html(prePrice + 200);
 
                         }else {
-                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
+                            $('.price').html(prePrice +  Math.round(prePrice*0.1));
                         }
                     }
                 }else {

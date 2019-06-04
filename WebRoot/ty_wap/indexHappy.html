@@ -471,7 +471,23 @@
                 })
             }
 
+            $.post(
+                getRealPath()+"/recycle/isLogin.do",
+                {
+
+                },
+                function(data){
+                    if ( data.success){
+                        eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                        isLoginCheck();
+                    }else{
+                        isLoginCheck();
+                    }
+                });
+
         })
+
+
     </script>
 <!--站长统计-->
 <div style="display: none;">
