@@ -812,15 +812,16 @@ public class RecycleNewController extends BaseController {
             String processstatus = params.getString("processstatus");
 
             if (StringUtils.isBlank(contactphone)) {
-                Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_NEW_H5_PHONE);
+                Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_HS_PHONE);
                 if (cookie == null || StringUtils.isBlank(cookie.getValue())) {
                     return getResult(result, null, false, "2", "请输入手机号");
                 }
                 String cookiePhone = cookie.getValue();
-                contactphone = URLDecoder.decode(cookiePhone, "UTF-8");
+                String phoneBase64 = URLDecoder.decode(cookiePhone, "UTF-8");
+                contactphone = Base64Util.getFromBase64(phoneBase64);
             } else {
                 String[] dname = request.getServerName().split("\\.");
-                CookiesUtil.setCookie(response, Consts.COOKIE_NEW_H5_PHONE, contactphone, CookiesUtil.prepare(dname), 999999999);
+                CookiesUtil.setCookie(response, Consts.COOKIE_HS_PHONE, Base64Util.getBase64(contactphone), CookiesUtil.prepare(dname), 999999999);
             }
 
             JSONObject requestNews = new JSONObject();
