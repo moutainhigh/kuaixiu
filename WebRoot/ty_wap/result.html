@@ -108,23 +108,26 @@
 
             <div class="recycleWay">
                 <!--<p class="moduleTitle">收款方式</p>-->
+				
                 <div class="eachRow">
+				    <span class="title">结款方式：</span>
+					 <label class="label" data-way="alipayText">
+                        <input name="way"  checked="checked" type="radio" value="1" />
+                        <i class="radio_icon"></i>
+                        <span class="genre">支付宝付款</span>
+                    </label>
                     <label class="label" data-way="phoneText">
-                        <input checked="checked" name="way" type="radio" value="2" />
+                        <input  name="way" type="radio" value="2" />
                         <i class="radio_icon"></i>
                         <span class="genre">话费充值</span>
                         <img src="img/icon_hot.png" alt="">
                     </label>
-                    <label class="label" data-way="alipayText">
-                        <input name="way" type="radio" value="1" />
-                        <i class="radio_icon"></i>
-                        <span class="genre">支付宝付款</span>
-                    </label>
+                   
                 </div>
                 <div class="inputRow" id="alipayBox">
-                    <input id="alipay2" class="text mustText phoneText" data-way="call" maxlength="11"  type="text" value="" placeholder="请输入手机充值号码" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                    <input id="alipay2" class="text mustText phoneText" data-way="call" style="display:none;" maxlength="11"  type="text" value="" placeholder="请输入手机充值号码" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
 
-                    <input id="alipay1" class="text mustText alipayText" data-way="alipay" style="display:none;" type="text" value="" placeholder="请输入支付宝账号">
+                    <input id="alipay1" class="text mustText alipayText" data-way="alipay"  type="text" value="" placeholder="请输入支付宝账号">
 
                 </div>
             </div>

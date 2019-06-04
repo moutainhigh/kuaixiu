@@ -300,6 +300,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         BigDecimal addCouponPrice = new BigDecimal(orderPrice).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("95"));
         return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP).toString();
     }
+
     /**
      * 返回结果解析
      */

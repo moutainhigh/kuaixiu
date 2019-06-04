@@ -2180,6 +2180,12 @@ textarea:-moz-placeholder {
       -ms-flex-pack: start;
           justify-content: flex-start;
 }
+
+#wrap.orderWrap .main .recycleWay .eachRow .title{
+  font-size: .14rem;
+  font-weight: 450;
+  color: #000000;
+}
 #wrap.orderWrap .main .recycleWay .eachRow .label {
   display: -webkit-box;
   display: -ms-flexbox;

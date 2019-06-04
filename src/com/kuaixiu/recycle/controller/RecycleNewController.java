@@ -360,7 +360,7 @@ public class RecycleNewController extends BaseController {
                 myExecutor.fun(session, j, openId, loginMobile, items, productId,
                         price, source, recycleCheckItemsService);
                 price=recycleOrderService.div095(price);//加个乘以0.95
-                j.put("price",price);
+                j.put("price",Integer.valueOf(price));
             }
 
             getResult(result, jsonResult, true, "0", "");
