@@ -296,6 +296,10 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
+    public static String div095(String orderPrice){
+        BigDecimal addCouponPrice = new BigDecimal(orderPrice).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("95"));
+        return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+    }
     /**
      * 返回结果解析
      */
@@ -306,6 +310,8 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         }
         return result;
     }
+
+
 
     /**
      * 超人系统地址为 上海市 黄浦区 城区    -----  浙江 杭州市 江干区

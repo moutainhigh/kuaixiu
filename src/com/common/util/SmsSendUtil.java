@@ -66,7 +66,7 @@ public class SmsSendUtil {
         }
         content = content.replace("${code}", randomCode);
         //System.out.println(content);
-        return sendSms(mobile, content);
+        return sendSms2(mobile, content);
     }
 
     /**
@@ -814,7 +814,7 @@ class SmsSendThread implements Runnable {
 
     @Override
     public void run() {
-        SmsSendUtil.sendSms(mobile, content);
+        SmsSendUtil.sendSms2(mobile, content);
     }
 
 }
