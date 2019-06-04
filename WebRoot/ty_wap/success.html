@@ -26,8 +26,11 @@
                 <p>多退少补</p>
             </div>
             <div class="tip">
-                <p>顺丰将在<span id="pickTime" class="color-blue">11月11日11:11</span>上门收取快递</p>
-                <p>工作人员将会提前1小时与您联系，请保持手机畅通！</p>
+               <!-- <p>顺丰将在<span id="pickTime" class="color-blue">11月11日11:11</span>上门收取快递</p>
+                <p>工作人员将会提前1小时与您联系，请保持手机畅通！</p>  -->
+				
+				<P>顺丰上门人员信息稍后短信至您的手机</p>
+				<p>如验货无误，收到机器后48小时放款</p>
             </div>
             <div class="hope">
                 <p>- 达成以下两点，可提高结算速度 -</p>
@@ -65,7 +68,7 @@
 
 			if( PrePrice ){
 			
-			   if(PrePrice* 0.05 >= 200){
+			  /* if(PrePrice* 0.05 >= 200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
 					$('.pre-price-t').text( 200 )
 				}else {
@@ -76,15 +79,15 @@
 					  $('.pre-price-o').text( Number(PrePrice) + Math.round(PrePrice*0.05) )
 					  $('.pre-price-t').text( Math.round(PrePrice*0.1) )
 					}
-				} 
+				}   */
 				
-				/* if(PrePrice*0.1>=200){
+			   if(PrePrice*0.1 >= 200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
 					$('.pre-price-t').text( 200 )
 				}else {
 					$('.pre-price-o').text( Number(PrePrice) + PrePrice*0.1 )
 					$('.pre-price-t').text( PrePrice*0.1 )
-				}  */
+				}
 			}
 			
 

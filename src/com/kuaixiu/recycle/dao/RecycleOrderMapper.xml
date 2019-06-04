@@ -38,6 +38,7 @@
         <result column="is_sale" jdbcType="INTEGER" property="isSale"/>
         <result column="increase_order_no" jdbcType="VARCHAR" property="increaseOrderNo"/>
         <result column="coupon_id" jdbcType="VARCHAR" property="couponId"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
     </resultMap>
 
 
@@ -45,7 +46,7 @@
     t.id, t.order_no, t.check_id, t.pay_ment_id,t.pay_refund_id,t.user_id, t.recycle_type,t.exchange_type,t.order_type, 
     t.pay_mobile, t.product_name, t.percent, t.prepare_price, t.price,t.final_price,t.negotiation_price,t.source_type, t.is_del, t.order_status, t.in_time,
     t.update_time, t.take_time, t.image_path, t.detail, t.sf_order_no, t.customer_id,t.mobile, t.note,t.mail_type,t.wechat_openId,
-    is_sale,increase_order_no,coupon_id
+    is_sale,increase_order_no,coupon_id,phone
   </sql>
 
     <!-- 根据orderno修改记录 -->
@@ -79,11 +80,11 @@
 		insert into kx_recycle_order
 		(id,order_no,check_id,pay_ment_id,pay_refund_id,user_id,recycle_type,exchange_type,order_type,pay_mobile,product_name,
 		percent,prepare_price,price,source_type,order_status,in_time,take_time,
-		image_path,detail,sf_order_no,customer_id,mobile,mail_type,note,wechat_openId,coupon_id)
+		image_path,detail,sf_order_no,customer_id,mobile,mail_type,note,wechat_openId,coupon_id,phone)
 		values
 		(#{id},#{orderNo},#{checkId},#{payMentId},#{payRefundId},#{userId},#{recycleType},#{exchangeType},#{orderType},#{payMobile},#{productName},
 		#{percent},#{preparePrice},#{price},#{sourceType},#{orderStatus},now(),#{takeTime},
-		#{imagePath},#{detail},#{sfOrderNo},#{customerId},#{mobile},#{mailType},#{note},#{wechatOpenId},#{couponId})
+		#{imagePath},#{detail},#{sfOrderNo},#{customerId},#{mobile},#{mailType},#{note},#{wechatOpenId},#{couponId},#{phone})
 	</insert>
 
     <!-- 根据id，修改记录 -->
@@ -102,7 +103,8 @@
 		pay_refund_id=#{payRefundId},
 		is_sale=#{isSale},
 		coupon_id=#{couponId},
-		increase_order_no=#{increaseOrderNo}
+		increase_order_no=#{increaseOrderNo},
+		phone=#{phone}
 		where id=#{id}
 	</update>
 

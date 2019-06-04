@@ -158,10 +158,10 @@
                     $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
 					//判断是否有Coupon元素
                     if(dataInfo.addCouponPrice){
-					    if(Number(dataInfo.addCouponPrice) * 2 >= 200 ){
+					    if(Number(dataInfo.addCouponPrice) >= 200 ){
 						   $('.tickets').show().html( '(含加价￥200)' );
 						}else{
-						   $('.tickets').show().html( '(含加价￥'+Number(dataInfo.addCouponPrice) * 2+')' );
+						   $('.tickets').show().html( '(含加价￥'+Number(dataInfo.addCouponPrice) +')' );
 						}
                     }else{
                         $('.tickets').hide().html('')

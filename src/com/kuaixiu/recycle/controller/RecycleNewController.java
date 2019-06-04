@@ -565,6 +565,7 @@ public class RecycleNewController extends BaseController {
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");//用户登录手机号
             String quoteid = params.getString("quoteId");
             String openId = params.getString("openId");
             String name = params.getString("customerName");
@@ -638,6 +639,7 @@ public class RecycleNewController extends BaseController {
             String customerId = UUID.randomUUID().toString().replace("-", "");
             order.setId(id);
             order.setOrderNo("");
+            order.setPhone(phone);
             order.setOrderType(1);             //正式订单
             order.setRecycleType(1);           //普通回收
             order.setExchangeType(Integer.parseInt(recycleType));

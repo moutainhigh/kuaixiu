@@ -94,18 +94,18 @@ var CacheKey = {
 	ModelId : "model_id",
 	//选择机型后的类型projectName
 	ProjectName : "project_name",
-	
+
 	userName:"user_name",
 	userPhone:"user_phone",
-	
+
 	//手机的估价
 	ModelPrice:"model_price",
 	//击败用户百分百
 	ModelPercent:"model_percent",
-	
+
 	//欢Go获取到的手机号
 	HappyGoMobile:"happygo_mobile",
-	
+
 	//填写收货地址后跳转的页面
 	ToHappyGoPage:"to_happygo_page"
 
@@ -115,7 +115,7 @@ var CacheKey = {
  * @returns {String}
  */
 function getRealPath(){
-	var pathName=location.pathname;  
+	var pathName=location.pathname;
 	var allPath=location.href;
 	var pos=allPath.indexOf(pathName);
 	var linkUrl=allPath.substring(0,pos);
@@ -123,7 +123,7 @@ function getRealPath(){
 	if(linkUrl.indexOf(u)>0){
 		linkUrl='http://m-super.com';
 	}
-	return 'http://47.98.196.79';
+	return linkUrl;
 }
 //绝对路径
      var linkUrl=getRealPath();
@@ -279,7 +279,7 @@ function selectLogin() {
     var is_login=getCookie("is_login"); //是否已登录过
     var code=GetQueryString("code");//判断是否获取了 code
     if(is_login!=undefined||!isWechat()){
-    //如果已登录过   或者来自非微信浏览器的登录 则不需要code  
+    //如果已登录过   或者来自非微信浏览器的登录 则不需要code
         if(code!=undefined){
             toLogin(code);//服务器重启的问题
         }else{
@@ -295,7 +295,7 @@ function selectLogin() {
 }
 
 /**
- * 无需传递code的登录请求   
+ * 无需传递code的登录请求
  * 满足条件：  1.非微信浏览器的登录     2.已经登录过的再次点击该页面
  */
 function login(){
@@ -387,7 +387,7 @@ function GetQueryString(name){
      var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
      var r = window.location.search.substr(1).match(reg);
      if(r!=null){
-    	 return  unescape(r[2]); 
+    	 return  unescape(r[2]);
      }
      return null;
 }
@@ -478,7 +478,7 @@ function orderCancel() {
         alertTip('请选择或写下不少于5个字符您取消的原因！');
         return false;
     }
-    
+
     var params = {
         id:orderId,
         reason:$('#reason').val(),
@@ -594,48 +594,48 @@ String.prototype.rtrim=function(){
     return this.replace(/(\s*$)/g,"");
 }
 
-Number.prototype.fixed=function(n){  
+Number.prototype.fixed=function(n){
 	with(Math)return round(Number(this)*pow(10,n))/pow(10,n);
 };
 
 //判断是否有indexOf方法
-if (!Array.indexOf) {  
-    Array.prototype.indexOf = function (obj) {  
-        for (var i = 0; i < this.length; i++) {  
-            if (this[i] == obj) {  
-                return i;  
-            }  
-        }  
-        return -1;  
-    }  
+if (!Array.indexOf) {
+    Array.prototype.indexOf = function (obj) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == obj) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
 
-//对Date的扩展，将 Date 转化为指定格式的String   
-//月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
-//年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
-//例子：   
-//(new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
-//(new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18   
+//对Date的扩展，将 Date 转化为指定格式的String
+//月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+//年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+//例子：
+//(new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+//(new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
 Date.prototype.format = function(fmt){
-	var o = {   
-			"M+" : this.getMonth()+1,                 //月份   
-			"d+" : this.getDate(),                    //日   
-			"h+" : this.getHours(),                   //小时   
-			"m+" : this.getMinutes(),                 //分   
-			"s+" : this.getSeconds(),                 //秒   
-			"q+" : Math.floor((this.getMonth()+3)/3), //季度   
-			"S"  : this.getMilliseconds()             //毫秒   
-			};   
+	var o = {
+			"M+" : this.getMonth()+1,                 //月份
+			"d+" : this.getDate(),                    //日
+			"h+" : this.getHours(),                   //小时
+			"m+" : this.getMinutes(),                 //分
+			"s+" : this.getSeconds(),                 //秒
+			"q+" : Math.floor((this.getMonth()+3)/3), //季度
+			"S"  : this.getMilliseconds()             //毫秒
+			};
 	if(/(y+)/.test(fmt)){
-		fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+		fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
 	}
 	for(var k in o){
 		if(new RegExp("("+ k +")").test(fmt)){
-			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
 		}
 	}
-	return fmt;   
-}  
+	return fmt;
+}
 
 function getDateDayFormat(day){
 	var now = new Date();
@@ -650,9 +650,9 @@ function getDateHourFormat(hour){
 }
 
 function getTimeStr(remainTime){
-    var hh = parseInt(remainTime / 60 / 60, 10);//计算剩余的分钟数  
-    var mm = parseInt(remainTime / 60 % 60, 10);//计算剩余的分钟数  
-    var ss = parseInt(remainTime % 60, 10);//计算剩余的秒数  
+    var hh = parseInt(remainTime / 60 / 60, 10);//计算剩余的分钟数
+    var mm = parseInt(remainTime / 60 % 60, 10);//计算剩余的分钟数
+    var ss = parseInt(remainTime % 60, 10);//计算剩余的秒数
     if(hh == 0){
 	    return checkTime(mm) + ":" + checkTime(ss);
     }else{
@@ -661,9 +661,9 @@ function getTimeStr(remainTime){
 }
 
 function getHourTimeStr(remainTime){
-    var hh = parseInt(remainTime / 60 / 60, 10);//计算剩余的分钟数  
-    var mm = parseInt(remainTime / 60 % 60, 10);//计算剩余的分钟数  
-    var ss = parseInt(remainTime % 60, 10);//计算剩余的秒数  
+    var hh = parseInt(remainTime / 60 / 60, 10);//计算剩余的分钟数
+    var mm = parseInt(remainTime / 60 % 60, 10);//计算剩余的分钟数
+    var ss = parseInt(remainTime % 60, 10);//计算剩余的秒数
     return checkTime(hh) + ":" + checkTime(mm) + ":" + checkTime(ss);
 }
 
@@ -681,10 +681,10 @@ function getlastday(year,month)
     return (new Date(new_date.getTime()-1000*60*60*24)).getDate();//获取当月最后一天日期
 }
 
-function checkTime(i){    
-    if (i < 10) {    
-        i = "0" + i;    
-    }    
+function checkTime(i){
+    if (i < 10) {
+        i = "0" + i;
+    }
     return i;
 }
 
@@ -728,7 +728,7 @@ function isNumber(value){
 function dataFormat(val, n) {
 	if (isNaN(val)) return "";
 	if (n == undefined || n == null || isNaN(n)) n = 2;
- 
+
 	return new Number(val).toFixed(n);
 }
 
@@ -753,7 +753,7 @@ function isGbOrEn(value){
  * @param email
  * @returns {Boolean}
  */
-function check_email(email){  
+function check_email(email){
    if(email){
    var myReg=/(^\s*)\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*(\s*$)/;
    if(!myReg.test(email)){return false;}
@@ -765,7 +765,7 @@ function check_email(email){
 
 /**
  * 检查邮编
- * 
+ *
  * @param zip
  * @returns {Boolean}
  */
@@ -780,7 +780,7 @@ function check_zip(zip) {
 
 /**
  * 检查手机号码
- * 
+ *
  * @param mobile
  * @returns {Boolean}
  */
@@ -795,7 +795,7 @@ function check_mobile(mobile) {
 
 /**
  * 检查身份证号码(中间位为*)
- * 
+ *
  * @param idCard
  * @returns {Boolean}
  */
