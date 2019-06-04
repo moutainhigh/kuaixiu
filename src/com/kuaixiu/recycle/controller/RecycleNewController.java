@@ -875,13 +875,23 @@ public class RecycleNewController extends BaseController {
                                     String orderPrice = quote.getString("orderprice");
                                     if (recycleCoupon.getPricingType() == 1) {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
-                                        Integer addCouponPrice = (recycleOrderService.getAddCouponPrice(new BigDecimal(orderPrice))).intValue();
-                                        if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
-                                            quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper().toString());
-                                            quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
+                                        if (!recycleCoupon.getStrCouponPrice().toString().equals("5")) {
+                                            if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                                                quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper());
+                                                quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
+                                            } else {
+                                                quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice());
+                                                quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getStrCouponPrice()));
+                                            }
                                         } else {
-                                            quote.put("addCouponPrice", addCouponPrice.toString());
-                                            quote.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString())));
+                                            Integer addCouponPrice = (recycleOrderService.getAddCouponPrice(new BigDecimal(orderPrice))).intValue();
+                                            if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
+                                                quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper().toString());
+                                                quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
+                                            } else {
+                                                quote.put("addCouponPrice", addCouponPrice.toString());
+                                                quote.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString())));
+                                            }
                                         }
                                     } else {
                                         json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());

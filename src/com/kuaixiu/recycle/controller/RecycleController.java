@@ -780,7 +780,7 @@ public class RecycleController extends BaseController {
             List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
             //判断该订单来源确定是否使用加价券
             if (isSend10Coupon) {
-                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues,order.getPrice());
+                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues, order.getPrice());
                 if (recycleCoupon != null) {
                     couponCode = recycleCoupon.getCouponCode();
                 }
@@ -1382,7 +1382,7 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "/recycle/list")
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
-        if(su==null){
+        if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
         RecycleSystem r = new RecycleSystem();
@@ -1401,7 +1401,7 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/order/queryListForPage")
     public void queryListForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
-        if(su==null){
+        if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
@@ -1432,6 +1432,27 @@ public class RecycleController extends BaseController {
         List<RecycleOrder> list = recycleOrderService.queryListForPage(r);
         List<RecycleSystem> flist = recycleSystemService.queryList(null);
         for (RecycleOrder o : list) {
+            if (StringUtils.isNotBlank(o.getCouponId())) {
+                RecycleCoupon recycleCoupon = recycleCouponService.queryById(o.getCouponId());
+                if (recycleCoupon.getPricingType() == 1) {
+                    if (!recycleCoupon.getStrCouponPrice().toString().equals("5")) {
+                        if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                            o.setPrice(o.getPrice().add(recycleCoupon.getAddPriceUpper()));
+                        } else {
+                            o.setPrice(o.getPrice().add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
+                        }
+                    } else {
+                        BigDecimal addCouponPrice = recycleOrderService.getHouAddCouponPrice(o.getPrice());
+                        if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice.intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                            o.setPrice(o.getPrice().add(recycleCoupon.getAddPriceUpper()));
+                        } else {
+                            o.setPrice(o.getPrice().add(new BigDecimal(addCouponPrice.toString())));
+                        }
+                    }
+                } else {
+                    o.setPrice(o.getPrice().add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
+                }
+            }
             for (RecycleSystem system : flist) {
                 if (o.getSourceType() == system.getId()) {
                     o.setFm(system.getName());  //系统来源
@@ -1450,7 +1471,7 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/order/detail")
     public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
-        if(su==null){
+        if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
@@ -1464,26 +1485,23 @@ public class RecycleController extends BaseController {
         RecycleCoupon recycleCoupon = new RecycleCoupon();
         if (StringUtils.isNotBlank(o.getCouponId())) {
             recycleCoupon = recycleCouponService.queryById(o.getCouponId());
-            if (recycleCoupon.getStrCouponPrice().intValue() != 5) {
-                if (recycleCoupon.getPricingType() == 1) {
-                    Integer addCouponPrice = (o.getPrice().divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())).intValue();
-                    if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
+            if (recycleCoupon.getPricingType() == 1) {
+                if (!recycleCoupon.getStrCouponPrice().toString().equals("5")) {
+                    if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
                         recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());
                     } else {
-                        recycleCoupon.setCouponPrice(String.valueOf(addCouponPrice));
+                        recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString());
                     }
                 } else {
-                    recycleCoupon.setCouponPrice(recycleCoupon.getStrCouponPrice().toString());
+                    BigDecimal addCouponPrice = recycleOrderService.getHouAddCouponPrice(o.getPrice());
+                    if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice.intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                        recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());
+                    } else {
+                        recycleCoupon.setCouponPrice(addCouponPrice.toString());
+                    }
                 }
             } else {
-                //%5加价券
-                Integer addCouponPriceFalse = (o.getPrice().divide(new BigDecimal("100")).multiply(new BigDecimal("5"))).intValue();
-                //BigDecimal couponPrice=new BigDecimal(recycleCoupon.getCouponPrice()).multiply(new BigDecimal("2"));
-                if (recycleCoupon.getAddPriceUpper() != null && addCouponPriceFalse > recycleCoupon.getAddPriceUpper().intValue()) {
-                    recycleCoupon.setCouponPrice(recycleCoupon.getAddPriceUpper().toString());
-                } else {
-                    recycleCoupon.setCouponPrice(addCouponPriceFalse.toString());
-                }
+                o.setPrice(o.getPrice().add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
             }
         }
         RecycleCustomer cust = recycleCustomerService.queryById(o.getCustomerId());
@@ -1509,7 +1527,7 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/preparePay")
     public void preparePay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
-        if(su==null){
+        if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
@@ -1548,7 +1566,7 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/endPay")
     public void endPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
-        if(su==null){
+        if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
@@ -1584,7 +1602,7 @@ public class RecycleController extends BaseController {
     @RequestMapping(value = "recycle/deductPay")
     public void deductPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SessionUser su = getCurrentUser(request);
-        if(su==null){
+        if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
         if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
