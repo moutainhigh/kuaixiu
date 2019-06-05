@@ -1,157 +1,167 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/commons/taglibs.jsp" %>
-<link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
-<script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
-<div class="am-cf am-padding am-padding-bottom-0">
-    <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">活动管理</a></strong>
-        /
-        <small>创建活动</small>
-    </div>
-</div>
-
-<hr>
-
-<div class="am-g">
-
-    <form id="insertForm" method="post" class="form-horizontal" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="source" class="col-sm-2 control-label"><span style="color:red">*</span> 来源</label>
-            <div class="col-sm-9">
-                <select id="source" name="source" style="width:400px;" class="form-control">
-                    <option value="">--请选择--</option>
-                    <c:forEach items="${recycleSystems }" var="item" varStatus="i">
-                        <option value="${item.id }">${item.name }</option>
-                    </c:forEach>
-                </select>
-            </div>
+<div class="modal-backdrop fade in"></div>
+<div class="modal-dialog" style="width: 700px;">
+    <div class="modal-content">
+        <div class="modal-title"><span>新增回收加价券活动</span>
+            <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>上传头图</label>
-            <input class="col-sm-9" type="file" name="headFile" id="headFile" accept="image/*"
-                   onchange="imgChange(this);"/>
-            <!--文件上传选择按钮-->
-            <div id="preview" hidden="hidden" class="col-sm-9">
-                <img id="imghead" src="" width="260" height="180"/> <!--图片显示位置-->
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-5 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
-        </div>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图高度</label>--%>
-            <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" id="headHeight" name="headHeight" class="form-control">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图宽度</label>--%>
-            <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" id="headWide" name="headWide" class="form-control">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>上传加价券图</label>
-            <input class="col-sm-9" type="file" name="centerFile" id="centerFile" accept="image/*"
-                   onchange="imgCenterChange(this);"/>
-            <!--文件上传选择按钮-->
-            <div id="previewCenter" hidden="hidden" class="col-sm-9">
-                <img id="imgCenter" src="" width="260" height="180"/> <!--图片显示位置-->
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-5 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框高度</label>
-            <div class="col-sm-9">
-                <input type="text" style="width:400px;" id="marginHeight" name="marginHeight" class="form-control"
-                       placeholder="加价券边框高度">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框宽度</label>
-            <div class="col-sm-9">
-                <input type="text" style="width:400px;" id="marginWide" name="marginWide" class="form-control"
-                       placeholder="加价券边框宽度">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片色值</label>
-            <div class="col-sm-9">
-                <input type="text" id="centercolorValue" style="width:400px;" name="centercolorValue"
-                       class="form-control"
-                       placeholder="加价券图片色值">
-            </div>
-        </div>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片高度</label>--%>
-            <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" name="centerHeight" id="centerHeight"--%>
-                       <%--class="form-control"--%>
-                       <%--placeholder="加价券图片高度">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片宽度</label>--%>
-            <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" name="centerWide" id="centerWide"--%>
-                       <%--class="form-control"--%>
-                       <%--placeholder="加价券图片宽度">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>活动规则</label>
-            <div class="col-sm-9" id="activityRole">
-                <input style="width:400px;" type="text" id="activityRoles" name="activityRoles"
-                       class="form-control"
-                       placeholder="活动规则">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-9 col-sm-offset-2">
-                <button onclick="addRole();" class="am-btn am-btn-default" type="button">增添规则</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="isDefault" class="col-sm-2 control-label"><span style="color:red"></span>是否默认</label>
-            <div class="col-sm-9">
-                <div class="oldToNew">
-                    <input name="isDefault" type="radio" value="1" checked/>是
-                    &nbsp&nbsp&nbsp&nbsp
-                    <input name="isDefault" type="radio" value="0"/>否
+        <div class="modal-body">
+            <form id="insertForm" method="post" class="form-horizontal" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="source" class="col-sm-2 control-label"><span style="color:red">*</span> 来源</label>
+                    <div class="col-sm-9">
+                        <select id="source" name="source" style="width:400px;" class="form-control">
+                            <option value="">--请选择--</option>
+                            <c:forEach items="${recycleSystems }" var="item" varStatus="i">
+                                <option value="${item.id }">${item.name }</option>
+                            </c:forEach>
+                        </select>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="addBrand" class="col-sm-2 control-label"><span style="color:red">*</span>选择加价券</label>
-            <div class="col-sm-9">
-                <c:forEach items="${couponRoles }" var="item" varStatus="i">
-                    <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
-                        <input type="checkbox" name="couponRoles" value="${item.id }"> ${item.nameLabel }
-                    </label>
-                </c:forEach>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>上传头图</label>
+                    <input class="col-sm-9" type="file" style="width:420px" name="headFile" id="headFile" accept="image/*"
+                           onchange="imgChange(this);"/>
+                    <!--文件上传选择按钮-->
+                    <div id="preview" hidden="hidden" class="col-sm-9">
+                        <img id="imghead" src="" width="260" height="180"/> <!--图片显示位置-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-7 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
+                </div>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图高度</label>--%>
+                <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" id="headHeight" name="headHeight" class="form-control">--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图宽度</label>--%>
+                <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" id="headWide" name="headWide" class="form-control">--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>上传加价券图</label>
+                    <input class="col-sm-9" type="file" type="file" style="width:420px" name="centerFile" id="centerFile" accept="image/*"
+                           onchange="imgCenterChange(this);"/>
+                    <!--文件上传选择按钮-->
+                    <div id="previewCenter" hidden="hidden" class="col-sm-9">
+                        <img id="imgCenter" src="" width="260" height="180"/> <!--图片显示位置-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-7 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
+                </div>
 
+                <%--<div class="form-group">--%>
+                    <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框高度</label>--%>
+                    <%--<div class="col-sm-9">--%>
+                        <%--<input type="text" style="width:400px;" id="marginHeight" name="marginHeight"--%>
+                               <%--class="form-control"--%>
+                               <%--placeholder="加价券边框高度">--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="form-group">--%>
+                    <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框宽度</label>--%>
+                    <%--<div class="col-sm-9">--%>
+                        <%--<input type="text" style="width:400px;" id="marginWide" name="marginWide" class="form-control"--%>
+                               <%--placeholder="加价券边框宽度">--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片色值</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="centercolorValue" style="width:400px;" name="centercolorValue"
+                               class="form-control"
+                               placeholder="加价券图片色值">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>活动结束时间</label>
+                    <div class="am-datepicker-date col-sm-9">
+                        <input type="text" style="width:400px;" id="endTime" name="actvityEndTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
+                    </div>
+                </div>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片高度</label>--%>
+                <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" name="centerHeight" id="centerHeight"--%>
+                <%--class="form-control"--%>
+                <%--placeholder="加价券图片高度">--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="form-group">--%>
+                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片宽度</label>--%>
+                <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" name="centerWide" id="centerWide"--%>
+                <%--class="form-control"--%>
+                <%--placeholder="加价券图片宽度">--%>
+                <%--</div>--%>
+                <%--</div>--%>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>活动规则</label>
+                    <div class="col-sm-9" id="activityRole">
+                        <input style="width:400px;" type="text" id="activityRoles" name="activityRoles"
+                               class="form-control"
+                               placeholder="活动规则">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-2">
+                        <button onclick="addRole();" class="am-btn am-btn-default" type="button">增添规则</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="isDefault" class="col-sm-2 control-label"><span style="color:red"></span>是否默认</label>
+                    <div class="col-sm-9">
+                        <div class="oldToNew">
+                            <input name="isDefault" type="radio" value="1" checked/>是
+                            &nbsp&nbsp&nbsp&nbsp
+                            <input name="isDefault" type="radio" value="0"/>否
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addBrand" class="col-sm-2 control-label"><span style="color:red">*</span>选择加价券</label>
+                    <div class="col-sm-9">
+                        <c:forEach items="${couponRoles }" var="item" varStatus="i">
+                            <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
+                                <input type="checkbox" name="couponRoles" value="${item.id }"> ${item.nameLabel }
+                            </label>
+                        </c:forEach>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-sm-9 col-sm-offset-2">
-                <button id="addSaveBtn" type="button" class="btn btn-default fl" style="padding: 6px 80px;">保 存</button>
-            </div>
+                <button type="submit" class="hide" id="addSubmitBtn"></button>
+            </form>
         </div>
-        <button type="submit" class="hide" id="addSubmitBtn"></button>
-    </form>
+        <div class="modal-footer">
+            <button type="button" id="addSaveBtn" class="btn modal-btn"><span class="am-icon-save icon-save"></span>提交
+            </button>
+            <button type="button" id="addMissBtn" class="btn modal-btn" data-dismiss="modal" aria-label="Close"><span
+                    class="am-icon-close icon-close"></span>取消
+            </button>
+        </div>
+    </div><!-- /.modal-content -->
 </div>
-<!-- /am-g -->
-
+<!-- /.modal-dialog -->
 
 <script type="text/javascript">
     function addRole() {
         $("#activityRole").append("<input style='width:400px;' type='text' name='activityRoles'" +
             "class='form-control' placeholder='活动规则'>");
     }
+
+    $("#actvityEndTime").datetimepicker({
+        format: "yyyy-mm-dd",
+        language: "zh-CN",
+        autoclose: true,//选中关闭
+        minView: "month"//设置只显示到月份
+    });
 
     // 选择图片显示
     function imgChange(obj) {
@@ -219,45 +229,112 @@
             }
         }
     }
-
     //点击保存按钮,提交form表单，触发校验
     $("#addSaveBtn").click(function () {
-        var formdata = new FormData($("#insertForm")[0]);
-        var headFile = $('#headFile').get(0).files[0];
-        var centerFile = $('#centerFile').get(0).files[0];
-//        console.info(headFile);
-//        console.info(centerFile);
-        if (headFile&&centerFile) {
-            $.ajax({
-                url: "${ctx}/hsActivity/addActivity.do",
-                type: "POST",
-                data: formdata,
-                dataType: "json",
-                processData: false,  // 告诉jQuery不要去处理发送的数据
-                contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
-                success: function (result) {
-                    if (result.success) {
-                        AlertText.tips("d_alert", "提示", result.resultMessage);
-                        $("#insertForm")[0].reset();
-                        var imghead = document.getElementById('imghead');
-                        imghead.setAttribute('src', '');
-                        $("#preview").hide();
-                        var imgCenter = document.getElementById('imgCenter');
-                        imgCenter.setAttribute('src', '');
-                        $("#previewCenter").hide();
-                    } else {
-                        AlertText.tips("d_alert", "提示", result.resultMessage);
-                    }
-                },
-                error: function () {
-                    alert("异常");
-                }
+        //格式化分类属性信息为JSON串
+        $("#addSubmitBtn").click();
+    });
 
-            })
-        } else {
-            AlertText.tips("d_alert", "提示", "请选择上传文件！");
-        }
-    })
+    //表单验证
+    $(document).ready(function () {
+        insertValidatorForm();
+    });
+    //初始化表单
+    function insertValidatorForm() {
+//        var headFile = $('#headFile').get(0).files[0];
+//        var centerFile = $('#centerFile').get(0).files[0];
+//        if (headFile && centerFile) {
+            $("#insertForm")
+                .bootstrapValidator({
+                    message: "不能为空",
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        source: {
+                            validators : {
+                                notEmpty : {
+                                    message : "不能为空"
+                                }
+                            }
+                        },
+                        headFile: {
+                            validators : {
+                                notEmpty : {
+                                    message : "图片不能为空"
+                                }
+                            }
+                        },
+                        centerFile: {
+                            validators : {
+                                notEmpty : {
+                                    message : "图片不能为空"
+                                }
+                            }
+                        },
+                        centercolorValue: {
+                            validators : {
+                                notEmpty : {
+                                    message : "不能为空"
+                                }
+                            }
+                        },
+                        activityRoles: {
+                            validators : {
+                                notEmpty : {
+                                    message : "不能为空"
+                                }
+                            }
+                        },
+                        couponRoles: {
+                            validators : {
+                                notEmpty : {
+                                    message : "不能为空"
+                                }
+                            }
+                        }
+                    }// end fields
+                }).on("success.form.bv", function (e) {
+                // 阻止表单提交
+                e.preventDefault();
+                // 验证颜色是否添加
+                //console.log("ddd");
+                //加载等待
+                AlertText.tips("d_loading");
+                //校验成功后的操作
+                var btn = $("#addSaveBtn");
+                //让按钮不能点击
+                btn.button("loading");
+                //遮盖层
+                var options = {
+                    url: "${ctx}/hsActivity/addActivity.do",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.success) {
+                            AlertText.tips("d_alert", "提示", result.resultMessage);
+                            refreshPage();
+                            //全部更新完后关闭弹窗
+                            $("#addMissBtn").click();
+                            //重置表单数据
+                            document.getElementById("insertForm").reset();
+                        } else {
+                            AlertText.tips("d_alert", "提示", result.resultMessage);
+                        }
+                    },
+                    error: function () {
+                        alert("系统异常，请稍后再试");
+                        addFormReset();
+                    }
+                }; // end options
+                $("#insertForm").ajaxSubmit(options);
+            }); // end on("success.form.bv"
+//        } else {
+//            AlertText.tips("d_alert", "提示", "请选择上传文件！");
+//        }
+    }
+
     $("#startTime").datetimepicker({
         format: "yyyy-mm-dd",
         language: "zh-CN",
@@ -277,6 +354,12 @@
         pickerPosition: 'top-right',
         autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
+    });
+
+    //点击保存按钮,提交form表单，触发校验
+    $("#addSaveBtn").click(function () {
+        //格式化分类属性信息为JSON串
+        $("#addSubmitBtn").click();
     });
 
 </script>

@@ -1,113 +1,124 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/commons/taglibs.jsp" %>
-<link rel="stylesheet" href="${webResourceUrl}/resource/order/css/order.detail.css">
-<script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
-<div class="am-cf am-padding am-padding-bottom-0">
-    <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">回收管理</a></strong>
-        /
-        <small>创建加价券规则</small>
+<div class="modal-backdrop fade in"></div>
+<div class="modal-dialog" style="width: 700px;">
+  <div class="modal-content">
+    <div class="modal-title"><span>新增创建加价券规则</span>
+      <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
     </div>
-</div>
-
-<hr>
-
-<div class="am-g">
-
-    <form id="insertForm" method="post" class="form-horizontal">
+    <div class="modal-body">
+      <form id="insertForm" method="post" class="form-horizontal">
         <div class="form-group" id="nameLabels">
-            <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 规则名称</label>
-            <div class="col-sm-9">
-                <input type="text" id="nameLabel" name="nameLabel" class="form-control" placeholder="请输入规则名称">
-            </div>
+          <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 规则名称</label>
+          <div class="col-sm-9">
+            <input type="text" id="nameLabel" name="nameLabel" class="form-control" placeholder="请输入规则名称">
+          </div>
         </div>
 
         <div class="form-group" id="couponNames">
-            <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券名称</label>
-            <div class="col-sm-9">
-                <input type="text" id="couponName" name="couponName" class="form-control" placeholder="请输入加价券名称">
-            </div>
+          <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券名称</label>
+          <div class="col-sm-9">
+            <input type="text" id="couponName" name="couponName" class="form-control" placeholder="请输入加价券名称">
+          </div>
         </div>
         <div class="form-group">
-            <label for="pricingTypes" class="col-sm-2 control-label"><span style="color:red">*</span>加价券类型</label>
-            <div class="col-sm-9">
-                <div class="oldToNew">
-                    <input name="pricingType" type="radio"  value="1"checked/>百分比加价
-                    &nbsp&nbsp&nbsp&nbsp
-                    <input name="pricingType" type="radio"  value="2"/>固定加价
-                </div>
+          <label for="pricingTypes" class="col-sm-2 control-label"><span style="color:red">*</span>加价券类型</label>
+          <div class="col-sm-9">
+            <div class="oldToNew">
+              <input name="pricingType" type="radio"  value="1"checked/>百分比加价
+              &nbsp&nbsp&nbsp&nbsp
+              <input name="pricingType" type="radio"  value="2"/>固定加价
             </div>
+          </div>
         </div>
         <div class="form-group" id="prices">
-            <label for="upperLimit" class="col-sm-2 control-label"><span style="color:red">*</span> 加价额度</label>
-            <div class="col-sm-9">
-                <input type="text" id="price" name="price" class="form-control" placeholder="加价额度">
-            </div>
+          <label for="upperLimit" class="col-sm-2 control-label"><span style="color:red">*</span> 加价额度</label>
+          <div class="col-sm-9">
+            <input type="text" id="price" name="price" class="form-control" placeholder="加价额度">
+          </div>
         </div>
         <div class="form-group" id="addPriceUppers">
-            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
-            <div class="col-sm-9">
-                <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="加价额度上限">
-            </div>
+          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
+          <div class="col-sm-9">
+            <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="加价额度上限">
+          </div>
         </div>
-        <div class="form-group" id="validBeginTimes">
-            <input type="hidden" id="validBeginTime" name="validBeginTime"/>
-            <input type="hidden" id="validEndTime" name="validEndTime"/>
-            <label for="validTime" class="col-sm-2 control-label"><span style="color:red">*</span> 有效时间</label>
-            <div class="col-sm-9">
-                <input type="text" id="validTime" class="form-control" placeholder="请选择加价券有效时间" readonly="readonly">
-            </div>
+        <%--<div class="form-group" id="validBeginTimes">--%>
+          <%--<input type="hidden" id="validBeginTime" name="validBeginTime"/>--%>
+          <%--<input type="hidden" id="validEndTime" name="validEndTime"/>--%>
+          <%--<label for="validTime" class="col-sm-2 control-label"><span style="color:red">*</span> 有效时间</label>--%>
+          <%--<div class="col-sm-9">--%>
+            <%--<input type="text" id="validTime" class="form-control" placeholder="请选择加价券有效时间" readonly="readonly">--%>
+          <%--</div>--%>
+        <%--</div>--%>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"><span style="color:red">*</span>有效时间</label>
+          <div class="am-datepicker-date col-sm-9">
+            <input type="text" style="width:160px;" id="startTime" name="validBeginTime"
+                   class="form-control am-datepicker-start" data-am-datepicker readonly>
+            <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
+            <input type="text" style="width:160px;" id="endTime" name="validEndTime"
+                   class="form-control am-datepicker-end" data-am-datepicker readonly>
+          </div>
         </div>
         <div class="form-group" id="subtractionPrices">
-            <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单额度</label>
-            <div class="col-sm-9">
-                <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入加价券金额">
-            </div>
+          <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单额度</label>
+          <div class="col-sm-9">
+            <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入加价券金额">
+          </div>
         </div>
         <div class="form-group" id="upperLimits">
-            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>
-            <div class="col-sm-9">
-                <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">
-            </div>
+          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>
+          <div class="col-sm-9">
+            <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">
+          </div>
         </div>
 
         <div class="form-group" id="ruleDescriptions">
-            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
-            <div class="col-sm-9">
-                <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="规则描述">
-            </div>
+          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
+          <div class="col-sm-9">
+            <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="规则描述">
+          </div>
         </div>
         <div class="form-group" id="projects">
-            <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>备注</label>
-            <div class="col-sm-9">
-                <input type="text" id="note" name="note" class="form-control" placeholder="备注">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-9 col-sm-offset-2">
-                <button id="addSaveBtn" type="button" class="btn btn-default fl" style="padding: 6px 80px;">保 存</button>
-                <span class="form-control-static form-control-inline pull-left ml20"></span>
-                <span class="form-control-static form-control-inline pull-left ml20"></span>
-                <span class="form-control-static form-control-inline pull-left ml20"></span>
-            </div>
+          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>备注</label>
+          <div class="col-sm-9">
+            <input type="text" id="note" name="note" class="form-control" placeholder="备注">
+          </div>
         </div>
         <button type="submit" class="hide" id="addSubmitBtn"></button>
-    </form>
-</div>
-<!-- /am-g -->
-
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="addSaveBtn" class="btn modal-btn" ><span class="am-icon-save icon-save"></span>提交</button>
+      <button type="button" id="addMissBtn" class="btn modal-btn" data-dismiss="modal" aria-label="Close"><span class="am-icon-close icon-close"></span>取消</button>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
 
 <script type="text/javascript">
 
-    //初始化时间选择控件
-    $("#validTime").daterangepicker({
-        "startDate": getDateDayFormat(1),
-        "endDate": getDateDayFormat(181)
-    }, function (start, end, label) {
-        $("#validBeginTime").val(start.format("YYYY-MM-DD"));
-        $("#validEndTime").val(end.format("YYYY-MM-DD"));
-    });
+//    //初始化时间选择控件
+//    $("#validTime").daterangepicker({
+//        "startDate": getDateDayFormat(1),
+//        "endDate": getDateDayFormat(181)
+//    }, function (start, end, label) {
+//        $("#validBeginTime").val(start.format("YYYY-MM-DD"));
+//        $("#validEndTime").val(end.format("YYYY-MM-DD"));
+//    });
+$("#startTime").datetimepicker({
+    format: "yyyy-mm-dd",
+    language: "zh-CN",
+    autoclose: true,//选中关闭
+    minView: "month"//设置只显示到月份
+});
 
+$("#endTime").datetimepicker({
+    format: "yyyy-mm-dd",
+    language: "zh-CN",
+    autoclose: true,//选中关闭
+    minView: "month"//设置只显示到月份
+});
     //表单验证
     $(document).ready(function () {
         insertValidatorForm();
@@ -170,6 +181,11 @@
                 success: function (data) {
                     if (data.success) {
                         AlertText.tips("d_alert", "提示", "创建成功");
+                        refreshPage();
+                        //全部更新完后关闭弹窗
+                        $("#addMissBtn").click();
+                        //重置表单数据
+                        document.getElementById("insertForm").reset();
                     } else {
                         //保存失败
                         alert(data.resultMessage);
@@ -196,5 +212,12 @@
         //隐藏等待
         AlertText.hide();
     }
+
+
+//点击保存按钮,提交form表单，触发校验
+$("#addSaveBtn").click(function() {
+    //格式化分类属性信息为JSON串
+    $("#addSubmitBtn").click();
+});
 
 </script>

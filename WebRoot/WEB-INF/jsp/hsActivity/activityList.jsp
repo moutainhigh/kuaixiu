@@ -8,7 +8,17 @@
 </div>
 
 <hr>
-
+<div class="am-g">
+    <div class="am-u-sm-12 am-u-md-4">
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-sm">
+                <button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span
+                        class="am-icon-plus"></span> 新增
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="am-g">
     <form id="searchForm" class="am-form am-form-horizontal">
         <table id="searchTable">
@@ -41,13 +51,14 @@
                 <th class="fontWeight_normal tdwidth40 center">是否默认</th>
                 <%--<th class="fontWeight_normal tdwidth60 center">头图片高度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">头图片宽度</th>--%>
-                <th class="fontWeight_normal tdwidth60 center">边框图片高度</th>
-                <th class="fontWeight_normal tdwidth60 center">边框图片宽度</th>
+                <%--<th class="fontWeight_normal tdwidth60 center">边框图片高度</th>--%>
+                <%--<th class="fontWeight_normal tdwidth60 center">边框图片宽度</th>--%>
                 <th class="fontWeight_normal tdwidth60 center">加价券图片色值</th>
                 <%--<th class="fontWeight_normal tdwidth60 center">加价券图片高度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">加价券图片宽度</th>--%>
                 <th class="fontWeight_normal tdwidth60 center">活动规则</th>
                 <th class="fontWeight_normal tdwidth60 center">创建时间</th>
+                <th class="fontWeight_normal tdwidth60 center">活动结束时间</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
             </thead>
@@ -57,10 +68,18 @@
         </table>
     </div>
 </div>
-
+<!-- 新增弹窗 end -->
+<div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
+<!-- 新增弹窗 end -->
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-
+    function addBtnClick() {
+        $("#modal-insertView").html("");
+        $("#modal-insertView").load("${ctx}/hsActivity/toAddActivity.do", function () {
+            func_after_model_load(this);
+        });
+    }
     //自定义datatable的数据
     var dto = new DtOptions();
     //设置数据刷新路径
@@ -83,13 +102,14 @@
         {"data": "isDefault", "class": ""},
 //        {"data": "headHeight", "class": ""},
 //        {"data": "headWide", "class": ""},
-        {"data": "marginHeight", "class": ""},
-        {"data": "marginWide", "class": ""},
+//        {"data": "marginHeight", "class": ""},
+//        {"data": "marginWide", "class": ""},
         {"data": "centercolorValue", "class": ""},
 //        {"data": "centerHeight", "class": ""},
 //        {"data": "centerWide", "class": ""},
         {"data": "activityRole", "class": ""},
         {"data": "strCreateTime", "class": ""},
+        {"data": "endTime", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性

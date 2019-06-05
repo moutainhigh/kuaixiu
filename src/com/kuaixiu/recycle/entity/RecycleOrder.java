@@ -82,6 +82,9 @@ public class RecycleOrder extends BaseEntity{
     /** 产品名称*/
     private String productName;
 
+    /** 品牌名字*/
+    private String brandName;
+
     /** 信用预支付比例*/
     private Integer percent;
 
@@ -297,6 +300,14 @@ public class RecycleOrder extends BaseEntity{
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 	public Integer getPercent() {

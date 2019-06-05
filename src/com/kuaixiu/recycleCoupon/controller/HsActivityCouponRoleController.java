@@ -84,7 +84,7 @@ public class HsActivityCouponRoleController extends BaseController {
 
     @RequestMapping(value = "hsActivity/toAddCouponRole")
     public ModelAndView toAddCouponRole(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+                                        HttpServletResponse response) throws Exception {
 
         String returnView = "hsActivity/createCouponRole";
         return new ModelAndView(returnView);
@@ -157,6 +157,7 @@ public class HsActivityCouponRoleController extends BaseController {
         String returnView = "hsActivity/activityList";
         return new ModelAndView(returnView);
     }
+
     /**
      * 活动列表
      *
@@ -170,8 +171,8 @@ public class HsActivityCouponRoleController extends BaseController {
         HsActivityCoupon activityCoupon = new HsActivityCoupon();
         activityCoupon.setPage(page);
         List<HsActivityCoupon> activityCoupons = hsActivityCouponService.queryListForPage(activityCoupon);
-        for(HsActivityCoupon activityCoupon1:activityCoupons){
-            String sourceName= systemService.queryById(activityCoupon1.getSource()).getName();
+        for (HsActivityCoupon activityCoupon1 : activityCoupons) {
+            String sourceName = systemService.queryById(activityCoupon1.getSource()).getName();
             activityCoupon1.setSourceName(sourceName);
         }
         page.setData(activityCoupons);
@@ -210,34 +211,32 @@ public class HsActivityCouponRoleController extends BaseController {
         ResultData result = new ResultData();
         try {
             String source = request.getParameter("source");//来源
-            String headHeight = request.getParameter("headHeight");//头图片高度
-            String headWide = request.getParameter("headWide");//头图片宽度
-            String marginHeight = request.getParameter("marginHeight");//中心图片边框高度
-            String marginWide = request.getParameter("marginWide");//中心图片边框宽度
+//            String headHeight = request.getParameter("headHeight");//头图片高度
+//            String headWide = request.getParameter("headWide");//头图片宽度
+//            String marginHeight = request.getParameter("marginHeight");//中心图片边框高度
+//            String marginWide = request.getParameter("marginWide");//中心图片边框宽度
             String centercolorValue = request.getParameter("centercolorValue");//中心图片色值
-            String centerHeight = request.getParameter("centerHeight");//中心图片高度
-            String centerWide = request.getParameter("centerWide");//中心图片宽度
+//            String centerHeight = request.getParameter("centerHeight");//中心图片高度
+//            String centerWide = request.getParameter("centerWide");//中心图片宽度
             String[] activityRoles = request.getParameterValues("activityRoles");//活动规则描述
             String isDefault = request.getParameter("isDefault");//是否默认展示   1是   2否
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
-
-            if (StringUtils.isBlank(source) ||
-                    StringUtils.isBlank(marginHeight) || StringUtils.isBlank(marginWide) || StringUtils.isBlank(centercolorValue) ||
-                    activityRoles==null ||
-                    couponRoles == null) {
+            String endTime = request.getParameter("actvityEndTime");//活动结束时间
+            if (StringUtils.isBlank(source) || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
+                    couponRoles == null || StringUtils.isBlank(endTime)){
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             //头图
             //获取图片，保存图片到webapp同级inages/activityCoupon目录
-            String imageName= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
+            String imageName = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "hd_images";
-            String logoPath = getPath(request, "headFile", savePath,imageName);             //图片路径
+            String logoPath = getPath(request, "headFile", savePath, imageName);             //图片路径
             String headUrl = getProjectUrl(request) + "/images/activityCoupon/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
             //中心加价券图片
-            String imageName2= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
+            String imageName2 = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
             String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
-            String logoPath2 = getPath(request, "centerFile", savePath,imageName2);             //图片路径
+            String logoPath2 = getPath(request, "centerFile", savePath, imageName2);             //图片路径
             String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath2);
             //添加活动
@@ -248,10 +247,11 @@ public class HsActivityCouponRoleController extends BaseController {
             activityCoupon.setHeadUrl(headUrl);
 //            activityCoupon.setHeadHeight(Integer.valueOf(headHeight));
 //            activityCoupon.setHeadWide(Integer.valueOf(headWide));
-            activityCoupon.setMarginHeight(Integer.valueOf(marginHeight));
-            activityCoupon.setMarginWide(Integer.valueOf(marginWide));
+//            activityCoupon.setMarginHeight(Integer.valueOf(marginHeight));
+//            activityCoupon.setMarginWide(Integer.valueOf(marginWide));
             activityCoupon.setCenterUrl(centerUrl);
             activityCoupon.setCentercolorValue(centercolorValue);
+            activityCoupon.setEndTime(endTime);
 //            activityCoupon.setCenterHeight(Integer.valueOf(centerHeight));
 //            activityCoupon.setCenterWide(Integer.valueOf(centerWide));
             StringBuilder sb = new StringBuilder();
@@ -268,7 +268,7 @@ public class HsActivityCouponRoleController extends BaseController {
                 hsActivityCouponService.updateIsDefault(activityCoupon);
             }
             //活动绑定加价券
-            hsActivityCouponService.activityAndCoupon(activityCoupon.getId(), couponRoles);
+            hsActivityCouponService.activityAndCoupon(activityCoupon.getId(), couponRoles,activityCoupon.getEndTime());
 
             getSjResult(result, null, true, "0", null, "创建成功");
         } catch (Exception e) {

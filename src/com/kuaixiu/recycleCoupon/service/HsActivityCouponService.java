@@ -70,19 +70,20 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         json.put("activityLabel", actCoupon.getActivityLabel());
         JSONObject headImage = new JSONObject();
         headImage.put("headUrl", actCoupon.getHeadUrl());
-        headImage.put("headHeight", actCoupon.getHeadHeight());
-        headImage.put("headWide", actCoupon.getHeadWide());
+//        headImage.put("headHeight", actCoupon.getHeadHeight());
+//        headImage.put("headWide", actCoupon.getHeadWide());
         json.put("headImage", headImage);
-        JSONObject margin = new JSONObject();
-        margin.put("marginHeight", actCoupon.getMarginHeight());
-        margin.put("marginWide", actCoupon.getMarginWide());
-        json.put("margin", margin);
+//        JSONObject margin = new JSONObject();
+//        margin.put("marginHeight", actCoupon.getMarginHeight());
+//        margin.put("marginWide", actCoupon.getMarginWide());
+//        json.put("margin", margin);
         JSONObject centerImage = new JSONObject();
         centerImage.put("centerUrl", actCoupon.getCenterUrl());
         centerImage.put("centercolorValue", actCoupon.getCentercolorValue());
-        centerImage.put("centerHeight", actCoupon.getCenterHeight());
-        centerImage.put("centerWide", actCoupon.getCenterWide());
-        json.put("margin", centerImage);
+//        centerImage.put("centerHeight", actCoupon.getCenterHeight());
+//        centerImage.put("centerWide", actCoupon.getCenterWide());
+        json.put("centerImage", centerImage);
+        json.put("endTime", actCoupon.getEndTime());
         if (actCoupon.getActivityRole().contains("|")) {
             String[] roles = actCoupon.getActivityRole().split("\\|");
             JSONArray activityRole = new JSONArray();
@@ -233,10 +234,11 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         getDao().updateIsDefault1(hsActivityCoupon.getId());
     }
 
-    public void activityAndCoupon(String activityId, String[] couponRoles) {
+    public void activityAndCoupon(String activityId, String[] couponRoles,String endTime) {
         for (int i = 0; i < couponRoles.length; i++) {
             HsActivityCouponRole activityCouponRole = activityCouponRoleService.queryById(couponRoles[i]);
             activityCouponRole.setActivityId(activityId);
+            activityCouponRole.setActivityEndTime(endTime);
             activityCouponRoleService.saveUpdate(activityCouponRole);
         }
     }

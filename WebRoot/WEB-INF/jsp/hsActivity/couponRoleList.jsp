@@ -7,7 +7,19 @@
     </div>
 </div>
 
+
 <hr>
+<div class="am-g">
+    <div class="am-u-sm-12 am-u-md-4">
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-sm">
+                <button onclick="addBtnClick();" type="button" class="am-btn am-btn-default"><span
+                        class="am-icon-plus"></span> 新增
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="am-g">
     <form id="searchForm" class="am-form am-form-horizontal">
@@ -52,6 +64,13 @@
 
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+
+    function addBtnClick() {
+        $("#modal-insertView").html("");
+        $("#modal-insertView").load("${ctx}/hsActivity/toAddCouponRole.do", function () {
+            func_after_model_load(this);
+        });
+    }
     //自定义datatable的数据
     var dto = new DtOptions();
     //设置数据刷新路径
