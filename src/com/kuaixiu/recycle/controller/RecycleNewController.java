@@ -314,7 +314,7 @@ public class RecycleNewController extends BaseController {
             String items = params.getString("items");
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
-            Object source = params.get("fm");//来源
+            Integer source = params.getInteger("fm");//来源
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
             String[] itemses = items.split("\\|");

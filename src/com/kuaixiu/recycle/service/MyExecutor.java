@@ -21,7 +21,7 @@ public class MyExecutor {
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     public void fun(HttpSession session, JSONObject j, String openId, String loginMobile, String items,
-                    String productId, String price, Object source,
+                    String productId, String price, Integer source,
                     RecycleCheckItemsService recycleCheckItemsService) throws Exception {
 
         executor.submit(new Runnable() {
@@ -55,7 +55,7 @@ public class MyExecutor {
                         t.setLastPrice(checkItems.getPrice());
                     }
                     if (source != null) {
-                        t.setSource(Integer.valueOf(source.toString()));
+                        t.setSource(source);
                     }
 
                     t.setItems(items);
