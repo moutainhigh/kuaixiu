@@ -745,7 +745,7 @@ public class RecycleNewController extends BaseController {
             //更新回收订单
             recycleOrderService.saveUpdate(order);
             //下单成功发送短信
-            SmsSendUtil.submitRecycleOrder(order.getMobile());
+            SmsSendUtil.submitRecycleOrder(order.getMobile(),source);
 
             getResult(result, jsonResult, true, "0", "成功");
             //下单成功后更新下单间隔时间

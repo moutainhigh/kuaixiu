@@ -157,7 +157,7 @@ public class SmsSendUtil2 {
      * @CreateDate: 2016-9-26 下午8:10:21
      */
     public static Boolean sendSmsThread(String mobile, String content){
-        SmsSendThread sst = new SmsSendThread(mobile, content);
+        SmsSendThread sst = new SmsSendThread(mobile, content,null);
         new Thread(sst).start();
         System.out.println("started ...");
         return true;
