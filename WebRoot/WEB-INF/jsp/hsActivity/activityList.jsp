@@ -38,17 +38,17 @@
                 </th>
                 <th class="fontWeight_normal tdwidth60 center">活动标识</th>
                 <th class="fontWeight_normal tdwidth60 center">来源</th>
-                <th class="fontWeight_normal tdwidth90 center">是否默认</th>
-                <th class="fontWeight_normal tdwidth60 center">头图片高度</th>
-                <th class="fontWeight_normal tdwidth60 center">头图片宽度</th>
+                <th class="fontWeight_normal tdwidth40 center">是否默认</th>
+                <%--<th class="fontWeight_normal tdwidth60 center">头图片高度</th>--%>
+                <%--<th class="fontWeight_normal tdwidth60 center">头图片宽度</th>--%>
                 <th class="fontWeight_normal tdwidth60 center">边框图片高度</th>
                 <th class="fontWeight_normal tdwidth60 center">边框图片宽度</th>
                 <th class="fontWeight_normal tdwidth60 center">加价券图片色值</th>
-                <th class="fontWeight_normal tdwidth60 center">加价券图片高度</th>
-                <th class="fontWeight_normal tdwidth60 center">加价券图片宽度</th>
+                <%--<th class="fontWeight_normal tdwidth60 center">加价券图片高度</th>--%>
+                <%--<th class="fontWeight_normal tdwidth60 center">加价券图片宽度</th>--%>
                 <th class="fontWeight_normal tdwidth60 center">活动规则</th>
                 <th class="fontWeight_normal tdwidth60 center">创建时间</th>
-                <th class="fontWeight_normal tdwidth60 center">操作</th>
+                <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -81,13 +81,13 @@
         {"data": "activityLabel", "class": ""},
         {"data": "sourceName", "class": ""},
         {"data": "isDefault", "class": ""},
-        {"data": "headHeight", "class": ""},
-        {"data": "headWide", "class": ""},
+//        {"data": "headHeight", "class": ""},
+//        {"data": "headWide", "class": ""},
         {"data": "marginHeight", "class": ""},
         {"data": "marginWide", "class": ""},
         {"data": "centercolorValue", "class": ""},
-        {"data": "centerHeight", "class": ""},
-        {"data": "centerWide", "class": ""},
+//        {"data": "centerHeight", "class": ""},
+//        {"data": "centerWide", "class": ""},
         {"data": "activityRole", "class": ""},
         {"data": "strCreateTime", "class": ""},
         {"defaultContent": "操作", "class": ""}

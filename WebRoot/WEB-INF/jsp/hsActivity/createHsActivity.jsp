@@ -36,20 +36,20 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-5 control-label">（图片尺寸为600*300大小控制200k以下）</label><!--图片显示位置-->
+            <label class="col-sm-5 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>头图高度</label>
-            <div class="col-sm-9">
-                <input type="text" style="width:400px;" id="headHeight" name="headHeight" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>头图宽度</label>
-            <div class="col-sm-9">
-                <input type="text" style="width:400px;" id="headWide" name="headWide" class="form-control">
-            </div>
-        </div>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图高度</label>--%>
+            <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" id="headHeight" name="headHeight" class="form-control">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图宽度</label>--%>
+            <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" id="headWide" name="headWide" class="form-control">--%>
+            <%--</div>--%>
+        <%--</div>--%>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>上传加价券图</label>
             <input class="col-sm-9" type="file" name="centerFile" id="centerFile" accept="image/*"
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-5 control-label">（图片尺寸为600*300大小控制200k以下）</label><!--图片显示位置-->
+            <label class="col-sm-5 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
         </div>
 
         <div class="form-group">
@@ -85,22 +85,22 @@
                        placeholder="加价券图片色值">
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片高度</label>
-            <div class="col-sm-9">
-                <input type="text" style="width:400px;" name="centerHeight" id="centerHeight"
-                       class="form-control"
-                       placeholder="加价券图片高度">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片宽度</label>
-            <div class="col-sm-9">
-                <input type="text" style="width:400px;" name="centerWide" id="centerWide"
-                       class="form-control"
-                       placeholder="加价券图片宽度">
-            </div>
-        </div>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片高度</label>--%>
+            <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" name="centerHeight" id="centerHeight"--%>
+                       <%--class="form-control"--%>
+                       <%--placeholder="加价券图片高度">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片宽度</label>--%>
+            <%--<div class="col-sm-9">--%>
+                <%--<input type="text" style="width:400px;" name="centerWide" id="centerWide"--%>
+                       <%--class="form-control"--%>
+                       <%--placeholder="加价券图片宽度">--%>
+            <%--</div>--%>
+        <%--</div>--%>
         <div class="form-group">
             <label class="col-sm-2 control-label"><span style="color:red">*</span>活动规则</label>
             <div class="col-sm-9" id="activityRole">
@@ -225,8 +225,8 @@
         var formdata = new FormData($("#insertForm")[0]);
         var headFile = $('#headFile').get(0).files[0];
         var centerFile = $('#centerFile').get(0).files[0];
-        console.info(headFile);
-        console.info(centerFile);
+//        console.info(headFile);
+//        console.info(centerFile);
         if (headFile&&centerFile) {
             $.ajax({
                 url: "${ctx}/hsActivity/addActivity.do",
@@ -239,8 +239,12 @@
                     if (result.success) {
                         AlertText.tips("d_alert", "提示", result.resultMessage);
                         $("#insertForm")[0].reset();
-                        var img = document.getElementById('imghead');
-                        img.setAttribute('src', '');
+                        var imghead = document.getElementById('imghead');
+                        imghead.setAttribute('src', '');
+                        $("#preview").hide();
+                        var imgCenter = document.getElementById('imgCenter');
+                        imgCenter.setAttribute('src', '');
+                        $("#previewCenter").hide();
                     } else {
                         AlertText.tips("d_alert", "提示", result.resultMessage);
                     }

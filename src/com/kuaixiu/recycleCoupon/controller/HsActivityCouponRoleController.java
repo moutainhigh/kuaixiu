@@ -221,9 +221,9 @@ public class HsActivityCouponRoleController extends BaseController {
             String isDefault = request.getParameter("isDefault");//是否默认展示   1是   2否
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
 
-            if (StringUtils.isBlank(source) || StringUtils.isBlank(headHeight) || StringUtils.isBlank(headWide) ||
+            if (StringUtils.isBlank(source) ||
                     StringUtils.isBlank(marginHeight) || StringUtils.isBlank(marginWide) || StringUtils.isBlank(centercolorValue) ||
-                    StringUtils.isBlank(centerHeight) || StringUtils.isBlank(centerWide) || activityRoles==null ||
+                    activityRoles==null ||
                     couponRoles == null) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
@@ -232,13 +232,13 @@ public class HsActivityCouponRoleController extends BaseController {
             String imageName= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "hd_images";
             String logoPath = getPath(request, "headFile", savePath,imageName);             //图片路径
-            String headUrl = getProjectUrl(request) + "/images/activityCoupon/hd_images" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+            String headUrl = getProjectUrl(request) + "/images/activityCoupon/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
             //中心加价券图片
             String imageName2= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
             String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
             String logoPath2 = getPath(request, "centerFile", savePath,imageName2);             //图片路径
-            String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
+            String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath2);
             //添加活动
             HsActivityCoupon activityCoupon = new HsActivityCoupon();
@@ -246,14 +246,14 @@ public class HsActivityCouponRoleController extends BaseController {
             activityCoupon.setActivityLabel(SeqUtil.getNext("ayll"));
             activityCoupon.setSource(Integer.valueOf(source));
             activityCoupon.setHeadUrl(headUrl);
-            activityCoupon.setHeadHeight(Integer.valueOf(headHeight));
-            activityCoupon.setHeadWide(Integer.valueOf(headWide));
+//            activityCoupon.setHeadHeight(Integer.valueOf(headHeight));
+//            activityCoupon.setHeadWide(Integer.valueOf(headWide));
             activityCoupon.setMarginHeight(Integer.valueOf(marginHeight));
             activityCoupon.setMarginWide(Integer.valueOf(marginWide));
             activityCoupon.setCenterUrl(centerUrl);
             activityCoupon.setCentercolorValue(centercolorValue);
-            activityCoupon.setCenterHeight(Integer.valueOf(centerHeight));
-            activityCoupon.setCenterWide(Integer.valueOf(centerWide));
+//            activityCoupon.setCenterHeight(Integer.valueOf(centerHeight));
+//            activityCoupon.setCenterWide(Integer.valueOf(centerWide));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < activityRoles.length; i++) {
                 sb.append(activityRoles[i]);

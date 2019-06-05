@@ -102,11 +102,10 @@
                                                                type="checkbox"/>序号
                 </th>
                 <th class="fontWeight_normal tdwidth50">订单号</th>
-                <%--<th class="fontWeight_normal tdwidth40">快递单号</th>--%>
                 <th class="fontWeight_normal tdwidth50">订单状态</th>
                 <th class="fontWeight_normal tdwidth50">联系人/<br/>手机号</th>
-                <%--<th class="fontWeight_normal tdwidth70">回收类型</th>--%>
                 <th class="fontWeight_normal tdwidth50">支付类型</th>
+                <th class="fontWeight_normal tdwidth50">机型名字</th>
                 <th class="fontWeight_normal tdwidth50">回收价格</th>
                 <th class="fontWeight_normal tdwidth50">订单来源</th>
                 <th class="fontWeight_normal tdwidth30">使用加价券</th>
@@ -123,17 +122,17 @@
 
 <script type="text/javascript">
     $("#query_startTime").datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "yyyy-mm-dd hh:ii:ss",
         language: "zh-CN",
         autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
+        minView: "hour"//设置只显示到月份
     });
 
     $("#query_endTime").datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "yyyy-mm-dd hh:ii:ss",
         language: "zh-CN",
         autoclose: true,//选中关闭
-        minView: "month"//设置只显示到月份
+        minView: "hour"//设置只显示到月份
     });
     //自定义datatable的数据
     var dto = new DtOptions();
@@ -158,6 +157,7 @@
         {"data": "name", "class": ""},
 //        {"data": "recycleType", "class": ""},
         {"data": "exchangeType", "class": ""},
+        {"data": "productName", "class": ""},
         {"data": "price", "class": ""},
         {"data": "fm", "class": ""},
         {"data": "couponId", "class": ""},
@@ -260,71 +260,6 @@
         {
             targets: -1,
             render: function (data, type, row, meta) {
-//                if (row.orderStatus == 3) {
-//                    var context = {
-//                        func: [
-//                            {
-//                                "name": "查看",
-//                                "fn": "showOrderDetail(\'" + row.id + "\')",
-//                                "icon": "am-icon-pencil-square-o",
-//                                "class": "am-text-secondary"
-//                            },
-//                           {
-//                                "name": "预支付",
-//                                "fn": "preparePay(\'" + row.id + "\')",
-//                                "icon": "am-icon-pencil-square-o",
-//                                "class": "am-text-secondary"
-//                            }
-//                        ]
-//                    };
-//                } else if (row.orderStatus == 4) {
-//                    var context = {
-//                        func: [
-//                            {
-//                                "name": "查看",
-//                                "fn": "showOrderDetail(\'" + row.id + "\')",
-//                                "icon": "am-icon-pencil-square-o",
-//                                "class": "am-text-secondary"
-//                            },
-//                            {
-//                                "name": "支付尾款",
-//                                "fn": "endPay(\'" + row.id + "\')",
-//                                "icon": "am-icon-pencil-square-o",
-//                                "class": "am-text-secondary"
-//                            }
-//                        ]
-//                    };
-//                } else if (row.orderStatus == 5) {
-//                    var context = {
-//                        func: [
-//                            {
-//                                "name": "查看",
-//                                "fn": "showOrderDetail(\'" + row.id + "\')",
-//                                "icon": "am-icon-pencil-square-o",
-//                                "class": "am-text-secondary"
-//                            },
-//                            {
-//                                "name": "扣款",
-//                                "fn": "deductPay(\'" + row.id + "\')",
-//                                "icon": "am-icon-trash-o",
-//                                "class": "am-text-danger"
-//                            }
-//                        ]
-//                    };
-//                } else {
-//                    if (row.isSale == 0) {
-//                        var context = {
-//                            func: [
-//                                {
-//                                    "name": "查看",
-//                                    "fn": "showOrderDetail(\'" + row.id + "\')",
-//                                    "icon": "am-icon-pencil-square-o",
-//                                    "class": "am-text-secondary"
-//                                }
-//                                //     {"name" : "拍卖", "fn" : "sale(\'" + row.id + "\')","icon" : "am-icon-pencil-square-o","class" : "am-text-secondary"}
-//                            ]
-//                        };
-//                    } else {
                 var context = {
                     func: [
                         {
@@ -335,15 +270,12 @@
                         }
                     ]
                 };
-//                    }
-//
-//                }
                 var html = template_btn(context);
                 return html;
             }
         }
     ]);
-    dto.sScrollXInner = "130%";
+    dto.sScrollXInner = "100%";
     var myTable = $("#dt").DataTable(dto);
 
     /**

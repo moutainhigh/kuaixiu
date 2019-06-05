@@ -123,17 +123,21 @@ public class FileDownloadController extends BaseController{
                 response.addHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(sysReport.getFileName(), "UTF-8") + "\"");
             }
 
-            InputStream inputStream = new FileInputStream(path);
+            try {
+                InputStream inputStream = new FileInputStream(path);
 
-            OutputStream os = response.getOutputStream();
-            byte[] b = new byte[2048];
-            int length;
-            while ((length = inputStream.read(b)) > 0) {
-                os.write(b, 0, length);
+                OutputStream os = response.getOutputStream();
+                byte[] b = new byte[2048];
+                int length;
+                while ((length = inputStream.read(b)) > 0) {
+                    os.write(b, 0, length);
+                }
+
+                os.close();
+                inputStream.close();
+            }catch (FileNotFoundException f){
+
             }
-
-            os.close();
-            inputStream.close();
         } 
         catch (FileNotFoundException e) {
             logger.error("FileDownload_FileNotFoundException", e);

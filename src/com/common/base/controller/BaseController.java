@@ -425,6 +425,9 @@ public class BaseController {
                 throw new SystemException("上传文件扩展名是不允许的扩展名：" + fileExt);
             } else {
                 //保存文件
+                if(StringUtils.isNotBlank(imageName)){
+                    fileName=imageName+"."+fileExt;
+                }
                 path = saveFile(bfile, fileName, request, URLPath);
             }
         } catch (IOException e) {

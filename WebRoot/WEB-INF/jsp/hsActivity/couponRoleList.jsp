@@ -28,11 +28,11 @@
                 <th class="fontWeight_normal tdwidth90 center">加价券名字</th>
                 <th class="fontWeight_normal tdwidth90 center">加价券类型</th>
                 <th class="fontWeight_normal tdwidth50 center">加价券金额</th>
-                <th class="fontWeight_normal tdwidth160 center">满加额度上限</th>
-                <th class="fontWeight_normal tdwidth40 center">加价额度</th>
+                <th class="fontWeight_normal tdwidth50 center">满加额度上限</th>
+                <th class="fontWeight_normal tdwidth50 center">加价额度</th>
                 <th class="fontWeight_normal tdwidth60 center">加价规则描述</th>
                 <th class="fontWeight_normal tdwidth80 center">备注</th>
-                <th class="fontWeight_normal tdwidth60 center">加价额度上限</th>
+                <th class="fontWeight_normal tdwidth50 center">加价额度上限</th>
                 <th class="fontWeight_normal tdwidth60 center">开始时间</th>
                 <th class="fontWeight_normal tdwidth60 center">结束时间</th>
                 <th class="fontWeight_normal tdwidth80 center">活动结束时间</th>

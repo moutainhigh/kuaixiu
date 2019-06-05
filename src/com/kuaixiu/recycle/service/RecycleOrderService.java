@@ -452,7 +452,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         }
 
         //excel标题
-        String[] header = new String[]{"订单号", "订单状态", "联系人/手机号", "支付类型", "回收价格",
+        String[] header = new String[]{"订单号", "订单状态", "联系人/手机号", "支付类型", "机型名字","回收价格",
                 "订单来源", "使用加价券", "下单时间"};
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
@@ -535,25 +535,30 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
                 row.createCell(3).setCellValue("话费充值");
             }
         }
-        if (map.get("price") == null) {
+        if (map.get("productName") == null) {
             row.createCell(4).setCellValue("");
         } else {
-            row.createCell(4).setCellValue(map.get("price").toString());
+            row.createCell(4).setCellValue(map.get("productName").toString());
         }
-        if (map.get("fm") == null) {
+        if (map.get("price") == null) {
             row.createCell(5).setCellValue("");
         } else {
-            row.createCell(5).setCellValue(map.get("fm").toString());
+            row.createCell(5).setCellValue(map.get("price").toString());
+        }
+        if (map.get("fm") == null) {
+            row.createCell(6).setCellValue("");
+        } else {
+            row.createCell(6).setCellValue(map.get("fm").toString());
         }
         if (map.get("couponId") == null) {
-            row.createCell(6).setCellValue("否");
+            row.createCell(7).setCellValue("否");
         } else {
-            row.createCell(6).setCellValue("是");
+            row.createCell(7).setCellValue("是");
         }
         if (map.get("inTime") == null) {
-            row.createCell(7).setCellValue("");
+            row.createCell(8).setCellValue("");
         } else {
-            row.createCell(7).setCellValue(DateUtil.getDateyyyyMMddHHmmss((Date) map.get("inTime")));
+            row.createCell(8).setCellValue(DateUtil.getDateyyyyMMddHHmmss((Date) map.get("inTime")));
         }
         return row;
     }
