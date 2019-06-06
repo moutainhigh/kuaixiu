@@ -3,7 +3,9 @@ package com.common.base.service;
 import com.common.base.dao.BaseDao;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 超级服务抽象类.
@@ -91,6 +93,28 @@ public abstract class BaseService<T>{
         return getDao().queryListForPage(t);
     }
 
+//	public static HttpSession getSession() {
+//		HttpServletRequest session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+//				.getRequest();
+//		return session.getSession();
+//	}
 
-
+    public void setListAgent(List<List<Map<String, Object>>> lists ,List<String> listAgent,List<Map<String, Object>> maps){
+        int size = maps.size() / 10000;
+        if (maps.size() < 10000) {
+            lists.add(maps);
+            listAgent.add("集合");
+        } else {
+            for (int i = 0; i < size; i++) {
+                List<Map<String, Object>> list = maps.subList(i * 10000, (i + 1) * 10000);
+                lists.add(list);
+                listAgent.add("集合" + i);
+            }
+            //余数
+            int lastSize = maps.size() - size * 10000;
+            List<Map<String, Object>> list = maps.subList(size * 10000, size * 10000 + lastSize);
+            lists.add(list);
+            listAgent.add("集合" + size);
+        }
+    }
 }

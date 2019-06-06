@@ -173,14 +173,14 @@
         <if test="id != null and id != ''">
             and id = #{id}
         </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="orderNo != null and orderNo != ''">
-            and order_no = #{orderNo}
-        </if>
-        <if test="assignCompanyId != null and assignCompanyId != ''">
-            and assign_company_id = #{assignCompanyId}
-        </if>
-        <if test="assignWorkerId != null and assignWorkerId != ''">
-            and assign_worker_id = #{assignWorkerId}
+            and order_no like CONCAT('%', #{orderNo}, '%')
         </if>
         <if test="type != null and type != ''">
             and type = #{type}
@@ -189,7 +189,7 @@
             and state = #{state}
         </if>
         <if test="companyName != null and companyName != ''">
-            and company_name = #{companyName}
+            and company_name like CONCAT('%', #{companyName}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and province_id = #{provinceId}
@@ -260,14 +260,32 @@
         <if test="completedTime != null and completedTime != ''">
             and completed_time = #{completedTime}
         </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
         <if test="createTime != null and createTime != ''">
             and create_time = #{createTime}
         </if>
         <if test="createUserid != null and createUserid != ''">
-            and create_userid = #{createUserid}
+            and create_userid like CONCAT('%', #{createUserid}, '%')
         </if>
         <if test="createName != null and createName != ''">
-            and create_name = #{createName}
+            and create_name like CONCAT('%', #{createName}, '%')
+        </if>
+        <if test="assignCompanyId != null and assignCompanyId != ''">
+            and assign_company_id = #{assignCompanyId}
+        </if>
+        <if test="assignWorkerId != null and assignWorkerId != ''">
+            and assign_worker_id = #{assignWorkerId}
+        </if>
+        <if test="isAssign != null and isAssign != ''">
+            ORDER BY approval_time DESC
+        </if>
+        <if test="isAssign == null or isAssign == ''">
+            ORDER BY create_time DESC
         </if>
     </select>
 

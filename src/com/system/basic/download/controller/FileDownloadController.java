@@ -3,6 +3,7 @@ package com.system.basic.download.controller;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.util.DateUtil;
+import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.system.basic.download.entity.SysReport;
 import com.system.basic.download.service.FileDownloadService;
 import com.system.basic.user.entity.SessionUser;
@@ -173,25 +174,7 @@ public class FileDownloadController extends BaseController{
             //根据模板导出数据模式
             if(sysReport.getType() == 1){
                 //获取登录用户
-                SessionUser su = getCurrentUser(request);
-                if(fileId.equals("15")){
-                    //碎屏险导出 只有管理员和碎屏险商有权限
-                    if(su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType()!=SystemConstant.USER_TYPE_SCREEN){
-                        throw new SystemException("对不起您没有权限操作！");
-                    }
-                }
-                if(fileId.equals("17")){
-                    //碎屏险免激活用户导出 只有管理员有权限
-                    if(su.getType() != SystemConstant.USER_TYPE_SYSTEM){
-                        throw new SystemException("对不起您没有权限操作！");
-                    }
-                }
-                if(fileId.equals("21")){
-                    //站点信息导出 只有管理员,客服,号卡站点人员有权限
-                    if(su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType()!=SystemConstant.USER_TYPE_CUSTOMER_SERVICE&&su.getType()!=SystemConstant.STATION_USER){
-                        throw new SystemException("对不起您没有权限操作！");
-                    }
-                }
+                SjSessionUser su = getSjCurrentUser(request);
 
                 //获取上下文
                 WebApplicationContext context = (WebApplicationContext) request
