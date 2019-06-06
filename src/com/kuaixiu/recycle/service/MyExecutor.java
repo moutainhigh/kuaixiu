@@ -29,7 +29,7 @@ public class MyExecutor {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                     session.setAttribute("productId", productId);
                     session.setAttribute("recycleItems", items);
                     session.setAttribute(j.getString("quoteid"), price);
