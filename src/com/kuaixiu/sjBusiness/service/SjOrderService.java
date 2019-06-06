@@ -381,21 +381,12 @@ public class SjOrderService extends BaseService<SjOrder> {
                 sjOrder.setCreateName(createUser);
             }
         }
-        List<SjOrder> sjOrders = this.queryList(sjOrder);
-        List<Map<String, Object>> maps = new ArrayList<>();
-        for (SjOrder o : sjOrders) {
-            List<String> projects = getProject(o.getProjectId());
+        List<Map<String, Object>> maps = this.getDao().queryImportList(sjOrder);
+        for (Map<String, Object> map : maps) {
+            List<String> projects = getProject(map.get("project_id").toString());
             String projectName = listToString(projects);
-            o.setProjectNames(projectName);
-            o.setStrCreateTime(DateUtil.getDateyyyyMMddHHmmss(o.getCreateTime()));
-            o.setNewDate(DateUtil.getDateyyyyMMddHHmmss(new Date()));
-            if (o.getApprovalTime() != null) {
-                o.setStrApprovalTime(DateUtil.getDateyyyyMMddHHmmss(o.getApprovalTime()));
-            }
-            Map<String, Object> map = new BeanMap(o);
-            maps.add(map);
+            map.put("projectName", projectName);
         }
-
 
         List<List<Map<String, Object>>> lists = new ArrayList<>();
         List<String> listAgent = new ArrayList<>();
@@ -404,11 +395,13 @@ public class SjOrderService extends BaseService<SjOrder> {
         //excel标题
         String[] header = new String[]{};
         if (type.equals("1")) {
-            header = new String[]{"订单号", "创建时间", "类型", "提交人/账号", "企业名字", "企业负责人/电话", "需求",
-                    "状态"};
+            header = new String[]{"订单编号", "创建时间", "类型", "创建人/创建名字", "企业名字", "联系人/联系电话", "产品需求",
+                    "地址", "审批人", "审批备注", "审批时间", "反馈人", "反馈备注", "反馈时间", "状态"};
         } else {
-            header = new String[]{"订单号", "创建时间", "类型", "提交人/账号", "CRM编号", "企业名字",
-                    "企业负责人/电话", "需求", "状态"};
+            header = new String[]{"订单编号", "创建时间", "类型", "创建人/创建名字", "企业名字", "联系人/联系电话", "产品需求",
+                    "地址", "审批人", "审批备注", "审批时间", "ORM编号", "指派人", "指派时间", "施工人", "施工单位", "完成时间",
+                    "竣工人", "竣工时间", "监控机型", "监控机型数量", "监控poe", "监控poe数量", "监控存储", "监控存储数量",
+                    "wifi无线", "wifi无线数量", "wifipoe", "wifipoe数量", "wifi网关", "wifi网关数量", "状态"};
         }
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
@@ -440,7 +433,7 @@ public class SjOrderService extends BaseService<SjOrder> {
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/x-download");
-            String filedisplay = "回收列表导出.xls";
+            String filedisplay = "商机单导出.xls";
             //防止文件名含有中文乱码
             filedisplay = new String(filedisplay.getBytes("gb2312"), "ISO8859-1");
             response.setHeader("Content-Disposition", "attachment;filename=" + filedisplay);
@@ -464,16 +457,16 @@ public class SjOrderService extends BaseService<SjOrder> {
     private HSSFRow getRow(HSSFRow row, Map<?, ?> map, String type) {
         // 设置对应单元格的值
         int count = 0;
-        if (map.get("orderNo") == null) {
+        if (map.get("order_no") == null) {
             row.createCell(count).setCellValue("");
         } else {
-            row.createCell(count).setCellValue(map.get("orderNo").toString());
+            row.createCell(count).setCellValue(map.get("order_no").toString());
         }
         count = count + 1;
-        if (map.get("strCreateTime") == null) {
+        if (map.get("create_time") == null) {
             row.createCell(count).setCellValue("");
         } else {
-            row.createCell(count).setCellValue(map.get("strCreateTime").toString());
+            row.createCell(count).setCellValue(map.get("create_time").toString());
         }
         count = count + 1;
         if (map.get("type") == null) {
@@ -486,44 +479,195 @@ public class SjOrderService extends BaseService<SjOrder> {
             }
         }
         count = count + 1;
-        if (map.get("createUserid") == null && map.get("createName") == null) {
+        if (map.get("create_userid") == null) {
             row.createCell(count).setCellValue("");
-        } else if (map.get("createUserid") != null && map.get("createName") != null) {
-            row.createCell(count).setCellValue(map.get("createName").toString() + "/" + map.get("createUserid").toString());
-        } else if (map.get("createUserid") != null) {
-            row.createCell(count).setCellValue(map.get("createUserid").toString());
-        } else if (map.get("createName") != null) {
-            row.createCell(count).setCellValue(map.get("createName").toString());
+        } else {
+            row.createCell(count).setCellValue(map.get("create_userid").toString());
         }
-        if(type.equals("2")){
+        count = count + 1;
+        if (map.get("company_name") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("company_name").toString());
+        }
+        count = count + 1;
+        if (map.get("person") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("person").toString());
+        }
+        count = count + 1;
+        if (map.get("projectName") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("projectName").toString());
+        }
+        count = count + 1;
+        if (map.get("address") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("address").toString());
+        }
+
+        count = count + 1;
+        if (map.get("approval_person") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("approval_person").toString());
+        }
+        count = count + 1;
+        if (map.get("approval_note") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("approval_note").toString());
+        }
+        count = count + 1;
+        if (map.get("approval_time") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("approval_time").toString());
+        }
+        if (type.equals("1")) {
             count = count + 1;
-            if (map.get("crmNo") == null) {
+            if (map.get("feedback_person") == null) {
                 row.createCell(count).setCellValue("");
             } else {
-                row.createCell(count).setCellValue(map.get("crmNo").toString());
+                row.createCell(count).setCellValue(map.get("feedback_person").toString());
+            }
+            count = count + 1;
+            if (map.get("feedback_note") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("feedback_note").toString());
+            }
+            count = count + 1;
+            if (map.get("feedback_time") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("feedback_time").toString());
             }
         }
-        count = count + 1;
-        if (map.get("companyName") == null) {
-            row.createCell(count).setCellValue("");
-        } else {
-            row.createCell(count).setCellValue(map.get("companyName").toString());
-        }
-        count = count + 1;
-        if (map.get("person") == null && map.get("phone") == null) {
-            row.createCell(count).setCellValue("");
-        } else if (map.get("person") != null && map.get("phone") != null) {
-            row.createCell(count).setCellValue(map.get("person").toString() + "/" + map.get("phone").toString());
-        } else if (map.get("person") != null) {
-            row.createCell(count).setCellValue(map.get("person").toString());
-        } else if (map.get("phone") != null) {
-            row.createCell(count).setCellValue(map.get("phone").toString());
-        }
-        count = count + 1;
-        if (map.get("projectNames") == null) {
-            row.createCell(count).setCellValue("");
-        } else {
-            row.createCell(count).setCellValue(map.get("projectNames").toString());
+        if (type.equals("2")) {
+            count = count + 1;
+            if (map.get("crm_no") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("crm_no").toString());
+            }
+            count = count + 1;
+            if (map.get("assign_person") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("assign_person").toString());
+            }
+            count = count + 1;
+            if (map.get("assign_time") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("assign_time").toString());
+            }
+            count = count + 1;
+            if (map.get("build_person") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("build_person").toString());
+            }
+            count = count + 1;
+            if (map.get("build_company") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("build_company").toString());
+            }
+            count = count + 1;
+            if (map.get("end_time") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("end_time").toString());
+            }
+            count = count + 1;
+            if (map.get("completed_person") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("completed_person").toString());
+            }
+            count = count + 1;
+            if (map.get("completed_time") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("completed_time").toString());
+            }
+            count = count + 1;
+            if (map.get("model_name") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("model_name").toString());
+            }
+            count = count + 1;
+            if (map.get("model_num") == null || map.get("model_num").equals("0")) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("model_num").toString());
+            }
+            count = count + 1;
+            if (map.get("poe_name") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("poe_name").toString());
+            }
+            count = count + 1;
+            if (map.get("poe_num") == null || map.get("poe_num").equals("0")) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("poe_num").toString());
+            }
+            count = count + 1;
+            if (map.get("save_net_name") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("save_net_name").toString());
+            }
+            count = count + 1;
+            if (map.get("storage_num") == null || map.get("storage_num").equals("0")) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("storage_num").toString());
+            }
+            count = count + 1;
+            if (map.get("model_wifi_name") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("model_wifi_name").toString());
+            }
+            count = count + 1;
+            if (map.get("model_wifi_num") == null || map.get("model_wifi_num").equals("0")) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("model_wifi_num").toString());
+            }
+            count = count + 1;
+            if (map.get("poe_wifi_name") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("poe_wifi_name").toString());
+            }
+            count = count + 1;
+            if (map.get("poe_wifi_num") == null || map.get("poe_wifi_num").equals("0")) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("poe_wifi_num").toString());
+            }
+            count = count + 1;
+            if (map.get("save_wifi_name") == null) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("save_wifi_name").toString());
+            }
+            count = count + 1;
+            if (map.get("storage_wifi_num") == null || map.get("storage_wifi_num").equals("0")) {
+                row.createCell(count).setCellValue("");
+            } else {
+                row.createCell(count).setCellValue(map.get("storage_wifi_num").toString());
+            }
         }
         count = count + 1;
         if (map.get("state") == null) {
@@ -535,7 +679,7 @@ public class SjOrderService extends BaseService<SjOrder> {
     }
 
     private String getState(Integer state, Integer type) {
-        if(type==1){
+        if (type == 1) {
             if (state == 100) {
                 return "待审核";
             } else if (state == 200) {
@@ -549,7 +693,7 @@ public class SjOrderService extends BaseService<SjOrder> {
             } else {
                 return "未知";
             }
-        }else{
+        } else {
             if (state == 100) {
                 return "待审核";
             } else if (state == 200) {

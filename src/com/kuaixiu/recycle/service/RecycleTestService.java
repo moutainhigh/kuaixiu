@@ -81,7 +81,7 @@ public class RecycleTestService extends BaseService<RecycleTest> {
         return map;
     }
 
-    public Map getProductName(String items, String productId1){
+    public Map getProductName(String items, String productId1) {
         Map map = new HashMap();
         try {
             JSONObject jsonResult = new JSONObject();
@@ -343,17 +343,21 @@ public class RecycleTestService extends BaseService<RecycleTest> {
         } else {
             row.createCell(5).setCellValue(map.get("login_mobile").toString());
         }
-        if (map.get("login_mobile") == null) {
-            row.createCell(6).setCellValue("H5");
+        if (map.get("name") != null) {
+            row.createCell(6).setCellValue(map.get("name").toString());
         } else {
+//            if (map.get("login_mobile") == null) {
+//                row.createCell(6).setCellValue("H5");
+//            } else {
             row.createCell(6).setCellValue("集团欢GO抽奖");
+//            }
         }
         if (map.get("recycle_id") == null) {
             row.createCell(7).setCellValue("否");
         } else {
             row.createCell(7).setCellValue("是");
         }
-        if (map.get("test_id") == null) {
+        if (map.get("test_id").toString().equals("0")) {
             row.createCell(8).setCellValue("待回访");
         } else {
             row.createCell(8).setCellValue("已回访");

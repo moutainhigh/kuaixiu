@@ -528,4 +528,153 @@
         ORDER BY create_time DESC
     </select>
 
+    <select id="queryImportList" resultType="Map" parameterType="Object">
+        SELECT o.order_no,o.type,o.state,o.company_name,CONCAT(o.person,'/',o.phone)person,
+        CONCAT(a1.area,a2.area,a3.area,o.address_detail)address,o.project_id,o.group_net,o.single,
+        CONCAT(o.create_userid,'/',o.create_name)create_userid,date_format(o.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,o.crm_no,
+        CONCAT(o.approval_person,'/',u1.`name`)approval_person,o.approval_note,date_format(o.`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,
+        CONCAT(o.assign_person,'/',u2.`name`)assign_person,date_format(o.`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,
+        CONCAT(o.build_person,'/',u3.`name`)build_person,o.build_phone,o.build_company,date_format(o.`end_time`,'%Y-%m-%d %H:%i:%s')end_time,
+        CONCAT(o.completed_person,'/',u4.`name`) completed_person,o.completed_phone,date_format(o.`completed_time`,'%Y-%m-%d %H:%i:%s')completed_time,
+        CONCAT(o.feedback_person,'/',u5.`name`)feedback_person,o.feedback_note,date_format(o.`feedback_time`,'%Y-%m-%d %H:%i:%s')feedback_time,
+        o.meal_id,m.meal_name,t.monitor_type_wifi_name model_name,o.model_num,p.poe_name,o.poe_num,s.save_net_name,o.storage_num,
+        o.meal_wifi_id,m2.meal_name meal_wifi_name,t2.monitor_type_wifi_name model_wifi_name,o.model_wifi_num,p2.poe_name poe_wifi_name,
+        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num
+        from sj_order o
+        LEFT JOIN sj_user u1 on u1.login_id=o.approval_person
+        LEFT JOIN sj_user u2 on u2.login_id=o.assign_person
+        LEFT JOIN sj_user u3 on u3.login_id=o.build_person
+        LEFT JOIN sj_user u4 on u4.login_id=o.completed_person
+        LEFT JOIN sj_user u5 on u5.login_id=o.feedback_person
+        LEFT JOIN sys_address a1 ON a1.area_id=o.province_id
+        LEFT JOIN sys_address a2 ON a2.area_id=o.city_id
+        LEFT JOIN sys_address a3 ON a3.area_id=o.area_id
+        LEFT JOIN sj_set_meal m ON m.id=o.meal_id
+        LEFT JOIN sj_wifi_monitor_type t on t.id=o.model_id
+        LEFT JOIN sj_poe p on p.id=o.poe_id
+        LEFT JOIN sj_save_net s on s.id=o.storage_id
+        LEFT JOIN sj_set_meal m2 ON m2.id=o.meal_wifi_id
+        LEFT JOIN sj_wifi_monitor_type t2 on t2.id=o.model_wifi_id
+        LEFT JOIN sj_poe p2 on p2.id=o.poe_wifi_id
+        LEFT JOIN sj_save_net s2 on s2.id=o.storage_wifi_id
+        where 1=1
+        <if test="id != null and id != ''">
+            and o.id = #{id}
+        </if>
+        <if test="queryIds != null and queryIds.size() > 0" >
+            and o.id in
+            <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            and o.order_no like CONCAT('%', #{orderNo}, '%')
+        </if>
+        <if test="type != null and type != ''">
+            and o.type = #{type}
+        </if>
+        <if test="state != null and state != ''">
+            and o.state = #{state}
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and o.company_name like CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="provinceId != null and provinceId != ''">
+            and o.province_id = #{provinceId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and o.city_id = #{cityId}
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and o.area_id = #{areaId}
+        </if>
+        <if test="streetId != null and streetId != ''">
+            and o.street_id = #{streetId}
+        </if>
+        <if test="addressDetail != null and addressDetail != ''">
+            and o.address_detail = #{addressDetail}
+        </if>
+        <if test="person != null and person != ''">
+            and o.person = #{person}
+        </if>
+        <if test="phone != null and phone != ''">
+            and o.phone = #{phone}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and o.project_id = #{projectId}
+        </if>
+        <if test="groupNet != null and groupNet != ''">
+            and o.group_not=#{groupNet}
+        </if>
+        <if test="single != null and single != ''">
+            and o.single = #{single}
+        </if>
+        <if test="stayPerson != null and stayPerson != ''">
+            and o.stayPerson = #{stayPerson}
+        </if>
+        <if test="approvalPerson != null and approvalPerson != ''">
+            and o.approval_person = #{approvalPerson}
+        </if>
+        <if test="approvalNote != null and approvalNote != ''">
+            and o.approval_note = #{approvalNote}
+        </if>
+        <if test="approvalTime != null and approvalTime != ''">
+            and o.approval_time = #{approvalTime}
+        </if>
+        <if test="assignPerson != null and assignPerson != ''">
+            and o.assign_person = #{assignPerson}
+        </if>
+        <if test="assignTime != null and assignTime != ''">
+            and o.assign_time = #{assignTime}
+        </if>
+        <if test="buildPerson != null and buildPerson != ''">
+            and o.build_person = #{buildPerson}
+        </if>
+        <if test="buildPhone != null and buildPhone != ''">
+            and o.build_phone = #{buildPhone}
+        </if>
+        <if test="buildCompany != null and buildCompany != ''">
+            and o.build_company = #{buildCompany}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and o.end_time = #{endTime}
+        </if>
+        <if test="completedPerson != null and completedPerson != ''">
+            and o.completed_person = #{completedPerson}
+        </if>
+        <if test="completedPhone != null and completedPhone != ''">
+            and o.completed_phone = #{completedPhone}
+        </if>
+        <if test="completedTime != null and completedTime != ''">
+            and o.completed_time = #{completedTime}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and o.create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and o.create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and o.create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''">
+            and o.create_userid like CONCAT('%', #{createUserid}, '%')
+        </if>
+        <if test="createName != null and createName != ''">
+            and o.create_name like CONCAT('%', #{createName}, '%')
+        </if>
+        <if test="assignCompanyId != null and assignCompanyId != ''">
+            and o.assign_company_id = #{assignCompanyId}
+        </if>
+        <if test="assignWorkerId != null and assignWorkerId != ''">
+            and o.assign_worker_id = #{assignWorkerId}
+        </if>
+        <if test="isAssign != null and isAssign != ''">
+            ORDER BY o.approval_time DESC
+        </if>
+        <if test="isAssign == null or isAssign == ''">
+            ORDER BY o.create_time DESC
+        </if>
+    </select>
+
 </mapper>   
