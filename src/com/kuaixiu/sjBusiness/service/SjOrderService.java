@@ -603,7 +603,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                 row.createCell(count).setCellValue(map.get("model_name").toString());
             }
             count = count + 1;
-            if (map.get("model_num") == null || map.get("model_num").equals("0")) {
+            if (map.get("model_num") == null || map.get("model_num").toString().equals("0")) {
                 row.createCell(count).setCellValue("");
             } else {
                 row.createCell(count).setCellValue(map.get("model_num").toString());
@@ -615,7 +615,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                 row.createCell(count).setCellValue(map.get("poe_name").toString());
             }
             count = count + 1;
-            if (map.get("poe_num") == null || map.get("poe_num").equals("0")) {
+            if (map.get("poe_num") == null || map.get("poe_num").toString().equals("0")) {
                 row.createCell(count).setCellValue("");
             } else {
                 row.createCell(count).setCellValue(map.get("poe_num").toString());
@@ -627,7 +627,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                 row.createCell(count).setCellValue(map.get("save_net_name").toString());
             }
             count = count + 1;
-            if (map.get("storage_num") == null || map.get("storage_num").equals("0")) {
+            if (map.get("storage_num") == null || map.get("storage_num").toString().equals("0")) {
                 row.createCell(count).setCellValue("");
             } else {
                 row.createCell(count).setCellValue(map.get("storage_num").toString());
@@ -639,7 +639,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                 row.createCell(count).setCellValue(map.get("model_wifi_name").toString());
             }
             count = count + 1;
-            if (map.get("model_wifi_num") == null || map.get("model_wifi_num").equals("0")) {
+            if (map.get("model_wifi_num") == null || map.get("model_wifi_num").toString().equals("0")) {
                 row.createCell(count).setCellValue("");
             } else {
                 row.createCell(count).setCellValue(map.get("model_wifi_num").toString());
@@ -651,7 +651,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                 row.createCell(count).setCellValue(map.get("poe_wifi_name").toString());
             }
             count = count + 1;
-            if (map.get("poe_wifi_num") == null || map.get("poe_wifi_num").equals("0")) {
+            if (map.get("poe_wifi_num") == null || map.get("poe_wifi_num").toString().equals("0")) {
                 row.createCell(count).setCellValue("");
             } else {
                 row.createCell(count).setCellValue(map.get("poe_wifi_num").toString());
@@ -663,7 +663,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                 row.createCell(count).setCellValue(map.get("save_wifi_name").toString());
             }
             count = count + 1;
-            if (map.get("storage_wifi_num") == null || map.get("storage_wifi_num").equals("0")) {
+            if (map.get("storage_wifi_num") == null || map.get("storage_wifi_num").toString().equals("0")) {
                 row.createCell(count).setCellValue("");
             } else {
                 row.createCell(count).setCellValue(map.get("storage_wifi_num").toString());
