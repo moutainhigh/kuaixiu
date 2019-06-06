@@ -28,7 +28,7 @@
             <div class="tip">
                <!-- <p>顺丰将在<span id="pickTime" class="color-blue">11月11日11:11</span>上门收取快递</p>
                 <p>工作人员将会提前1小时与您联系，请保持手机畅通！</p>  -->
-				
+
 				<P>顺丰上门人员信息稍后短信至您的手机</p>
 				<p>如验货无误，收到机器后48小时放款</p>
             </div>
@@ -37,7 +37,7 @@
                 <p>寄出前保留机器电量50%以上</p>
                 <p>请确保已解除机器开机密码</p>
             </div>
-			
+
             <div style="flex:1 1 auto;"></div>
             <div class="linkBox">
                 <a href="product.html" class="continue">继续卖宝贝</a>
@@ -67,7 +67,7 @@
 			var PrePrice = eCacheUtil.storage.getCache(CacheKey.PrePrice);
 
 			if( PrePrice ){
-			
+
 			  /* if(PrePrice* 0.05 >= 200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
 					$('.pre-price-t').text( 200 )
@@ -80,16 +80,16 @@
 					  $('.pre-price-t').text( Math.round(PrePrice*0.1) )
 					}
 				}   */
-				
+
 			   if(PrePrice*0.1 >= 200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
 					$('.pre-price-t').text( 200 )
 				}else {
-					$('.pre-price-o').text( Number(PrePrice) + PrePrice*0.1 )
-					$('.pre-price-t').text( PrePrice*0.1 )
+					$('.pre-price-o').text(Math.round( Number(PrePrice) + PrePrice*0.1) )
+					$('.pre-price-t').text( Math.round(PrePrice*0.1) )
 				}
 			}
-			
+
 
 			if(isEmpty(fm)){
 				eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
@@ -100,30 +100,30 @@
 				document.title = '翼回收';
 			}
             $('#pickTime').html(eCacheUtil.storage.getCache(CacheKey.pickTime));
-			
+
 			//判断是否是小程序
 		    var fm=eCacheUtil.storage.getCache( CacheKey.source );
 			var raiseOrderNo =eCacheUtil.storage.getCache(CacheKey.raiseOrderNo);
 			/*if(  fm == '7' &&  raiseOrderNo != null){
 				$( '#tipinfo-box' ).removeClass( 'hide' );
-				
+
 				//注册响应事件
 				$('#ti-dialog-content').click( function(){
 					//TODO： 立即参加
 					wx.miniProgram.reLaunch({url:'/pages/help/index?orderNo='+raiseOrderNo});
 				    //wx.miniProgram.postMessage({ data: {orderNo:raiseOrderNo} });
 				});
-				
+
 				//关闭弹框
 				$('#ti-dialog-close-btn').click( function(){
 					$( '#tipinfo-box' ).addClass( 'hide' );
 				});
-				
+
 			}*/
-        })  
+        })
 
 
-	
+
 	  //查看订单详情
 	  function seeDetails(){
             location.href = 'details.html?orderid='+eCacheUtil.storage.getCache(CacheKey.orderId);

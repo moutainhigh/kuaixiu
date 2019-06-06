@@ -100,15 +100,15 @@
                     <input type="text" name="" id="connect" maxlength="12" placeholder="请输入寄件人真实姓名">
                 </div>
                 <div class="inputRow">
-                    <!--<p>手机号</p>-->
+                    <p id="phoneTip" style="display: none">取件手机号</p>
                     <input class="text" id="inputtel" type="tel" value="" maxlength="11" placeholder="请输入寄件人手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
                 </div>
             </div>
 
 
-            <div class="recycleWay">
+            <div class="recycleWay" style="margin-top: 0.1rem">
                 <!--<p class="moduleTitle">收款方式</p>-->
-				
+
                 <div class="eachRow">
 				    <span class="title">结款方式：</span>
 					 <label class="label" data-way="alipayText">
@@ -122,7 +122,7 @@
                         <span class="genre">话费充值</span>
                         <img src="img/icon_hot.png" alt="">
                     </label>
-                   
+
                 </div>
                 <div class="inputRow" id="alipayBox">
                     <input id="alipay2" class="text mustText phoneText" data-way="call" style="display:none;" maxlength="11"  type="text" value="" placeholder="请输入手机充值号码" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
@@ -317,6 +317,7 @@
 					"loginMobile":HappyGoMobile,
 					"fm":fm
                 },base = new Base64();
+                console.log(fm)
                 $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){
                         var dataInfo = data.result.datainfo;
@@ -537,6 +538,7 @@
             var fm = eCacheUtil.storage.getCache(CacheKey.source);
 
             var mobileNum = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile );
+            $("#phoneTip").show();
             $('#inputtel').val( mobileNum );
 
             if(isEmpty(fm)){
@@ -735,9 +737,11 @@
                 if(loginPhone || HappyGoMobile) {
                     if(loginPhone) {
                         $('#alipay2').val(loginPhone)
+                        $("#phoneTip").show()
                         $('#inputtel').val(loginPhone)
                     }else if(HappyGoMobile){
                         $('#alipay2').val(HappyGoMobile)
+                        $("#phoneTip").show()
                         $('#inputtel').val(loginPhone)
                     }
 
