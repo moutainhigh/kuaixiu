@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.util.ConverterUtil;
 import com.common.util.DateUtil;
+import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.RecycleCheckItems;
 import com.kuaixiu.recycle.entity.RecycleOrder;
@@ -147,12 +148,55 @@ public class SjOrderService extends BaseService<SjOrder> {
         }
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(), null);
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getApprovalPerson(), null);
             jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
         }
         return jsonObject;
+    }
+
+    public void createOrder(String projectId,SjOrder sjOrder){
+        if (projectId.contains("1")&&projectId.contains("2")&&
+                (projectId.contains("3")||projectId.contains("4")||projectId.contains("5")||projectId.contains("6"))) {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("1");
+            this.add(sjOrder);
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("2");
+            this.add(sjOrder);
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId,"1,2,"));
+            this.add(sjOrder);
+        }else if (projectId.contains("1")&&
+                (projectId.contains("3")||projectId.contains("4")||projectId.contains("5")||projectId.contains("6"))) {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("1");
+            this.add(sjOrder);
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId,"1,"));
+            this.add(sjOrder);
+        }else if (projectId.contains("2")&&
+                (projectId.contains("3")||projectId.contains("4")||projectId.contains("5")||projectId.contains("6"))) {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("2");
+            this.add(sjOrder);
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId,"2,"));
+            this.add(sjOrder);
+        }else if (projectId.contains("1")&&projectId.contains("2")) {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("1");
+            this.add(sjOrder);
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("2");
+            this.add(sjOrder);
+        }else {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId(projectId);
+            this.add(sjOrder);
+        }
+
     }
 
     private List<String> getImages(String orderNo) {

@@ -148,7 +148,6 @@ public class SjOrderController extends BaseController {
             }
 
             SjOrder sjOrder = new SjOrder();
-            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setType(type);
             sjOrder.setCrmNo(crmNo);
             sjOrder.setState(100);
@@ -168,7 +167,12 @@ public class SjOrderController extends BaseController {
             sjOrder.setCreateUserid(phone);
             sjOrder.setCreateName(user.getName());
             sjOrder.setStayPerson("admin");
-            orderService.add(sjOrder);
+            if(type==2){
+                orderService.createOrder(projectId,sjOrder);
+            }else{
+                sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+                orderService.add(sjOrder);
+            }
 
             for (int i = 0; i < imagesList.size(); i++) {
                 String image = imagesList.get(i).toString();

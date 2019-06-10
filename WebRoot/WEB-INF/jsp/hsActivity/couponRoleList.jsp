@@ -40,13 +40,13 @@
                 <th class="fontWeight_normal tdwidth90 center">加价券名字</th>
                 <th class="fontWeight_normal tdwidth90 center">加价券类型</th>
                 <th class="fontWeight_normal tdwidth50 center">加价券金额</th>
-                <th class="fontWeight_normal tdwidth50 center">满加额度上限</th>
+                <%--<th class="fontWeight_normal tdwidth50 center">满加额度上限</th>--%>
                 <th class="fontWeight_normal tdwidth50 center">加价额度</th>
                 <th class="fontWeight_normal tdwidth60 center">加价规则描述</th>
                 <th class="fontWeight_normal tdwidth80 center">备注</th>
                 <th class="fontWeight_normal tdwidth50 center">加价额度上限</th>
-                <th class="fontWeight_normal tdwidth60 center">开始时间</th>
-                <th class="fontWeight_normal tdwidth60 center">结束时间</th>
+                <%--<th class="fontWeight_normal tdwidth60 center">开始时间</th>--%>
+                <%--<th class="fontWeight_normal tdwidth60 center">结束时间</th>--%>
                 <th class="fontWeight_normal tdwidth80 center">活动结束时间</th>
             </tr>
             </thead>
@@ -93,13 +93,13 @@
         {"data": "couponName", "class": ""},
         {"data": "pricingType", "class": ""},
         {"data": "couponPrice", "class": ""},
-        {"data": "upperLimit", "class": ""},
+//        {"data": "upperLimit", "class": ""},
         {"data": "subtractionPrice", "class": ""},
         {"data": "ruleDescription", "class": ""},
         {"data": "note", "class": ""},
         {"data": "addPriceUpper", "class": ""},
-        {"data": "beginTime", "class": ""},
-        {"data": "endTime", "class": ""},
+//        {"data": "beginTime", "class": ""},
+//        {"data": "endTime", "class": ""},
         {"data": "activityEndTime", "class": ""},
     ]);
     //设置定义列的初始属性

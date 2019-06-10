@@ -105,17 +105,16 @@ public class HsActivityCouponRoleController extends BaseController {
             String nameLabel = request.getParameter("nameLabel");
             String couponName = request.getParameter("couponName");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
-            String subtractionPrice = request.getParameter("subtractionPrice");//满减金额
-            String upperLimit = request.getParameter("upperLimit");//订单金额上限额度
+            String subtractionPrice = request.getParameter("subtractionPrice");//订单满减加金额
+//            String upperLimit = request.getParameter("upperLimit");//订单金额上限额度
             String addPriceUpper = request.getParameter("addPriceUpper");//加价金额上限
             String price = request.getParameter("price");//优惠券金额
             String description = request.getParameter("ruleDescription");//加价规则描述
-            String startTime = request.getParameter("validBeginTime");//优惠券开始时间
-            String endTime = request.getParameter("validEndTime");//优惠券过期时间
+//            String startTime = request.getParameter("validBeginTime");//优惠券开始时间
+//            String endTime = request.getParameter("validEndTime");//优惠券过期时间
             String activityEndTime = request.getParameter("activityEndTime");//活动结束时间
             String note = request.getParameter("note");//优惠券备注
-            if (StringUtils.isBlank(couponName) || StringUtils.isBlank(price) || StringUtils.isBlank(startTime)
-                    || StringUtils.isBlank(endTime) || StringUtils.isBlank(pricingType)
+            if (StringUtils.isBlank(couponName) || StringUtils.isBlank(price) || StringUtils.isBlank(pricingType)
                     || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)) {
                 throw new SystemException("参数不完整");
             }
@@ -125,12 +124,14 @@ public class HsActivityCouponRoleController extends BaseController {
             couponRole.setCouponName(couponName);
             couponRole.setPricingType(Integer.valueOf(pricingType));
             couponRole.setSubtractionPrice(new BigDecimal(subtractionPrice));
-            couponRole.setUpperLimit(new BigDecimal(upperLimit));
-            couponRole.setAddPriceUpper(new BigDecimal(addPriceUpper));
+//            couponRole.setUpperLimit(new BigDecimal(upperLimit));
+            if("1".equals(pricingType)){
+                couponRole.setAddPriceUpper(new BigDecimal(addPriceUpper));
+            }
             couponRole.setCouponPrice(new BigDecimal(price));
             couponRole.setRuleDescription(description);
-            couponRole.setBeginTime(startTime);
-            couponRole.setEndTime(endTime);
+//            couponRole.setBeginTime(startTime);
+//            couponRole.setEndTime(endTime);
             couponRole.setActivityEndTime(activityEndTime);
             couponRole.setNote(note);
             hsActivityCouponRoleService.add(couponRole);
@@ -211,13 +212,7 @@ public class HsActivityCouponRoleController extends BaseController {
         ResultData result = new ResultData();
         try {
             String source = request.getParameter("source");//来源
-//            String headHeight = request.getParameter("headHeight");//头图片高度
-//            String headWide = request.getParameter("headWide");//头图片宽度
-//            String marginHeight = request.getParameter("marginHeight");//中心图片边框高度
-//            String marginWide = request.getParameter("marginWide");//中心图片边框宽度
             String centercolorValue = request.getParameter("centercolorValue");//中心图片色值
-//            String centerHeight = request.getParameter("centerHeight");//中心图片高度
-//            String centerWide = request.getParameter("centerWide");//中心图片宽度
             String[] activityRoles = request.getParameterValues("activityRoles");//活动规则描述
             String isDefault = request.getParameter("isDefault");//是否默认展示   1是   2否
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
@@ -245,15 +240,9 @@ public class HsActivityCouponRoleController extends BaseController {
             activityCoupon.setActivityLabel(SeqUtil.getNext("ayll"));
             activityCoupon.setSource(Integer.valueOf(source));
             activityCoupon.setHeadUrl(headUrl);
-//            activityCoupon.setHeadHeight(Integer.valueOf(headHeight));
-//            activityCoupon.setHeadWide(Integer.valueOf(headWide));
-//            activityCoupon.setMarginHeight(Integer.valueOf(marginHeight));
-//            activityCoupon.setMarginWide(Integer.valueOf(marginWide));
             activityCoupon.setCenterUrl(centerUrl);
             activityCoupon.setCentercolorValue(centercolorValue);
             activityCoupon.setEndTime(endTime);
-//            activityCoupon.setCenterHeight(Integer.valueOf(centerHeight));
-//            activityCoupon.setCenterWide(Integer.valueOf(centerWide));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < activityRoles.length; i++) {
                 sb.append(activityRoles[i]);

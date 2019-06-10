@@ -217,6 +217,9 @@ public class RecycleTestService extends BaseService<RecycleTest> {
             String[] ids = StringUtils.split(idStr, ",");
             checkItem.setQueryIds(Arrays.asList(ids));
         }
+        if(StringUtils.isNotBlank(channel)){
+            checkItem.setSource(Integer.valueOf(channel));
+        }
         checkItem.setQueryStartTime(queryStartTime);
         checkItem.setQueryEndTime(queryEndTime);
         checkItem.setLoginMobile(mobile);

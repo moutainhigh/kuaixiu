@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="pricingTypes" class="col-sm-2 control-label"><span style="color:red">*</span>加价券类型</label>
+          <label for="pricingType" class="col-sm-2 control-label"><span style="color:red">*</span>加价券类型</label>
           <div class="col-sm-9">
             <div class="oldToNew">
               <input name="pricingType" type="radio"  value="1"checked/>百分比加价
@@ -32,56 +32,51 @@
           </div>
         </div>
         <div class="form-group" id="prices">
-          <label for="upperLimit" class="col-sm-2 control-label"><span style="color:red">*</span> 加价额度</label>
+          <label for="price" class="col-sm-2 control-label"><span style="color:red">*</span>加价券金额</label>
           <div class="col-sm-9">
             <input type="text" id="price" name="price" class="form-control" placeholder="加价额度">
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-9 control-label">（加价券金额。如果是百分比加价：无需输入百分号，输入分子即可）</label>
+        </div>
         <div class="form-group" id="addPriceUppers">
-          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
+          <label for="addPriceUpper" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
           <div class="col-sm-9">
             <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="加价额度上限">
           </div>
         </div>
-        <%--<div class="form-group" id="validBeginTimes">--%>
-          <%--<input type="hidden" id="validBeginTime" name="validBeginTime"/>--%>
-          <%--<input type="hidden" id="validEndTime" name="validEndTime"/>--%>
-          <%--<label for="validTime" class="col-sm-2 control-label"><span style="color:red">*</span> 有效时间</label>--%>
-          <%--<div class="col-sm-9">--%>
-            <%--<input type="text" id="validTime" class="form-control" placeholder="请选择加价券有效时间" readonly="readonly">--%>
+        <%--<div class="form-group">--%>
+          <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>有效时间</label>--%>
+          <%--<div class="am-datepicker-date col-sm-9">--%>
+            <%--<input type="text" style="width:160px;" id="startTime" name="validBeginTime"--%>
+                   <%--class="form-control am-datepicker-start" data-am-datepicker readonly>--%>
+            <%--<span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>--%>
+            <%--<input type="text" style="width:160px;" id="endTime" name="validEndTime"--%>
+                   <%--class="form-control am-datepicker-end" data-am-datepicker readonly>--%>
           <%--</div>--%>
         <%--</div>--%>
-        <div class="form-group">
-          <label class="col-sm-2 control-label"><span style="color:red">*</span>有效时间</label>
-          <div class="am-datepicker-date col-sm-9">
-            <input type="text" style="width:160px;" id="startTime" name="validBeginTime"
-                   class="form-control am-datepicker-start" data-am-datepicker readonly>
-            <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
-            <input type="text" style="width:160px;" id="endTime" name="validEndTime"
-                   class="form-control am-datepicker-end" data-am-datepicker readonly>
-          </div>
-        </div>
         <div class="form-group" id="subtractionPrices">
           <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单额度</label>
           <div class="col-sm-9">
             <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入加价券金额">
           </div>
         </div>
-        <div class="form-group" id="upperLimits">
-          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>
-          <div class="col-sm-9">
-            <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">
-          </div>
-        </div>
+        <%--<div class="form-group" id="upperLimits">--%>
+          <%--<label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>--%>
+          <%--<div class="col-sm-9">--%>
+            <%--<input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">--%>
+          <%--</div>--%>
+        <%--</div>--%>
 
         <div class="form-group" id="ruleDescriptions">
-          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
+          <label for="ruleDescription" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
           <div class="col-sm-9">
             <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="规则描述">
           </div>
         </div>
         <div class="form-group" id="projects">
-          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>备注</label>
+          <label for="note" class="col-sm-2 control-label"> <span style="color:red">*</span>备注</label>
           <div class="col-sm-9">
             <input type="text" id="note" name="note" class="form-control" placeholder="备注">
           </div>
@@ -98,27 +93,18 @@
 
 <script type="text/javascript">
 
-//    //初始化时间选择控件
-//    $("#validTime").daterangepicker({
-//        "startDate": getDateDayFormat(1),
-//        "endDate": getDateDayFormat(181)
-//    }, function (start, end, label) {
-//        $("#validBeginTime").val(start.format("YYYY-MM-DD"));
-//        $("#validEndTime").val(end.format("YYYY-MM-DD"));
-//    });
-$("#startTime").datetimepicker({
-    format: "yyyy-mm-dd",
-    language: "zh-CN",
-    autoclose: true,//选中关闭
-    minView: "month"//设置只显示到月份
-});
 
-$("#endTime").datetimepicker({
-    format: "yyyy-mm-dd",
-    language: "zh-CN",
-    autoclose: true,//选中关闭
-    minView: "month"//设置只显示到月份
-});
+    $(function () {
+        $('input:radio[name="pricingType"]').change(function () {
+            var v = $(this).val();
+            if (v == 2) {
+                $("#addPriceUppers").hide();
+            } else {
+                $("#addPriceUppers").show();
+            }
+        });
+    });
+
     //表单验证
     $(document).ready(function () {
         insertValidatorForm();

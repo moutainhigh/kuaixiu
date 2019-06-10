@@ -9,7 +9,7 @@
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">商机订单管理</a></strong>
         /
         <small>订单详情</small>
-        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_detail_to_back();">返回</a></strong>
+        <strong class="am-text-primary"><a href="javascript:void(0);" onclick="func_to_back();">返回</a></strong>
     </div>
 </div>
 
@@ -581,9 +581,6 @@
 
 
     function toList() {
-        func_reload_page("${ctx}/sj/order/list2.do");
-    }
-    function func_detail_to_back() {
         func_reload_page("${ctx}/sj/order/list2.do");
     }
 

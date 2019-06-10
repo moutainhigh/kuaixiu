@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -271,6 +272,10 @@ public class HsActivityCouponController extends BaseController {
             HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySourceActivityLabel(source, activityLabel);
             if (activityCoupon == null) {
                 return getSjResult(result, null, false, "1", null, "活动标识错误");
+            }
+            SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+            if(sdf.parse(activityCoupon.getEndTime()).getTime()<DateUtil.getNow().getTime()){
+                return getSjResult(result, null, false, "3", null, "活动已过期");
             }
             HsUserActivityCoupon userActivityCoupon = new HsUserActivityCoupon();
             userActivityCoupon.setAcvityId(activityCoupon.getId());

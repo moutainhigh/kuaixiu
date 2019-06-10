@@ -26,7 +26,7 @@
     <sql id="Base_Column_List" >
         id,activity_id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,
         subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,
-        date_format(`activity_end_time`,'%Y-%m-%d %H:%i:%s')activity_end_time,
+        date_format(`activity_end_time`,'%Y-%m-%d')activity_end_time,
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 

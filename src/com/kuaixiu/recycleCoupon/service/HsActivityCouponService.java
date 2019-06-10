@@ -33,6 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -211,8 +212,10 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
             recycleCoupon.setUpperLimit(activityCouponRole.getUpperLimit());
             recycleCoupon.setSubtraction_price(activityCouponRole.getSubtractionPrice());
             recycleCoupon.setStrCouponPrice(activityCouponRole.getCouponPrice());
-            recycleCoupon.setBeginTime(activityCouponRole.getBeginTime());
-            recycleCoupon.setEndTime(activityCouponRole.getEndTime());
+            recycleCoupon.setBeginTime(DateUtil.getNowyyyyMMdd());
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 7);
+            recycleCoupon.setEndTime(DateUtil.getDateYYYYMMDD(calendar.getTime()));
             recycleCoupon.setReceiveMobile(mobile);
             recycleCoupon.setAddPriceUpper(activityCouponRole.getAddPriceUpper());
             recycleCoupon.setIsDel(0);
