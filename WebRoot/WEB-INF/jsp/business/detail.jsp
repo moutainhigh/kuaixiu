@@ -578,14 +578,22 @@
             }
         })
     }
-
+    function toBigImg(obj) {
+//        alert(parseInt(obj.style.zoom,10));
+        var zoom = parseInt(obj.style.zoom, 10) || 100;
+        zoom += event.wheelDelta / 12;
+        if (zoom > 0) {
+            obj.style.zoom = zoom + '%';
+        }
+        return false;
+    }
 
     function toList() {
         func_reload_page("${ctx}/sj/order/list2.do");
     }
 
     function zoomImage(url) {
-        var imgHtml = "<img src='" + url + "' width='auto' height='500'/>";
+        var imgHtml = "<img src='" + url + "' width='auto' height='500' onmousewheel='return toBigImg(this)' style='cursor:pointer'/>";
         //弹出层
         layer.open({
             type: 1,

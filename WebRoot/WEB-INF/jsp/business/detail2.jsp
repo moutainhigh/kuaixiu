@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="${webResourceUrl}/resource/layui/css/modules/laydate/default/laydate.css">
 <link rel="stylesheet" href="${webResourceUrl}/resource/layui/css/modules/layer/default/layer.css">
 <link rel="stylesheet" href="${webResourceUrl}/resource/layui/css/modules/code.css">
+<link rel="stylesheet" href="${webResourceUrl}/resource/zoom/css/zoom.css">
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">商机订单管理</a></strong>
@@ -100,7 +101,9 @@
                             </c:if>
                             <c:forEach items="${companyPictures }" var="item" varStatus="i">
                                 <img src="${item.companyPictureUrl}" class="layui-upload-img"
-                                     onclick="zoomImage('${item.companyPictureUrl}')" width="90" height="80"/>
+                                     onclick="zoomImage('${item.companyPictureUrl}')"
+                                     width="90" height="80"
+                                     style="cursor:pointer"/>
                             </c:forEach>
                         </h4>
                     </div><!-- /.col -->
@@ -224,14 +227,35 @@
     </table>
 </div>
 <!-- /am-g -->
+<script src="${webResourceUrl}/resource/zoom/js/zoom.js" type="text/javascript" charset="utf-8"></script>
+<%--<script src="${webResourceUrl}/plugins/assets/js/" type="text/javascript" charset="utf-8"></script>--%>
 <script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     function toList() {
         func_reload_page("${ctx}/sj/order/list.do");
     }
+    $(function() {
+        /*
+         smallimg   // 小图
+         bigimg  //点击放大的图片
+         mask   //黑色遮罩
+         */
+        var obj = new zoom('mask', 'bigimg', 'smallimg');
+        obj.init();
+    })
+
+    function toBigImg(obj) {
+//        alert(parseInt(obj.style.zoom,10));
+        var zoom = parseInt(obj.style.zoom, 10) || 100;
+        zoom += event.wheelDelta / 12;
+        if (zoom > 0) {
+            obj.style.zoom = zoom + '%';
+        }
+        return false;
+    }
 
     function zoomImage(url) {
-        var imgHtml = "<img src='" + url + "' width='auto' height='500'/>";
+        var imgHtml = "<img src='" + url + "' width='auto' height='500' onmousewheel='return toBigImg(this)' style='cursor:pointer'/>";
         //弹出层
         layer.open({
             type: 1,
