@@ -200,7 +200,7 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
     public void receiveCoupon(List<HsActivityAndCoupon> activityAndCoupons, String mobile) throws Exception {
         List<HsActivityCouponRole> activityCouponRoles = new ArrayList<>();
         for(HsActivityAndCoupon activityAndCoupon:activityAndCoupons){
-            HsActivityCouponRole activityCouponRole = activityCouponRoleService.getDao().queryByNameLabel(activityAndCoupon.getCouponId());
+            HsActivityCouponRole activityCouponRole = activityCouponRoleService.queryById(activityAndCoupon.getCouponId());
             activityCouponRoles.add(activityCouponRole);
         }
         for (HsActivityCouponRole activityCouponRole : activityCouponRoles) {

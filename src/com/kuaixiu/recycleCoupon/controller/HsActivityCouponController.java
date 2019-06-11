@@ -290,7 +290,7 @@ public class HsActivityCouponController extends BaseController {
                 return getSjResult(result, null, false, "3", null, "您已领取过此加价券");
             }
             List<HsActivityAndCoupon> activityAndCoupons=hsActivityAndCouponService.getDao().queryByActivityId(activityCoupon.getId());
-            if (CollectionUtils.isNotEmpty(activityAndCoupons)) {
+            if (CollectionUtils.isEmpty(activityAndCoupons)) {
                 return getSjResult(result, null, false, "3", null, "该活动没有加价券");
             }
             hsActivityCouponService.receiveCoupon(activityAndCoupons, phone);
