@@ -13,7 +13,8 @@ import java.util.List;
  */
 public interface HsActivityCouponRoleMapper<T> extends BaseDao<T> {
 
-    List<T> queryByActivityId(String activityId);
+    T queryByNameLabel(String nameLabel);
+
 }
 
 

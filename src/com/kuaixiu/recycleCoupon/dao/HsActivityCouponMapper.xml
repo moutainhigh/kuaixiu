@@ -8,7 +8,6 @@
         <result column="id" property="id"/>
         <result column="activity_label" property="activityLabel"/>
         <result column="source" property="source"/>
-        <result column="is_default" property="isDefault"/>
         <result column="is_del" property="isDel"/>
         <result column="head_url" property="headUrl"/>
         <result column="head_height" property="headHeight"/>
@@ -29,15 +28,15 @@
 
     <!-- hs_activity_coupon table all fields -->
     <sql id="Base_Column_List" >
-        id,activity_label,source,is_default,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,centercolor_value,center_height,center_wide,activity_role,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,end_time
+        id,activity_label,source,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,centercolor_value,center_height,center_wide,activity_role,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,end_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_activity_coupon
-        (id,activity_label,source,is_default,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,centercolor_value,center_height,center_wide,activity_role,create_time,create_userid,update_time,update_userid,end_time)
+        (id,activity_label,source,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,centercolor_value,center_height,center_wide,activity_role,create_time,create_userid,update_time,update_userid,end_time)
         values
-        (#{id},#{activityLabel},#{source},#{isDefault},0,#{headUrl},#{headHeight},#{headWide},#{marginHeight},#{marginWide},#{centerUrl},#{centercolorValue},#{centerHeight},#{centerWide},#{activityRole},now(),#{createUserid},#{updateTime},#{updateUserid},#{endTime})
+        (#{id},#{activityLabel},#{source},0,#{headUrl},#{headHeight},#{headWide},#{marginHeight},#{marginWide},#{centerUrl},#{centercolorValue},#{centerHeight},#{centerWide},#{activityRole},now(),#{createUserid},#{updateTime},#{updateUserid},#{endTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -47,7 +46,6 @@
             id=#{id},
             activity_label=#{activityLabel},
             source=#{source},
-            is_default=#{isDefault},
             is_del=#{isDel},
             head_url=#{headUrl},
             head_height=#{headHeight},
@@ -66,24 +64,6 @@
         where id=#{id}
     </update>
 
-    <select id="queryByIsDefault"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
-        from hs_activity_coupon where source=#{source} and is_default=1 and is_del=0
-    </select>
-
-    <update id="updateIsDefault1" parameterType="Object" >
-        update hs_activity_coupon
-        set
-        is_default=1
-        where id=#{id} and is_del=0
-    </update>
-
-    <update id="updateIsDefault0" parameterType="Object" >
-        update hs_activity_coupon
-        set
-        is_default=0
-        where id=#{id} and is_del=0
-    </update>
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
@@ -100,7 +80,6 @@
         select <include refid="Base_Column_List" />
         from hs_activity_coupon
         where source=#{source}
-        and is_default=1
         and is_del=0
     </select>
 
@@ -109,7 +88,6 @@
         from hs_activity_coupon
         where source=#{source}
         and activity_label=#{activityLabel}
-        and is_default=1
         and is_del=0
     </select>
 
@@ -128,9 +106,6 @@
         </if>
         <if test="source != null and source != ''" >
             and source = #{source}
-        </if>
-        <if test="isDefault != null and isDefault != ''" >
-            and is_default = #{isDefault}
         </if>
         <if test="headUrl != null and headUrl != ''" >
             and head_url = #{headUrl}
@@ -191,9 +166,6 @@
         </if>
         <if test="source != null and source != ''" >
             and source = #{source}
-        </if>
-        <if test="isDefault != null and isDefault != ''" >
-            and is_default = #{isDefault}
         </if>
         <if test="headUrl != null and headUrl != ''" >
             and head_url = #{headUrl}

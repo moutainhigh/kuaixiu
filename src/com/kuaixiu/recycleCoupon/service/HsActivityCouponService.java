@@ -9,18 +9,16 @@ import com.common.util.Base64Util;
 import com.common.util.Consts;
 import com.common.util.CookiesUtil;
 import com.common.util.DateUtil;
-import com.kuaixiu.recycle.entity.CouponAddValue;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.RecycleCouponService;
 import com.kuaixiu.recycle.service.RecycleOrderService;
 import com.kuaixiu.recycleCoupon.dao.HsActivityCouponMapper;
+import com.kuaixiu.recycleCoupon.entity.HsActivityAndCoupon;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCoupon;
 
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.kuaixiu.recycleUser.entity.HsUser;
 import com.kuaixiu.recycleUser.service.HsUserService;
-import com.system.basic.user.entity.SessionUser;
-import com.system.basic.user.entity.SysUser;
 import com.system.constant.SystemConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -56,7 +54,7 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
     @Autowired
     private RecycleCouponService recycleCouponService;
     @Autowired
-    private HsUserActivityCouponService userActivityCouponService;
+    private HsActivityAndCouponService hsActivityAndCouponService;
     @Autowired
     private HsActivityCouponRoleService activityCouponRoleService;
 
@@ -178,7 +176,7 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
 
     public JSONObject recycleCouponDetail2Json(RecycleCoupon recycleCoupon) {
         JSONObject json = new JSONObject();
-        json.put("batchId",recycleCoupon.getBatchId());
+        json.put("batchId", recycleCoupon.getBatchId());
         json.put("couponId", recycleCoupon.getId());
         json.put("couponCode", recycleCoupon.getCouponCode());
         json.put("couponName", recycleCoupon.getCouponName());
@@ -191,15 +189,28 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         json.put("endTime", recycleCoupon.getEndTime());
         json.put("ruleDescription", recycleCoupon.getRuleDescription());
         json.put("isUser", recycleCoupon.getIsUse());
-        if(recycleCoupon.getUseTime()!=null){
+        if (recycleCoupon.getUseTime() != null) {
             json.put("userTime", DateUtil.getDateyyyyMMddHHmmss(recycleCoupon.getUseTime()));
         }
         json.put("note", recycleCoupon.getNote());
         return json;
     }
 
+
     public void receiveCoupon(String activityCouponId, String mobile) throws Exception {
-        List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.getDao().queryByActivityId(activityCouponId);
+        HsActivityCoupon hsActivityCoupon = this.queryById(activityCouponId);
+        List<HsActivityCouponRole> activityCouponRoles = new ArrayList<>();
+        String hsCouponName = hsActivityCoupon.getHsCouponName();
+        if (hsCouponName.contains(",")) {
+            String[] hsCouponNames = hsCouponName.split(",");
+            for (int i = 0; i < hsCouponNames.length; i++) {
+                HsActivityCouponRole activityCouponRole = activityCouponRoleService.getDao().queryByNameLabel(hsCouponNames[i]);
+                activityCouponRoles.add(activityCouponRole);
+            }
+        } else {
+            HsActivityCouponRole activityCouponRole = activityCouponRoleService.getDao().queryByNameLabel(hsCouponName);
+            activityCouponRoles.add(activityCouponRole);
+        }
         for (HsActivityCouponRole activityCouponRole : activityCouponRoles) {
             RecycleCoupon recycleCoupon = new RecycleCoupon();
             recycleCoupon.setBatchId(SystemConstant.RECYCLE_COUPON_BATCH);
@@ -228,21 +239,15 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         }
     }
 
-    //修改活动为默认显示活动
-    public void updateIsDefault(HsActivityCoupon hsActivityCoupon) {
-        HsActivityCoupon activityCoupon = getDao().queryByIsDefault(hsActivityCoupon.getSource());
-        if (activityCoupon != null) {
-            getDao().updateIsDefault0(activityCoupon.getId());
-        }
-        getDao().updateIsDefault1(hsActivityCoupon.getId());
-    }
 
-    public void activityAndCoupon(String activityId, String[] couponRoles,String endTime) {
+    public void activityAndCoupon(String activityId, String[] couponRoles, String endTime) {
         for (int i = 0; i < couponRoles.length; i++) {
-            HsActivityCouponRole activityCouponRole = activityCouponRoleService.queryById(couponRoles[i]);
-            activityCouponRole.setActivityId(activityId);
-            activityCouponRole.setActivityEndTime(endTime);
-            activityCouponRoleService.saveUpdate(activityCouponRole);
+            HsActivityAndCoupon hsActivityAndCoupon = new HsActivityAndCoupon();
+            hsActivityAndCoupon.setId(UUID.randomUUID().toString().replace("-", ""));
+            hsActivityAndCoupon.setActivityId(activityId);
+            hsActivityAndCoupon.setEndTime(endTime);
+            hsActivityAndCoupon.setCouponId(couponRoles[i]);
+            hsActivityAndCouponService.add(hsActivityAndCoupon);
         }
     }
 }

@@ -16,13 +16,6 @@ public interface HsActivityCouponMapper<T> extends BaseDao<T> {
 
     T queryBySourceActivityLabel(@Param("source") Integer source, @Param("activityLabel") String activityLabel);
 
-    //查询默认活动
-    T queryByIsDefault(@Param("source") Integer source);
-
-    int updateIsDefault1(@Param("id") String id);
-
-    int updateIsDefault0(@Param("id") String id);
-
 }
 
 

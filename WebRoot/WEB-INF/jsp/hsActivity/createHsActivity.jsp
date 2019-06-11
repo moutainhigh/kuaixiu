@@ -116,16 +116,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="isDefault" class="col-sm-2 control-label"><span style="color:red"></span>是否默认</label>
-                    <div class="col-sm-9">
-                        <div class="oldToNew">
-                            <input name="isDefault" type="radio" value="1" checked/>是
-                            &nbsp&nbsp&nbsp&nbsp
-                            <input name="isDefault" type="radio" value="0"/>否
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="addBrand" class="col-sm-2 control-label"><span style="color:red">*</span>选择加价券</label>
                     <div class="col-sm-9">
                         <c:forEach items="${couponRoles }" var="item" varStatus="i">

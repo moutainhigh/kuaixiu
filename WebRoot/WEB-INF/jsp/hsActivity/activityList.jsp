@@ -25,16 +25,6 @@
 
         </table>
 
-        <%--<div class="form-group">--%>
-        <%--<div class="am-u-sm-12 am-u-md-6">--%>
-        <%--<div class="am-btn-toolbar">--%>
-        <%--<div class="am-btn-group am-btn-group-sm m20">--%>
-        <%--<button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 筛 选--%>
-        <%--</button>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-        <%--</div>--%>
     </form>
 </div>
 
@@ -48,7 +38,6 @@
                 </th>
                 <th class="fontWeight_normal tdwidth60 center">活动标识</th>
                 <th class="fontWeight_normal tdwidth60 center">来源</th>
-                <th class="fontWeight_normal tdwidth40 center">是否默认</th>
                 <%--<th class="fontWeight_normal tdwidth60 center">头图片高度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">头图片宽度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">边框图片高度</th>--%>
@@ -58,6 +47,7 @@
                 <%--<th class="fontWeight_normal tdwidth60 center">加价券图片宽度</th>--%>
                 <th class="fontWeight_normal tdwidth60 center">活动规则</th>
                 <th class="fontWeight_normal tdwidth60 center">创建时间</th>
+                <th class="fontWeight_normal tdwidth60 center">绑定加价券名字</th>
                 <th class="fontWeight_normal tdwidth60 center">活动结束时间</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
@@ -99,7 +89,6 @@
         {"data": "id", "class": "center"},
         {"data": "activityLabel", "class": ""},
         {"data": "sourceName", "class": ""},
-        {"data": "isDefault", "class": ""},
 //        {"data": "headHeight", "class": ""},
 //        {"data": "headWide", "class": ""},
 //        {"data": "marginHeight", "class": ""},
@@ -109,6 +98,7 @@
 //        {"data": "centerWide", "class": ""},
         {"data": "activityRole", "class": ""},
         {"data": "strCreateTime", "class": ""},
+        {"data": "hsCouponName", "class": ""},
         {"data": "endTime", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
@@ -126,46 +116,21 @@
                 return html;
             }
         },
-        {//复选框
-            targets: 3,
-            render: function (data, type, row, meta) {
-                if (row.isDefault == 1) {
-                    return "是";
-                } else {
-                    return "否";
-                }
-            }
-        },
         {
             targets: -1,
             render: function (data, type, row, meta) {
-                if (row.isDefault == 1) {
                     var context = {
                         func: [
                             {
-                                "name": "已默认",
-//                                "fn": "editBtnClick(\'" + row.id + "\')",
+                                "name": "删除",
+                                "fn": "delBtnClick(\'" + row.id + "\')",
                                 "icon": "am-icon-search",
-                                "class": "am-text-secondary"
-                            },
-                        ]
-                    };
-                    var html = template_btn(context);
-                    return html;
-                } else {
-                    var context = {
-                        func: [
-                            {
-                                "name": "默认",
-                                "fn": "editBtnClick(\'" + row.id + "\')",
-                                "icon": "am-icon-pencil-square-o",
                                 "class": "am-text-secondary"
                             }
                         ]
                     };
                     var html = template_btn(context);
                     return html;
-                }
             }
         }
     ]);
@@ -181,12 +146,12 @@
         myTable.ajax.reload(null, false);
     }
 
-    function editBtnClick(id) {
-        AlertText.tips("d_confirm", "默认提示", "确定要默认显示吗？", function () {
+    function delBtnClick(id) {
+        AlertText.tips("d_confirm", "删除提示", "确定删除吗？", function () {
             //加载等待
             AlertText.tips("d_loading");
             var url_ = AppConfig.ctx + "/hsActivity/updateIsDefault.do";
-            var data_ = {activityId: id,isDefault:1};
+            var data_ = {activityId: id};
             $.ajax({
                 url: url_,
                 data: data_,

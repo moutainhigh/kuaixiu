@@ -6,7 +6,6 @@
     <!-- Result Map-->
     <resultMap id="BaseResultMap" type="com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole" >
         <result column="id" property="id"/>
-        <result column="activity_id" property="activityId"/>
         <result column="name_label" property="nameLabel"/>
         <result column="coupon_name" property="couponName"/>
         <result column="pricing_Type" property="pricingType"/>
@@ -16,26 +15,22 @@
         <result column="rule_description" property="ruleDescription"/>
         <result column="note" property="note"/>
         <result column="add_price_upper" property="addPriceUpper"/>
-        <result column="begin_time" property="beginTime"/>
-        <result column="end_time" property="endTime"/>
-        <result column="activity_end_time" property="activityEndTime"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
     
     <!-- hs_activity_coupon_role table all fields -->
     <sql id="Base_Column_List" >
-        id,activity_id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,
-        subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,
-        date_format(`activity_end_time`,'%Y-%m-%d')activity_end_time,
+        id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,
+        subtraction_price,rule_description,note,add_price_upper,
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_activity_coupon_role
-        (id,activity_id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,activity_end_time,create_time)
+        (id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,create_time)
         values
-        (#{id},#{activityId},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},#{beginTime},#{endTime},#{activityEndTime},now())
+        (#{id},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},now())
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -43,7 +38,6 @@
         update hs_activity_coupon_role 
         set 
             id=#{id},
-            activity_id=#{activityId},
             name_label=#{nameLabel},
             coupon_name=#{couponName},
             pricing_Type=#{pricingType},
@@ -52,10 +46,7 @@
             subtraction_price=#{subtractionPrice},
             rule_description=#{ruleDescription},
             note=#{note},
-            add_price_upper=#{addPriceUpper},
-            begin_time=#{beginTime},
-            end_time=#{endTime},
-            activity_end_time=#{activityEndTime}
+            add_price_upper=#{addPriceUpper}
         where id=#{id}
     </update>
 
@@ -69,6 +60,12 @@
         select <include refid="Base_Column_List" />
         from hs_activity_coupon_role where id = #{id}
     </select>
+
+    <select id="queryByNameLabel"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_activity_coupon_role where name_label=#{nameLabel}
+    </select>
+
 
     <select id="queryByActivityId"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
@@ -84,9 +81,6 @@
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
-        <if test="activityId != null and activityId != ''" >
-            and activity_id = #{activityId}
-        </if>
         <if test="couponName != null and couponName != ''" >
             and coupon_name = #{couponName}
         </if>
@@ -110,15 +104,6 @@
         </if>
         <if test="addPriceUpper != null and addPriceUpper != ''" >
             and add_price_upper = #{addPriceUpper}
-        </if>
-        <if test="beginTime != null and beginTime != ''" >
-            and begin_time = #{beginTime}
-        </if>
-        <if test="endTime != null and endTime != ''" >
-            and end_time = #{endTime}
-        </if>
-        <if test="activityEndTime != null and activityEndTime != ''" >
-            and activity_end_time = #{activityEndTime}
         </if>
         order by create_time desc
     </select>
@@ -132,9 +117,6 @@
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
-        <if test="activityId != null and activityId != ''" >
-            and activity_id = #{activityId}
-        </if>
         <if test="couponName != null and couponName != ''" >
             and coupon_name = #{couponName}
         </if>
@@ -158,15 +140,6 @@
         </if>
         <if test="addPriceUpper != null and addPriceUpper != ''" >
             and add_price_upper = #{addPriceUpper}
-        </if>
-        <if test="beginTime != null and beginTime != ''" >
-            and begin_time = #{beginTime}
-        </if>
-        <if test="endTime != null and endTime != ''" >
-            and end_time = #{endTime}
-        </if>
-        <if test="activityEndTime != null and activityEndTime != ''" >
-            and activity_end_time = #{activityEndTime}
         </if>
         order by create_time desc
     </select>
