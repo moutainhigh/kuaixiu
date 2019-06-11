@@ -7,8 +7,10 @@ import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.RecycleCouponService;
+import com.kuaixiu.recycleCoupon.entity.HsActivityAndCoupon;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCoupon;
 import com.kuaixiu.recycleCoupon.entity.HsUserActivityCoupon;
+import com.kuaixiu.recycleCoupon.service.HsActivityAndCouponService;
 import com.kuaixiu.recycleCoupon.service.HsActivityCouponService;
 import com.kuaixiu.recycleCoupon.service.HsUserActivityCouponService;
 import com.kuaixiu.recycleUser.entity.HsUser;
@@ -48,6 +50,8 @@ public class HsActivityCouponController extends BaseController {
     private RecycleCouponService recycleCouponService;
     @Autowired
     private HsUserActivityCouponService userActivityCouponService;
+    @Autowired
+    private HsActivityAndCouponService hsActivityAndCouponService;
 
     /**
      * 获取活动领取加价券首页信息
@@ -285,7 +289,11 @@ public class HsActivityCouponController extends BaseController {
             if (CollectionUtils.isNotEmpty(userActivityCoupons)) {
                 return getSjResult(result, null, false, "3", null, "您已领取过此加价券");
             }
-            hsActivityCouponService.receiveCoupon(activityCoupon.getId(), phone);
+            List<HsActivityAndCoupon> activityAndCoupons=hsActivityAndCouponService.getDao().queryByActivityId(activityCoupon.getId());
+            if (CollectionUtils.isNotEmpty(activityAndCoupons)) {
+                return getSjResult(result, null, false, "3", null, "该活动没有加价券");
+            }
+            hsActivityCouponService.receiveCoupon(activityAndCoupons, phone);
             HsUserActivityCoupon userActivityCoupon1 = new HsUserActivityCoupon();
             userActivityCoupon1.setAcvityId(activityCoupon.getId());
             userActivityCoupon1.setSource(source);

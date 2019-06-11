@@ -197,18 +197,10 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
     }
 
 
-    public void receiveCoupon(String activityCouponId, String mobile) throws Exception {
-        HsActivityCoupon hsActivityCoupon = this.queryById(activityCouponId);
+    public void receiveCoupon(List<HsActivityAndCoupon> activityAndCoupons, String mobile) throws Exception {
         List<HsActivityCouponRole> activityCouponRoles = new ArrayList<>();
-        String hsCouponName = hsActivityCoupon.getHsCouponName();
-        if (hsCouponName.contains(",")) {
-            String[] hsCouponNames = hsCouponName.split(",");
-            for (int i = 0; i < hsCouponNames.length; i++) {
-                HsActivityCouponRole activityCouponRole = activityCouponRoleService.getDao().queryByNameLabel(hsCouponNames[i]);
-                activityCouponRoles.add(activityCouponRole);
-            }
-        } else {
-            HsActivityCouponRole activityCouponRole = activityCouponRoleService.getDao().queryByNameLabel(hsCouponName);
+        for(HsActivityAndCoupon activityAndCoupon:activityAndCoupons){
+            HsActivityCouponRole activityCouponRole = activityCouponRoleService.getDao().queryByNameLabel(activityAndCoupon.getCouponId());
             activityCouponRoles.add(activityCouponRole);
         }
         for (HsActivityCouponRole activityCouponRole : activityCouponRoles) {
