@@ -62,11 +62,19 @@
 <div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
 </div>
 <!-- 新增弹窗 end -->
+<div id="modal-editView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     function addBtnClick() {
         $("#modal-insertView").html("");
         $("#modal-insertView").load("${ctx}/hsActivity/toAddActivity.do", function () {
+            func_after_model_load(this);
+        });
+    }
+    function editBtnClick(id) {
+        $("#modal-editView").html("");
+        $("#modal-editView").load("${ctx}/hsActivity/toEditActivity.do?id="+id, function () {
             func_after_model_load(this);
         });
     }
@@ -121,6 +129,12 @@
             render: function (data, type, row, meta) {
                     var context = {
                         func: [
+                            {
+                                "name": "编辑",
+                                "fn": "editBtnClick(\'" + row.id + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            },
                             {
                                 "name": "删除",
                                 "fn": "delBtnClick(\'" + row.id + "\')",

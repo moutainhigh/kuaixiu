@@ -57,6 +57,8 @@
 <!-- 新增弹窗 end -->
 <div id="modal-insertView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
 </div>
+<div id="modal-editView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+</div>
 <!-- 新增弹窗 end -->
 
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
@@ -68,6 +70,14 @@
             func_after_model_load(this);
         });
     }
+
+    function editBtnClick(id) {
+        $("#modal-editView").html("");
+        $("#modal-editView").load("${ctx}/hsActivity/toEditCouponRole.do?id="+id, function () {
+            func_after_model_load(this);
+        });
+    }
+
     //自定义datatable的数据
     var dto = new DtOptions();
     //设置数据刷新路径
@@ -132,6 +142,12 @@
             render: function (data, type, row, meta) {
                 var context = {
                     func: [
+                        {
+                            "name": "编辑",
+                            "fn": "editBtnClick(\'" + row.id + "\')",
+                            "icon": "am-icon-pencil-square-o",
+                            "class": "am-text-secondary"
+                        },
                         {
                             "name": "删除",
                             "fn": "delBtnClick(\'" + row.id + "\')",

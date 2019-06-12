@@ -68,10 +68,11 @@ public class HsActivityCouponController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             Integer source = params.getInteger("fm");
+            String activityLabel = params.getString("label");//活动标识
             if (source == null) {
                 return getSjResult(result, null, false, "2", null, "来源不能为空");
             }
-            HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySource(source);
+            HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySourceActivityLabel(source,activityLabel);
             if (activityCoupon == null) {
                 getSjResult(result, null, true, "0", null, "获取成功");
             } else {

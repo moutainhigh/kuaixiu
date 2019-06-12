@@ -3,18 +3,19 @@
 <div class="modal-backdrop fade in"></div>
 <div class="modal-dialog" style="width: 700px;">
     <div class="modal-content">
-        <div class="modal-title"><span>新增回收加价券活动</span>
+        <div class="modal-title"><span>编辑回收加价券活动</span>
             <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
         </div>
         <div class="modal-body">
             <form id="insertForm" method="post" class="form-horizontal" enctype="multipart/form-data">
+                <input type="hidden" name="activityId" value="${hsActivityCoupon.id }"/>
                 <div class="form-group">
                     <label for="source" class="col-sm-2 control-label"><span style="color:red">*</span> 来源</label>
                     <div class="col-sm-9">
                         <select id="source" name="source" style="width:400px;" class="form-control">
                             <option value="">--请选择--</option>
                             <c:forEach items="${recycleSystems }" var="item" varStatus="i">
-                                <option value="${item.id }">${item.name }</option>
+                                <option value="${item.id }" ${item.id == hsActivityCoupon.source ? 'selected="selected"' : ''}>${item.name }</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -25,7 +26,7 @@
                            onchange="imgChange(this);"/>
                     <!--文件上传选择按钮-->
                     <div id="preview" hidden="hidden" class="col-sm-9">
-                        <img id="imghead" src="" width="260" height="180"/> <!--图片显示位置-->
+                        <img id="imghead" src="${hsActivityCoupon.headUrl }" width="260" height="180"/> <!--图片显示位置-->
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,7 +50,7 @@
                            onchange="imgCenterChange(this);"/>
                     <!--文件上传选择按钮-->
                     <div id="previewCenter" hidden="hidden" class="col-sm-9">
-                        <img id="imgCenter" src="" width="260" height="180"/> <!--图片显示位置-->
+                        <img id="imgCenter" src="${hsActivityCoupon.centerUrl }" width="260" height="180"/> <!--图片显示位置-->
                     </div>
                 </div>
                 <div class="form-group">
@@ -74,7 +75,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片色值</label>
                     <div class="col-sm-9">
-                        <input type="text" id="centercolorValue" style="width:400px;" name="centercolorValue"
+                        <input type="text" id="centercolorValue" value="${hsActivityCoupon.centercolorValue }" style="width:400px;" name="centercolorValue"
                                class="form-control"
                                placeholder="加价券图片色值">
                     </div>
@@ -82,7 +83,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>活动结束时间</label>
                     <div class="am-datepicker-date col-sm-9">
-                        <input type="text" style="width:400px;" id="endTime" name="actvityEndTime"
+                        <input type="text" style="width:400px;" id="endTime" value="${hsActivityCoupon.endTime }" name="actvityEndTime"
                                class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </div>
@@ -105,9 +106,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>活动规则</label>
                     <div class="col-sm-9" id="activityRole">
-                        <input style="width:400px;" type="text" id="activityRoles" name="activityRoles"
-                               class="form-control"
-                               placeholder="活动规则">
+                        <c:forEach items="${activityRole }" var="item" varStatus="i">
+                            <c:if test="${i.index != 0}">
+                                </br>
+                            </c:if>
+                            <input style="width:400px;" type="text" value="${item.role }" name="activityRoles"
+                                   class="form-control"
+                                   placeholder="活动规则">
+                        </c:forEach>
                     </div>
                 </div>
                 <div class="form-group">
@@ -120,7 +126,7 @@
                     <div class="col-sm-9">
                         <c:forEach items="${couponRoles }" var="item" varStatus="i">
                             <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
-                                <input type="checkbox" name="couponRoles" value="${item.id }"> ${item.nameLabel }
+                                <input type="checkbox" name="couponRoles" value="${item.id }" ${item.isChoice == 1 ? 'checked="checked"' : '' }> ${item.nameLabel }
                             </label>
                         </c:forEach>
                     </div>
@@ -299,7 +305,7 @@
                 btn.button("loading");
                 //遮盖层
                 var options = {
-                    url: "${ctx}/hsActivity/addActivity.do",
+                    url: "${ctx}/hsActivity/editActivity.do",
                     dataType: "json",
                     success: function (result) {
                         if (result.success) {

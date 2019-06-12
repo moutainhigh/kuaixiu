@@ -42,6 +42,9 @@
     <delete id="deleteByCouponId" parameterType="Object">
         delete from hs_activity_and_coupon where coupon_id=#{couponId}
     </delete>
+    <delete id="deleteByActivityId" parameterType="Object">
+        delete from hs_activity_and_coupon where activity_id=#{activityId}
+    </delete>
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />

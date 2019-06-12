@@ -92,6 +92,11 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
                 activityRole.add(role);
             }
             json.put("activityRole", activityRole);
+        }else{
+            JSONArray activityRole = new JSONArray();
+            JSONObject role = new JSONObject();
+            role.put("role", actCoupon.getActivityRole());
+            json.put("activityRole", activityRole);
         }
         return json;
     }

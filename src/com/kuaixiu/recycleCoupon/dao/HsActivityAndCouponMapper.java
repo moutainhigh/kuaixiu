@@ -16,6 +16,8 @@ public interface HsActivityAndCouponMapper<T> extends BaseDao<T> {
     List<T> queryByActivityId(String activityId);
 
     int deleteByCouponId(String couponId);
+
+    int deleteByActivityId(String couponId);
 }
 
 
