@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -327,13 +329,11 @@ public class HsActivityCouponRoleController extends BaseController {
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "hd_images";
             String logoPath = getPath(request, "headFile", savePath, imageName);             //图片路径
             String headUrl = getProjectUrl(request) + "/images/activityCoupon/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
-            System.out.println("图片路径：" + savePath);
             //中心加价券图片
             String imageName2 = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
             String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
             String logoPath2 = getPath(request, "centerFile", savePath2, imageName2);             //图片路径
-            String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
-            System.out.println("图片路径：" + savePath2);
+            String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath2.substring(logoPath2.lastIndexOf("/") + 1);
             //添加活动
             HsActivityCoupon activityCoupon = new HsActivityCoupon();
             activityCoupon.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -424,23 +424,30 @@ public class HsActivityCouponRoleController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             HsActivityCoupon activityCoupon = hsActivityCouponService.queryById(activityId);
-            //头图
-            //获取图片，保存图片到webapp同级inages/activityCoupon目录
-            String imageName = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
-            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "hd_images";
-            String logoPath = getPath(request, "headFile", savePath, imageName);             //图片路径
-            String headUrl = getProjectUrl(request) + "/images/activityCoupon/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
-            System.out.println("图片路径：" + savePath);
-            //中心加价券图片
-            String imageName2 = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
-            String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
-            String logoPath2 = getPath(request, "centerFile", savePath, imageName2);             //图片路径
-            String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
-            System.out.println("图片路径：" + savePath2);
+            MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
+            MultipartFile mfile = rm.getFile("headFile");                             //获得前端页面传来的文件
+            byte[] bfile = mfile.getBytes();                                    //获得文件的字节数组
+            if (bfile.length != 0) {
+                //头图
+                //获取图片，保存图片到webapp同级inages/activityCoupon目录
+                String imageName = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
+                String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "hd_images";
+                String logoPath = getPath(request, "headFile", savePath, imageName);             //图片路径
+                String headUrl = getProjectUrl(request) + "/images/activityCoupon/hd_images/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
+                activityCoupon.setHeadUrl(headUrl);
+            }
+            MultipartFile mfile2 = rm.getFile("centerFile");                             //获得前端页面传来的文件
+            byte[] bfile2 = mfile2.getBytes();                                    //获得文件的字节数组
+            if (bfile2.length != 0) {
+                //中心加价券图片
+                String imageName2 = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
+                String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
+                String logoPath2 = getPath(request, "centerFile", savePath2, imageName2);             //图片路径
+                String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath2.substring(logoPath2.lastIndexOf("/") + 1);
+                activityCoupon.setCenterUrl(centerUrl);
+            }
             //添加活动
             activityCoupon.setSource(Integer.valueOf(source));
-            activityCoupon.setHeadUrl(headUrl);
-            activityCoupon.setCenterUrl(centerUrl);
             activityCoupon.setCentercolorValue(centercolorValue);
             activityCoupon.setEndTime(endTime);
             StringBuilder sb = new StringBuilder();
