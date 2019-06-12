@@ -2,7 +2,7 @@
 <%@ include file="/commons/taglibs.jsp" %>
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg">预约管理</strong> /
+        <strong class="am-text-primary am-text-lg">回收活动管理</strong> /
         <small>列表查询</small>
     </div>
 </div>

@@ -15,6 +15,7 @@ public interface HsActivityCouponRoleMapper<T> extends BaseDao<T> {
 
     T queryByNameLabel(String nameLabel);
 
+    int deleteByIsDel(String id);
 }
 
 

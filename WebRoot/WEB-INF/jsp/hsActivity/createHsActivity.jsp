@@ -142,7 +142,7 @@
 
 <script type="text/javascript">
     function addRole() {
-        $("#activityRole").append("<input style='width:400px;' type='text' name='activityRoles'" +
+        $("#activityRole").append("</br><input style='width:400px;' type='text' name='activityRoles'" +
             "class='form-control' placeholder='活动规则'>");
     }
 

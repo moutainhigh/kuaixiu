@@ -14,6 +14,8 @@ import java.util.List;
 public interface HsActivityAndCouponMapper<T> extends BaseDao<T> {
 
     List<T> queryByActivityId(String activityId);
+
+    int deleteByCouponId(String couponId);
 }
 
 

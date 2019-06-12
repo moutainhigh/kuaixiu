@@ -2,7 +2,7 @@
 <%@ include file="/commons/taglibs.jsp" %>
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf" style="width: 100%;">
-        <strong class="am-text-primary am-text-lg">优惠券管理</strong> /
+        <strong class="am-text-primary am-text-lg">加价券规则管理</strong> /
         <small>列表查询</small>
     </div>
 </div>
@@ -38,11 +38,13 @@
                 <th class="fontWeight_normal tdwidth80 center">加价券规则名字</th>
                 <th class="fontWeight_normal tdwidth90 center">加价券名字</th>
                 <th class="fontWeight_normal tdwidth90 center">加价券类型</th>
-                <th class="fontWeight_normal tdwidth50 center">加价券金额</th>
-                <th class="fontWeight_normal tdwidth50 center">加价额度</th>
+                <th class="fontWeight_normal tdwidth50 center">加价金额</th>
+                <th class="fontWeight_normal tdwidth50 center">最高加价金额</th>
+                <th class="fontWeight_normal tdwidth50 center">订单金额上限</th>
+                <th class="fontWeight_normal tdwidth50 center">订单金额下限</th>
                 <th class="fontWeight_normal tdwidth60 center">加价规则描述</th>
                 <th class="fontWeight_normal tdwidth80 center">备注</th>
-                <th class="fontWeight_normal tdwidth50 center">加价额度上限</th>
+                <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -87,10 +89,12 @@
         {"data": "couponName", "class": ""},
         {"data": "pricingType", "class": ""},
         {"data": "couponPrice", "class": ""},
+        {"data": "addPriceUpper", "class": ""},
+        {"data": "upperLimit", "class": ""},
         {"data": "subtractionPrice", "class": ""},
         {"data": "ruleDescription", "class": ""},
         {"data": "note", "class": ""},
-        {"data": "addPriceUpper", "class": ""}
+        {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -121,6 +125,23 @@
                         state = "异常";
                 }
                 return state;
+            }
+        },
+        {
+            targets: -1,
+            render: function (data, type, row, meta) {
+                var context = {
+                    func: [
+                        {
+                            "name": "删除",
+                            "fn": "delBtnClick(\'" + row.id + "\')",
+                            "icon": "am-icon-search",
+                            "class": "am-text-secondary"
+                        }
+                    ]
+                };
+                var html = template_btn(context);
+                return html;
             }
         }
     ]);
@@ -156,130 +177,12 @@
         $("#check_all_btn").prop("checked", checked);
     }
 
-    function toDetail(id) {
-        func_reload_page("${ctx}/coupon/detail.do?id=" + id);
-    }
-
-    function createCoupon() {
-        func_reload_page("${ctx}/coupon/create.do");
-    }
-
-    /**
-     *  编辑
-     */
-    function editBtnClick(id) {
-        $("#modal-insertView").html("");
-        $("#modal-insertView").load("${ctx}/coupon/edit.do?id=" + id, function () {
-            func_after_model_load(this);
-        });
-    }
-    /**
-     * 导出数据
-     */
-    function expDataExcel() {
-        var params = "";
-        var array = $("#searchForm").serializeArray();
-        $.each(array, function () {
-            params += "&" + this.name + "=" + this.value;
-        });
-        var ids = "";
-        $("input[name='item_check_btn']").each(function () {
-            if (this.checked) {
-                ids += this.value + ",";
-            }
-        });
-        window.open("${ctx}/file/download.do?fileId=12&ids=" + ids + params, "导出");
-    }
-    /**
-     * 批量删除
-     */
-    function batchDelBtnClick() {
-        var ids = "";
-        $("input[name='item_check_btn']").each(function () {
-            if (this.checked) {
-                ids += this.value + ",";
-            }
-        });
-        if (ids == "") {
-            AlertText.tips("d_alert", "提示", "请选择删除项！");
-        }
-        else {
-            delBtnClick(ids);
-        }
-    }
-
-    /**
-     * 按批次删除
-     */
-    function delByBatchIdBtnClick() {
-        AlertText.tips("d_confirm", "按批次删除", "请输入要删除批次：<input id='batchId' style='margin-left: 80px;' />", function () {
-            var batchId = $("#batchId").val();
-            if (batchId == "") {
-                AlertText.tips("d_alert", "提示", "请输入要删除批次！", function () {
-                    delByBatchIdBtnClick();
-                });
-                return false;
-            }
-            delByBatchId(batchId);
-        });
-    }
-
-    function delByBatchId(batchId) {
-        AlertText.tips("d_confirm", "按批次删除", "确定要删除当前批次吗？确定后会删除当前批次未使用的优惠券。", function () {
-            //加载等待
-            AlertText.tips("d_loading");
-            var url_ = AppConfig.ctx + "/coupon/delete.do";
-            var data_ = {batchId: batchId};
-            $.ajax({
-                url: url_,
-                data: data_,
-                type: "POST",
-                dataType: "json",
-                success: function (result) {
-                    if (result.success) {
-                        //保存成功,关闭窗口，刷新列表
-                        refreshPage();
-                    } else {
-                        AlertText.tips("d_alert", "提示", result.msg);
-                        return false;
-                    }
-                    //隐藏等待
-                    AlertText.hide();
-                }
-            });
-        });
-    }
-
-    /**
-     *  按批次编辑优惠券
-     */
-    function editByBatchIdBtnClick() {
-        AlertText.tips("d_confirm", "按批次编辑", "请输入要编辑批次：<input id='batchId' style='margin-left: 80px;' />", function () {
-            var batchId = $("#batchId").val();
-            if (batchId == "") {
-                AlertText.tips("d_alert", "提示", "请输入要编辑批次！", function () {
-                    editByBatchIdBtnClick();
-                });
-                return false;
-            }
-            editByBatchId(batchId);
-        });
-    }
-
-
-    function editByBatchId(batchId) {
-        $("#modal-insertView").html("");
-        $("#modal-insertView").load("${ctx}/coupon/editByBatch.do?batchId=" + batchId, function () {
-            func_after_model_load(this);
-        });
-    }
-
 
     function delBtnClick(id) {
         AlertText.tips("d_confirm", "删除提示", "确定要删除吗？", function () {
             //加载等待
             AlertText.tips("d_loading");
-            var url_ = AppConfig.ctx + "/coupon/delete.do";
+            var url_ = AppConfig.ctx + "/hsActivity/delHsCouponRole.do";
             var data_ = {id: id};
             $.ajax({
                 url: url_,
@@ -291,7 +194,7 @@
                         //保存成功,关闭窗口，刷新列表
                         refreshPage();
                     } else {
-                        AlertText.tips("d_alert", "提示", result.msg);
+                        AlertText.tips("d_alert", "提示", result.resultMessage);
                         return false;
                     }
                     //隐藏等待

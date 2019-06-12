@@ -32,18 +32,18 @@
           </div>
         </div>
         <div class="form-group" id="prices">
-          <label for="price" class="col-sm-2 control-label"><span style="color:red">*</span>加价券金额</label>
+          <label for="price" class="col-sm-2 control-label"><span style="color:red">*</span>加价金额</label>
           <div class="col-sm-9">
-            <input type="text" id="price" name="price" class="form-control" placeholder="加价额度">
+            <input type="text" id="price" name="price" class="form-control" placeholder="请输入加价金额">
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-9 control-label">（加价券金额。如果是百分比加价：无需输入百分号，输入分子即可）</label>
+          <label class="col-sm-9 control-label">（加价金额。如果是百分比加价：无需输入百分号，输入分子即可）</label>
         </div>
         <div class="form-group" id="addPriceUppers">
-          <label for="addPriceUpper" class="col-sm-2 control-label"> <span style="color:red">*</span>加价额度上限</label>
+          <label for="addPriceUpper" class="col-sm-2 control-label"> <span style="color:red">*</span>最高加价金额</label>
           <div class="col-sm-9">
-            <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="加价额度上限">
+            <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="请输入最高加价金额">
           </div>
         </div>
         <%--<div class="form-group">--%>
@@ -57,28 +57,28 @@
           <%--</div>--%>
         <%--</div>--%>
         <div class="form-group" id="subtractionPrices">
-          <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单额度</label>
+          <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单额度下限</label>
           <div class="col-sm-9">
-            <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入加价券金额">
+            <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入订单金额下限">
           </div>
         </div>
-        <%--<div class="form-group" id="upperLimits">--%>
-          <%--<label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>--%>
-          <%--<div class="col-sm-9">--%>
-            <%--<input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="订单金额上限">--%>
-          <%--</div>--%>
-        <%--</div>--%>
+        <div class="form-group" id="upperLimits">
+          <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>
+          <div class="col-sm-9">
+            <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入订单金额上限">
+          </div>
+        </div>
 
         <div class="form-group" id="ruleDescriptions">
           <label for="ruleDescription" class="col-sm-2 control-label"> <span style="color:red">*</span>规则描述</label>
           <div class="col-sm-9">
-            <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="规则描述">
+            <input type="text" id="ruleDescription" name="ruleDescription" class="form-control" placeholder="请输入规则描述">
           </div>
         </div>
         <div class="form-group" id="projects">
           <label for="note" class="col-sm-2 control-label"> <span style="color:red">*</span>备注</label>
           <div class="col-sm-9">
-            <input type="text" id="note" name="note" class="form-control" placeholder="备注">
+            <input type="text" id="note" name="note" class="form-control" placeholder="请输入备注">
           </div>
         </div>
         <button type="submit" class="hide" id="addSubmitBtn"></button>

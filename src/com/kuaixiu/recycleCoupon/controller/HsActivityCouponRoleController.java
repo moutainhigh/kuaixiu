@@ -1,7 +1,6 @@
 package com.kuaixiu.recycleCoupon.controller;
 
 import com.common.base.controller.BaseController;
-import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.kuaixiu.recycle.entity.RecycleSystem;
@@ -45,6 +44,8 @@ public class HsActivityCouponRoleController extends BaseController {
     private HsActivityCouponService hsActivityCouponService;
     @Autowired
     private RecycleSystemService systemService;
+    @Autowired
+    private HsActivityAndCouponService hsActivityAndCouponService;
 
     /**
      * 跳转加价券规则列表
@@ -102,13 +103,12 @@ public class HsActivityCouponRoleController extends BaseController {
             String couponName = request.getParameter("couponName");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
             String subtractionPrice = request.getParameter("subtractionPrice");//订单满减加金额
-//            String upperLimit = request.getParameter("upperLimit");//订单金额上限额度
+            String upperLimit = request.getParameter("upperLimit");//订单金额上限额度
             String addPriceUpper = request.getParameter("addPriceUpper");//加价金额上限
             String price = request.getParameter("price");//优惠券金额
             String description = request.getParameter("ruleDescription");//加价规则描述
 //            String startTime = request.getParameter("validBeginTime");//优惠券开始时间
 //            String endTime = request.getParameter("validEndTime");//优惠券过期时间
-            String activityEndTime = request.getParameter("activityEndTime");//活动结束时间
             String note = request.getParameter("note");//优惠券备注
             if (StringUtils.isBlank(couponName) || StringUtils.isBlank(price) || StringUtils.isBlank(pricingType)
                     || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)
@@ -125,7 +125,9 @@ public class HsActivityCouponRoleController extends BaseController {
             couponRole.setCouponName(couponName);
             couponRole.setPricingType(Integer.valueOf(pricingType));
             couponRole.setSubtractionPrice(new BigDecimal(subtractionPrice));
-//            couponRole.setUpperLimit(new BigDecimal(upperLimit));
+            if(StringUtils.isNotBlank(upperLimit)){
+                couponRole.setUpperLimit(new BigDecimal(upperLimit));
+            }
             if ("1".equals(pricingType)) {
                 couponRole.setAddPriceUpper(new BigDecimal(addPriceUpper));
             }
@@ -133,11 +135,40 @@ public class HsActivityCouponRoleController extends BaseController {
             couponRole.setRuleDescription(description);
 //            couponRole.setBeginTime(startTime);
 //            couponRole.setEndTime(endTime);
-//            couponRole.setActivityEndTime(activityEndTime);
             couponRole.setNote(note);
             hsActivityCouponRoleService.add(couponRole);
 
             getSjResult(result, null, true, "0", null, "创建成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            getSjResult(result, null, false, "5", null, "系统异常请稍后再试");
+        }
+        return result;
+    }
+
+    /**
+     * 删除回收加价规则
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/hsActivity/delHsCouponRole")
+    @ResponseBody
+    public ResultData delHsCouponRole(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            String hsCouponId = request.getParameter("id");
+
+            if (StringUtils.isBlank(hsCouponId)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            HsActivityCouponRole activityCouponRole = hsActivityCouponRoleService.queryById(hsCouponId);
+            if(activityCouponRole==null){
+                return getSjResult(result, null, false, "2", null, "规则不存在");
+            }
+            hsActivityCouponRoleService.getDao().deleteByIsDel(hsCouponId);
+            hsActivityAndCouponService.getDao().deleteByCouponId(hsCouponId);
+            getSjResult(result, null, true, "0", null, "删除成功");
         } catch (Exception e) {
             e.printStackTrace();
             getSjResult(result, null, false, "5", null, "系统异常请稍后再试");
@@ -160,8 +191,7 @@ public class HsActivityCouponRoleController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    @Autowired
-    private HsActivityAndCouponService hsActivityAndCouponService;
+
 
     /**
      * 活动列表

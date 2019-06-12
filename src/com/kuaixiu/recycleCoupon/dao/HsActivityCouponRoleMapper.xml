@@ -16,21 +16,22 @@
         <result column="note" property="note"/>
         <result column="add_price_upper" property="addPriceUpper"/>
         <result column="create_time" property="createTime"/>
+        <result column="is_del" property="isDel"/>
     </resultMap>
     
     <!-- hs_activity_coupon_role table all fields -->
     <sql id="Base_Column_List" >
         id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,
         subtraction_price,rule_description,note,add_price_upper,
-        date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+        date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,is_del
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_activity_coupon_role
-        (id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,create_time)
+        (id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,create_time,is_del)
         values
-        (#{id},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},now())
+        (#{id},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},now(),0)
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -46,7 +47,15 @@
             subtraction_price=#{subtractionPrice},
             rule_description=#{ruleDescription},
             note=#{note},
+            is_del=#{isDel},
             add_price_upper=#{addPriceUpper}
+        where id=#{id}
+    </update>
+
+    <update id="deleteByIsDel" parameterType="Object" >
+        update hs_activity_coupon_role
+        set
+        is_del=1
         where id=#{id}
     </update>
 
@@ -59,17 +68,20 @@
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from hs_activity_coupon_role where id = #{id}
+        and  is_del=0
     </select>
 
     <select id="queryByNameLabel"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from hs_activity_coupon_role where name_label=#{nameLabel}
+        and  is_del=0
     </select>
 
 
     <select id="queryByActivityId"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from hs_activity_coupon_role where activity_id=#{activityId}
+        and  is_del=0
     </select>
 
     <!-- 查询列表无分页 -->
@@ -78,6 +90,7 @@
         <include refid="Base_Column_List"/>
         from hs_activity_coupon_role
         where 1=1
+        and  is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -114,6 +127,7 @@
         <include refid="Base_Column_List"/>
         from hs_activity_coupon_role
         where 1=1
+        and  is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>

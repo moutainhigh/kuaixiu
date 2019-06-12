@@ -138,14 +138,8 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
     public RecycleCoupon getCouponCode(String mobile, HttpServletRequest request, List<CouponAddValue> addValues, BigDecimal price) {
         CouponAddValue addValue = new CouponAddValue();
         for (CouponAddValue addValue1 : addValues) {
-            if (price.intValue() > 4000) {
-                if (addValue1.getPricingType() == 2) {
-                    addValue = addValue1;
-                }
-            } else {
-                if (addValue1.getPricingType() == 1) {
-                    addValue = addValue1;
-                }
+            if (addValue1.getUpperLimit().intValue() > price.intValue() && price.intValue() > addValue1.getSubtractionPrice().intValue()) {
+                addValue = addValue1;
             }
         }
         RecycleCoupon recycleCoupon = new RecycleCoupon();
@@ -296,7 +290,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
-    public static String div095(String orderPrice){
+    public static String div095(String orderPrice) {
         BigDecimal addCouponPrice = new BigDecimal(orderPrice).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("95"));
         return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP).toString();
     }
@@ -311,7 +305,6 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         }
         return result;
     }
-
 
 
     /**
@@ -452,7 +445,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         }
 
         //excel标题
-        String[] header = new String[]{"订单号", "订单状态", "联系人/手机号", "支付类型", "机型名字","回收价格",
+        String[] header = new String[]{"订单号", "订单状态", "联系人/手机号", "支付类型", "机型名字", "回收价格",
                 "订单来源", "使用加价券", "下单时间"};
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始

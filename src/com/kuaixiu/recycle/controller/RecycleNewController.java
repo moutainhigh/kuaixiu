@@ -735,7 +735,7 @@ public class RecycleNewController extends BaseController {
                 order = recycleOrderService.queryById(id);
                 order.setOrderNo(j.getString("orderid"));
 //                //更新回收订单：订单号
-//                recycleOrderService.saveUpdate(order);
+                recycleOrderService.saveUpdate(order);
                 //订单提交成功 当用户选择超人系统推送时  调用顺丰取件接口
                 if (mailType.equals("1")) {
                     recycleOrderService.getPostSF(order, time, request);//调用顺丰取件接口
