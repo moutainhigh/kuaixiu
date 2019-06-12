@@ -331,7 +331,7 @@ public class HsActivityCouponRoleController extends BaseController {
             //中心加价券图片
             String imageName2 = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
             String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";
-            String logoPath2 = getPath(request, "centerFile", savePath, imageName2);             //图片路径
+            String logoPath2 = getPath(request, "centerFile", savePath2, imageName2);             //图片路径
             String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath.substring(logoPath2.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath2);
             //添加活动

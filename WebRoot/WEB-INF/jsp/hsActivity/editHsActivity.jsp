@@ -25,7 +25,7 @@
                     <input class="col-sm-9" type="file" style="width:420px" name="headFile" id="headFile" accept="image/*"
                            onchange="imgChange(this);"/>
                     <!--文件上传选择按钮-->
-                    <div id="preview" hidden="hidden" class="col-sm-9">
+                    <div id="preview" class="col-sm-9">
                         <img id="imghead" src="${hsActivityCoupon.headUrl }" width="260" height="180"/> <!--图片显示位置-->
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <input class="col-sm-9" type="file" type="file" style="width:420px" name="centerFile" id="centerFile" accept="image/*"
                            onchange="imgCenterChange(this);"/>
                     <!--文件上传选择按钮-->
-                    <div id="previewCenter" hidden="hidden" class="col-sm-9">
+                    <div id="previewCenter" class="col-sm-9">
                         <img id="imgCenter" src="${hsActivityCoupon.centerUrl }" width="260" height="180"/> <!--图片显示位置-->
                     </div>
                 </div>
