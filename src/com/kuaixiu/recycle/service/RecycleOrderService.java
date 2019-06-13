@@ -229,7 +229,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             }
             json.put("up", addValue.getUpperLimit());
             json.put("low", addValue.getSubtractionPrice());
-            json.put("desc", recycleCoupon.getRuleDescription());
+            json.put("desc", addValue.getRuleDescription());
             jsonArray.add(json);
         }
         code.put("coupon_rule", jsonArray.toJSONString());
