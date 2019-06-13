@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-7 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
+                    <label class="col-sm-7 control-label">（图片尺寸为750*532大小控制200k以下）</label><!--图片显示位置-->
                 </div>
                 <%--<div class="form-group">--%>
                 <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图高度</label>--%>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-7 control-label">（图片尺寸为750*492大小控制200k以下）</label><!--图片显示位置-->
+                    <label class="col-sm-7 control-label">（图片尺寸为750*532大小控制200k以下）</label><!--图片显示位置-->
                 </div>
 
                 <%--<div class="form-group">--%>
@@ -172,12 +172,12 @@
                     //加载图片获取图片真实宽度和高度
                     var width = image.width;
                     var height = image.height;
-                    if (width < 751 && height < 493) {
+                    if (width < 751 && height < 533) {
                         var img = document.getElementById('imghead');
                         img.setAttribute('src', imgUrl); // 修改img标签src属性值
                         $("#preview").show();
                     } else {
-                        var msg = "文件尺寸应小于：750*492！,当前图片" + width + "*" + height;
+                        var msg = "文件尺寸应小于：750*532！,当前图片" + width + "*" + height;
                         AlertText.tips("d_alert", "提示", msg);
                         file.value = "";
                         return false;
@@ -205,12 +205,12 @@
                     //加载图片获取图片真实宽度和高度
                     var width = image.width;
                     var height = image.height;
-                    if (width < 751 && height < 493) {
+                    if (width < 751 && height < 533) {
                         var img = document.getElementById('imgCenter');
                         img.setAttribute('src', imgUrl); // 修改img标签src属性值
                         $("#previewCenter").show();
                     } else {
-                        var msg = "文件尺寸应小于：750*492！,当前图片" + width + "*" + height;
+                        var msg = "文件尺寸应小于：750*532！,当前图片" + width + "*" + height;
                         AlertText.tips("d_alert", "提示", msg);
                         file.value = "";
                         return false;
