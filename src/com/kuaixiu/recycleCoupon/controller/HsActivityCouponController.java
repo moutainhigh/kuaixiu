@@ -260,28 +260,14 @@ public class HsActivityCouponController extends BaseController {
             List<RecycleCoupon> recycleCoupons = recycleCouponService.queryUnReceive(recycleCoupon1);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             for (RecycleCoupon recycleCoupon : recycleCoupons) {
-                JSONObject json = new JSONObject();
                 if (sdf.parse(recycleCoupon.getEndTime()).getTime() - new Date().getTime() < 0) {
                     if (recycleCoupon.getStatus() == 1) {
                         recycleCouponService.updateStatusByBatchId(recycleCoupon.getBatchId());
                     }
                     continue;
                 }
-                json.put("couponId", recycleCoupon.getId());
-                json.put("couponCode", recycleCoupon.getCouponCode());
-                json.put("couponName", recycleCoupon.getCouponName());
-                json.put("upperLimit", recycleCoupon.getUpperLimit());
-                json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
-                if (recycleCoupon.getPricingType() == 1) {
-                    json.put("couponPrice", recycleCoupon.getStrCouponPrice().setScale(0, BigDecimal.ROUND_HALF_UP) + "%");
-                } else {
-                    json.put("couponPrice", recycleCoupon.getStrCouponPrice());
-                }
-                json.put("type", recycleCoupon.getPricingType());
-                json.put("beginTime", recycleCoupon.getBeginTime());
-                json.put("endTime", recycleCoupon.getEndTime());
-                json.put("ruleDescription", recycleCoupon.getRuleDescription());
-                array.add(json);
+                JSONObject jsonObject = hsActivityCouponService.recycleCouponDetail2Json(recycleCoupon);
+                array.add(jsonObject);
             }
             jsonResult.put("Coupons", array);
             getSjResult(result, jsonResult, true, "0", null, "查询成功");
