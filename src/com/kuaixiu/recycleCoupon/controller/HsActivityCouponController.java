@@ -248,22 +248,22 @@ public class HsActivityCouponController extends BaseController {
             JSONObject params = getPrarms(request);
             String mobile = params.getString("mobile");
 
-            RecycleCoupon recycleCoupon = new RecycleCoupon();
-            recycleCoupon.setStatus(1);
-            recycleCoupon.setIsDel(0);
-            recycleCoupon.setIsUse(0);
-            recycleCoupon.setReceiveMobile(mobile);
+            RecycleCoupon recycleCoupon1 = new RecycleCoupon();
+            recycleCoupon1.setStatus(1);
+            recycleCoupon1.setIsDel(0);
+            recycleCoupon1.setIsUse(0);
+            recycleCoupon1.setReceiveMobile(mobile);
 
             JSONArray array = new JSONArray();
 
             //查询所有可使用加价券
-            List<RecycleCoupon> recycleCoupons = recycleCouponService.queryUnReceive(recycleCoupon);
+            List<RecycleCoupon> recycleCoupons = recycleCouponService.queryUnReceive(recycleCoupon1);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            for (RecycleCoupon recycleCoupon1 : recycleCoupons) {
+            for (RecycleCoupon recycleCoupon : recycleCoupons) {
                 JSONObject json = new JSONObject();
-                if (sdf.parse(recycleCoupon1.getEndTime()).getTime() - new Date().getTime() < 0) {
-                    if (recycleCoupon1.getStatus() == 1) {
-                        recycleCouponService.updateStatusByBatchId(recycleCoupon1.getBatchId());
+                if (sdf.parse(recycleCoupon.getEndTime()).getTime() - new Date().getTime() < 0) {
+                    if (recycleCoupon.getStatus() == 1) {
+                        recycleCouponService.updateStatusByBatchId(recycleCoupon.getBatchId());
                     }
                     continue;
                 }
