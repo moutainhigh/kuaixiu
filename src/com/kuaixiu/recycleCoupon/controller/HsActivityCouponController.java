@@ -277,6 +277,7 @@ public class HsActivityCouponController extends BaseController {
                 } else {
                     json.put("couponPrice", recycleCoupon.getStrCouponPrice());
                 }
+                json.put("type", recycleCoupon.getPricingType());
                 json.put("beginTime", recycleCoupon.getBeginTime());
                 json.put("endTime", recycleCoupon.getEndTime());
                 json.put("ruleDescription", recycleCoupon.getRuleDescription());
