@@ -1,7 +1,9 @@
 package com.kuaixiu.recycleCoupon.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
+import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
@@ -27,9 +29,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -227,6 +232,64 @@ public class HsActivityCouponController extends BaseController {
         return result;
     }
 
+    /**
+     * 获取已领用加价券列表
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/recycle/getAllUserCouponList")
+    @ResponseBody
+    public ResultData getIsUserCouponList(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        JSONObject jsonResult = new JSONObject();
+        try {
+            JSONObject params = getPrarms(request);
+            String mobile = params.getString("mobile");
+
+            RecycleCoupon recycleCoupon = new RecycleCoupon();
+            recycleCoupon.setStatus(1);
+            recycleCoupon.setIsDel(0);
+            recycleCoupon.setIsUse(0);
+            recycleCoupon.setReceiveMobile(mobile);
+
+            JSONArray array = new JSONArray();
+
+            //查询所有可使用加价券
+            List<RecycleCoupon> recycleCoupons = recycleCouponService.queryUnReceive(recycleCoupon);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            for (RecycleCoupon recycleCoupon1 : recycleCoupons) {
+                JSONObject json = new JSONObject();
+                if (sdf.parse(recycleCoupon1.getEndTime()).getTime() - new Date().getTime() < 0) {
+                    if (recycleCoupon1.getStatus() == 1) {
+                        recycleCouponService.updateStatusByBatchId(recycleCoupon1.getBatchId());
+                    }
+                    continue;
+                }
+                json.put("couponId", recycleCoupon.getId());
+                json.put("couponCode", recycleCoupon.getCouponCode());
+                json.put("couponName", recycleCoupon.getCouponName());
+                json.put("upperLimit", recycleCoupon.getUpperLimit());
+                json.put("subtractionPrice", recycleCoupon.getSubtraction_price());
+                if (recycleCoupon.getPricingType() == 1) {
+                    json.put("couponPrice", recycleCoupon.getStrCouponPrice().setScale(0, BigDecimal.ROUND_HALF_UP) + "%");
+                } else {
+                    json.put("couponPrice", recycleCoupon.getStrCouponPrice());
+                }
+                json.put("beginTime", recycleCoupon.getBeginTime());
+                json.put("endTime", recycleCoupon.getEndTime());
+                json.put("ruleDescription", recycleCoupon.getRuleDescription());
+                array.add(json);
+            }
+            jsonResult.put("Coupons", array);
+            getSjResult(result, jsonResult, true, "0", null, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
 
     @RequestMapping(value = "/recycle/getHsCouponDetail")
     @ResponseBody
