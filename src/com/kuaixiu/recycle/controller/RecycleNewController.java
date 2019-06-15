@@ -8,6 +8,7 @@ import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
+import com.kuaixiu.recycleCoupon.service.HsActivityCouponService;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
@@ -925,6 +926,8 @@ public class RecycleNewController extends BaseController {
 //        renderJson(response, result);
     }
 
+    @Autowired
+    private HsActivityCouponService activityCouponService;
 
     /**
      * 获取订单明细
@@ -988,15 +991,12 @@ public class RecycleNewController extends BaseController {
                     if (StringUtils.isNotBlank(r.getCouponId())) {
                         RecycleCoupon recycleCoupon = recycleCouponService.queryById(r.getCouponId());
                         if (recycleCoupon != null) {
-                            JSONObject json = new JSONObject();
-                            json.put("batchId", recycleCoupon.getBatchId());
-                            json.put("couponCode", recycleCoupon.getCouponCode());
-                            json.put("couponName", recycleCoupon.getCouponName());
-                            json.put("pricingType", recycleCoupon.getPricingType());
+                            JSONObject json=activityCouponService.recycleCouponDetail2Json(recycleCoupon);
+                            info.put("coupon", json);
                             String orderPrice = info.getString("orderprice");
                             orderPrice=recycleOrderService.div095(orderPrice);//加个乘以0.95
                             if (recycleCoupon.getPricingType() == 1) {
-                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
+//                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                 if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
                                     if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
                                         info.put("addCouponPrice", recycleCoupon.getAddPriceUpper());
@@ -1016,23 +1016,15 @@ public class RecycleNewController extends BaseController {
                                     }
                                 }
                             } else {
-                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
+//                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                 info.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
                                 info.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
                             }
-                            json.put("beginTime", recycleCoupon.getBeginTime());
-                            json.put("endTime", recycleCoupon.getEndTime());
-                            info.put("Coupon", json);
                         }
                     }
-
                 }
             }
-
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
-
+            getResult(result,jsonResult,true,"0","成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
