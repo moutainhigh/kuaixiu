@@ -10,6 +10,7 @@ import com.common.util.DateUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.dao.RecycleOrderMapper;
 import com.kuaixiu.recycle.entity.*;
+import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
@@ -235,6 +236,27 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         code.put("coupon_rule", jsonArray.toJSONString());
     }
 
+    //发送给回收平台加价券
+    public void sendActivityRecycleCoupon(JSONObject code, RecycleCoupon recycleCoupon, List<HsActivityCouponRole> addValues) {
+        JSONArray jsonArray = new JSONArray();
+        for (HsActivityCouponRole addValue : addValues) {
+            JSONObject json = new JSONObject();
+            json.put("couponId", recycleCoupon.getCouponCode());
+            json.put("actType", addValue.getPricingType());
+            if (addValue.getPricingType() == 1) {
+                json.put("addFee", 0);
+                json.put("percent", addValue.getCouponPrice().divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN));
+            } else {
+                json.put("addFee", addValue.getCouponPrice().intValue());
+                json.put("percent", 0);
+            }
+            json.put("up", addValue.getUpperLimit());
+            json.put("low", addValue.getSubtractionPrice());
+            json.put("desc", addValue.getRuleDescription());
+            jsonArray.add(json);
+        }
+        code.put("coupon_rule", jsonArray.toJSONString());
+    }
 
     //订单提交成功 当用户选择超人系统推送时  调用顺丰取件接口
     public void getPostSF(RecycleOrder order, Long time, HttpServletRequest request) {

@@ -8,6 +8,8 @@ import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
+import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
+import com.kuaixiu.recycleCoupon.service.HsActivityCouponRoleService;
 import com.kuaixiu.recycleCoupon.service.HsActivityCouponService;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.service.SessionUserService;
@@ -58,6 +60,10 @@ public class RecycleNewController extends BaseController {
     private SourceService sourceService;
     @Autowired
     private CouponAddValueService couponAddValueService;
+    @Autowired
+    private HsActivityCouponService activityCouponService;
+    @Autowired
+    private HsActivityCouponRoleService activityCouponRoleService;
 
     /**
      * 基础访问接口地址
@@ -603,13 +609,15 @@ public class RecycleNewController extends BaseController {
             }
             //确定来源，没有则默认微信公众号来源
             source = recycleOrderService.isHaveSource(order, source);
-            List<String> sources = sourceService.getDao().queryByType(1);
-            Boolean isSend10Coupon = false;
-            if (sources.contains(source)) {
-                isSend10Coupon = true;
-            }
+//            List<String> sources = sourceService.getDao().queryByType(1);
+//            Boolean isSend10Coupon = false;
+//            if (sources.contains(source)) {
+//                isSend10Coupon = true;
+//            }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
-            if (StringUtils.isNotBlank(couponCode) && !isSend10Coupon) {
+            if (StringUtils.isNotBlank(couponCode)
+//                    && !isSend10Coupon
+                    ) {
                 recycleCoupon = recycleCouponService.queryByCode(couponCode);
                 if (recycleCoupon == null) {
                     throw new SystemException("加价码输入错误");
@@ -671,21 +679,22 @@ public class RecycleNewController extends BaseController {
             if (StringUtils.isNotBlank(openId)) {
                 order.setWechatOpenId(openId);
             }
-            //查询回收下单所有加价规则
+//            //查询回收下单所有加价规则
             List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
-            //判断该订单来源确定是否使用加价券
-            if (isSend10Coupon) {
-                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues, order.getPrice());
-                if (recycleCoupon != null) {
-                    couponCode = recycleCoupon.getCouponCode();
-                }
-            } else {
-                if (StringUtils.isNotBlank(couponCode)) {
-                    if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()) {
-                        throw new SystemException("加价券的使用不满足条件");
-                    }
-                }
-            }
+           List<HsActivityCouponRole> activityCouponRoles= activityCouponRoleService.queryList(null);
+//            //判断该订单来源确定是否使用加价券
+//            if (isSend10Coupon) {
+//                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues, order.getPrice());
+//                if (recycleCoupon != null) {
+//                    couponCode = recycleCoupon.getCouponCode();
+//                }
+//            } else {
+//                if (StringUtils.isNotBlank(couponCode)) {
+//                    if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()) {
+//                        throw new SystemException("加价券的使用不满足条件");
+//                    }
+//                }
+//            }
             if (StringUtils.isNotBlank(recycleCoupon.getId())) {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
@@ -719,7 +728,8 @@ public class RecycleNewController extends BaseController {
             code.put("address", address);                                      //详细地址
             if (StringUtils.isNotBlank(couponCode)) {
                 //发送给回收平台加价券
-                recycleOrderService.sendRecycleCoupon(code, recycleCoupon, addValues);
+//                recycleOrderService.sendRecycleCoupon(code, recycleCoupon, addValues);
+                recycleOrderService.sendActivityRecycleCoupon(code, recycleCoupon, activityCouponRoles);
             }
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
@@ -919,8 +929,6 @@ public class RecycleNewController extends BaseController {
 //        renderJson(response, result);
     }
 
-    @Autowired
-    private HsActivityCouponService activityCouponService;
 
     /**
      * 获取订单明细
