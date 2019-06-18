@@ -118,6 +118,11 @@ public class HsActivityCouponRoleController extends BaseController {
                     || StringUtils.isBlank(nameLabel)) {
                 return getSjResult(result, null, false, "2", null, "参数不完整");
             }
+            if ("1".equals(pricingType)) {
+                if (StringUtils.isBlank(addPriceUpper)) {
+                    return getSjResult(result, null, false, "2", null, "参数不完整");
+                }
+            }
             HsActivityCouponRole hsActivityCouponRole = hsActivityCouponRoleService.getDao().queryByNameLabel(nameLabel);
             if (hsActivityCouponRole != null) {
                 return getSjResult(result, null, false, "3", null, "规则名字重复");
@@ -176,6 +181,11 @@ public class HsActivityCouponRoleController extends BaseController {
                     || StringUtils.isBlank(hsCouponId) || StringUtils.isBlank(subtractionPrice) || StringUtils.isBlank(description)
                     || StringUtils.isBlank(nameLabel)) {
                 return getSjResult(result, null, false, "2", null, "参数不完整");
+            }
+            if ("1".equals(pricingType)) {
+                if (StringUtils.isBlank(addPriceUpper)) {
+                    return getSjResult(result, null, false, "2", null, "参数不完整");
+                }
             }
             HsActivityCouponRole couponRole = hsActivityCouponRoleService.queryById(hsCouponId);
             HsActivityCouponRole hsActivityCouponRole = hsActivityCouponRoleService.getDao().queryByNameLabel(nameLabel);

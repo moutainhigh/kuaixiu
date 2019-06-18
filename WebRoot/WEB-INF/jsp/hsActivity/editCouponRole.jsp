@@ -41,22 +41,12 @@
         <div class="form-group">
           <label class="col-sm-9 control-label">（加价金额。如果是百分比加价：无需输入百分号，输入分子即可）</label>
         </div>
-        <div class="form-group" id="addPriceUppers">
+        <div class="form-group" id="addPriceUppers" ${couponRole.pricingType == 1 ? 'style="display:block"' : 'style="display:none"' }>
           <label for="addPriceUpper" class="col-sm-2 control-label"> <span style="color:red">*</span>最高加价金额</label>
           <div class="col-sm-9">
             <input type="text" id="addPriceUpper" name="addPriceUpper" value="${couponRole.addPriceUpper}" class="form-control" placeholder="请输入最高加价金额">
           </div>
         </div>
-        <%--<div class="form-group">--%>
-          <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>有效时间</label>--%>
-          <%--<div class="am-datepicker-date col-sm-9">--%>
-            <%--<input type="text" style="width:160px;" id="startTime" name="validBeginTime"--%>
-                   <%--class="form-control am-datepicker-start" data-am-datepicker readonly>--%>
-            <%--<span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>--%>
-            <%--<input type="text" style="width:160px;" id="endTime" name="validEndTime"--%>
-                   <%--class="form-control am-datepicker-end" data-am-datepicker readonly>--%>
-          <%--</div>--%>
-        <%--</div>--%>
         <div class="form-group" id="subtractionPrices">
           <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单金额下限</label>
           <div class="col-sm-9">
