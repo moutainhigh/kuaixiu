@@ -1954,6 +1954,7 @@ textarea:-moz-placeholder {
           justify-content: space-between;
   height: calc(100% - 56.822%);
   background: #fff;
+  z-index: 1000;
 }
 #wrap.resultWrap .main .mixinsBox .iconBox {
   display: -webkit-box;

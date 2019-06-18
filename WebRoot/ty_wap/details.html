@@ -43,7 +43,7 @@
                             <img src="img/temp1.jpg" alt="">
                         </div>
                         <div class="text">
-                           
+
                         </div>
                     </div>
                     <div class="priceBox">
@@ -62,7 +62,7 @@
                 </p>
                 <p>订单编号：<span id="orderid"></span></p>
                 <p>交易时间：<span id="time"></span></p>
-                
+
             </div>
             <div class="noteDiv">
                 <p>备注：<span id="note"></span></p>
@@ -128,10 +128,39 @@
                 }
             });
         });
+        // function calPrice(obj,price) {
+        //     var prePrice = parseInt(price)
+        //     var couponPrice = obj.couponPrice;
+        //     if (obj.couponType == 1) {
+        //         obj.addPrice = parseInt(prePrice * (couponPrice / 100));
+        //         if (obj.addPrice >= obj.addPriceUpper) {
+        //             obj.addPrice = prePrice + parseInt(obj.addPriceUpper)
+        //
+        //             obj.present = parseInt(obj.addPriceUpper);
+        //         } else {
+        //             obj.addPrice = prePrice + obj.addPrice;
+        //             obj.present = parseInt(prePrice * (couponPrice / 100));
+        //         }
+        //
+        //     } else if (obj.couponType == 2) {
+        //         if (prePrice > obj.subtractionPrice) {
+        //             obj.addPrice = prePrice + parseInt(obj.couponPrice);
+        //             obj.present = obj.couponPrice;
+        //         } else {
+        //             obj.addPrice = prePrice;
+        //             obj.present = 0;
+        //         }
+        //
+        //
+        //
+        //     }
+        //     return obj;
+        // }
         function loadDate(param){
             $.post(linkUrl+'/recycleNew/getOrderDetail.do',{params:JSON.stringify(param)},function (data) {
                 if (data.success){
                     var dataInfo = data.result.datainfo;
+
                     if (dataInfo.alert == 1){//需要
                         $('.pickInput').show();
                         $('.pickText').hide();
@@ -151,23 +180,28 @@
                         $('.pickText').show();
                     }
 					if(dataInfo.processstatus == 204){
-					  $('.prePriceText').html('成交价'); 
+					  $('.prePriceText').html('成交价');
 					}
                     $('.image img').attr('src',dataInfo.modelpic);
                     $('.proInfor .text').html('<p class="fb">'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p><a class="pull_down"><img src="img/icon_arrow_down.png" /></a>');
                     $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
 					//判断是否有Coupon元素
-                    if(dataInfo.addCouponPrice){
-					    if(Number(dataInfo.addCouponPrice) >= 200 ){
-						   $('.tickets').show().html( '(含加价￥200)' );
-						}else{
-						   $('.tickets').show().html( '(含加价￥'+Number(dataInfo.addCouponPrice) +')' );
-						}
-                    }else{
-                        $('.tickets').hide().html('')
+
+                    if(data.result.datainfo.coupon && data.result.datainfo.processstatus !=  204 && data.result.datainfo.processstatus !=  '-200') {
+                        // var currentDiscount = calPrice(data.result.datainfo.coupon,data.result.datainfo.orderprice)
+                        $('.tickets').show().html( '(含加价￥'+ data.result.datainfo.addCouponPrice +')</span>' );
                     }
-					
-					
+                    // if(dataInfo.addCouponPrice){
+					//     if(Number(dataInfo.addCouponPrice) >= 200 ){
+					// 	   $('.tickets').show().html( '(含加价￥200)' );
+					// 	}else{
+					// 	   $('.tickets').show().html( '(含加价￥'+Number(dataInfo.addCouponPrice) +')' );
+					// 	}
+                    // }else{
+                    //     $('.tickets').hide().html('')
+                    // }
+
+
                     if (dataInfo.recycle_type == 1){
                         $('#recycleType').html('支付宝收款');
                         $('#alipay').html('支付宝账号：<span>'+dataInfo.pay_mobile+'</span>');
@@ -175,7 +209,7 @@
                         $('#recycleType').html('话费充值');
                         $('#alipay').html('充值手机号：<span>'+dataInfo.pay_mobile+'</span>');
                     }
-                    
+
                     $('#orderid').html('po-'+dataInfo.orderid);
                     var str = dataInfo.createtime,
                         result = Number((/\((\d+)\)/.exec(str))[1]);
@@ -222,7 +256,7 @@
             $('.pickLayer').hide();
             $('.pickInBox').removeClass('active');
         }
-       
+
     </script>
     <!--站长统计-->
 <div style="display: none;">

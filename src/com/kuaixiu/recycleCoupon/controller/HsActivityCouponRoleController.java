@@ -396,7 +396,7 @@ public class HsActivityCouponRoleController extends BaseController {
                 role.put("role", roles[i]);
                 activityRole.add(role);
             }
-        }else{
+        } else {
             JSONObject role = new JSONObject();
             role.put("role", hsActivityCoupon.getActivityRole());
         }
@@ -419,15 +419,14 @@ public class HsActivityCouponRoleController extends BaseController {
             String[] activityRoles = request.getParameterValues("activityRoles");//活动规则描述
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
             String endTime = request.getParameter("actvityEndTime");//活动结束时间
-            if (StringUtils.isBlank(activityId) ||StringUtils.isBlank(source) || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
+            if (StringUtils.isBlank(activityId) || StringUtils.isBlank(source) || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
                     couponRoles == null || StringUtils.isBlank(endTime)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             HsActivityCoupon activityCoupon = hsActivityCouponService.queryById(activityId);
             MultipartHttpServletRequest rm = (MultipartHttpServletRequest) request;
             MultipartFile mfile = rm.getFile("headFile");                             //获得前端页面传来的文件
-            byte[] bfile = mfile.getBytes();                                    //获得文件的字节数组
-            if (bfile.length != 0) {
+            if (mfile != null) {
                 //头图
                 //获取图片，保存图片到webapp同级inages/activityCoupon目录
                 String imageName = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
@@ -437,8 +436,7 @@ public class HsActivityCouponRoleController extends BaseController {
                 activityCoupon.setHeadUrl(headUrl);
             }
             MultipartFile mfile2 = rm.getFile("centerFile");                             //获得前端页面传来的文件
-            byte[] bfile2 = mfile2.getBytes();                                    //获得文件的字节数组
-            if (bfile2.length != 0) {
+            if (mfile2 != null) {
                 //中心加价券图片
                 String imageName2 = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
                 String savePath2 = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "activityCoupon" + System.getProperty("file.separator") + "cen_images";

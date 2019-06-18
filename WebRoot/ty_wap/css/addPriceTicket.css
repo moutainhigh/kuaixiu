@@ -12,12 +12,15 @@
 	font-size:14px;
 	padding:20px;
 	background-color:#FFF;
-	
 	z-index:9999;
+	height: 100%;
+	overflow: auto;
 }
 .add-price-ticket .list-title{
 	position:relative;
-	line-height:2.em;
+	line-height:2.0em;
+	height: 100%;
+	overflow: auto;
 	font-size:1.2em;
 	color:#666666;
 }
@@ -36,6 +39,17 @@
 	color:#FFF;
 }
 .add-price-ticket .ticket-item.can-use{
+	background-image:url('../img/add-price-canuse.png');
+}
+.discount-box .ticket-item{
+	position:relative;
+	padding:.8em 1.2em;
+	margin-bottom:.8em;
+	background:url('../img/add-price-disable.png') no-repeat center center;
+	background-size:100% 100%;
+	color:#FFF;
+}
+.discount-box .ticket-item.can-use{
 	background-image:url('../img/add-price-canuse.png');
 }
 
@@ -104,8 +118,14 @@
 	right:8%;
 	width:50%;
 	height:50%;
-	background:url('../img/add-price-used-label.png') no-repeat 100% -5px;
+	/*background:url('../img/add-price-used-label.png') no-repeat 100% -5px;*/
 	background-size:auto 100%;
+}
+.ticket-add-btn {
+	position: absolute;
+	top: 0.2rem;
+	right: 0.2rem;
+
 }
 
 
@@ -129,7 +149,7 @@
 	background-color:#FFF;
 	border-radius:10px;
 	padding:.8rem;
-	
+
 }
 .add-price-ticket .my-ticket-box .tipinfo-box{
 	position:relative;

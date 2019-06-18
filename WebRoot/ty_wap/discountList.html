@@ -7,6 +7,7 @@
     <script src="js/flexible.js"></script>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css?version=1.6">
+    <link rel="stylesheet" href="css/addPriceTicket.css">
     <title></title>
 
 </head>
@@ -26,33 +27,8 @@
                 <div>已过期</div>
             </div>
             <div class="discount-box">
-                <!--<div class="discount_box active">-->
-                    <!--<div class="discount-item">-->
-                        <!--<div>-->
-                            <!--<sub>￥</sub>400-->
-                        <!--</div>-->
-                        <!--<div>-->
-                            <!--（满100元最高200元）-->
-                        <!--</div>-->
-                        <!--<div>-->
-                            <!--<button>立即使用</button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="discount-date">-->
-                        <!--有效时间：2019-01-25 00：00 - 2019-07-24 23:59-->
-                    <!--</div>-->
-                <!--</div>-->
-
-                <!--<div class="discount_box">-->
-                    <!--<div class="discount-item">-->
-                        <!--<div><sub>￥</sub>400</div>-->
-                        <!--<div>（满100元最高200元）</div>-->
-                        <!--<div><button>立即使用</button></div>-->
-                    <!--</div>-->
-                    <!--<div class="discount-date">-->
-                        <!--有效时间：2019-01-25 00：00 - 2019-07-24 23:59-->
-                    <!--</div>-->
-                <!--</div>-->
+                <dl class="ticket-list js-coupon-available">
+                </dl>
             </div>
         </div>
 
@@ -119,6 +95,13 @@
         if(isEmpty(fm)){
             eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
         }
+
+        var otherLoginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+
+        if(isEmpty(otherLoginPhone)){
+            eCacheUtil.storage.cache(CacheKey.loginPhone,GetQueryString('phone'));
+        }
+
         if(fm == 2 || fm == 9 || fm == 10){
             document.title = '天翼回收';
         }else{
@@ -128,8 +111,9 @@
         var discountList = [];
 
         // 使用优惠券
-        $(".discount-box").on('click','.useDiscount',function () {
-            var id = $(this).attr('data-item');
+        $(".discount-box").on('click','.beUsed',function () {
+
+            var id = $(this).attr('data-id')
             if(id) {
                 eCacheUtil.storage.cache('discount_info_infos',id)
                 location.href = 'product.html'
@@ -139,12 +123,12 @@
 
         var state = 1;
         var pageIndex = 1;
-        var pageSize = 5;
+        var pageSize = 10;
         var off_on = true;
         //点击切换tab
         $(".discount_tab  ").on('click','div',function () {
             $(this).addClass('active').siblings('div').removeClass('active')
-            $('.discount-box').html('');
+            $('.js-coupon-available').html('');
             state = $(this).index() + 1;
             discountList = [];
             pageIndex = 1;
@@ -157,6 +141,7 @@
         //    查询优惠券列表
         getDiscountList(1)
         function getDiscountList() {
+            var newId = eCacheUtil.storage.getCache('discount_info_infos');
             var phone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
             var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
             var params = {};
@@ -173,78 +158,67 @@
             $.post(linkUrl+'/recycle/getCouponList.do',{params:JSON.stringify(params)},
                 function(data){
                     if(data.success) {
+
                         $("#mask_boxs").hide();
-                        if(discountList.length == 0 && data.result.recordsTotal == 0) {
-                            $('.discount-box').html('<p class="baseline blue" style="text-align: center;line-height: 0.4rem;' +
+                        if (discountList.length == 0 && data.result.recordsTotal == 0) {
+                            $('.js-coupon-available').html('<p class="baseline blue" style="text-align: center;line-height: 0.4rem;' +
                                 'color: #a2a2a2">——没有更多数据了！——</p>')
-                        }else if(discountList.length >= data.result.recordsTotal){
-                            $(".discount-box").find('.baseline').empty()
-                            $('.discount-box').append('<p class="baseline blue" style="text-align: center;line-height: 0.4rem;' +
+                        } else if (discountList.length >= data.result.recordsTotal) {
+                            $(".js-coupon-available").find('.baseline').empty()
+                            $('.js-coupon-available').append('<p class="baseline blue" style="text-align: center;line-height: 0.4rem;' +
                                 'color: #a2a2a2">——没有更多数据了！——</p>')
-                        }else {
+                        } else {
 
                             discountList = discountList.concat(data.result.Coupons);
-                            var htmlStr = '';
-                            if(state == 1) {
-                                discountList.forEach(item => {
-                                    var str = '<div class="discount_box active">';
-                                    str += '<div class="discount-item">';
-                                    if(item.couponPrice.toString().indexOf('%') > -1) {
-                                        str += '<div>'+ item.couponPrice +'</div>';
-                                    }else {
-                                        str += '<div><sub>￥</sub>'+ item.couponPrice +'</div>';
-                                    }
-                                    str += '<div>（' + item.couponName +'）</div>';
-                                    str += '<div><button class="useDiscount" data-item="'+ item.couponId +'">立即使用</button></div>'
-                                    str += '</div>'
-                                    str += '<div class="discount-date">有效时间：'
-                                    str += item.beginTime + ' 至 ' + item.endTime;
-                                    str += '</div></div>';
-                                    htmlStr = htmlStr + str;
-                                })
-                            }else if(state == 2){
-                                discountList.forEach(item => {
-                                    var str = '<div class="discount_box ">';
-                                    str += '<div class="discount-item">';
-                                    if(item.couponPrice.toString().indexOf('%') > -1) {
-                                        str += '<div>'+ item.couponPrice +'</div>';
-                                    }else {
-                                        str += '<div><sub>￥</sub>'+ item.couponPrice +'</div>';
-                                    }
 
-                                    str += '<div>（' + item.couponName +'）</div>';
-                                    str += '<div><button >已使用</button></div>'
-                                    str += '</div>'
-                                    str += '<div class="discount-date">有效时间：'
-                                    str += item.beginTime + ' 至 ' + item.endTime;
-                                    str += '</div></div>';
-                                    htmlStr = htmlStr + str;
-                                })
-                            }
-                            else if(state == 3){
-                                discountList.forEach(item => {
-                                    var str = '<div class="discount_box ">';
-                                    str += '<div class="discount-item">';
-                                    if(item.couponPrice.toString().indexOf('%') > -1) {
-                                        str += '<div>'+ item.couponPrice +'</div>';
-                                    }else {
-                                        str += '<div><sub>￥</sub>'+ item.couponPrice +'</div>';
-                                    }
+                            var couponAvailableHTML = ''
+                            for (var i = 0; i < discountList.length; i++) {
+                                var classHtml = '';
+                                // 判断是否是默认优惠券
+                                // G.couponsAvailableDefault = {}
+                                // discountList[i].couponCode == G.couponsAvailableDefault.couponCode
+                                classHtml = '<dd class="ticket-item can-use" data-code="' + discountList[i].couponCode + '">'
+                                if (state == 1) {
+                                    couponAvailableHTML += classHtml +
+                                        '	<div class="ticket-info " >' +
+                                        '		<div class="ticket-value">' + discountList[i].couponPrice + '</div>' +
+                                        '		<div class="ticket-desc">' +
+                                        '			<label>加价券</label>' +
+                                        '			<span class="condition">' + discountList[i].couponName + '</span>' +
+                                        '		</div>' +
+                                         '<div class="ticket-add-btn beUsed" data-id="'+ discountList[i].couponCode +'">立即使用</div>'+
+                                        '	</div>' +
+                                        '	<div class="ticket-date">' +
+                                        '		<label>有效期:</label>' +
+                                        '		<span class="start-date">' + discountList[i].beginTime + '</span>至<span class="end-date">' + discountList[i].endTime + '</span>' +
+                                        '	</div>' +
+                                        '</dd>'
 
-                                    str += '<div>（' + item.couponName +'）</div>';
-                                    str += '<div><button >已过期</button></div>'
-                                    str += '</div>'
-                                    str += '<div class="discount-date">有效时间：'
-                                    str += item.beginTime + ' 至 ' + item.endTime;
-                                    str += '</div></div>';
-                                    htmlStr = htmlStr + str;
-                                })
+                                } else {
+                                    couponAvailableHTML +=   '<dd class="ticket-item used" data-id="'+ discountList[i].couponCode +'">'+
+                                        '	<div class="ticket-info">'+
+                                        '		<div class="ticket-value">' + discountList[i].couponPrice +'</div>'+
+                                        '		<div class="ticket-desc">'+
+                                        '			<label>加价券</label>'+
+                                        '			<span class="condition">'+ discountList[i].couponName +'</span>'+
+                                        '		</div>'+
+                                        '	</div>'+
+                                        '	<div class="ticket-date">'+
+                                        '		<label>有效期:</label>'+
+                                        '		<span class="start-date">'+ discountList[i].beginTime +'</span>至<span class="end-date">'+ discountList[i].endTime +'</span>'+
+                                        '	</div>'+
+                                        '</dd>'
+                                }
+
+
                             }
-                            $(".discount-box").find('.baseline').empty()
-                            $('.discount-box').html(htmlStr)
+
+                            $(".js-coupon-available").find('.baseline').empty()
+                            $('.js-coupon-available').html( couponAvailableHTML );
+                            // $('.discount-box').html(couponAvailableHTML)
+
+                            off_on = true;
                         }
-                        off_on = true;
-                    }else {
                     }
 
                     // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}

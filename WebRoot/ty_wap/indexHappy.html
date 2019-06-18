@@ -81,14 +81,14 @@
     <div id="wrap" class="indexWrap">
 
         <!-- start of 首页弹窗 -->
-        <div class="dialog-active">
+      <!--  <div class="dialog-active">
             <div class="mask-hide"></div>
             <div class="img-active-wrap">
                 <i class="close-active-btn js-close-active"></i>
                 <img class="img-active" src="./img/51_image.png" alt="">
                 <a class="join-active-btn" href="./product.html">立即参加</a>
             </div>
-        </div>
+        </div>  -->
         <!-- end of 首页弹窗 -->
 
         <div class="main">
@@ -99,7 +99,7 @@
             <div class="swiper-container">
                 <div class="banner">
                     <div class="slide-item">
-                        <a href="product.html"><img src="img/banner6.png" alt=""></a>
+                        <a href="product.html"><img src="img/banner5.png" alt=""></a>
                     </div>
                     <div class="slide-item">
                         <a href="product.html"><img src="img/banner3.png" alt=""></a>
@@ -277,10 +277,10 @@
                 <div class="dialog-title">登录</div>
                 <div class="dialog-body">
                     <div class="input-item">
-                        <input id="phoneNum" class="popodlg-input" type="text" placeholder="请输入登录手机号码" />
+                        <input id="phoneNum" class="popodlg-input"  type="text" placeholder="请输入登录手机号码" />
                     </div>
                     <div class="input-item">
-                        <input id="codeNum" class="short-input popodlg-input" type="text" placeholder="请填写验证码" />
+                        <input id="codeNum" class="short-input popodlg-input" type="text"  placeholder="请填写验证码" />
                         <span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
                         <!--<span id="secondLabel" class="input-label info-box">60秒</span>-->
                     </div>
@@ -301,7 +301,7 @@
         $(function(){
             eCacheUtil.storage.cache(CacheKey.isSelect,false);
             eCacheUtil.storage.cache(CacheKey.happyGo,true);
-            eCacheUtil.storage.cache('discount_info_infos',undefined)
+            eCacheUtil.storage.cache('discount_info_infos','')
 
 
 			//TODO 从欢Go客户端加载当前页面

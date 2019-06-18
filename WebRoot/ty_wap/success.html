@@ -65,8 +65,11 @@
 			var tip = GetQueryString('tip');
 			var fm = eCacheUtil.storage.getCache(CacheKey.source);
 			var PrePrice = eCacheUtil.storage.getCache(CacheKey.PrePrice);
+            var addPrice = eCacheUtil.storage.getCache('addPrice')
 
 			if( PrePrice ){
+                $('.pre-price-o').text( Number(PrePrice) + Number(addPrice) )
+                $('.pre-price-t').text( Number(addPrice) )
 
 			  /* if(PrePrice* 0.05 >= 200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
@@ -81,13 +84,13 @@
 					}
 				}   */
 
-			   if(PrePrice*0.1 >= 200){
-					$('.pre-price-o').text( Number(PrePrice) + 200 )
-					$('.pre-price-t').text( 200 )
-				}else {
-					$('.pre-price-o').text(Math.round( Number(PrePrice) + PrePrice*0.1) )
-					$('.pre-price-t').text( Math.round(PrePrice*0.1) )
-				}
+			   // if(PrePrice*0.1 >= 200){
+               //     $('.pre-price-o').text( Number(PrePrice) + Number(addPrice) )
+               //     $('.pre-price-t').text( Number(addPrice) )
+				// }else {
+				// 	$('.pre-price-o').text(Math.round( Number(PrePrice) + PrePrice*0.1) )
+				// 	$('.pre-price-t').text( Math.round(PrePrice*0.1) )
+				// }
 			}
 
 

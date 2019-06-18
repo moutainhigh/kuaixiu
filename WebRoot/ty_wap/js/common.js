@@ -143,7 +143,7 @@ function getRealPath(){
 	if(linkUrl.indexOf(u)>0){
 		linkUrl='http://m-super.com';
 	}
-	return linkUrl;
+	return linkUrl 
 }
 //绝对路径
      var linkUrl=getRealPath();

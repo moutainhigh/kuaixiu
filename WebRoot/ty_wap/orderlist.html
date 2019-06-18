@@ -123,7 +123,7 @@
             var params = {
                 contactphone: phoneNumber,
                 pageindex:pIndex,
-                pagesize:"3",
+                pagesize:"5",
                 processstatus:orderStatus
             }
             $.post(linkUrl+'/recycleNew/getOrderList.do',{params:JSON.stringify(params)},function (data) {
@@ -167,12 +167,48 @@
 				if(n.processstatus == 204){
 				 $('.priceText',tmp).html("成交价"+"¥"+(n.orderprice).toFixed(2));
 				}else{
-				 $('.priceText',tmp).html("预估价"+"¥"+(n.orderprice).toFixed(2));
+                    if(n.addCouponPrice && n.processstatus !=  '-200') {
+                        // var currentDiscount = calPrice(info.coupon,orderprice)
+                        $('.priceText',tmp).html("预估价"+"¥"+(n.orderprice).toFixed(2) + '<span style="color: #ff0000">(含加价￥'+ n.addCouponPrice +')</span>');
+                        // $('.tickets').show().html(  );
+                    }else {
+                        $('.priceText',tmp).html("预估价"+"¥"+(n.orderprice).toFixed(2));
+                    }
+
 				}
 
                 //追加到对应区块
                 $(".cont").append(tmp);
             });
+        }
+
+        function calPrice(obj,price) {
+            var prePrice = parseInt(price)
+            var couponPrice = obj.couponPrice;
+            if (obj.couponType == 1) {
+                obj.addPrice = parseInt(prePrice * (couponPrice / 100));
+                if (obj.addPrice >= obj.addPriceUpper) {
+                    obj.addPrice = prePrice + parseInt(obj.addPriceUpper)
+
+                    obj.present = parseInt(obj.addPriceUpper);
+                } else {
+                    obj.addPrice = prePrice + obj.addPrice;
+                    obj.present = parseInt(prePrice * (couponPrice / 100));
+                }
+
+            } else if (obj.couponType == 2) {
+                if (prePrice > obj.subtractionPrice) {
+                    obj.addPrice = prePrice + parseInt(obj.couponPrice);
+                    obj.present = obj.couponPrice;
+                } else {
+                    obj.addPrice = prePrice;
+                    obj.present = 0;
+                }
+
+
+
+            }
+            return obj;
         }
 
         //滚动加载

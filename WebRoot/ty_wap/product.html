@@ -9,7 +9,7 @@
     <title></title>
     <style>
         .native-model {
-             display: none; 
+             display: none;
              flex-basis: 2.55rem;
              overflow: hidden;
              margin-bottom: 0.1rem;
@@ -19,7 +19,7 @@
         }
          .native-fl {
              float: left;
-             width: 30% 
+             width: 30%
         }
          .native-fl img {
              width: 100%;
@@ -70,7 +70,7 @@
         <div class="main clearfix">
             <div class="mainLeft fl">
                 <ul class="swiper-wrapper">
-                    
+
                 </ul>
             </div>
             <div class="mainRight fl">
@@ -86,7 +86,7 @@
                             </div>
                             <div class="native-bot">
                                 <p class="native-code js-native-code"></p>
-                            </div>                           
+                            </div>
                         </div>
                 </div>
                 <!-- end of 本机机型 -->
@@ -96,7 +96,7 @@
             </div>
             <div id="template" style="display:none;">
                 <div class="item"></div>
-                
+
             </div>
         </div>
 
@@ -117,12 +117,18 @@
     <script src="js/jquery.js"></script>
     <script src="js/swiper.min.js"></script>
     <script src="js/common.js"></script>
-	
+
     <script>
-		var fm=eCacheUtil.storage.getCache(CacheKey.source);
-		if(isEmpty(fm)){
-			eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
-		}
+        var fm=eCacheUtil.storage.getCache(CacheKey.source);
+        if(isEmpty(fm)){
+            eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+        }
+        var otherLoginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+
+        if(isEmpty(otherLoginPhone)){
+            eCacheUtil.storage.cache(CacheKey.loginPhone,GetQueryString('phone'));
+        }
+
 		if(fm == 2 || fm == 9 || fm == 10){
 			document.title = '天翼回收';
 		}else{
@@ -131,6 +137,32 @@
 
         var ModelName_cache = '';
         var ProjectId_cache = '';
+
+        function GetUrlParam(paraName) {
+            var url = document.location.toString();
+            var arrObj = url.split("?");
+
+            if (arrObj.length > 1) {
+                var arrPara = arrObj[1].split("&");
+                var arr;
+
+                for (var i = 0; i < arrPara.length; i++) {
+                    arr = arrPara[i].split("=");
+
+                    if (arr != null && arr[0] == paraName) {
+                        return arr[1];
+                    }
+                }
+                return "";
+            }
+            else {
+                return "";
+            }
+        }
+        var codeId = GetUrlParam('codeId');
+        eCacheUtil.storage.cache('discount_info_infos',codeId);
+
+
 
         // 首次进入获取本机型
         function getNativeModel(mobileData){
@@ -142,7 +174,7 @@
             // 跳转到指定品牌, 如果没有这两个参数则不做任何操作
             for( var i = 0; i < $dom_li.length; i++ ){
                 if( brandId == $dom_li.eq(i).data('bid') ){
-                    var height = $dom_li.eq(i).height()*i; 
+                    var height = $dom_li.eq(i).height()*i;
                     $('.mainLeft .swiper-wrapper').css('transform','translate3d(0px, -'+height+'px, 0px)')
                     $dom_li.eq(i).addClass('active').siblings().removeClass('active');
                 }
@@ -154,27 +186,27 @@
             $('.js-native-img').attr('src', mobileData.modelLogo);
             $('.js-native-code').text( mobileData.modelName )
         }
-	
+
 		function getUrlParam(key){
 			var url = window.location.search;
 			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
 			var result = url.substr(1).match(reg);
 			return result ? decodeURIComponent(result[2]) : null;
 		}
-		
+
 		function setCacheData(key,keyName){
 			if(getUrlParam(keyName)!==null &&  getUrlParam(keyName) !== undefined && getUrlParam(keyName)!==''){
 			  eCacheUtil.storage.cache(key,getUrlParam(keyName));
 			}
 		}
-		
+
 		if (getUrlParam("openId")){
 			setCacheData(CacheKey.OpenId,"openId");
 			setCacheData(CacheKey.ModelName,"modelName");
 			setCacheData(CacheKey.imgHref,"modelImageUrl");
 			eCacheUtil.storage.cache(CacheKey.isSelect,false);
 		}
-	
+
         var page = 1, //分页码
             off_on = false,//分页开关
             totalcount = 0;
@@ -218,7 +250,7 @@
                 }else{
                     location.href = 'test.html';
                 }*/
-				
+
 				location.href = 'test.html';
             });
 
@@ -243,7 +275,7 @@
                 location.href = "test.html";
             })
         });
-        
+
         //加载品牌
         function searchBrand(bid) {
             $.post(linkUrl+"/recycleNew/getBrandList.do",function(data){

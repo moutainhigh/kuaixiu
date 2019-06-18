@@ -256,14 +256,14 @@
                                 }
                             }
                         },
-                        headFile: {
+                        imgHead: {
                             validators : {
                                 notEmpty : {
                                     message : "图片不能为空"
                                 }
                             }
                         },
-                        centerFile: {
+                        imgCenter: {
                             validators : {
                                 notEmpty : {
                                     message : "图片不能为空"
