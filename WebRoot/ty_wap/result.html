@@ -850,26 +850,27 @@
 
                         // 渲染页面 ，判断是否有默认优惠券，没有就渲染之前的bestPrice
                         // 优惠券列表的代码合入order.html后，不需要缓存了
-
                         if(newId) {
                             // 识别默认优惠券
                             for(var i = 0; i < couponsUsableArr.length; i++){
-                                if( newId === couponsUsableArr[i].couponCode ){
+                                if( newId == couponsUsableArr[i].couponCode ){
                                     //保存默认的优惠券
-
                                     G.couponsAvailableDefault = couponsUsableArr[i] ;
                                 }
                             }
 
+                            if(G.couponsUsableArr.length > 0 || !G.couponsAvailableDefault){
+                                $('.js-current-coupons i').text( bestPrice );
+                                G.couponsAvailableDefault = couponsPriceFourthArr[0] || {};    //保存默认的优惠券
 
-
-                        }else if(!couponsUsableArr.length){
-                            $('.js-current-coupons i').text( 0 );
-                            $("#addInfo").hide()
-
-                        }else {
+                            }
+                        }else if(G.couponsUsableArr.length > 0 ){
                             $('.js-current-coupons i').text( bestPrice );
                             G.couponsAvailableDefault = couponsPriceFourthArr[0] || {};    //保存默认的优惠券
+
+                        }else {
+                            $('.js-current-coupons i').text( 0 );
+                            $("#addInfo").hide()
                         }
                         if(G.couponsAvailableDefault ) {
                             $("#disTip").html('加价'+ G.couponsAvailableDefault.present + '元' + "（30分钟内下单有效）")
@@ -898,10 +899,10 @@
                 if (obj.couponType == 1) {
                     obj.addPrice = parseInt(prePrice * (couponPrice / 100));
                     if (obj.addPrice >= obj.addPriceUpper) {
-                        obj.addPrice = prePrice + parseInt(obj.addPriceUpper)
-
+                        obj.addPrice = prePrice + parseInt(0)
                         obj.present = parseInt(obj.addPriceUpper);
                     } else {
+
                         obj.addPrice = prePrice + obj.addPrice;
                         obj.present = parseInt(prePrice * (couponPrice / 100));
                     }

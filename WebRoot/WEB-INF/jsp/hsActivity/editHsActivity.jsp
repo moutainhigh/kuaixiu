@@ -46,7 +46,7 @@
                 <%--</div>--%>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>上传加价券图</label>
-                    <input class="col-sm-9" type="file" type="file" style="width:420px" name="centerFile" id="centerFile" accept="image/*"
+                    <input class="col-sm-9" type="file" style="width:420px" name="centerFile" id="centerFile" accept="image/*"
                            onchange="imgCenterChange(this);"/>
                     <!--文件上传选择按钮-->
                     <div id="previewCenter" class="col-sm-9">

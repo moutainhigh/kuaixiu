@@ -99,7 +99,9 @@
         var otherLoginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
 
         if(isEmpty(otherLoginPhone)){
-            eCacheUtil.storage.cache(CacheKey.loginPhone,GetQueryString('phone'));
+            if(GetQueryString('phone')) {
+                eCacheUtil.storage.cache(CacheKey.loginPhone,GetQueryString('phone'));
+            }
         }
 
         if(fm == 2 || fm == 9 || fm == 10){
