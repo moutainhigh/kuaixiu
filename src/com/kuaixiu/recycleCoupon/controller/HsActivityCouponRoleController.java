@@ -268,7 +268,7 @@ public class HsActivityCouponRoleController extends BaseController {
         activityCoupon.setPage(page);
         List<HsActivityCoupon> activityCoupons = hsActivityCouponService.queryListForPage(activityCoupon);
         for (HsActivityCoupon activityCoupon1 : activityCoupons) {
-            String sourceName = systemService.queryById(activityCoupon1.getSource()).getName();
+            String sourceName = hsActivityCouponRoleService.sourceIdToSourceName(activityCoupon1.getSource());
             activityCoupon1.setSourceName(sourceName);
             List<HsActivityAndCoupon> hsActivityAndCoupons = hsActivityAndCouponService.getDao().queryByActivityId(activityCoupon1.getId());
             StringBuilder sb = new StringBuilder();
@@ -314,12 +314,12 @@ public class HsActivityCouponRoleController extends BaseController {
     public ResultData addActivity(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
         try {
-            String source = request.getParameter("source");//来源
+            String[] sources = request.getParameterValues("source");//来源
             String centercolorValue = request.getParameter("centercolorValue");//中心图片色值
             String[] activityRoles = request.getParameterValues("activityRoles");//活动规则描述
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
             String endTime = request.getParameter("actvityEndTime");//活动结束时间
-            if (StringUtils.isBlank(source) || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
+            if (sources == null || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
                     couponRoles == null || StringUtils.isBlank(endTime)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
@@ -335,10 +335,18 @@ public class HsActivityCouponRoleController extends BaseController {
             String logoPath2 = getPath(request, "centerFile", savePath2, imageName2);             //图片路径
             String centerUrl = getProjectUrl(request) + "/images/activityCoupon/cen_images/" + logoPath2.substring(logoPath2.lastIndexOf("/") + 1);
             //添加活动
+
             HsActivityCoupon activityCoupon = new HsActivityCoupon();
             activityCoupon.setId(UUID.randomUUID().toString().replace("-", ""));
             activityCoupon.setActivityLabel(SeqUtil.getNext("ayll"));
-            activityCoupon.setSource(Integer.valueOf(source));
+            StringBuilder sb1 = new StringBuilder();
+            for (int i = 0; i < sources.length; i++) {
+                sb1.append(sources[i]);
+                if (i != sources.length - 1) {
+                    sb1.append(",");
+                }
+            }
+            activityCoupon.setSource(sb1.toString());
             activityCoupon.setHeadUrl(headUrl);
             activityCoupon.setCenterUrl(centerUrl);
             activityCoupon.setCentercolorValue(centercolorValue);
@@ -364,7 +372,7 @@ public class HsActivityCouponRoleController extends BaseController {
     }
 
     /**
-     * 跳转添加活动页面
+     * 跳转编辑活动页面
      *
      * @param request
      * @param response
@@ -400,6 +408,16 @@ public class HsActivityCouponRoleController extends BaseController {
             JSONObject role = new JSONObject();
             role.put("role", hsActivityCoupon.getActivityRole());
         }
+        List activitySources = new ArrayList();
+        if (hsActivityCoupon.getSource().contains(",")) {
+            String[] sources = hsActivityCoupon.getSource().split(",");
+            for (int i = 0; i < sources.length; i++) {
+                activitySources.add(sources[i]);
+            }
+        } else {
+            activitySources.add(hsActivityCoupon.getSource());
+        }
+        request.setAttribute("activitySources", activitySources);
         request.setAttribute("activityRole", activityRole);
         request.setAttribute("hsActivityCoupon", hsActivityCoupon);
         request.setAttribute("recycleSystems", recycleSystems);
@@ -414,12 +432,12 @@ public class HsActivityCouponRoleController extends BaseController {
         ResultData result = new ResultData();
         try {
             String activityId = request.getParameter("activityId");//活动id
-            String source = request.getParameter("source");//来源
+            String[] sources = request.getParameterValues("source");//来源
             String centercolorValue = request.getParameter("centercolorValue");//中心图片色值
             String[] activityRoles = request.getParameterValues("activityRoles");//活动规则描述
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
             String endTime = request.getParameter("actvityEndTime");//活动结束时间
-            if (StringUtils.isBlank(activityId) || StringUtils.isBlank(source) || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
+            if (StringUtils.isBlank(activityId) || sources == null || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
                     couponRoles == null || StringUtils.isBlank(endTime)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
@@ -445,7 +463,14 @@ public class HsActivityCouponRoleController extends BaseController {
                 activityCoupon.setCenterUrl(centerUrl);
             }
             //添加活动
-            activityCoupon.setSource(Integer.valueOf(source));
+            StringBuilder sb1 = new StringBuilder();
+            for (int i = 0; i < sources.length; i++) {
+                sb1.append(sources[i]);
+                if (i != sources.length - 1) {
+                    sb1.append(",");
+                }
+            }
+            activityCoupon.setSource(sb1.toString());
             activityCoupon.setCentercolorValue(centercolorValue);
             activityCoupon.setEndTime(endTime);
             StringBuilder sb = new StringBuilder();

@@ -86,7 +86,7 @@
     <select id="queryBySourceActivityLabel"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
         from hs_activity_coupon
-        where source=#{source}
+        where source like CONCAT('%', #{source}, '%')
         and activity_label=#{activityLabel}
         and is_del=0
     </select>

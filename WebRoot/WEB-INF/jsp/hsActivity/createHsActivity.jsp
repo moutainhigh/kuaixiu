@@ -9,19 +9,19 @@
         <div class="modal-body">
             <form id="insertForm" method="post" class="form-horizontal" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="source" class="col-sm-2 control-label"><span style="color:red">*</span> 来源</label>
+                    <label for="sources" class="col-sm-2 control-label"><span style="color:red">*</span> 来源</label>
                     <div class="col-sm-9">
-                        <select id="source" name="source" style="width:400px;" class="form-control">
-                            <option value="">--请选择--</option>
-                            <c:forEach items="${recycleSystems }" var="item" varStatus="i">
-                                <option value="${item.id }">${item.name }</option>
-                            </c:forEach>
-                        </select>
+                        <c:forEach items="${recycleSystems }" var="item" varStatus="i">
+                            <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
+                                <input type="checkbox" name="source" value="${item.id }"> ${item.name }
+                            </label>
+                        </c:forEach>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>上传头图</label>
-                    <input class="col-sm-9" type="file" style="width:420px" name="headFile" id="headFile" accept="image/*"
+                    <input class="col-sm-9" type="file" style="width:420px" name="headFile" id="headFile"
+                           accept="image/*"
                            onchange="imgChange(this);"/>
                     <!--文件上传选择按钮-->
                     <div id="preview" hidden="hidden" class="col-sm-9">
@@ -31,21 +31,10 @@
                 <div class="form-group">
                     <label class="col-sm-7 control-label">（图片尺寸为750*532大小控制200k以下）</label><!--图片显示位置-->
                 </div>
-                <%--<div class="form-group">--%>
-                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图高度</label>--%>
-                <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" id="headHeight" name="headHeight" class="form-control">--%>
-                <%--</div>--%>
-                <%--</div>--%>
-                <%--<div class="form-group">--%>
-                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>头图宽度</label>--%>
-                <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" id="headWide" name="headWide" class="form-control">--%>
-                <%--</div>--%>
-                <%--</div>--%>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>上传加价券图</label>
-                    <input class="col-sm-9" type="file" type="file" style="width:420px" name="centerFile" id="centerFile" accept="image/*"
+                    <input class="col-sm-9" type="file" type="file" style="width:420px" name="centerFile"
+                           id="centerFile" accept="image/*"
                            onchange="imgCenterChange(this);"/>
                     <!--文件上传选择按钮-->
                     <div id="previewCenter" hidden="hidden" class="col-sm-9">
@@ -56,21 +45,6 @@
                     <label class="col-sm-7 control-label">（图片尺寸为750*532大小控制200k以下）</label><!--图片显示位置-->
                 </div>
 
-                <%--<div class="form-group">--%>
-                    <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框高度</label>--%>
-                    <%--<div class="col-sm-9">--%>
-                        <%--<input type="text" style="width:400px;" id="marginHeight" name="marginHeight"--%>
-                               <%--class="form-control"--%>
-                               <%--placeholder="加价券边框高度">--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-                <%--<div class="form-group">--%>
-                    <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券边框宽度</label>--%>
-                    <%--<div class="col-sm-9">--%>
-                        <%--<input type="text" style="width:400px;" id="marginWide" name="marginWide" class="form-control"--%>
-                               <%--placeholder="加价券边框宽度">--%>
-                    <%--</div>--%>
-                <%--</div>--%>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片色值</label>
                     <div class="col-sm-9">
@@ -86,22 +60,6 @@
                                class="form-control am-datepicker-end" data-am-datepicker readonly>
                     </div>
                 </div>
-                <%--<div class="form-group">--%>
-                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片高度</label>--%>
-                <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" name="centerHeight" id="centerHeight"--%>
-                <%--class="form-control"--%>
-                <%--placeholder="加价券图片高度">--%>
-                <%--</div>--%>
-                <%--</div>--%>
-                <%--<div class="form-group">--%>
-                <%--<label class="col-sm-2 control-label"><span style="color:red">*</span>加价券图片宽度</label>--%>
-                <%--<div class="col-sm-9">--%>
-                <%--<input type="text" style="width:400px;" name="centerWide" id="centerWide"--%>
-                <%--class="form-control"--%>
-                <%--placeholder="加价券图片宽度">--%>
-                <%--</div>--%>
-                <%--</div>--%>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>活动规则</label>
                     <div class="col-sm-9" id="activityRole">
@@ -234,94 +192,94 @@
 //        var headFile = $('#headFile').get(0).files[0];
 //        var centerFile = $('#centerFile').get(0).files[0];
 //        if (headFile && centerFile) {
-            $("#insertForm")
-                .bootstrapValidator({
-                    message: "不能为空",
-                    feedbackIcons: {
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    fields: {
-                        source: {
-                            validators : {
-                                notEmpty : {
-                                    message : "不能为空"
-                                }
-                            }
-                        },
-                        headFile: {
-                            validators : {
-                                notEmpty : {
-                                    message : "图片不能为空"
-                                }
-                            }
-                        },
-                        centerFile: {
-                            validators : {
-                                notEmpty : {
-                                    message : "图片不能为空"
-                                }
-                            }
-                        },
-                        centercolorValue: {
-                            validators : {
-                                notEmpty : {
-                                    message : "不能为空"
-                                }
-                            }
-                        },
-                        activityRoles: {
-                            validators : {
-                                notEmpty : {
-                                    message : "不能为空"
-                                }
-                            }
-                        },
-                        couponRoles: {
-                            validators : {
-                                notEmpty : {
-                                    message : "不能为空"
-                                }
+        $("#insertForm")
+            .bootstrapValidator({
+                message: "不能为空",
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    source: {
+                        validators: {
+                            notEmpty: {
+                                message: "不能为空"
                             }
                         }
-                    }// end fields
-                }).on("success.form.bv", function (e) {
-                // 阻止表单提交
-                e.preventDefault();
-                // 验证颜色是否添加
-                //console.log("ddd");
-                //加载等待
-                AlertText.tips("d_loading");
-                //校验成功后的操作
-                var btn = $("#addSaveBtn");
-                //让按钮不能点击
-                btn.button("loading");
-                //遮盖层
-                var options = {
-                    url: "${ctx}/hsActivity/addActivity.do",
-                    dataType: "json",
-                    success: function (result) {
-                        if (result.success) {
-                            AlertText.tips("d_alert", "提示", result.resultMessage);
-                            refreshPage();
-                            //全部更新完后关闭弹窗
-                            $("#addMissBtn").click();
-                            //重置表单数据
-                            document.getElementById("insertForm").reset();
-                        } else {
-                            AlertText.tips("d_alert", "提示", result.resultMessage, function () {
-                                addFormReset();
-                            });
+                    },
+                    headFile: {
+                        validators: {
+                            notEmpty: {
+                                message: "图片不能为空"
+                            }
                         }
                     },
-                    error: function () {
-                        alert("系统异常，请稍后再试");
-                        addFormReset();
+                    centerFile: {
+                        validators: {
+                            notEmpty: {
+                                message: "图片不能为空"
+                            }
+                        }
+                    },
+                    centercolorValue: {
+                        validators: {
+                            notEmpty: {
+                                message: "不能为空"
+                            }
+                        }
+                    },
+                    activityRoles: {
+                        validators: {
+                            notEmpty: {
+                                message: "不能为空"
+                            }
+                        }
+                    },
+                    couponRoles: {
+                        validators: {
+                            notEmpty: {
+                                message: "不能为空"
+                            }
+                        }
                     }
-                }; // end options
-                $("#insertForm").ajaxSubmit(options);
-            }); // end on("success.form.bv"
+                }// end fields
+            }).on("success.form.bv", function (e) {
+            // 阻止表单提交
+            e.preventDefault();
+            // 验证颜色是否添加
+            //console.log("ddd");
+            //加载等待
+            AlertText.tips("d_loading");
+            //校验成功后的操作
+            var btn = $("#addSaveBtn");
+            //让按钮不能点击
+            btn.button("loading");
+            //遮盖层
+            var options = {
+                url: "${ctx}/hsActivity/addActivity.do",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        AlertText.tips("d_alert", "提示", result.resultMessage);
+                        refreshPage();
+                        //全部更新完后关闭弹窗
+                        $("#addMissBtn").click();
+                        //重置表单数据
+                        document.getElementById("insertForm").reset();
+                    } else {
+                        AlertText.tips("d_alert", "提示", result.resultMessage, function () {
+                            addFormReset();
+                        });
+                    }
+                },
+                error: function () {
+                    alert("系统异常，请稍后再试");
+                    addFormReset();
+                }
+            }; // end options
+            $("#insertForm").ajaxSubmit(options);
+        }); // end on("success.form.bv"
 //        } else {
 //            AlertText.tips("d_alert", "提示", "请选择上传文件！");
 //        }
@@ -353,12 +311,6 @@
         pickerPosition: 'top-right',
         autoclose: true,//选中关闭
         minView: "month"//设置只显示到月份
-    });
-
-    //点击保存按钮,提交form表单，触发校验
-    $("#addSaveBtn").click(function () {
-        //格式化分类属性信息为JSON串
-        $("#addSubmitBtn").click();
     });
 
 </script>

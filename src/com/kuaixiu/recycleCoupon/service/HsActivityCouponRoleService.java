@@ -2,6 +2,7 @@ package com.kuaixiu.recycleCoupon.service;
 
 
 import com.common.base.service.BaseService;
+import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.kuaixiu.recycleCoupon.dao.HsActivityCouponRoleMapper;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 
@@ -20,6 +21,8 @@ public class HsActivityCouponRoleService extends BaseService<HsActivityCouponRol
 
     @Autowired
     private HsActivityCouponRoleMapper<HsActivityCouponRole> mapper;
+    @Autowired
+    private RecycleSystemService systemService;
 
 
     public HsActivityCouponRoleMapper<HsActivityCouponRole> getDao() {
@@ -28,4 +31,21 @@ public class HsActivityCouponRoleService extends BaseService<HsActivityCouponRol
 
     //**********自定义方法***********
 
+
+    public String sourceIdToSourceName(String sourceId){
+        if(sourceId.contains(",")){
+            String[] sourceIds=sourceId.split(",");
+            StringBuilder sb=new StringBuilder();
+            for(int i=0;i<sourceIds.length;i++){
+                String sourceName = systemService.queryById(sourceIds[i]).getName();
+                sb.append(sourceName);
+                if(i!=sourceIds.length-1){
+                    sb.append(",");
+                }
+            }
+            return sb.toString();
+        }else{
+            return systemService.queryById(sourceId).getName();
+        }
+    }
 }
