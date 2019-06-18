@@ -174,7 +174,7 @@
                         document.getElementById("insertForm").reset();
                     } else {
                         //保存失败
-                        AlertText.tips("d_alert", "提示", result.resultMessage, function () {
+                        AlertText.tips("d_alert", "提示", data.resultMessage, function () {
                             addFormReset();
                         });
                     }

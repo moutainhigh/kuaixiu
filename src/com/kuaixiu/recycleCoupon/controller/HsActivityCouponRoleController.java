@@ -138,6 +138,8 @@ public class HsActivityCouponRoleController extends BaseController {
             }
             if ("1".equals(pricingType)) {
                 couponRole.setAddPriceUpper(new BigDecimal(addPriceUpper));
+            } else {
+                couponRole.setAddPriceUpper(null);
             }
             couponRole.setCouponPrice(new BigDecimal(price));
             couponRole.setRuleDescription(description);
@@ -203,6 +205,8 @@ public class HsActivityCouponRoleController extends BaseController {
             }
             if ("1".equals(pricingType)) {
                 couponRole.setAddPriceUpper(new BigDecimal(addPriceUpper));
+            } else {
+                couponRole.setAddPriceUpper(null);
             }
             couponRole.setCouponPrice(new BigDecimal(price));
             couponRole.setRuleDescription(description);
