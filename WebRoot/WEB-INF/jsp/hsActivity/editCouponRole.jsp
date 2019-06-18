@@ -202,10 +202,4 @@
     }
 
 
-//点击保存按钮,提交form表单，触发校验
-$("#editSaveBtn").click(function() {
-    //格式化分类属性信息为JSON串
-    $("#editSubmitBtn").click();
-});
-
 </script>
