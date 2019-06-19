@@ -31,7 +31,7 @@
         insert into hs_group_coupon_role
         (id,name_label,coupon_name,pricing_Type,coupon_price,upper_limit,subtraction_price,rule_description,note,add_price_upper,begin_time,end_time,create_time,is_del)
         values
-        (#{id},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},#{beginTime},#{endTime},#{createTime},#{isDel})
+        (#{id},#{nameLabel},#{couponName},#{pricingType},#{couponPrice},#{upperLimit},#{subtractionPrice},#{ruleDescription},#{note},#{addPriceUpper},#{beginTime},#{endTime},now(),0)
     </insert>
 
     <select id="queryByNameLabel"  resultMap="BaseResultMap" parameterType="Object">

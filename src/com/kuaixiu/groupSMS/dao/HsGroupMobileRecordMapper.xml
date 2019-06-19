@@ -23,7 +23,7 @@
         insert into hs_group_mobile_record
         (id,mobile,coupon_id,coupon_code,create_time,create_userid)
         values
-        (#{id},#{mobile},#{couponId},#{couponCode},#{createTime},#{createUserid})
+        (#{id},#{mobile},#{couponId},#{couponCode},now(),#{createUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -74,6 +74,7 @@
         <if test="createUserid != null and createUserid != ''" >
             and create_userid = #{createUserid}
         </if>
+        order by create_time desc
     </select>
     
     <!-- 查询列表 带分页 -->
@@ -100,6 +101,7 @@
         <if test="createUserid != null and createUserid != ''" >
             and create_userid = #{createUserid}
         </if>
+        order by create_time desc
     </select>
 
 </mapper>   

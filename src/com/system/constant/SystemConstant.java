@@ -283,6 +283,7 @@ public class SystemConstant {
     public static final String RECYCLE_BASENUMBER = SystemUtil.getSysCfgProperty("recycle_base_number");
 
     public static final String RECYCLE_COUPON_BATCH = SystemUtil.getSysCfgProperty("recycle_coupon_batch");
+    public static final String RECYCLE_GROUP_SMS_COUPON_BATCH = SystemUtil.getSysCfgProperty("recycle_Group_sms_coupon_batch");
 
     /**
      * 默认回收机型图片地址

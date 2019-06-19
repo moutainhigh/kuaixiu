@@ -162,7 +162,7 @@ public class HsGroupMobileService extends BaseService<HsGroupMobile> {
         }
 
         HsGroupMobile hsGroupMobile = this.getDao().queryByMobile(phone);
-        if (hsGroupMobile == null) {
+        if (hsGroupMobile != null) {
             ImportError error = new ImportError();
             error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
             error.setMsgType("手机号错误");

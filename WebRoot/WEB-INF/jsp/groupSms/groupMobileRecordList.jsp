@@ -37,9 +37,9 @@
     </div>
 </div>
 
-
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+
 
     //自定义datatable的数据
     var dto = new DtOptions();

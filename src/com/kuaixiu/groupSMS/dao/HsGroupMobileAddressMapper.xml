@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.groupSMS.dao.HsGroupMobileAddressMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.groupSMS.entity.HsGroupMobileAddress" >
+        <result column="id" property="id"/>
+        <result column="name_label" property="nameLabel"/>
+        <result column="address" property="address"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- hs_group_mobile_address table all fields -->
+    <sql id="Base_Column_List" >
+        id,name_label,address,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_group_mobile_address
+        (id,name_label,address,is_del,create_time,update_time)
+        values
+        (#{id},#{nameLabel},#{address},0,now(),now())
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_group_mobile_address 
+        set 
+            id=#{id},
+            name_label=#{nameLabel},
+            address=#{address},
+            is_del=#{isDel},
+            update_time=now()
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_group_mobile_address where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_mobile_address where id = #{id} and  is_del=0
+    </select>
+
+    <update id="deleteByIsDel" parameterType="Object" >
+        update hs_group_mobile_address
+        set
+        is_del=1
+        where id=#{id}
+    </update>
+
+    <select id="queryByNameLabel"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_mobile_address where name_label=#{nameLabel}
+        and  is_del=0
+    </select>
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_mobile_address
+        where 1=1
+        and  is_del=0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="nameLabel != null and nameLabel != ''" >
+            and name_label = #{nameLabel}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        order by create_time desc
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_mobile_address
+        where 1=1
+        and  is_del=0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="nameLabel != null and nameLabel != ''" >
+            and name_label = #{nameLabel}
+        </if>
+        <if test="address != null and address != ''" >
+            and address = #{address}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>   
