@@ -77,6 +77,8 @@ public class HsGroupMobileRecordController extends BaseController {
             mobileRecord.setAddress(groupMobileAddress.getAddress());
             RecycleCoupon recycleCoupon=recycleCouponService.queryById(mobileRecord.getCouponId());
             mobileRecord.setCouponCode(recycleCoupon.getCouponCode());
+            HsGroupMobileSms hsGroupMobileSms=hsGroupMobileSmsService.queryById(mobileRecord.getSmsId());
+            mobileRecord.setSmsTemplate(hsGroupMobileSms.getNameLabel());
         }
         page.setData(groupMobileRecords);
         this.renderJson(response, page);

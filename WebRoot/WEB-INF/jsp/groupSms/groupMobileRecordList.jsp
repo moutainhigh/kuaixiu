@@ -27,6 +27,7 @@
                 <th class="fontWeight_normal tdwidth80 center">手机号</th>
                 <th class="fontWeight_normal tdwidth50 center">加价券编码</th>
                 <th class="fontWeight_normal tdwidth60 center">下单地址</th>
+                <th class="fontWeight_normal tdwidth60 center">短信模板名字</th>
                 <th class="fontWeight_normal tdwidth60 center">发起人</th>
                 <th class="fontWeight_normal tdwidth80 center">发起时间</th>
             </tr>
@@ -62,6 +63,7 @@
         {"data": "mobile", "class": ""},
         {"data": "couponCode", "class": ""},
         {"data": "address", "class": ""},
+        {"data": "smsTemplate", "class": ""},
         {"data": "createUserid", "class": ""},
         {"data": "strCreateTime", "class": ""}
     ]);

@@ -9,21 +9,22 @@
         <result column="mobile" property="mobile"/>
         <result column="coupon_id" property="couponId"/>
         <result column="address_id" property="addressId"/>
+        <result column="sms_id" property="smsId"/>
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
     </resultMap>
     
     <!-- hs_group_mobile_record table all fields -->
     <sql id="Base_Column_List" >
-        id,mobile,coupon_id,address_id,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
+        id,mobile,coupon_id,address_id,sms_id,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_group_mobile_record
-        (id,mobile,coupon_id,address_id,create_time,create_userid)
+        (id,mobile,coupon_id,address_id,sms_id,create_time,create_userid)
         values
-        (#{id},#{mobile},#{couponId},#{addressId},now(),#{createUserid})
+        (#{id},#{mobile},#{couponId},#{addressId},#{smsId},now(),#{createUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -34,6 +35,7 @@
             mobile=#{mobile},
             coupon_id=#{couponId},
             address_id=#{addressId},
+            sms_id=#{smsId},
             create_time=#{createTime},
             create_userid=#{createUserid}
         where id=#{id}

@@ -34,6 +34,7 @@ public class GroupMobileExecutor {
                         groupMobileRecord.setMobile(groupMobile.getMobile());
                         groupMobileRecord.setCreateUserid(su.getUserId());
                         groupMobileRecord.setAddressId(groupMobileAddress.getId());
+                        groupMobileRecord.setSmsId(hsGroupMobileSms.getId());
                         hsGroupMobileRecordService.add(groupMobileRecord);
 
                         SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile(), groupMobileAddress.getAddress());

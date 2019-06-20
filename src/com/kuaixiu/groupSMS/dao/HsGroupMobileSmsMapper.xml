@@ -41,6 +41,7 @@
     <update id="deleteByIsDel" parameterType="Object" >
         update hs_group_mobile_sms
         set
+        update_time=now(),
         is_del=1
         where id=#{id}
     </update>
