@@ -165,15 +165,15 @@ public class HsGroupMobileService extends BaseService<HsGroupMobile> {
             report.setPass(false);
         }
 
-        HsGroupMobile hsGroupMobile = this.getDao().queryByMobile(phone);
-        if (hsGroupMobile != null) {
-            ImportError error = new ImportError();
-            error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
-            error.setMsgType("手机号错误");
-            error.setMessage("该手机号已存在！");
-            report.getErrorList().add(error);
-            report.setPass(false);
-        }
+//        HsGroupMobile hsGroupMobile = this.getDao().queryByMobile(phone);
+//        if (hsGroupMobile != null) {
+//            ImportError error = new ImportError();
+//            error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+//            error.setMsgType("手机号错误");
+//            error.setMessage("该手机号已存在！");
+//            report.getErrorList().add(error);
+//            report.setPass(false);
+//        }
         groupMobile.setMobile(phone);
     }
 

@@ -13,7 +13,7 @@ public interface HsGroupMobileMapper<T> extends BaseDao<T> {
 
     T queryByMobile(String mobile);
 
-    T deleteNull();
+    int deleteNull();
 }
 
 
