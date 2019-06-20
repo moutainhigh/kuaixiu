@@ -649,6 +649,13 @@ public class SmsSendUtil {
         return sendSmsThread(mobile, content.toString());
     }
 
+    public static boolean groupMobileSendCoupon(String mobile,String couponCode,String address) {
+        StringBuffer content = new StringBuffer();
+        content.append("增送加价券，编码为：").append(couponCode);
+        content.append("下单地址：").append(address);
+        return sendSmsThread(mobile, content.toString());
+    }
+
     /**
      * 商机指派订单发送短信
      * @param phone

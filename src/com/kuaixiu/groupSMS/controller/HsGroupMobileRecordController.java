@@ -9,6 +9,7 @@ import com.kuaixiu.groupSMS.entity.HsGroupMobileRecord;
 import com.kuaixiu.groupSMS.service.*;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.MyExecutor;
+import com.kuaixiu.recycle.service.RecycleCouponService;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.SessionUser;
@@ -41,6 +42,8 @@ public class HsGroupMobileRecordController extends BaseController {
     private HsGroupMobileAddressService hsGroupMobileAddressService;
     @Autowired
     private HsGroupMobileService hsGroupMobileService;
+    @Autowired
+    private RecycleCouponService recycleCouponService;
 
     /**
      * 跳转群发短信记录列表
@@ -70,6 +73,12 @@ public class HsGroupMobileRecordController extends BaseController {
         HsGroupMobileRecord groupMobileRecord = new HsGroupMobileRecord();
         groupMobileRecord.setPage(page);
         List<HsGroupMobileRecord> groupMobileRecords = hsGroupMobileRecordService.queryListForPage(groupMobileRecord);
+        for(HsGroupMobileRecord mobileRecord:groupMobileRecords){
+            HsGroupMobileAddress groupMobileAddress=hsGroupMobileAddressService.queryById(mobileRecord.getAddressId());
+            mobileRecord.setAddress(groupMobileAddress.getAddress());
+            RecycleCoupon recycleCoupon=recycleCouponService.queryById(mobileRecord.getCouponId());
+            mobileRecord.setCouponCode(recycleCoupon.getCouponCode());
+        }
         page.setData(groupMobileRecords);
         this.renderJson(response, page);
     }
@@ -98,10 +107,11 @@ public class HsGroupMobileRecordController extends BaseController {
             SessionUser su=getCurrentUser(request);
             List<HsGroupMobile> groupMobiles=hsGroupMobileService.queryList(null);
             HsGroupCouponRole hsGroupCouponRole=hsGroupCouponRoleService.queryById(couponRoleId);
+            HsGroupMobileAddress groupMobileAddress=hsGroupMobileAddressService.queryById(addressId);
 
             GroupMobileExecutor myExecutor = new GroupMobileExecutor();
-            myExecutor.fun(su, groupMobiles, hsGroupCouponRole);
-            
+            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress);
+
             getSjResult(result, null, true, "0", null, "后台创建中");
         } catch (Exception e) {
             e.printStackTrace();
