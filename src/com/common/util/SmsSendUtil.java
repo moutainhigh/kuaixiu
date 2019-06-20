@@ -3,6 +3,7 @@ package com.common.util;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import com.kuaixiu.nbTelecomSJ.entity.NBArea;
@@ -623,10 +624,11 @@ public class SmsSendUtil {
 
     /**
      * 商机用户注册发送短信
+     *
      * @param user
      * @return
      */
-    public static boolean sjRegisterUserSend(SjUser user,String pwd) {
+    public static boolean sjRegisterUserSend(SjUser user, String pwd) {
         StringBuffer content = new StringBuffer();
         content.append("商机后台注册:用户：").append(user.getName());
         content.append("账号为").append(user.getLoginId());
@@ -634,19 +636,19 @@ public class SmsSendUtil {
         return sendSmsThread(user.getPhone(), content.toString());
     }
 
-    public static boolean sjApprovalSend(SjVirtualTeam virtualTeam,String ordelNo) {
+    public static boolean sjApprovalSend(SjVirtualTeam virtualTeam, String ordelNo) {
         StringBuffer content = new StringBuffer();
         content.append("商机后台审核:订单：").append(ordelNo);
         content.append("审核已通过");
         return sendSmsThread(virtualTeam.getPhone(), content.toString());
     }
 
-    public static boolean submitRecycleOrder(String mobile) {
+    public static boolean submitRecycleOrder(String mobile, String source) {
         StringBuffer content = new StringBuffer();
         content.append("订单提交成功，价格有效期10天，等待顺丰快递上门取件，" +
                 "收货地址 浙江省杭州市下城区武林广场电信营业厅三楼售后维修中心0571-87162535  ，" +
                 "寄出前请解除机器所有账号和密码（flyme，iCloud）等并取出手机卡和内存卡。");
-        return sendSmsThread(mobile, content.toString());
+        return sendSmsThread(mobile, content.toString(), source);
     }
 
     public static boolean groupMobileSendCoupon(String mobile,String couponCode,String address) {
@@ -658,16 +660,17 @@ public class SmsSendUtil {
 
     /**
      * 商机指派订单发送短信
+     *
      * @param phone
      * @param orderNo
      * @return
      */
-    public static boolean sjAssignOrderSend(String phone,String orderNo,Integer type) {
+    public static boolean sjAssignOrderSend(String phone, String orderNo, Integer type) {
         StringBuffer content = new StringBuffer();
         content.append("商机后台订单指派:订单号：").append(orderNo);
-        if(type==1){
+        if (type == 1) {
             content.append("该订单已指派给您企业下员工");
-        }else{
+        } else {
             content.append("该订单已指派给您");
         }
         return sendSmsThread(phone, content.toString());
@@ -690,8 +693,15 @@ public class SmsSendUtil {
      * @param content 短信内容
      * @CreateDate: 2016-9-26 下午8:10:21
      */
+    public static Boolean sendSmsThread(String mobile, String content, String source) {
+        SmsSendThread sst = new SmsSendThread(mobile, content, source);
+        new Thread(sst).start();
+        System.out.println("started ...");
+        return true;
+    }
+
     public static Boolean sendSmsThread(String mobile, String content) {
-        SmsSendThread sst = new SmsSendThread(mobile, content);
+        SmsSendThread sst = new SmsSendThread(mobile, content, null);
         new Thread(sst).start();
         System.out.println("started ...");
         return true;
@@ -813,15 +823,22 @@ public class SmsSendUtil {
 class SmsSendThread implements Runnable {
     private String mobile;
     private String content;
+    private String source;
 
-    public SmsSendThread(String mobile, String content) {
+    public SmsSendThread(String mobile, String content, String source) {
         this.mobile = mobile;
         this.content = content;
+        this.source = source;
     }
 
     @Override
     public void run() {
-        SmsSendUtil.sendSms2(mobile, content);
+        List<String> sources= Arrays.asList("2","4","9","10","15");
+        if (sources.contains(source) && StringUtils.isNotBlank(source)) {
+            SmsSendUtil.sendSms2(mobile, content);
+        } else {
+            SmsSendUtil.sendSms(mobile, content);
+        }
     }
 
 }
