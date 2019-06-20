@@ -31,8 +31,7 @@
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
-                                                               type="checkbox"/>序号
+                <th class="fontWeight_normal tdwidth30">序号
                 </th>
                 <th class="fontWeight_normal tdwidth200 center">手机号</th>
             </tr>
@@ -78,13 +77,13 @@
         {//复选框
             targets: 0,
             render: function (data, type, row, meta) {
-                    var context = {
-                        func: [
-                            {"id": row.id, "order": meta.row + 1}
-                        ]
-                    };
-                    var html = template_chk(context);
-                    return html;
+//                    var context = {
+//                        func: [
+//                            {"id": row.id, "order": meta.row + 1}
+//                        ]
+//                    };
+//                    var html = template_chk(context);
+                    return meta.row + 1;
             }
         }
     ]);

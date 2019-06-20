@@ -115,7 +115,7 @@ public class HsGroupMobileRecordController extends BaseController {
             HsGroupMobileSms hsGroupMobileSms=hsGroupMobileSmsService.queryById(smsId);
 
             GroupMobileExecutor myExecutor = new GroupMobileExecutor();
-            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress,hsGroupMobileSms);
+            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress,hsGroupMobileSms,hsGroupMobileService);
 
             getSjResult(result, null, true, "0", null, "后台创建中");
         } catch (Exception e) {

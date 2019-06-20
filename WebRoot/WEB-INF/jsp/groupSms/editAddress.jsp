@@ -3,23 +3,23 @@
 <div class="modal-backdrop fade in"></div>
 <div class="modal-dialog" style="width: 700px;">
   <div class="modal-content">
-    <div class="modal-title"><span>编辑加价券规则</span>
+    <div class="modal-title"><span>编辑下单地址</span>
       <a href="javascript: void(0);" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
     </div>
     <div class="modal-body">
       <form id="editForm" method="post" class="form-horizontal">
         <input type="hidden" name="id" value="${groupMobileAddress.id }"/>
         <div class="form-group" id="nameLabels">
-          <label for="nameLabel" class="col-sm-2 control-label"><span style="color:red">*</span> 规则名称</label>
+          <label for="nameLabel" class="col-sm-2 control-label"><span style="color:red">*</span> 地址名称</label>
           <div class="col-sm-9">
-            <input type="text" id="nameLabel" name="nameLabel" value="${groupMobileAddress.nameLabel}" class="form-control" placeholder="请输入规则名称">
+            <input type="text" id="nameLabel" name="nameLabel" value="${groupMobileAddress.nameLabel}" class="form-control" placeholder="请输入地址名称">
           </div>
         </div>
 
         <div class="form-group" id="couponNames">
           <label for="address" class="col-sm-2 control-label"><span style="color:red">*</span> 地址</label>
           <div class="col-sm-9">
-            <input type="text" id="address" name="address" value="${groupMobileAddress.address}" class="form-control" placeholder="请输入加价券名称">
+            <input type="text" id="address" name="address" value="${groupMobileAddress.address}" class="form-control" placeholder="请输入地址">
           </div>
         </div>
         <button type="submit" class="hide" id="editSubmitBtn"></button>

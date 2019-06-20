@@ -34,7 +34,7 @@
         <div class="form-group" id="prices">
           <label for="price" class="col-sm-2 control-label"><span style="color:red">*</span>加价金额</label>
           <div class="col-sm-9">
-            <input type="text" id="price" name="price" class="form-control" placeholder="请输入加价金额">
+            <input type="number" oninput="if(value>9999999)value=9999999" id="price" name="price" class="form-control" placeholder="请输入加价金额">
           </div>
         </div>
         <div class="form-group">
@@ -43,19 +43,19 @@
         <div class="form-group" id="addPriceUppers">
           <label for="addPriceUpper" class="col-sm-2 control-label"> <span style="color:red">*</span>最高加价金额</label>
           <div class="col-sm-9">
-            <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="请输入最高加价金额">
+            <input type="number" oninput="if(value>9999999)value=9999999" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="请输入最高加价金额">
           </div>
         </div>
         <div class="form-group" id="subtractionPrices">
           <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 订单金额下限</label>
           <div class="col-sm-9">
-            <input type="text" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入订单金额下限">
+            <input type="number" oninput="if(value>9999999)value=9999999" id="subtractionPrice" name="subtractionPrice" class="form-control" placeholder="请输入订单金额下限">
           </div>
         </div>
         <div class="form-group" id="upperLimits">
           <label for="upperLimit" class="col-sm-2 control-label"> <span style="color:red">*</span>订单金额上限</label>
           <div class="col-sm-9">
-            <input type="text" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入订单金额上限">
+            <input type="number" oninput="if(value>9999999)value=9999999" id="upperLimit" name="upperLimit" class="form-control" placeholder="请输入订单金额上限">
           </div>
         </div>
 

@@ -70,7 +70,9 @@ function uploadModelExcel(){
         	//隐藏等待
             AlertText.hide();
         	if(result.success && result.data && result.data.pass){
-        		AlertText.tips("d_alert", "提示", "导入成功！");
+                AlertText.tips("d_confirm", "提示", "导入成功!", function () {
+                    func_reload_page("${ctx}/groupSms/toGroupMobile.do");
+                });
         	}else{
         		errorMsg(result.data);
         	}

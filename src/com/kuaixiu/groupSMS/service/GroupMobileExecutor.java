@@ -17,7 +17,7 @@ public class GroupMobileExecutor {
 
     public void fun(SessionUser su, List<HsGroupMobile> groupMobiles, HsGroupCouponRole hsGroupCouponRole,
                     HsGroupMobileRecordService hsGroupMobileRecordService, HsGroupMobileAddress groupMobileAddress,
-                    HsGroupMobileSms hsGroupMobileSms) throws Exception {
+                    HsGroupMobileSms hsGroupMobileSms,HsGroupMobileService hsGroupMobileService) throws Exception {
 
         executor.submit(new Runnable() {
             @Override
@@ -39,6 +39,7 @@ public class GroupMobileExecutor {
 
                         SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile(), groupMobileAddress.getAddress());
                     }
+                    hsGroupMobileService.getDao().deleteNull();
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException("发送短信，系统异常！！");

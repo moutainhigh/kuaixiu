@@ -11,7 +11,7 @@
         <div class="form-group" id="nameLabels">
           <label for="nameLabel" class="col-sm-2 control-label"><span style="color:red">*</span> 模板名称</label>
           <div class="col-sm-9">
-            <input type="text" id="nameLabel" name="nameLabel" class="form-control" placeholder="请输入规则名称">
+            <input type="text" id="nameLabel" name="nameLabel" class="form-control" placeholder="请输入模板名称">
           </div>
         </div>
 

@@ -35,6 +35,10 @@
     <delete id="delete" parameterType="Object">
         delete from hs_group_mobile where id = #{id}
     </delete>
+
+    <delete id="deleteNull" parameterType="Object">
+        delete from hs_group_mobile
+    </delete>
     
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">

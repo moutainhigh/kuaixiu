@@ -12,6 +12,8 @@ import com.common.base.dao.BaseDao;
 public interface HsGroupMobileMapper<T> extends BaseDao<T> {
 
     T queryByMobile(String mobile);
+
+    T deleteNull();
 }
 
 

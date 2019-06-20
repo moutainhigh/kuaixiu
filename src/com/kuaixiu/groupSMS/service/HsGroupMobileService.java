@@ -76,6 +76,7 @@ public class HsGroupMobileService extends BaseService<HsGroupMobile> {
             if (checkExcelModel(workbook, report)) {
                 List<HsGroupMobile> list = checkData(workbook, report);
                 if (report.isPass() && list.size() > 0) {
+                    deleteNull();
                     //保存数据
                     saveData(list, su);
                 }
@@ -96,6 +97,9 @@ public class HsGroupMobileService extends BaseService<HsGroupMobile> {
         }
     }
 
+    public void deleteNull(){
+        this.getDao().deleteNull();
+    }
 
     /**
      * 检查模板是否正确
