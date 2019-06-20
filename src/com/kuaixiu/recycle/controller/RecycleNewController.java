@@ -321,7 +321,8 @@ public class RecycleNewController extends BaseController {
             String items = params.getString("items");
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
-            Integer source = params.getInteger("fm");//来源
+            String source = params.getString("fm");//来源
+//            Integer source = params.getInteger("fm");//来源
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
             String[] itemses = items.split("\\|");
@@ -757,7 +758,7 @@ public class RecycleNewController extends BaseController {
             //更新回收订单
             recycleOrderService.saveUpdate(order);
             //下单成功发送短信
-            SmsSendUtil.submitRecycleOrder(order.getMobile(),source);
+            SmsSendUtil.submitRecycleOrder(order.getMobile(), source);
 
             getResult(result, jsonResult, true, "0", "成功");
             //下单成功后更新下单间隔时间
