@@ -651,12 +651,6 @@ public class SmsSendUtil {
         return sendSmsThread(mobile, content.toString(), source);
     }
 
-    public static boolean groupMobileSendCoupon(String mobile,String couponCode,String address) {
-        StringBuffer content = new StringBuffer();
-        content.append("增送加价券，编码为：").append(couponCode);
-        content.append("下单地址：").append(address);
-        return sendSmsThread(mobile, content.toString());
-    }
 
     /**
      * 商机指派订单发送短信
@@ -674,6 +668,12 @@ public class SmsSendUtil {
             content.append("该订单已指派给您");
         }
         return sendSmsThread(phone, content.toString());
+    }
+
+    public static boolean groupMobileSendCoupon(String contentText,String mobile,String address) {
+        StringBuffer content = new StringBuffer();
+        content.append(contentText).append(address);
+        return sendSmsThread(mobile, content.toString(),"2");
     }
 
 

@@ -9,7 +9,7 @@
         <div class="modal-body">
             <form id="insertForm" method="post" class="form-horizontal" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="sources" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券规则</label>
+                    <label for="couponRoleId" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券规则</label>
                     <div class="col-sm-9">
                         <c:forEach items="${groupCouponRoles }" var="item" varStatus="i">
                             <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="sources" class="col-sm-2 control-label"><span style="color:red">*</span> 下单地址</label>
+                    <label for="addressId" class="col-sm-2 control-label"><span style="color:red">*</span> 下单地址</label>
                     <div class="col-sm-9">
                         <c:forEach items="${groupMobileAddresses }" var="item" varStatus="i">
                             <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
@@ -28,7 +28,16 @@
                         </c:forEach>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label for="smsId" class="col-sm-2 control-label"><span style="color:red">*</span> 短信模板</label>
+                    <div class="col-sm-9">
+                        <c:forEach items="${hsGroupMobileSms }" var="item" varStatus="i">
+                            <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
+                                <input type="radio" name="smsId" value="${item.id }"> ${item.nameLabel }
+                            </label>
+                        </c:forEach>
+                    </div>
+                </div>
 
                 <button type="submit" class="hide" id="addSubmitBtn"></button>
             </form>

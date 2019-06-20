@@ -2,10 +2,7 @@ package com.kuaixiu.groupSMS.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.kuaixiu.groupSMS.entity.HsGroupCouponRole;
-import com.kuaixiu.groupSMS.entity.HsGroupMobile;
-import com.kuaixiu.groupSMS.entity.HsGroupMobileAddress;
-import com.kuaixiu.groupSMS.entity.HsGroupMobileRecord;
+import com.kuaixiu.groupSMS.entity.*;
 import com.kuaixiu.groupSMS.service.*;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.MyExecutor;
@@ -44,6 +41,8 @@ public class HsGroupMobileRecordController extends BaseController {
     private HsGroupMobileService hsGroupMobileService;
     @Autowired
     private RecycleCouponService recycleCouponService;
+    @Autowired
+    private HsGroupMobileSmsService hsGroupMobileSmsService;
 
     /**
      * 跳转群发短信记录列表
@@ -90,6 +89,8 @@ public class HsGroupMobileRecordController extends BaseController {
         request.setAttribute("groupCouponRoles", groupCouponRoles);
         List<HsGroupMobileAddress> groupMobileAddresses = hsGroupMobileAddressService.queryList(null);
         request.setAttribute("groupMobileAddresses", groupMobileAddresses);
+        List<HsGroupMobileSms> hsGroupMobileSms=hsGroupMobileSmsService.queryList(null);
+        request.setAttribute("hsGroupMobileSms", hsGroupMobileSms);
         String returnView = "groupSms/createGroupSendSms";
         return new ModelAndView(returnView);
     }
@@ -101,16 +102,18 @@ public class HsGroupMobileRecordController extends BaseController {
         try {
             String couponRoleId = request.getParameter("couponRoleId");
             String addressId = request.getParameter("addressId");//优惠券名称
-            if (StringUtils.isBlank(couponRoleId) || StringUtils.isBlank(addressId)) {
+            String smsId = request.getParameter("smsId");//模板id
+            if (StringUtils.isBlank(couponRoleId) || StringUtils.isBlank(addressId)|| StringUtils.isBlank(smsId)) {
                 return getSjResult(result, null, false, "2", null, "参数不完整");
             }
             SessionUser su=getCurrentUser(request);
             List<HsGroupMobile> groupMobiles=hsGroupMobileService.queryList(null);
             HsGroupCouponRole hsGroupCouponRole=hsGroupCouponRoleService.queryById(couponRoleId);
             HsGroupMobileAddress groupMobileAddress=hsGroupMobileAddressService.queryById(addressId);
+            HsGroupMobileSms hsGroupMobileSms=hsGroupMobileSmsService.queryById(smsId);
 
             GroupMobileExecutor myExecutor = new GroupMobileExecutor();
-            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress);
+            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress,hsGroupMobileSms);
 
             getSjResult(result, null, true, "0", null, "后台创建中");
         } catch (Exception e) {
