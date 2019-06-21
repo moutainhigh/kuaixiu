@@ -24,12 +24,12 @@
                 <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth80 center">手机号</th>
-                <th class="fontWeight_normal tdwidth50 center">加价券编码</th>
+                <th class="fontWeight_normal tdwidth80 center">批次</th>
                 <th class="fontWeight_normal tdwidth60 center">下单地址</th>
                 <th class="fontWeight_normal tdwidth60 center">短信模板名字</th>
                 <th class="fontWeight_normal tdwidth60 center">发起人</th>
                 <th class="fontWeight_normal tdwidth80 center">发起时间</th>
+                <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -47,7 +47,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/groupSms/groupMobileRecordForPage.do",
+        "url": "${ctx}/groupSms/groupMobileBatchRecordForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -60,12 +60,12 @@
     //设置数据列
     dto.setColumns([
         {"data": "id", "class": "tdwidth50 center"},
-        {"data": "mobile", "class": ""},
-        {"data": "couponCode", "class": ""},
+        {"data": "batchId", "class": ""},
         {"data": "address", "class": ""},
         {"data": "smsTemplate", "class": ""},
         {"data": "createUserid", "class": ""},
-        {"data": "strCreateTime", "class": ""}
+        {"data": "strCreateTime", "class": ""},
+        {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -79,6 +79,23 @@
                     };
                     var html = template_chk(context);
                     return html;
+            }
+        },
+        {
+            targets: -1,
+            render: function (data, type, row, meta) {
+                var context = {
+                    func: [
+                        {
+                            "name": "查看",
+                            "fn": "toDetail(\'" + row.id + "\')",
+                            "icon": "am-icon-pencil-square-o",
+                            "class": "am-text-secondary"
+                        }
+                    ]
+                };
+                var html = template_btn(context);
+                return html;
             }
         }
     ]);
@@ -94,6 +111,10 @@
         myTable.ajax.reload(null, false);
     }
 
+    function toDetail(id) {
+        func_reload_page("${ctx}/groupSms/toGroupMobileRecord.do?batchId=" + id);
+    }
+
     /**
      * 全选按钮
      */
@@ -103,15 +124,15 @@
         });
     }
 
-    function checkItem(obj) {
-        var checked = true;
-        $("input[name='item_check_btn']").each(function () {
-            if (!this.checked) {
-                checked = false;
-                return false;
-            }
-        });
-        $("#check_all_btn").prop("checked", checked);
-    }
+//    function checkItem(obj) {
+//        var checked = true;
+//        $("input[name='item_check_btn']").each(function () {
+//            if (!this.checked) {
+//                checked = false;
+//                return false;
+//            }
+//        });
+//        $("#check_all_btn").prop("checked", checked);
+//    }
 
 </script>
