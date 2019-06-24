@@ -217,7 +217,7 @@
             and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
         </if>
         <if test="responsibleName != null and responsibleName != ''">
-            and responsible_name = #{responsibleName}
+            and responsible_name like CONCAT('%', #{responsibleName}, '%')
         </if>
         <if test="phone != null and phone != ''">
             and phone = #{phone}
@@ -342,7 +342,7 @@
             and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
         </if>
         <if test="responsibleName != null and responsibleName != ''">
-            and responsible_name like CONCAT('%', #{responsible_name}, '%')
+            and responsible_name like CONCAT('%', #{responsibleName}, '%')
         </if>
         <if test="phone != null and phone != ''">
             and phone = #{phone}
@@ -461,7 +461,7 @@
             and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
         </if>
         <if test="responsibleName != null and responsibleName != ''">
-            and responsible_name = #{responsibleName}
+            and responsible_name like CONCAT('%', #{responsibleName}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and province_id = #{provinceId}
@@ -606,7 +606,7 @@
             and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
         </if>
         <if test="responsibleName != null and responsibleName != ''">
-            and responsible_name like CONCAT('%', #{responsible_name}, '%')
+            and responsible_name like CONCAT('%', #{responsibleName}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and o.province_id = #{provinceId}
