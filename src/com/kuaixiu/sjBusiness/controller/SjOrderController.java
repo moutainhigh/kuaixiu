@@ -99,21 +99,23 @@ public class SjOrderController extends BaseController {
         ResultData result = new ResultData();
         try {
             JSONObject params = getPrarms(request);
-            Integer type = params.getInteger("type");
-            String phone = params.getString("phone");
-            String companyName = params.getString("companyName");
+            Integer type = params.getInteger("type");//
+            String phone = params.getString("phone");//登录手机号
+            String companyName = params.getString("companyName");//企业名字
             String provinceId = params.getString("provinceId");
             String cityId = params.getString("cityId");
             String areaId = params.getString("areaId");
             String streetId = params.getString("streetId");
             String addressDetail = params.getString("addressDetail");
-            String person = params.getString("person");
-            String personPhone = params.getString("personPhone");
+            String person = params.getString("person");//姓名
+            String personPhone = params.getString("personPhone");//手机号
+            String responsibleName = params.getString("responsibleName");//负责人姓名
+            String responsibleIdNumber = params.getString("responsibleIdNumber");//负责人身份证号
             JSONArray imagesList = params.getJSONArray("imagesList");
-            String projectId = params.getString("projectId");
+            String projectId = params.getString("projectId");//需求id  ","隔开
             Integer single = params.getInteger("ap");//AP
             Integer group = params.getInteger("monitor");//监控
-            String crmNo = params.getString("crmNo");
+            String crmNo = params.getString("crmNo");//CRM编号
 
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(companyName)
                     || StringUtils.isBlank(addressDetail) || StringUtils.isBlank(person)
@@ -123,10 +125,20 @@ public class SjOrderController extends BaseController {
                     || null == type || null == imagesList) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
+            SjUser user = userService.getDao().queryByLoginId(phone, null);
+            if (user == null) {
+                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+            }
             if (type == 2) {
                 if (projectId.contains("1")) {
                     if (null == single) {
                         return getSjResult(result, null, false, "2", null, "AP为空");
+                    }
+                    if (StringUtils.isBlank(responsibleIdNumber)) {
+                        return getSjResult(result, null, false, "2", null, "负责人身份证号为空");
+                    }
+                    if (StringUtils.isBlank(responsibleName)) {
+                        return getSjResult(result, null, false, "2", null, "负责人姓名为空");
                     }
                 }
                 if (projectId.contains("2")) {
@@ -141,12 +153,6 @@ public class SjOrderController extends BaseController {
                     return getSjResult(result, null, false, "2", null, "CRM错误");
                 }
             }
-
-            SjUser user = userService.getDao().queryByLoginId(phone, null);
-            if (user == null) {
-                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
-            }
-
             SjOrder sjOrder = new SjOrder();
             sjOrder.setType(type);
             sjOrder.setCrmNo(crmNo);
@@ -158,6 +164,8 @@ public class SjOrderController extends BaseController {
             sjOrder.setStreetId(streetId);
             sjOrder.setAddressDetail(addressDetail);
             sjOrder.setPerson(person);
+            sjOrder.setResponsibleIdNumber(responsibleIdNumber);
+            sjOrder.setResponsibleName(responsibleName);
             sjOrder.setPhone(personPhone);
             sjOrder.setProjectId(projectId);
             if (type == 2) {

@@ -18,6 +18,8 @@
         <result column="address_detail" property="addressDetail"/>
         <result column="person" property="person"/>
         <result column="phone" property="phone"/>
+        <result column="responsible_id_number" property="responsibleIdNumber"/>
+        <result column="responsible_name" property="responsibleName"/>
         <result column="project_id" property="projectId"/>
         <result column="group_net" property="groupNet"/>
         <result column="single" property="single"/>
@@ -61,7 +63,7 @@
     <!-- sj_order table all fields -->
     <sql id="Base_Column_List">
         id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,
-        address_detail,person,phone,project_id,group_net,single,stayPerson,approval_person,
+        address_detail,person,responsible_id_number,responsible_name,phone,project_id,group_net,single,stayPerson,approval_person,
         approval_note,date_format(`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,assign_person,
         date_format(`assign_time`,'%Y-%m-%d %H:%i:%s')assign_time,build_person,build_phone,
         build_company,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,completed_person,
@@ -76,13 +78,13 @@
     <insert id="add" parameterType="Object">
         insert into sj_order
         (id,order_no,type,crm_no,state,company_name,province_id,city_id,area_id,street_id,address_detail,
-        person,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,
+        person,responsible_id_number,responsible_name,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,
         assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,
         completed_phone,completed_time,create_time,create_userid,create_name,feedback_person,
         feedback_note,feedback_time,assign_company_id,assign_worker_id)
         values
         (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},
-        #{streetId},#{addressDetail},#{person},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
+        #{streetId},#{addressDetail},#{person},#{responsibleIdNumber},#{responsibleName},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
         #{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},
         #{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},
         now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime},#{assignCompanyId}
@@ -105,6 +107,8 @@
             street_id=#{streetId},
             address_detail=#{addressDetail},
             person=#{person},
+            responsible_id_number=#{responsibleIdNumber},
+            responsible_name=#{responsibleName},
             phone=#{phone},
             project_id=#{projectId},
             group_net=#{groupNet},
@@ -208,6 +212,12 @@
         </if>
         <if test="person != null and person != ''">
             and person = #{person}
+        </if>
+        <if test="responsibleIdNumber != null and responsibleIdNumber != ''">
+            and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
+        </if>
+        <if test="responsibleName != null and responsibleName != ''">
+            and responsible_name = #{responsibleName}
         </if>
         <if test="phone != null and phone != ''">
             and phone = #{phone}
@@ -328,6 +338,12 @@
         <if test="person != null and person != ''">
             and person = #{person}
         </if>
+        <if test="responsibleIdNumber != null and responsibleIdNumber != ''">
+            and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
+        </if>
+        <if test="responsibleName != null and responsibleName != ''">
+            and responsible_name like CONCAT('%', #{responsible_name}, '%')
+        </if>
         <if test="phone != null and phone != ''">
             and phone = #{phone}
         </if>
@@ -441,6 +457,12 @@
         <if test="companyName != null and companyName != ''">
             and company_name = #{companyName}
         </if>
+        <if test="responsibleIdNumber != null and responsibleIdNumber != ''">
+            and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
+        </if>
+        <if test="responsibleName != null and responsibleName != ''">
+            and responsible_name = #{responsibleName}
+        </if>
         <if test="provinceId != null and provinceId != ''">
             and province_id = #{provinceId}
         </if>
@@ -539,7 +561,7 @@
         CONCAT(o.feedback_person,'/',u5.`name`)feedback_person,o.feedback_note,date_format(o.`feedback_time`,'%Y-%m-%d %H:%i:%s')feedback_time,
         o.meal_id,m.meal_name,t.monitor_type_wifi_name model_name,o.model_num,p.poe_name,o.poe_num,s.save_net_name,o.storage_num,
         o.meal_wifi_id,m2.meal_name meal_wifi_name,t2.monitor_type_wifi_name model_wifi_name,o.model_wifi_num,p2.poe_name poe_wifi_name,
-        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num
+        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num,o.responsible_id_number
         from sj_order o
         LEFT JOIN sj_user u1 on u1.login_id=o.approval_person
         LEFT JOIN sj_user u2 on u2.login_id=o.assign_person
@@ -578,6 +600,12 @@
         </if>
         <if test="companyName != null and companyName != ''">
             and o.company_name like CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="responsibleIdNumber != null and responsibleIdNumber != ''">
+            and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
+        </if>
+        <if test="responsibleName != null and responsibleName != ''">
+            and responsible_name = #{responsibleName}
         </if>
         <if test="provinceId != null and provinceId != ''">
             and o.province_id = #{provinceId}

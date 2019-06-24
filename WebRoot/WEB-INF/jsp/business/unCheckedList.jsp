@@ -44,10 +44,17 @@
                 <td class="search_td"><input type="text" name="createUser" class="form-control"></td>
             </tr>
             <tr>
+                <td class="search_th "><label class="control-label">负责人姓名：</label></td>
+                <td class="search_td"><input type="text" name="responsibleName" class="form-control"></td>
+                <td class="search_th "><label class="control-label">负责人身份证号：</label></td>
+                <td class="search_td"><input type="number" name="responsibleIdNumber" class="form-control"></td>
+            </tr>
+            <tr>
                 <input type="hidden" id="state" name="state" value="200"/><br/>
                 <input type="hidden" id="type" name="type" value="2"/><br/>
                 <input type="hidden" id="isAssign" name="isAssign" value="1"/><br/>
             </tr>
+
 
         </table>
         <div class="form-group">
@@ -78,6 +85,7 @@
                 <th class="fontWeight_normal tdwidth90">CRM编码</th>
                 <th class="fontWeight_normal tdwidth90">企业名字</th>
                 <th class="fontWeight_normal table-title tdwidth80">企业负责人/电话</th>
+                <th class="fontWeight_normal table-title tdwidth80">负责人姓名/身份证号</th>
                 <th class="fontWeight_normal tdwidth100">需求</th>
                 <th class="fontWeight_normal tdwidth70">状态</th>
                 <th class="fontWeight_normal tdwidth70">等待时间</th>
@@ -133,6 +141,7 @@
         {"data": "crmNo", "class": ""},
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
+        {"data": "responsibleName", "class": ""},
         {"data": "projectNames", "class": ""},
         {"data": "state", "class": ""},
         {"data": "strApprovalTime", "class": ""},
@@ -181,9 +190,19 @@
             }
         },
         {
-            targets: -5,
+            targets: -6,
             render: function (data, type, row, meta) {
                 return row.person + "/" + row.phone;
+            }
+        },
+        {
+            targets: -5,
+            render: function (data, type, row, meta) {
+                if(row.responsibleName!=null&&row.responsibleIdNumber!=null){
+                    return row.responsibleName+"/<br/>"+row.responsibleIdNumber;
+                }else{
+                    return "";
+                }
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600

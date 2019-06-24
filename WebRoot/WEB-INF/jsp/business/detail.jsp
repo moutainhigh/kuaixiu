@@ -84,6 +84,11 @@
                     </div><!-- /.col -->
                 </div><!-- /.row -->
                 <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>负责人姓名/身份证号：${sjOrder.responsibleName }/${sjOrder.responsibleIdNumber }</h4>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+                <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>地址：${sjOrder.address} ${sjOrder.addressDetail}</h4>
                     </div><!-- /.col -->
