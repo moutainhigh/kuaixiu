@@ -312,6 +312,8 @@ public class SjOrderController extends BaseController {
             String addressDetail = params.getString("addressDetail");
             String person = params.getString("person");
             String personPhone = params.getString("personPhone");
+            String responsibleName = params.getString("responsibleName");//负责人姓名
+            String responsibleIdNumber = params.getString("responsibleIdNumber");//负责人身份证号
             JSONArray imagesList = params.getJSONArray("imagesList");
             String projectId = params.getString("projectId");
             Integer single = params.getInteger("ap");
@@ -329,6 +331,12 @@ public class SjOrderController extends BaseController {
                 if (projectId.contains("1")) {
                     if (null == single) {
                         return getSjResult(result, null, false, "2", null, "AP为空");
+                    }
+                    if (StringUtils.isBlank(responsibleIdNumber)) {
+                        return getSjResult(result, null, false, "2", null, "负责人身份证号为空");
+                    }
+                    if (StringUtils.isBlank(responsibleName)) {
+                        return getSjResult(result, null, false, "2", null, "负责人姓名为空");
                     }
                 }
                 if (projectId.contains("2")) {
@@ -361,6 +369,8 @@ public class SjOrderController extends BaseController {
             sjOrder.setAddressDetail(addressDetail);
             sjOrder.setPerson(person);
             sjOrder.setPhone(personPhone);
+            sjOrder.setResponsibleIdNumber(responsibleIdNumber);
+            sjOrder.setResponsibleName(responsibleName);
             sjOrder.setProjectId(projectId);
             if (type == 2) {
                 sjOrder.setSingle(single);
