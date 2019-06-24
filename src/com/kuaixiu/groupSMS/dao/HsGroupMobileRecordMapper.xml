@@ -97,7 +97,7 @@
             and batch_id=#{batchId}
         </if>
         <if test="mobile != null and mobile != ''" >
-            and mobile = #{mobile}
+            and mobile like CONCAT('%', #{mobile}, '%')
         </if>
         <if test="couponId != null and couponId != ''" >
             and coupon_id = #{couponId}
