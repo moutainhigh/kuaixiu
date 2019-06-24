@@ -12,7 +12,32 @@
 
 <div class="am-g">
     <form id="searchForm" class="am-form am-form-horizontal">
-
+        <table id="searchTable">
+            <tr>
+                <td class="search_th"><label class="control-label">创建时间：</label></td>
+                <td class="search_td">
+                    <div class="am-datepicker-date">
+                        <input type="text" id="query_startTime" name="queryStartTime"
+                               class="form-control am-datepicker-start" data-am-datepicker readonly>
+                        <span style="float: left; line-height: 30px; height: 30px; width: 10%; text-align: center;">至</span>
+                        <input type="text" id="query_endTime" name="queryEndTime"
+                               class="form-control am-datepicker-end" data-am-datepicker readonly>
+                    </div>
+                </td>
+                <td class="search_th"><label class="control-label">手机号：</label></td>
+                <td class="search_td"><input type="text" name="mobile" class="form-control"></td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <div class="am-u-sm-12 am-u-md-6">
+                <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-sm m20">
+                        <button onclick="refreshPage();" class="am-btn am-btn-default search_btn" type="button"> 搜 索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -72,13 +97,13 @@
         {//复选框
             targets: 0,
             render: function (data, type, row, meta) {
-                    var context = {
-                        func: [
-                            {"id": row.id, "order": meta.row + 1}
-                        ]
-                    };
-                    var html = template_chk(context);
-                    return html;
+                var context = {
+                    func: [
+                        {"id": row.id, "order": meta.row + 1}
+                    ]
+                };
+                var html = template_chk(context);
+                return html;
             }
         },
         {
@@ -124,15 +149,18 @@
         });
     }
 
-//    function checkItem(obj) {
-//        var checked = true;
-//        $("input[name='item_check_btn']").each(function () {
-//            if (!this.checked) {
-//                checked = false;
-//                return false;
-//            }
-//        });
-//        $("#check_all_btn").prop("checked", checked);
-//    }
+    $("#query_startTime").datetimepicker({
+        format: "yyyy-mm-dd",
+        language: "zh-CN",
+        autoclose: true,//选中关闭
+        minView: "month"//设置只显示到月份
+    });
+
+    $("#query_endTime").datetimepicker({
+        format: "yyyy-mm-dd",
+        language: "zh-CN",
+        autoclose: true,//选中关闭
+        minView: "month"//设置只显示到月份
+    });
 
 </script>

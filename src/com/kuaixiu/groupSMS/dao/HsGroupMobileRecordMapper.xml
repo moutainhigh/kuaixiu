@@ -105,6 +105,12 @@
         <if test="addressId != null and addressId != ''" >
             and address_id = #{addressId}
         </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
         <if test="createTime != null and createTime != ''" >
             and create_time = #{createTime}
         </if>

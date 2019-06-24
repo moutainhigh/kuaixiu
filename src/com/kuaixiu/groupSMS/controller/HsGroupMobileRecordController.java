@@ -74,9 +74,15 @@ public class HsGroupMobileRecordController extends BaseController {
     @RequestMapping(value = "groupSms/groupMobileRecordForPage")
     public void groupMobileRecordForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String batchId = request.getParameter("batchId");
+        String mobile = request.getParameter("mobile");
+        String queryStartTime = request.getParameter("queryStartTime");
+        String queryEndTime = request.getParameter("queryEndTime");
         Page page = getPageByRequest(request);
         HsGroupMobileRecord groupMobileRecord = new HsGroupMobileRecord();
         groupMobileRecord.setBatchId(batchId);
+        groupMobileRecord.setMobile(mobile);
+        groupMobileRecord.setQueryStartTime(queryStartTime);
+        groupMobileRecord.setQueryEndTime(queryEndTime);
         groupMobileRecord.setPage(page);
         List<HsGroupMobileRecord> groupMobileRecords = hsGroupMobileRecordService.queryListForPage(groupMobileRecord);
         for(HsGroupMobileRecord mobileRecord:groupMobileRecords){
