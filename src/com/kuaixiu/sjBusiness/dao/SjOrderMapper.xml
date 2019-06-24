@@ -551,7 +551,8 @@
     </select>
 
     <select id="queryImportList" resultType="Map" parameterType="Object">
-        SELECT o.order_no,o.type,o.state,o.company_name,CONCAT(o.person,'/',o.phone)person,
+        SELECT o.order_no,o.type,o.state,o.company_name,
+        CONCAT(o.person,'/',o.phone)person,CONCAT(o.responsible_name,'/',o.responsible_id_number)responsible_name,
         CONCAT(a1.area,a2.area,a3.area,o.address_detail)address,o.project_id,o.group_net,o.single,
         CONCAT(o.create_userid,'/',o.create_name)create_userid,date_format(o.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,o.crm_no,
         CONCAT(o.approval_person,'/',u1.`name`)approval_person,o.approval_note,date_format(o.`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,
@@ -561,7 +562,7 @@
         CONCAT(o.feedback_person,'/',u5.`name`)feedback_person,o.feedback_note,date_format(o.`feedback_time`,'%Y-%m-%d %H:%i:%s')feedback_time,
         o.meal_id,m.meal_name,t.monitor_type_wifi_name model_name,o.model_num,p.poe_name,o.poe_num,s.save_net_name,o.storage_num,
         o.meal_wifi_id,m2.meal_name meal_wifi_name,t2.monitor_type_wifi_name model_wifi_name,o.model_wifi_num,p2.poe_name poe_wifi_name,
-        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num,o.responsible_id_number
+        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num
         from sj_order o
         LEFT JOIN sj_user u1 on u1.login_id=o.approval_person
         LEFT JOIN sj_user u2 on u2.login_id=o.assign_person
@@ -605,7 +606,7 @@
             and responsible_id_number like CONCAT('%', #{responsibleIdNumber}, '%')
         </if>
         <if test="responsibleName != null and responsibleName != ''">
-            and responsible_name = #{responsibleName}
+            and responsible_name like CONCAT('%', #{responsible_name}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and o.province_id = #{provinceId}

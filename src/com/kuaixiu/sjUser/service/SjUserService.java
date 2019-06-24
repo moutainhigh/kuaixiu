@@ -70,6 +70,10 @@ public class SjUserService extends BaseService<SjUser> {
     private SjProjectService sjProjectService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private SjVirtualTeamService virtualTeamService;
+    @Autowired
+    private AreaManagementUnitService managementUnitService;
 
 
     public SjUserMapper<SjUser> getDao() {
@@ -621,11 +625,6 @@ public class SjUserService extends BaseService<SjUser> {
             sjUser.setCompanyName(companyName);
         }
     }
-
-    @Autowired
-    private SjVirtualTeamService virtualTeamService;
-    @Autowired
-    private AreaManagementUnitService managementUnitService;
 
     private List<SjVirtualTeam> checkVirtualTeamData(Workbook workbook, ImportReport report) {
         Sheet sheet = workbook.getSheetAt(0);
