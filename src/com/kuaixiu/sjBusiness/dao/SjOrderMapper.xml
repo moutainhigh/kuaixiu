@@ -552,7 +552,7 @@
 
     <select id="queryImportList" resultType="Map" parameterType="Object">
         SELECT o.order_no,o.type,o.state,o.company_name,
-        CONCAT(o.person,'/',o.phone)person,CONCAT(o.responsible_name,'/',o.responsible_id_number)responsible_name,
+        CONCAT(o.person,'/',o.phone)person,CONCAT(o.responsible_name,'/',o.responsible_id_number)responsibleName,
         CONCAT(a1.area,a2.area,a3.area,o.address_detail)address,o.project_id,o.group_net,o.single,
         CONCAT(o.create_userid,'/',o.create_name)create_userid,date_format(o.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,o.crm_no,
         CONCAT(o.approval_person,'/',u1.`name`)approval_person,o.approval_note,date_format(o.`approval_time`,'%Y-%m-%d %H:%i:%s')approval_time,
