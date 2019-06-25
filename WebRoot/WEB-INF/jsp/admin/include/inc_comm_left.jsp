@@ -18,23 +18,17 @@
                     <c:if test="${not empty menu1.subMenuList }">
                         <ul class="am-list am-collapse admin-sidebar-sub" id="collapse-nav_${j.index}">
                             <c:forEach items="${menu1.subMenuList}" var="menu" varStatus="i">
-                                <c:if test="${not empty menu.href }">
-                                    <li><a href="javascript:void(0);"
-                                           onclick="func_menu_click(this,'','${ctx}${menu.href }',0);"
-                                           class="am-cf">
-                                        <span class="${menu.icon }"></span> ${menu.name }</a></li>
-                                </c:if>
                                 <c:if test="${null eq menu.href||'' eq menu.href }">
                                     <li class="admin-parent">
                                         <a class="am-cf am-collapsed" onclick="func_admin_parent_click(this);"
-                                           data-am-collapse="{target: '#collapse-nav_1_${i.index}'}">
+                                           data-am-collapse="{target: '#collapse-nav_${j.index}_${i.index}'}">
                                             <span class="${menu.icon }"></span> ${menu.name }<span
                                                 class="am-icon-angle-down am-fr am-margin-right"></span>
                                         </a>
                                             <%-- 循环子菜单 --%>
                                         <c:if test="${not empty menu.subMenuList }">
                                             <ul class="am-list am-collapse admin-sidebar-sub"
-                                                id="collapse-nav_1_${i.index}">
+                                                id="collapse-nav_${j.index}_${i.index}">
                                                 <c:forEach items="${menu.subMenuList }" var="subMenu" varStatus="sub">
                                                     <li><a href="javascript:void(0);"
                                                            onclick="func_menu_click(this,'','${ctx}${subMenu.href }',0);"
@@ -46,7 +40,12 @@
                                             <%-- 循环子菜单 end --%>
                                     </li>
                                 </c:if>
-
+                                <c:if test="${null ne menu.href && '' ne menu.href}">
+                                    <li><a href="javascript:void(0);"
+                                           onclick="func_menu_click(this,'','${ctx}${menu.href }',0);"
+                                           class="am-cf">
+                                        <span class="${menu.icon }"></span> ${menu.name }</a></li>
+                                </c:if>
                             </c:forEach>
                         </ul>
                     </c:if>
