@@ -1432,8 +1432,8 @@ public class RecycleController extends BaseController {
         List<RecycleOrder> list = recycleOrderService.queryListForPage(r);
         List<RecycleSystem> flist = recycleSystemService.queryList(null);
         for (RecycleOrder o : list) {
-            String price=recycleOrderService.div095(o.getPrice().toString());//加个乘以0.95
-            o.setPrice(new BigDecimal(price));
+//            String price=recycleOrderService.div095(o.getPrice().toString());//加个乘以0.95
+            o.setPrice(new BigDecimal(o.getPrice().toString()));
             if (StringUtils.isNotBlank(o.getCouponId())) {
                 RecycleCoupon recycleCoupon = recycleCouponService.queryById(o.getCouponId());
                 if (recycleCoupon.getPricingType() == 1) {
@@ -1484,8 +1484,8 @@ public class RecycleController extends BaseController {
         if (o == null) {
             throw new SystemException("订单未找到！！");
         }
-        String price=recycleOrderService.div095(o.getPrice().toString());//加个乘以0.95
-        o.setPrice(new BigDecimal(price));
+//        String price=recycleOrderService.div095(o.getPrice().toString());//加个乘以0.95
+        o.setPrice(new BigDecimal(o.getPrice().toString()));
         RecycleCoupon recycleCoupon = new RecycleCoupon();
         if (StringUtils.isNotBlank(o.getCouponId())) {
             recycleCoupon = recycleCouponService.queryById(o.getCouponId());
