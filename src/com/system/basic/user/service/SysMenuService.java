@@ -85,14 +85,10 @@ public class SysMenuService extends BaseService<SysMenu> {
         for (SysMenu menu0 : menuses) {
             menu.setPcode(menu0.getCode());
             menu.setType(2);
-            menu.setIsShow(1);
-            menu.setUserId(userId);
             List<SysMenu> menus = this.queryList(menu);
             menu0.setSubMenuList(menus);
             for (SysMenu menu1 : menus) {
                 menu.setType(3);
-                menu.setIsShow(1);
-                menu.setUserId(userId);
                 menu.setPcode(menu1.getCode());
                 List<SysMenu> menus1 = this.queryList(menu);
                 menu1.setSubMenuList(menus1);
