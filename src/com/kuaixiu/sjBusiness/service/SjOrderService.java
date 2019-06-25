@@ -136,6 +136,10 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("person", o.getPerson());
         jsonObject.put("personPhone", o.getPhone());
         if (o.getType() == 2) {
+            if (StringUtils.isNotBlank(o.getResponsibleIdNumber()) && StringUtils.isNotBlank(o.getResponsibleName())) {
+                jsonObject.put("responsibleName", o.getResponsibleName());
+                jsonObject.put("responsibleIdNumber", o.getResponsibleIdNumber());
+            }
             jsonObject.put("ap", o.getSingle());
             jsonObject.put("monitor", o.getGroupNet());
         } else {
