@@ -75,7 +75,7 @@ public class SessionUserService {
         //家族用户权限
         su.setUserAuthoritys(menuService.queryMenusByUserId(su.getUserId()));
         //设置用户菜单
-        su.setSysMenuList(menuService.dealSysMenusByUserAuthoritys(su.getUserAuthoritys()));
+        su.setSysMenuList(menuService.getSysMenu(su.getUserId()));
 
         //根据用户类型加载用户信息
         if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {

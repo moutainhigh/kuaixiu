@@ -43,7 +43,7 @@ public class SysMenuService extends BaseService<SysMenu> {
     
     /**
      * 根据角色id查询角色菜单
-     * @param uid
+     * @param roleId
      * @return
      * @CreateDate: 2016-8-27 上午1:01:20
      */
@@ -73,6 +73,32 @@ public class SysMenuService extends BaseService<SysMenu> {
             }
         }
         return rootMenu;
+    }
+
+    public List<SysMenu> getSysMenu(String userId){
+        SysMenu menu = new SysMenu();
+        menu.setType(1);
+        menu.setIsShow(1);
+        menu.setUserId(userId);
+        List<SysMenu> menuses = this.queryList(menu);
+        menu.setCode(null);
+        for (SysMenu menu0 : menuses) {
+            menu.setPcode(menu0.getCode());
+            menu.setType(2);
+            menu.setIsShow(1);
+            menu.setUserId(userId);
+            List<SysMenu> menus = this.queryList(menu);
+            menu0.setSubMenuList(menus);
+            for (SysMenu menu1 : menus) {
+                menu.setType(3);
+                menu.setIsShow(1);
+                menu.setUserId(userId);
+                menu.setPcode(menu1.getCode());
+                List<SysMenu> menus1 = this.queryList(menu);
+                menu1.setSubMenuList(menus1);
+            }
+        }
+        return menuses;
     }
     
     /**
