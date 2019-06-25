@@ -9,6 +9,7 @@ import com.kuaixiu.recycle.service.MyExecutor;
 import com.kuaixiu.recycle.service.RecycleCouponService;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.system.api.entity.ResultData;
+import com.system.basic.sequence.util.SeqUtil;
 import com.system.basic.user.entity.SessionUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,11 @@ public class HsGroupMobileRecordController extends BaseController {
     private RecycleCouponService recycleCouponService;
     @Autowired
     private HsGroupMobileSmsService hsGroupMobileSmsService;
+    @Autowired
+    private HsGroupMobileBatchRecordService hsGroupMobileBatchRecordService;
 
     /**
-     * 跳转群发短信记录列表
+     * 跳转群发短信记录详情
      *
      * @param request
      * @param response
@@ -54,8 +57,10 @@ public class HsGroupMobileRecordController extends BaseController {
     @RequestMapping(value = "groupSms/toGroupMobileRecord")
     public ModelAndView toGroupMobileRecords(HttpServletRequest request,
                                              HttpServletResponse response) throws Exception {
-
-        String returnView = "groupSms/groupMobileRecordList";
+        String batchId = request.getParameter("batchId");
+        HsGroupMobileBatchRecord batchRecord=hsGroupMobileBatchRecordService.queryById(batchId);
+        request.setAttribute("batchRecord", batchRecord);
+        String returnView = "groupSms/groupSmsRecordDetail";
         return new ModelAndView(returnView);
     }
 
@@ -68,8 +73,16 @@ public class HsGroupMobileRecordController extends BaseController {
      */
     @RequestMapping(value = "groupSms/groupMobileRecordForPage")
     public void groupMobileRecordForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String batchId = request.getParameter("batchId");
+        String mobile = request.getParameter("mobile");
+        String queryStartTime = request.getParameter("queryStartTime");
+        String queryEndTime = request.getParameter("queryEndTime");
         Page page = getPageByRequest(request);
         HsGroupMobileRecord groupMobileRecord = new HsGroupMobileRecord();
+        groupMobileRecord.setBatchId(batchId);
+        groupMobileRecord.setMobile(mobile);
+        groupMobileRecord.setQueryStartTime(queryStartTime);
+        groupMobileRecord.setQueryEndTime(queryEndTime);
         groupMobileRecord.setPage(page);
         List<HsGroupMobileRecord> groupMobileRecords = hsGroupMobileRecordService.queryListForPage(groupMobileRecord);
         for(HsGroupMobileRecord mobileRecord:groupMobileRecords){
@@ -114,8 +127,17 @@ public class HsGroupMobileRecordController extends BaseController {
             HsGroupMobileAddress groupMobileAddress=hsGroupMobileAddressService.queryById(addressId);
             HsGroupMobileSms hsGroupMobileSms=hsGroupMobileSmsService.queryById(smsId);
 
+            HsGroupMobileBatchRecord groupMobileBatchRecord=new HsGroupMobileBatchRecord();
+            groupMobileBatchRecord.setId(UUID.randomUUID().toString().replace("-", ""));
+            groupMobileBatchRecord.setAddressId(groupMobileAddress.getId());
+            groupMobileBatchRecord.setSmsId(hsGroupMobileSms.getId());
+            groupMobileBatchRecord.setBatchId(SeqUtil.getNext("gs"));
+            groupMobileBatchRecord.setCreateUserid(su.getUserId());
+            hsGroupMobileBatchRecordService.add(groupMobileBatchRecord);
+
             GroupMobileExecutor myExecutor = new GroupMobileExecutor();
-            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress,hsGroupMobileSms,hsGroupMobileService);
+            myExecutor.fun(su, groupMobiles, hsGroupCouponRole,hsGroupMobileRecordService,groupMobileAddress,
+                    hsGroupMobileSms,hsGroupMobileService,groupMobileBatchRecord);
 
             getSjResult(result, null, true, "0", null, "后台创建中");
         } catch (Exception e) {

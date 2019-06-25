@@ -35,7 +35,7 @@
                 <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth80 center">地址名字</th>
+                <th class="fontWeight_normal tdwidth80 center">模板名字</th>
                 <th class="fontWeight_normal tdwidth90 center">短信模板</th>
                 <th class="fontWeight_normal tdwidth90 center">创建时间</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>

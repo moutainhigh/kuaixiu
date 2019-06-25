@@ -367,7 +367,7 @@ public class RecycleNewController extends BaseController {
                 MyExecutor myExecutor = new MyExecutor();
                 myExecutor.fun(session, j, openId, loginMobile, items, productId,
                         price, source, recycleCheckItemsService);
-                price = recycleOrderService.div095(price);//加个乘以0.95
+//                price = recycleOrderService.div095(price);//加个乘以0.95
                 j.put("price", Integer.valueOf(price));
             }
 
@@ -886,7 +886,7 @@ public class RecycleNewController extends BaseController {
                                         JSONObject json = activityCouponService.recycleCouponDetail2Json(recycleCoupon);
                                         quote.put("coupon", json);
                                         String orderPrice = quote.getString("orderprice");
-                                        orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
+//                                        orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
                                         if (recycleCoupon.getPricingType() == 1) {
 //                                        json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                             if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
@@ -998,7 +998,7 @@ public class RecycleNewController extends BaseController {
                                 JSONObject json = activityCouponService.recycleCouponDetail2Json(recycleCoupon);
                                 info.put("coupon", json);
                                 String orderPrice = info.getString("orderprice");
-                                orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
+//                                orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
                                 if (recycleCoupon.getPricingType() == 1) {
 //                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                     if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {

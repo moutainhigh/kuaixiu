@@ -2,42 +2,42 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.groupSMS.dao.HsGroupMobileRecordMapper" >
+<mapper namespace="com.kuaixiu.groupSMS.dao.HsGroupMobileBatchRecordMapper" >
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.groupSMS.entity.HsGroupMobileRecord" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.groupSMS.entity.HsGroupMobileBatchRecord" >
         <result column="id" property="id"/>
         <result column="batch_id" property="batchId"/>
-        <result column="mobile" property="mobile"/>
-        <result column="coupon_id" property="couponId"/>
-        <result column="address_id" property="addressId"/>
         <result column="sms_id" property="smsId"/>
+        <result column="address_id" property="addressId"/>
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
     </resultMap>
     
-    <!-- hs_group_mobile_record table all fields -->
+    <!-- hs_group_mobile_batch_record table all fields -->
     <sql id="Base_Column_List" >
-        id,batch_id,mobile,coupon_id,address_id,sms_id,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
+        id,batch_id,sms_id,address_id,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
+    </sql>
+
+    <sql id="Base_Column_List_b" >
+        b.id,b.batch_id,b.sms_id,b.address_id,date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,b.create_userid
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
-        insert into hs_group_mobile_record
-        (id,batch_id,mobile,coupon_id,address_id,sms_id,create_time,create_userid)
+        insert into hs_group_mobile_batch_record
+        (id,batch_id,sms_id,address_id,create_time,create_userid)
         values
-        (#{id},#{batchId},#{mobile},#{couponId},#{addressId},#{smsId},now(),#{createUserid})
+        (#{id},#{batchId},#{smsId},#{addressId},now(),#{createUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
     <update id="update" parameterType="Object" >
-        update hs_group_mobile_record 
+        update hs_group_mobile_batch_record 
         set 
             id=#{id},
             batch_id=#{batchId},
-            mobile=#{mobile},
-            coupon_id=#{couponId},
-            address_id=#{addressId},
             sms_id=#{smsId},
+            address_id=#{addressId},
             create_time=#{createTime},
             create_userid=#{createUserid}
         where id=#{id}
@@ -45,32 +45,29 @@
 
     <!-- 删除记录 -->
     <delete id="delete" parameterType="Object">
-        delete from hs_group_mobile_record where id = #{id}
+        delete from hs_group_mobile_batch_record where id = #{id}
     </delete>
     
     <!-- 根据id查询  -->
     <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
         select <include refid="Base_Column_List" />
-        from hs_group_mobile_record where id = #{id}
+        from hs_group_mobile_batch_record where id = #{id}
     </select>
 
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from hs_group_mobile_record
+        from hs_group_mobile_batch_record
         where 1=1
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
         <if test="batchId != null and batchId != ''" >
-            and batch_id=#{batchId}
+            and batch_id = #{batchId}
         </if>
-        <if test="mobile != null and mobile != ''" >
-            and mobile = #{mobile}
-        </if>
-        <if test="couponId != null and couponId != ''" >
-            and coupon_id = #{couponId}
+        <if test="smsId != null and smsId != ''" >
+            and sms_id = #{smsId}
         </if>
         <if test="addressId != null and addressId != ''" >
             and address_id = #{addressId}
@@ -87,37 +84,38 @@
     <!-- 查询列表 带分页 -->
     <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
         select
-        <include refid="Base_Column_List"/>
-        from hs_group_mobile_record
+        b.id,b.batch_id,b.sms_id,b.address_id,
+        date_format(b.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,b.create_userid
+        from hs_group_mobile_batch_record b
         where 1=1
+        <if test="mobile != null and mobile != ''" >
+            and b.id in(select r.batch_id from hs_group_mobile_record r where r.mobile like CONCAT('%', #{mobile}, '%'))
+        </if>
         <if test="id != null and id != ''" >
-            and id = #{id}
+            and b.id = #{id}
         </if>
         <if test="batchId != null and batchId != ''" >
-            and batch_id=#{batchId}
+            and b.batch_id = #{batchId}
         </if>
-        <if test="mobile != null and mobile != ''" >
-            and mobile like CONCAT('%', #{mobile}, '%')
-        </if>
-        <if test="couponId != null and couponId != ''" >
-            and coupon_id = #{couponId}
+        <if test="smsId != null and smsId != ''" >
+            and b.sms_id = #{smsId}
         </if>
         <if test="addressId != null and addressId != ''" >
-            and address_id = #{addressId}
+            and b.address_id = #{addressId}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and b.create_time &gt;= #{queryStartTime}
         </if>
         <if test="queryEndTime != null and queryEndTime != ''">
-            and create_time &lt;= #{queryEndTime}
+            and b.create_time &lt;= #{queryEndTime}
         </if>
         <if test="createTime != null and createTime != ''" >
-            and create_time = #{createTime}
-        </if>
-        <if test="createTime != null and createTime != ''" >
-            and create_time = #{createTime}
+            and b.create_time = #{createTime}
         </if>
         <if test="createUserid != null and createUserid != ''" >
-            and create_userid = #{createUserid}
+            and b.create_userid = #{createUserid}
         </if>
-        order by create_time desc
+        order by b.create_time desc
     </select>
 
 </mapper>   

@@ -17,7 +17,8 @@ public class GroupMobileExecutor {
 
     public void fun(SessionUser su, List<HsGroupMobile> groupMobiles, HsGroupCouponRole hsGroupCouponRole,
                     HsGroupMobileRecordService hsGroupMobileRecordService, HsGroupMobileAddress groupMobileAddress,
-                    HsGroupMobileSms hsGroupMobileSms,HsGroupMobileService hsGroupMobileService) throws Exception {
+                    HsGroupMobileSms hsGroupMobileSms,HsGroupMobileService hsGroupMobileService,
+                    HsGroupMobileBatchRecord groupMobileBatchRecord) throws Exception {
 
         executor.submit(new Runnable() {
             @Override
@@ -29,6 +30,7 @@ public class GroupMobileExecutor {
                         RecycleCoupon recycleCoupon = hsGroupMobileRecordService.receiveCoupon(hsGroupCouponRole, groupMobile.getMobile(), su);
                         HsGroupMobileRecord groupMobileRecord = new HsGroupMobileRecord();
                         groupMobileRecord.setId(UUID.randomUUID().toString().replace("-", ""));
+                        groupMobileRecord.setBatchId(groupMobileBatchRecord.getId());
                         groupMobileRecord.setCouponId(recycleCoupon.getId());
                         groupMobileRecord.setCouponCode(recycleCoupon.getCouponCode());
                         groupMobileRecord.setMobile(groupMobile.getMobile());
