@@ -54,19 +54,25 @@ public class SysMenuRoleController extends BaseController {
             menu.setCode(null);
             for (SysMenu menu0 : menuses) {
                 menu.setPcode(menu0.getCode());
-                menu.setType(2);
+                menu.setType(1);
                 List<SysMenu> menus = sysMenuService.queryList(menu);
                 menu0.setSubMenuList(menus);
                 for (SysMenu menu1 : menus) {
-                    menu.setType(3);
                     menu.setPcode(menu1.getCode());
-                    List<SysMenu> menus1 = sysMenuService.queryList(menu);
-                    menu1.setSubMenuList(menus1);
-                    for (SysMenu menu2 : menus1) {
-                        menu.setType(4);
-                        menu.setPcode(menu2.getCode());
-                        List<SysMenu> menus2 = sysMenuService.queryList(menu);
-                        menu2.setSubMenuList(menus2);
+                    menu.setType(2);
+                    List<SysMenu> menus2 = sysMenuService.queryList(menu);
+                    menu1.setSubMenuList(menus2);
+                    for (SysMenu menu21 : menus2) {
+                        menu.setType(3);
+                        menu.setPcode(menu21.getCode());
+                        List<SysMenu> menus3 = sysMenuService.queryList(menu);
+                        menu21.setSubMenuList(menus3);
+                        for (SysMenu menu31 : menus3) {
+                            menu.setType(4);
+                            menu.setPcode(menu31.getCode());
+                            List<SysMenu> menus4 = sysMenuService.queryList(menu);
+                            menu31.setSubMenuList(menus4);
+                        }
                     }
                 }
             }
@@ -139,9 +145,9 @@ public class SysMenuRoleController extends BaseController {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
                 menus = sysMenuService.queryMenusByUserId(userId);
-                List<SysRole> sysRoles=new ArrayList<SysRole>();
+                List<SysRole> sysRoles = new ArrayList<SysRole>();
                 sysRoles = sysRoleService.queryRoles1ByUserId(userId);
-                if(CollectionUtils.isEmpty(sysRoles)) {
+                if (CollectionUtils.isEmpty(sysRoles)) {
                     sysRoles = sysRoleService.queryRolesByUserId(userId);
                 }
                 user1 = user;

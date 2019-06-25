@@ -79,6 +79,7 @@ public class SysMenuService extends BaseService<SysMenu> {
         SysMenu menu = new SysMenu();
         menu.setType(1);
         menu.setIsShow(1);
+        menu.setPcode("101");
         menu.setUserId(userId);
         List<SysMenu> menuses = this.queryList(menu);
         menu.setCode(null);
