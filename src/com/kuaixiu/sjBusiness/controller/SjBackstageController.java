@@ -158,6 +158,8 @@ public class SjBackstageController extends BaseController {
             String companyName = request.getParameter("companyName");
             String state = request.getParameter("state");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
+            String responsibleName =request.getParameter("responsibleName");//负责人姓名
+            String responsibleIdNumber = request.getParameter("responsibleIdNumber");//负责人身份证号
             SjOrder sjOrder = new SjOrder();
             SjSessionUser sjSessionUser = getSjCurrentUser(request);
             if (sjSessionUser.getType() == 3) {
@@ -169,6 +171,8 @@ public class SjBackstageController extends BaseController {
             if (sjSessionUser.getType() == 6) {
                 sjOrder.setStayPerson(sjSessionUser.getUserId());
             }
+            sjOrder.setResponsibleIdNumber(responsibleIdNumber);
+            sjOrder.setResponsibleName(responsibleName);
             sjOrder.setIsAssign(isAssign);
             sjOrder.setOrderNo(orderNo);
             if (StringUtils.isNotBlank(type)) {

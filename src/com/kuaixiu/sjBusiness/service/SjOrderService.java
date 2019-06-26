@@ -136,6 +136,10 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("person", o.getPerson());
         jsonObject.put("personPhone", o.getPhone());
         if (o.getType() == 2) {
+            if (StringUtils.isNotBlank(o.getResponsibleIdNumber()) && StringUtils.isNotBlank(o.getResponsibleName())) {
+                jsonObject.put("responsibleName", o.getResponsibleName());
+                jsonObject.put("responsibleIdNumber", o.getResponsibleIdNumber());
+            }
             jsonObject.put("ap", o.getSingle());
             jsonObject.put("monitor", o.getGroupNet());
         } else {
@@ -156,9 +160,9 @@ public class SjOrderService extends BaseService<SjOrder> {
         return jsonObject;
     }
 
-    public void createOrder(String projectId,SjOrder sjOrder){
-        if (projectId.contains("1")&&projectId.contains("2")&&
-                (projectId.contains("3")||projectId.contains("4")||projectId.contains("5")||projectId.contains("6"))) {
+    public void createOrder(String projectId, SjOrder sjOrder) {
+        if (projectId.contains("1") && projectId.contains("2") &&
+                (projectId.contains("3") || projectId.contains("4") || projectId.contains("5") || projectId.contains("6"))) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("1");
             this.add(sjOrder);
@@ -166,32 +170,32 @@ public class SjOrderService extends BaseService<SjOrder> {
             sjOrder.setProjectId("2");
             this.add(sjOrder);
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
-            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId,"1,2,"));
+            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId, "1,2,"));
             this.add(sjOrder);
-        }else if (projectId.contains("1")&&
-                (projectId.contains("3")||projectId.contains("4")||projectId.contains("5")||projectId.contains("6"))) {
+        } else if (projectId.contains("1") &&
+                (projectId.contains("3") || projectId.contains("4") || projectId.contains("5") || projectId.contains("6"))) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("1");
             this.add(sjOrder);
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
-            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId,"1,"));
+            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId, "1,"));
             this.add(sjOrder);
-        }else if (projectId.contains("2")&&
-                (projectId.contains("3")||projectId.contains("4")||projectId.contains("5")||projectId.contains("6"))) {
+        } else if (projectId.contains("2") &&
+                (projectId.contains("3") || projectId.contains("4") || projectId.contains("5") || projectId.contains("6"))) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("2");
             this.add(sjOrder);
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
-            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId,"2,"));
+            sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId, "2,"));
             this.add(sjOrder);
-        }else if (projectId.contains("1")&&projectId.contains("2")) {
+        } else if (projectId.contains("1") && projectId.contains("2")) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("1");
             this.add(sjOrder);
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("2");
             this.add(sjOrder);
-        }else {
+        } else {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId(projectId);
             this.add(sjOrder);
@@ -392,6 +396,8 @@ public class SjOrderService extends BaseService<SjOrder> {
         String companyName = MapUtils.getString(params, "companyName");
         String state = MapUtils.getString(params, "state");
         String isAssign = MapUtils.getString(params, "isAssign");//是否查询指派订单
+        String responsibleName = MapUtils.getString(params, "responsibleName");//负责人姓名
+        String responsibleIdNumber = MapUtils.getString(params, "responsibleIdNumber");//负责人身份证号
         SjOrder sjOrder = new SjOrder();
         String idStr = MapUtils.getString(params, "ids");
         if (StringUtils.isNotBlank(idStr)) {
@@ -409,6 +415,8 @@ public class SjOrderService extends BaseService<SjOrder> {
         }
         sjOrder.setIsAssign(isAssign);
         sjOrder.setOrderNo(orderNo);
+        sjOrder.setResponsibleIdNumber(responsibleIdNumber);
+        sjOrder.setResponsibleName(responsibleName);
         if (StringUtils.isNotBlank(type)) {
             sjOrder.setType(Integer.valueOf(type));
         }
@@ -442,10 +450,11 @@ public class SjOrderService extends BaseService<SjOrder> {
             header = new String[]{"订单编号", "创建时间", "类型", "创建人/创建名字", "企业名字", "联系人/联系电话", "产品需求",
                     "地址", "审批人", "审批备注", "审批时间", "反馈人", "反馈备注", "反馈时间", "状态"};
         } else {
-            header = new String[]{"订单编号", "创建时间", "类型", "创建人/创建名字", "企业名字", "联系人/联系电话", "产品需求",
-                    "地址", "审批人", "审批备注", "审批时间", "ORM编号", "指派人", "指派时间", "施工人", "施工单位", "完成时间",
-                    "竣工人", "竣工时间", "监控机型", "监控机型数量", "监控poe", "监控poe数量", "监控存储", "监控存储数量",
-                    "wifi无线", "wifi无线数量", "wifipoe", "wifipoe数量", "wifi网关", "wifi网关数量", "状态"};
+            header = new String[]{"订单编号", "创建时间", "类型", "创建人/创建名字", "企业名字", "联系人/联系电话",
+                    "负责人姓名/身份证号", "产品需求", "地址", "审批人", "审批备注", "审批时间", "ORM编号", "指派人",
+                    "指派时间", "施工人", "施工单位", "完成时间", "竣工人", "竣工时间", "监控机型", "监控机型数量",
+                    "监控poe", "监控poe数量", "监控存储", "监控存储数量", "wifi无线", "wifi无线数量", "wifipoe",
+                    "wifipoe数量", "wifi网关", "wifi网关数量", "状态"};
         }
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
@@ -539,6 +548,12 @@ public class SjOrderService extends BaseService<SjOrder> {
             row.createCell(count).setCellValue("");
         } else {
             row.createCell(count).setCellValue(map.get("person").toString());
+        }
+        count = count + 1;
+        if (map.get("responsibleName") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("responsibleName").toString());
         }
         count = count + 1;
         if (map.get("projectName") == null) {

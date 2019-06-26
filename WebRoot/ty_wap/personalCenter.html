@@ -153,8 +153,19 @@
            var params = {};
            if(phone) {
                params.phone = phone
-           }else {
+           }else if(HappyGoMobile) {
                params.phone = HappyGoMobile
+           }else {
+               $.post(
+                   getRealPath()+"/recycle/isLogin.do",
+                   {},
+                   function(data){
+                       if ( data.success){
+                           eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                           getPersonalInfo()
+                       }else{
+                       }
+                   });
            }
 
            $.post(linkUrl+'/recycle/getUser.do',{params:JSON.stringify(params)},

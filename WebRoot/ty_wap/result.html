@@ -102,9 +102,9 @@
                 <div class="postway">
                     <label class="label" data-way="postText">
                         <span class="genre">顺丰上门回收</span>
-                        <img src="img/free.png" alt="">
+                        <img  src="img/free.png" alt="">
                     </label>
-                    <div id="pickTime">
+                    <div id="pickTime" >
                         <p style="display: none"><img style="width: 0.1rem" src="img/icon_arrow.png" alt=""></p>
                         <p></p>
                         <p><img style="width: 0.1rem" src="img/icon_arrow.png" alt=""></p>
@@ -456,7 +456,7 @@
                             //   location.href = 'success.html';
                             //}
 
-                             location.href = 'success.html';
+                             location.href = 'success.html?id='+data.result.datainfo.orderid;
                         }else{
                             checkSubmitFlg = false;
                             alertTip(data.resultMessage);
@@ -549,7 +549,7 @@
                 if ($('input[name="post"]:checked').val() == 1){
                     init();
                 }else{
-                    $('#pickTime p').eq(1).html('一小时以内<img src="img/icon_arrow.png" alt="">');
+                    $('#pickTime p').eq(1).html('一小时以内');
                     $('#pickTime').removeClass('active');
                 }
             });
@@ -710,6 +710,7 @@
 
                 var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice),
                     quote = '';
+
                 if (!isEmpty(prePrice)){
                     $('.price').html(prePrice);
                     $('.pricePre').html(prePrice);
@@ -927,22 +928,65 @@
                 HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
                 if(loginPhone) {
                     initPhone = loginPhone;
+                    if(initPhone && initPhone !== 'null') {
+                        $('#alipay2').val(initPhone)
+                        $("#phoneTip").show()
+                        $('#inputtel').val(initPhone)
+
+                        $("#addInfo").show();
+                        $("#showLogin").hide();
+                    }else {
+                        $("#addInfo").hide();
+                        $("#showLogin").show();
+                    }
+                    initPrice ();
                 }else if(HappyGoMobile){
                     initPhone = HappyGoMobile;
-                }
+                    if(initPhone && initPhone !== 'null') {
+                        $('#alipay2').val(initPhone)
+                        $("#phoneTip").show()
+                        $('#inputtel').val(initPhone)
 
-                if(initPhone && initPhone !== 'null') {
-                    $('#alipay2').val(initPhone)
-                    $("#phoneTip").show()
-                    $('#inputtel').val(initPhone)
-
-                    $("#addInfo").show();
-                    $("#showLogin").hide();
+                        $("#addInfo").show();
+                        $("#showLogin").hide();
+                    }else {
+                        $("#addInfo").hide();
+                        $("#showLogin").show();
+                    }
+                    initPrice ();
                 }else {
-                    $("#addInfo").hide();
-                    $("#showLogin").show();
+                    $.post(
+                        getRealPath()+"/recycle/isLogin.do",
+                        {},
+                        function(data){
+                            if ( data.success){
+                                eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                                loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+                                HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                                if(loginPhone) {
+                                    initPhone = loginPhone;
+                                }else if(HappyGoMobile){
+                                    initPhone = HappyGoMobile;
+                                }
+                            }else{
+                            }
+
+                            if(initPhone && initPhone !== 'null') {
+                                $('#alipay2').val(initPhone)
+                                $("#phoneTip").show()
+                                $('#inputtel').val(initPhone)
+
+                                $("#addInfo").show();
+                                $("#showLogin").hide();
+                            }else {
+                                $("#addInfo").hide();
+                                $("#showLogin").show();
+                            }
+                            initPrice ();
+                        });
                 }
-                initPrice ();
+
+
 
             }
             //    弹出登录弹框

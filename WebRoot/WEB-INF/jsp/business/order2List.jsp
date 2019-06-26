@@ -49,7 +49,12 @@
             <tr>
                 <td class="search_th "><label class="control-label">企业名字：</label></td>
                 <td class="search_td"><input type="text" name="companyName" class="form-control"></td>
-
+                <td class="search_th "><label class="control-label">负责人姓名：</label></td>
+                <td class="search_td"><input type="text" name="responsibleName" class="form-control"></td>
+            </tr>
+            <tr>
+                <td class="search_th "><label class="control-label">负责人身份证号：</label></td>
+                <td class="search_td"><input type="number" name="responsibleIdNumber" class="form-control"></td>
             </tr>
 
         </table>
@@ -86,6 +91,7 @@
                 <th class="fontWeight_normal tdwidth90">CRM编号</th>
                 <th class="fontWeight_normal tdwidth90">企业名字</th>
                 <th class="fontWeight_normal table-title tdwidth80">企业负责人/电话</th>
+                <th class="fontWeight_normal table-title tdwidth80">负责人姓名/身份证号</th>
                 <th class="fontWeight_normal tdwidth100">需求</th>
                 <th class="fontWeight_normal tdwidth50">状态</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
@@ -140,6 +146,7 @@
         {"data": "crmNo", "class": ""},
         {"data": "companyName", "class": ""},
         {"data": "person", "class": ""},
+        {"data": "responsibleName", "class": ""},
         {"data": "projectNames", "class": ""},
         {"data": "state", "class": ""},
         {"defaultContent": "操作", "class": ""}
@@ -180,9 +187,19 @@
             }
         },
         {
-            targets: -4,
+            targets: -5,
             render: function (data, type, row, meta) {
                     return row.person+"/<br/>"+row.phone;
+            }
+        },
+        {
+            targets: -4,
+            render: function (data, type, row, meta) {
+                if(row.responsibleName!=null&&row.responsibleIdNumber!=null){
+                    return row.responsibleName+"/<br/>"+row.responsibleIdNumber;
+                }else{
+                    return "";
+                }
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
