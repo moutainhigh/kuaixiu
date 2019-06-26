@@ -21,7 +21,7 @@
             <div class="success">
                 <img src="img/success.png" alt="">
                 <p>订单提交成功</p>
-                <p class="pre-price">订单预计<span class="pre-price-o"></span>元 <span class="txt-red">含限时加价<span class="pre-price-t"></span>元</span></p>
+                <p class="pre-price">订单预计<span class="pre-price-o"></span>元 <span class="txt-red">含限时加价<span class="pre-price-t">0</span>元</span></p>
                 <p>最终价格以商家之间价格为准</p>
                 <p>多退少补</p>
             </div>
@@ -65,11 +65,59 @@
 			var tip = GetQueryString('tip');
 			var fm = eCacheUtil.storage.getCache(CacheKey.source);
 			var PrePrice = eCacheUtil.storage.getCache(CacheKey.PrePrice);
-            var addPrice = eCacheUtil.storage.getCache('addPrice')
+            var addPrice = eCacheUtil.storage.getCache('addPrice');
+            var id = GetQueryString( 'id' ) ;
+            var param = {
+                orderid: id
+            }
 
-			if( PrePrice ){
-                $('.pre-price-o').text( Number(PrePrice) + Number(addPrice) )
-                $('.pre-price-t').text( Number(addPrice) )
+            $.post(linkUrl+'/recycleNew/getOrderDetail.do',{params:JSON.stringify(param)},function (data) {
+                if (data.success){
+                    var dataInfo = data.result.datainfo;
+                    $('.pre-price-o').text( dataInfo.orderprice.toFixed(2) )
+                    $('.pre-price-t').text( data.result.datainfo.addCouponPrice )
+
+                    $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
+                    //判断是否有Coupon元素
+
+                    // if(data.result.datainfo.coupon && data.result.datainfo.processstatus !=  204 && data.result.datainfo.processstatus !=  '-200') {
+                    //     // var currentDiscount = calPrice(data.result.datainfo.coupon,data.result.datainfo.orderprice)
+                    //     $('.tickets').show().html( '(含加价￥'+ data.result.datainfo.addCouponPrice +')</span>' );
+                    // }
+                    // if(dataInfo.addCouponPrice){
+                    //     if(Number(dataInfo.addCouponPrice) >= 200 ){
+                    // 	   $('.tickets').show().html( '(含加价￥200)' );
+                    // 	}else{
+                    // 	   $('.tickets').show().html( '(含加价￥'+Number(dataInfo.addCouponPrice) +')' );
+                    // 	}
+                    // }else{
+                    //     $('.tickets').hide().html('')
+                    // }
+
+                    //
+                    // if (dataInfo.recycle_type == 1){
+                    //     $('#recycleType').html('支付宝收款');
+                    //     $('#alipay').html('支付宝账号：<span>'+dataInfo.pay_mobile+'</span>');
+                    // }else{
+                    //     $('#recycleType').html('话费充值');
+                    //     $('#alipay').html('充值手机号：<span>'+dataInfo.pay_mobile+'</span>');
+                    // }
+                    //
+                    // $('#orderid').html('po-'+dataInfo.orderid);
+                    // var str = dataInfo.createtime,
+                    //     result = Number((/\((\d+)\)/.exec(str))[1]);
+                    // $('#time').html(new Date(result).format("yyyy-MM-dd hh:mm:ss"));
+                    // $('#note').html(dataInfo.note);
+                    // loading_hide();
+                }else {
+                    // loading_hide();
+                    // alertTip(data.resultMessage);
+                }
+            });
+
+			// if( PrePrice ){
+            //     $('.pre-price-o').text( Number(PrePrice) + Number(addPrice) )
+            //     $('.pre-price-t').text( Number(addPrice) )
 
 			  /* if(PrePrice* 0.05 >= 200){
 					$('.pre-price-o').text( Number(PrePrice) + 200 )
@@ -91,7 +139,7 @@
 				// 	$('.pre-price-o').text(Math.round( Number(PrePrice) + PrePrice*0.1) )
 				// 	$('.pre-price-t').text( Math.round(PrePrice*0.1) )
 				// }
-			}
+			// }
 
 
 			if(isEmpty(fm)){
