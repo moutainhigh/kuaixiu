@@ -11,6 +11,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface SysUserRoleMapper<T> extends BaseDao<T> {
 
+    int deleteByUserId(String userId);
 }
 
 

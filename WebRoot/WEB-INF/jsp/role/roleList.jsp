@@ -43,10 +43,21 @@
                                                         <li class="closed">
                                                         <span><input type="checkbox" name="roleMenu"
                                                                      value="${item3.code }"> ${item3.name }</span>
+                                                            <ul>
+                                                                <c:forEach items="${item3.subMenuList }" var="item4"
+                                                                           varStatus="i">
+                                                                    <li class="closed">
+                                                                       <span><input type="checkbox" name="roleMenu"
+                                                                                    value="${item4.code }"> ${item4.name }</span>
+                                                                    </li>
+                                                                </c:forEach>
+                                                            </ul>
                                                         </li>
-                                                    </c:forEach></ul>
+                                                    </c:forEach>
+                                                </ul>
                                             </li>
-                                        </c:forEach></ul>
+                                        </c:forEach>
+                                    </ul>
                                 </li>
                             </c:forEach>
                         </ul>

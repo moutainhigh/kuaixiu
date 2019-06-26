@@ -125,6 +125,7 @@ public class SysMenuRoleController extends BaseController {
             SysUser user1 = new SysUser();
             SysRole role1 = new SysRole();
             List<SysMenu> menus = new ArrayList<>();
+            SysMenu menu=new SysMenu();
             if (StringUtils.isNotBlank(userName)) {
                 SysUser user = new SysUser();
                 user.setUname(userName);
@@ -135,7 +136,8 @@ public class SysMenuRoleController extends BaseController {
                 if (CollectionUtils.isEmpty(users)) {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
-                menus = sysMenuService.queryMenusByUserId(users.get(0).getLoginId());
+                menu.setUserId(users.get(0).getLoginId());
+                menus = sysMenuService.getDao().queryMenuList(menu);
                 List<SysRole> sysRoles = sysRoleService.queryRolesByUserId(users.get(0).getLoginId());
                 user1 = users.get(0);
                 role1 = sysRoles.get(0);
@@ -144,7 +146,8 @@ public class SysMenuRoleController extends BaseController {
                 if (user == null) {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
-                menus = sysMenuService.queryMenusByUserId(userId);
+                menu.setUserId(userId);
+                menus = sysMenuService.getDao().queryMenuList(menu);
                 List<SysRole> sysRoles = new ArrayList<SysRole>();
                 sysRoles = sysRoleService.queryRoles1ByUserId(userId);
                 if (CollectionUtils.isEmpty(sysRoles)) {
@@ -237,6 +240,7 @@ public class SysMenuRoleController extends BaseController {
                         userRole.setRoleId(role.getId());
                         List<SysUserRole> sysUserRoles = sysUserRoleService.queryList(userRole);
                         if (CollectionUtils.isEmpty(sysUserRoles)) {
+                            sysUserRoleService.getDao().deleteByUserId(userId);
                             sysUserRoleService.add(userRole);//2--用户绑定新角色
                         }
                         SysRoleMenu roleMenu = new SysRoleMenu();

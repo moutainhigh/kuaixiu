@@ -179,7 +179,7 @@
         <if test="userName != null and userName != ''">
             LEFT JOIN sys_user u on u.login_id=ur.user_id
         </if>
-        where t.is_del = 0 and r.is_del = 0 and t.code != '1090601'
+        where t.is_del = 0 and r.is_del = 0
         <if test="roleName != null and roleName != ''">
             and r.name = #{roleName}
         </if>
