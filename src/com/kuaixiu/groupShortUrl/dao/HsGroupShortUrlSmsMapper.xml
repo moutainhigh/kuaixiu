@@ -25,7 +25,7 @@
         insert into hs_group_shorturl_sms
         (id,name_label,sms_template,is_del,create_time,create_userid,update_time,update_userid)
         values
-        (#{id},#{nameLabel},#{smsTemplate},#{isDel},now(),#{createUserid},#{updateTime},#{updateUserid})
+        (#{id},#{nameLabel},#{smsTemplate},0,now(),#{createUserid},#{updateTime},#{updateUserid})
     </insert>
 
     <!-- 根据id，修改记录-->
