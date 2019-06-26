@@ -52,7 +52,7 @@
         update hs_group_shorturl_sms
         set
         update_time=now(),
-        update_userid=#{updateUserid}
+        update_userid=#{updateUserid},
         is_del=1
         where id=#{id}
     </update>
@@ -75,6 +75,7 @@
         <include refid="Base_Column_List"/>
         from hs_group_shorturl_sms
         where 1=1
+        and is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -107,6 +108,7 @@
         <include refid="Base_Column_List"/>
         from hs_group_shorturl_sms
         where 1=1
+        and is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>

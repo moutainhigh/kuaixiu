@@ -23,7 +23,7 @@
         insert into hs_group_shorturl_address
         (id,name_label,address,is_del,create_time,update_time)
         values
-        (#{id},#{nameLabel},#{address},#{isDel},#{createTime},#{updateTime})
+        (#{id},#{nameLabel},#{address},0,now(),#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -35,7 +35,7 @@
             address=#{address},
             is_del=#{isDel},
             create_time=#{createTime},
-            update_time=#{updateTime}
+            update_time=now()
         where id=#{id}
     </update>
 
@@ -70,6 +70,7 @@
         <include refid="Base_Column_List"/>
         from hs_group_shorturl_address
         where 1=1
+        and  is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>
@@ -96,6 +97,7 @@
         <include refid="Base_Column_List"/>
         from hs_group_shorturl_address
         where 1=1
+        and  is_del=0
         <if test="id != null and id != ''" >
             and id = #{id}
         </if>

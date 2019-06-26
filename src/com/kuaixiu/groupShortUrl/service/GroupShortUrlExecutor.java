@@ -4,7 +4,7 @@ import com.common.util.SmsSendUtil;
 import com.kuaixiu.groupSMS.entity.*;
 import com.kuaixiu.groupSMS.service.HsGroupMobileRecordService;
 import com.kuaixiu.groupSMS.service.HsGroupMobileService;
-import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlRecord;
+import com.kuaixiu.groupShortUrl.entity.*;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.system.basic.user.entity.SessionUser;
 
@@ -18,10 +18,10 @@ public class GroupShortUrlExecutor {
 
     private ExecutorService executor = Executors.newCachedThreadPool();
 
-    public void fun(SessionUser su, List<HsGroupMobile> groupMobiles,
-                    HsGroupShortUrlRecordService hsGroupShortUrlRecordService, HsGroupMobileAddress groupMobileAddress,
-                    HsGroupMobileSms hsGroupMobileSms,HsGroupMobileService hsGroupMobileService,
-                    HsGroupMobileBatchRecord groupMobileBatchRecord) throws Exception {
+    public void fun(SessionUser su, List<HsGroupShortUrlMobile> groupMobiles,
+                    HsGroupShortUrlRecordService hsGroupShortUrlRecordService, HsGroupShortUrlAddress groupShortUrlAddress,
+                    HsGroupShortUrlSms hsGroupShortUrlSms, HsGroupShortUrlMobileService hsGroupShortUrlMobileService,
+                    HsGroupShortUrlBatchRecord groupShortUrlBatchRecord) throws Exception {
 
         executor.submit(new Runnable() {
             @Override
@@ -29,19 +29,19 @@ public class GroupShortUrlExecutor {
                 try {
                     Thread.sleep(1000);
 
-                    for (HsGroupMobile groupMobile : groupMobiles) {
+                    for (HsGroupShortUrlMobile groupMobile : groupMobiles) {
                         HsGroupShortUrlRecord groupMobileRecord = new HsGroupShortUrlRecord();
                         groupMobileRecord.setId(UUID.randomUUID().toString().replace("-", ""));
-                        groupMobileRecord.setBatchId(groupMobileBatchRecord.getId());
+                        groupMobileRecord.setBatchId(groupShortUrlBatchRecord.getId());
                         groupMobileRecord.setMobile(groupMobile.getMobile());
                         groupMobileRecord.setCreateUserid(su.getUserId());
-                        groupMobileRecord.setAddressId(groupMobileAddress.getId());
-                        groupMobileRecord.setSmsId(hsGroupMobileSms.getId());
+                        groupMobileRecord.setAddressId(groupShortUrlAddress.getId());
+                        groupMobileRecord.setSmsId(hsGroupShortUrlSms.getId());
                         hsGroupShortUrlRecordService.add(groupMobileRecord);
 
-                        SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile(), groupMobileAddress.getAddress());
+                        SmsSendUtil.groupMobileSendCoupon(hsGroupShortUrlSms.getSmsTemplate(), groupMobile.getMobile(), groupShortUrlAddress.getAddress());
                     }
-                    hsGroupMobileService.getDao().deleteNull();
+                    hsGroupShortUrlMobileService.getDao().deleteNull();
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException("发送短信，系统异常！！");

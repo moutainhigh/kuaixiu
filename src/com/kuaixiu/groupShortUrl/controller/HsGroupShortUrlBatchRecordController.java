@@ -40,11 +40,11 @@ public class HsGroupShortUrlBatchRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "groupSms/toGroupMobileBatchRecord")
+    @RequestMapping(value = "groupShort/toGroupMobileBatchRecord")
     public ModelAndView toGroupMobileBatchRecord(HttpServletRequest request,
                                                  HttpServletResponse response) throws Exception {
 
-        String returnView = "groupSms/groupSmsBatchRecordList";
+        String returnView = "groupShort/groupSmsBatchRecordList";
         return new ModelAndView(returnView);
     }
 
@@ -55,7 +55,7 @@ public class HsGroupShortUrlBatchRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "groupSms/groupMobileBatchRecordForPage")
+    @RequestMapping(value = "groupShort/groupMobileBatchRecordForPage")
     public void groupMobileBatchRecordForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String mobile = request.getParameter("mobile");
         String queryStartTime = request.getParameter("queryStartTime");
