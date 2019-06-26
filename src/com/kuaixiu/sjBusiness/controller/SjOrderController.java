@@ -134,12 +134,12 @@ public class SjOrderController extends BaseController {
                     if (null == single) {
                         return getSjResult(result, null, false, "2", null, "AP为空");
                     }
-                    if (StringUtils.isBlank(responsibleIdNumber)) {
-                        return getSjResult(result, null, false, "2", null, "负责人身份证号为空");
-                    }
-                    if (StringUtils.isBlank(responsibleName)) {
-                        return getSjResult(result, null, false, "2", null, "负责人姓名为空");
-                    }
+//                    if (StringUtils.isBlank(responsibleIdNumber)) {
+//                        return getSjResult(result, null, false, "2", null, "负责人身份证号为空");
+//                    }
+//                    if (StringUtils.isBlank(responsibleName)) {
+//                        return getSjResult(result, null, false, "2", null, "负责人姓名为空");
+//                    }
                 }
                 if (projectId.contains("2")) {
                     if (null == group) {
@@ -332,12 +332,12 @@ public class SjOrderController extends BaseController {
                     if (null == single) {
                         return getSjResult(result, null, false, "2", null, "AP为空");
                     }
-                    if (StringUtils.isBlank(responsibleIdNumber)) {
-                        return getSjResult(result, null, false, "2", null, "负责人身份证号为空");
-                    }
-                    if (StringUtils.isBlank(responsibleName)) {
-                        return getSjResult(result, null, false, "2", null, "负责人姓名为空");
-                    }
+//                    if (StringUtils.isBlank(responsibleIdNumber)) {
+//                        return getSjResult(result, null, false, "2", null, "负责人身份证号为空");
+//                    }
+//                    if (StringUtils.isBlank(responsibleName)) {
+//                        return getSjResult(result, null, false, "2", null, "负责人姓名为空");
+//                    }
                 }
                 if (projectId.contains("2")) {
                     if (null == group) {
