@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.groupShortUrl.dao.HsGroupShortUrlBatchRecordMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlBatchRecord" >
+        <result column="id" property="id"/>
+        <result column="batch_id" property="batchId"/>
+        <result column="sms_id" property="smsId"/>
+        <result column="address_id" property="addressId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+    </resultMap>
+    
+    <!-- hs_group_shorturl_batch_record table all fields -->
+    <sql id="Base_Column_List" >
+        id,batch_id,sms_id,address_id,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_group_shorturl_batch_record
+        (id,batch_id,sms_id,address_id,create_time,create_userid)
+        values
+        (#{id},#{batchId},#{smsId},#{addressId},#{createTime},#{createUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_group_shorturl_batch_record 
+        set 
+            id=#{id},
+            batch_id=#{batchId},
+            sms_id=#{smsId},
+            address_id=#{addressId},
+            create_time=#{createTime},
+            create_userid=#{createUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_group_shorturl_batch_record where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_shorturl_batch_record where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_shorturl_batch_record
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and batch_id = #{batchId}
+        </if>
+        <if test="smsId != null and smsId != ''" >
+            and sms_id = #{smsId}
+        </if>
+        <if test="addressId != null and addressId != ''" >
+            and address_id = #{addressId}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_shorturl_batch_record
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and batch_id = #{batchId}
+        </if>
+        <if test="smsId != null and smsId != ''" >
+            and sms_id = #{smsId}
+        </if>
+        <if test="addressId != null and addressId != ''" >
+            and address_id = #{addressId}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+    </select>
+
+</mapper>   

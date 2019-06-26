@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.groupShortUrl.dao.HsGroupShortUrlMobileMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlMobile" >
+        <result column="id" property="id"/>
+        <result column="mobile" property="mobile"/>
+    </resultMap>
+    
+    <!-- hs_group_shorturl_mobile table all fields -->
+    <sql id="Base_Column_List" >
+        id,mobile
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_group_shorturl_mobile
+        (id,mobile)
+        values
+        (#{id},#{mobile})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_group_shorturl_mobile 
+        set 
+            id=#{id},
+            mobile=#{mobile}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_group_shorturl_mobile where id = #{id}
+    </delete>
+
+    <delete id="deleteNull" parameterType="Object">
+        delete from hs_group_shorturl_mobile
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_shorturl_mobile where id = #{id}
+    </select>
+
+    <select id="queryByMobile"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_shorturl_mobile where mobile=#{mobile}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_shorturl_mobile
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_shorturl_mobile
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+    </select>
+
+</mapper>   

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.groupShortUrl.dao.HsGroupShortUrlSmsMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlSms" >
+        <result column="id" property="id"/>
+        <result column="name_label" property="nameLabel"/>
+        <result column="sms_template" property="smsTemplate"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- hs_group_shorturl_sms table all fields -->
+    <sql id="Base_Column_List" >
+        id,name_label,sms_template,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into hs_group_shorturl_sms
+        (id,name_label,sms_template,is_del,create_time,create_userid,update_time,update_userid)
+        values
+        (#{id},#{nameLabel},#{smsTemplate},#{isDel},now(),#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update hs_group_shorturl_sms 
+        set 
+            id=#{id},
+            name_label=#{nameLabel},
+            sms_template=#{smsTemplate},
+            is_del=#{isDel},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from hs_group_shorturl_sms where id = #{id}
+    </delete>
+
+    <update id="deleteByIsDel" parameterType="Object" >
+        update hs_group_shorturl_sms
+        set
+        update_time=now(),
+        update_userid=#{updateUserid}
+        is_del=1
+        where id=#{id}
+    </update>
+
+    <select id="queryByNameLabel"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_shorturl_sms where name_label=#{nameLabel}
+        and is_del=0
+    </select>
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from hs_group_shorturl_sms where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_shorturl_sms
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="nameLabel != null and nameLabel != ''" >
+            and name_label = #{nameLabel}
+        </if>
+        <if test="smsTemplate != null and smsTemplate != ''" >
+            and sms_template = #{smsTemplate}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from hs_group_shorturl_sms
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="nameLabel != null and nameLabel != ''" >
+            and name_label = #{nameLabel}
+        </if>
+        <if test="smsTemplate != null and smsTemplate != ''" >
+            and sms_template = #{smsTemplate}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+
+</mapper>   
