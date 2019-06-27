@@ -158,6 +158,25 @@
         order by t.sort, t.code
     </select>
 
+    <select id="queryMenusByUserIdType" resultMap="BaseResultMap" parameterType="Object">
+        select DISTINCT
+        <include refid="Base_Column_List"/>
+        from sys_user_role ur
+        LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+        LEFT JOIN sys_menu t on rm.menu_code = t.`code`
+        where ur.user_id = #{userId} and t.is_del = 0
+        <if test="type != null and type != ''">
+            and t.type = #{type}
+        </if>
+        <if test="isShow != null and isShow != ''">
+            and t.is_show = #{isShow}
+        </if>
+        <if test="pcode != null and pcode != ''">
+            and t.pcode = #{pcode}
+        </if>
+        order by t.code
+    </select>
+
     <!-- 根据角色id查询角色菜单 -->
     <select id="queryMenusByRoleId" resultMap="BaseResultMap" parameterType="Object">
         select DISTINCT
