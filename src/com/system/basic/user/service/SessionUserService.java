@@ -3,14 +3,12 @@ package com.system.basic.user.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.kuaixiu.sjUser.entity.Menu;
 import com.system.basic.user.entity.SysMenu;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.common.exception.ApiServiceException;
 import com.common.exception.SystemException;
 import com.common.util.Base64Util;
 import com.common.util.Consts;
@@ -75,7 +72,7 @@ public class SessionUserService {
         //家族用户权限
         su.setUserAuthoritys(menuService.queryMenusByUserId(su.getUserId()));
         //设置用户菜单
-        su.setSysMenuList(menuService.getSysMenu(su.getUserId()));
+        su.setSysMenuList(menuService.dealSysMenusByUserAuthoritys(su.getUserAuthoritys()));
 
         //根据用户类型加载用户信息
         if (su.getType() == SystemConstant.USER_TYPE_PROVIDER) {
