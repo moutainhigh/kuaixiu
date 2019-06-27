@@ -210,22 +210,22 @@
             and u.uname = #{userName}
         </if>
         <if test="id != null and id != ''">
-            and id = #{id}
+            and t.id = #{id}
         </if>
         <if test="code != null and code != ''">
-            and code = #{code}
+            and t.code = #{code}
         </if>
         <if test="pcode != null and pcode != ''">
-            and pcode = #{pcode}
+            and t.pcode = #{pcode}
         </if>
         <if test="name != null and name != ''">
-            and name = #{name}
+            and t.name = #{name}
         </if>
         <if test="type != null and type != ''">
-            and type = #{type}
+            and t.type = #{type}
         </if>
         <if test="isShow != null and isShow != ''">
-            and is_show = #{isShow}
+            and t.is_show = #{isShow}
         </if>
     </select>
 

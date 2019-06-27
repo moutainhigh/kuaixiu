@@ -251,7 +251,7 @@
       and c.card_name = #{cardName}
     </if>
     <if test="queryIds != null and queryIds.size() > 0" >
-      and t.id in
+      and t.iccid in
       <foreach collection="queryIds" item="item" open="(" separator=", " close=")">
         #{item}
       </foreach>

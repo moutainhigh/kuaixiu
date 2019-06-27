@@ -125,7 +125,7 @@ public class SysMenuRoleController extends BaseController {
             SysUser user1 = new SysUser();
             SysRole role1 = new SysRole();
             List<SysMenu> menus = new ArrayList<>();
-            SysMenu menu=new SysMenu();
+            SysMenu menu = new SysMenu();
             if (StringUtils.isNotBlank(userName)) {
                 SysUser user = new SysUser();
                 user.setUname(userName);
@@ -266,9 +266,16 @@ public class SysMenuRoleController extends BaseController {
                     }
                 }
             }
+
             //删除权限 查询前端显示的菜单
             SysMenu menu = new SysMenu();
-            menu.setUserId(userId);
+            if (StringUtils.isNotBlank(roleName)) {
+                SysRole sysRole = sysRoleService.getDao().queryRolesByRoleName(roleName);
+                userId = sysRole.getId();
+                menu.setRoleName(roleName);
+            }else{
+                menu.setUserId(userId);
+            }
             List<SysMenu> menuList = sysMenuService.getDao().queryMenuList(menu);
             for (SysMenu menu1 : menuList) {
                 isTrue = true;
@@ -280,6 +287,7 @@ public class SysMenuRoleController extends BaseController {
                 }
                 if (isTrue) {
                     //删除权限
+
                     menu1.setUserId(userId);
                     sysRoleMenuService.getDao().deleteBYCode(menu1);
                 }

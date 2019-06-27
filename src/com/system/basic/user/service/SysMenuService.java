@@ -83,7 +83,7 @@ public class SysMenuService extends BaseService<SysMenu> {
         menu.setType(1);
         menu.setIsShow(1);
         menu.setPcode("101");
-        List<SysMenu> menuses = this.getDao().queryMenuList(menu);
+        List<SysMenu> menuses = this.getDao().queryList(menu);
         Iterator<SysMenu> it = menuses.iterator();
         while (it.hasNext()) {
             SysMenu str = it.next();
