@@ -2,7 +2,6 @@ package com.kuaixiu.groupSMS.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.kuaixiu.groupSMS.entity.HsGroupMobileAddress;
 import com.kuaixiu.groupSMS.entity.HsGroupMobileBatchRecord;
 import com.kuaixiu.groupSMS.entity.HsGroupMobileSms;
 import com.kuaixiu.groupSMS.service.*;
@@ -26,8 +25,6 @@ public class HsGroupMobileBatchRecordController extends BaseController {
 
     @Autowired
     private HsGroupMobileBatchRecordService hsGroupMobileBatchRecordService;
-    @Autowired
-    private HsGroupMobileAddressService hsGroupMobileAddressService;
     @Autowired
     private HsGroupMobileSmsService hsGroupMobileSmsService;
 
@@ -67,8 +64,6 @@ public class HsGroupMobileBatchRecordController extends BaseController {
         batchRecord.setPage(page);
         List<HsGroupMobileBatchRecord> groupMobileBatchRecords = hsGroupMobileBatchRecordService.queryListForPage(batchRecord);
         for(HsGroupMobileBatchRecord mobileBatchRecord:groupMobileBatchRecords){
-            HsGroupMobileAddress groupMobileAddress=hsGroupMobileAddressService.queryById(mobileBatchRecord.getAddressId());
-            mobileBatchRecord.setAddress(groupMobileAddress.getAddress());
             HsGroupMobileSms hsGroupMobileSms=hsGroupMobileSmsService.queryById(mobileBatchRecord.getSmsId());
             mobileBatchRecord.setSmsTemplate(hsGroupMobileSms.getNameLabel());
         }

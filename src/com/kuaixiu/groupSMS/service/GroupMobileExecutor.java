@@ -16,7 +16,7 @@ public class GroupMobileExecutor {
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     public void fun(SessionUser su, List<HsGroupMobile> groupMobiles, HsGroupCouponRole hsGroupCouponRole,
-                    HsGroupMobileRecordService hsGroupMobileRecordService, HsGroupMobileAddress groupMobileAddress,
+                    HsGroupMobileRecordService hsGroupMobileRecordService,
                     HsGroupMobileSms hsGroupMobileSms,HsGroupMobileService hsGroupMobileService,
                     HsGroupMobileBatchRecord groupMobileBatchRecord) throws Exception {
 
@@ -35,11 +35,10 @@ public class GroupMobileExecutor {
                         groupMobileRecord.setCouponCode(recycleCoupon.getCouponCode());
                         groupMobileRecord.setMobile(groupMobile.getMobile());
                         groupMobileRecord.setCreateUserid(su.getUserId());
-                        groupMobileRecord.setAddressId(groupMobileAddress.getId());
                         groupMobileRecord.setSmsId(hsGroupMobileSms.getId());
                         hsGroupMobileRecordService.add(groupMobileRecord);
 
-                        SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile(), groupMobileAddress.getAddress());
+                        SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile());
                     }
                     hsGroupMobileService.getDao().deleteNull();
                 } catch (Exception e) {

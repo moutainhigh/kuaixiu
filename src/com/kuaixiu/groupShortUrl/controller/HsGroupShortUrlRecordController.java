@@ -33,8 +33,6 @@ public class HsGroupShortUrlRecordController extends BaseController {
     @Autowired
     private HsGroupShortUrlRecordService hsGroupShortUrlRecordService;
     @Autowired
-    private HsGroupShortUrlAddressService hsGroupShortUrlAddressService;
-    @Autowired
     private HsGroupShortUrlMobileService hsGroupShortUrlMobileService;
     @Autowired
     private HsGroupShortUrlSmsService hsGroupShortUrlSmsService;
@@ -80,8 +78,6 @@ public class HsGroupShortUrlRecordController extends BaseController {
         groupMobileRecord.setPage(page);
         List<HsGroupShortUrlRecord> groupMobileRecords = hsGroupShortUrlRecordService.queryListForPage(groupMobileRecord);
         for(HsGroupShortUrlRecord mobileRecord:groupMobileRecords){
-            HsGroupShortUrlAddress groupMobileAddress=hsGroupShortUrlAddressService.queryById(mobileRecord.getAddressId());
-            mobileRecord.setAddress(groupMobileAddress.getAddress());
             HsGroupShortUrlSms hsGroupMobileSms=hsGroupShortUrlSmsService.queryById(mobileRecord.getSmsId());
             mobileRecord.setSmsTemplate(hsGroupMobileSms.getNameLabel());
         }
@@ -92,8 +88,6 @@ public class HsGroupShortUrlRecordController extends BaseController {
     @RequestMapping(value = "groupShort/toGroupSendSms")
     public ModelAndView toGroupSendSms(HttpServletRequest request,
                                        HttpServletResponse response) throws Exception {
-        List<HsGroupShortUrlAddress> groupMobileAddresses = hsGroupShortUrlAddressService.queryList(null);
-        request.setAttribute("groupMobileAddresses", groupMobileAddresses);
         List<HsGroupShortUrlSms> hsGroupMobileSms=hsGroupShortUrlSmsService.queryList(null);
         request.setAttribute("hsGroupMobileSms", hsGroupMobileSms);
         String returnView = "groupShort/createGroupSendSms";
@@ -105,26 +99,23 @@ public class HsGroupShortUrlRecordController extends BaseController {
     public ResultData groupSendSms(HttpServletRequest request, HttpServletResponse response)throws Exception{
         ResultData result = new ResultData();
         try {
-            String addressId = request.getParameter("addressId");//优惠券名称
             String smsId = request.getParameter("smsId");//模板id
-            if (StringUtils.isBlank(addressId)|| StringUtils.isBlank(smsId)) {
+            if (StringUtils.isBlank(smsId)) {
                 return getSjResult(result, null, false, "2", null, "参数不完整");
             }
             SessionUser su=getCurrentUser(request);
             List<HsGroupShortUrlMobile> groupMobiles=hsGroupShortUrlMobileService.queryList(null);
-            HsGroupShortUrlAddress groupMobileAddress=hsGroupShortUrlAddressService.queryById(addressId);
             HsGroupShortUrlSms hsGroupMobileSms=hsGroupShortUrlSmsService.queryById(smsId);
 
             HsGroupShortUrlBatchRecord groupMobileBatchRecord=new HsGroupShortUrlBatchRecord();
             groupMobileBatchRecord.setId(UUID.randomUUID().toString().replace("-", ""));
-            groupMobileBatchRecord.setAddressId(groupMobileAddress.getId());
             groupMobileBatchRecord.setSmsId(hsGroupMobileSms.getId());
             groupMobileBatchRecord.setBatchId(SeqUtil.getNext("gss"));
             groupMobileBatchRecord.setCreateUserid(su.getUserId());
             hsGroupShortUrlBatchRecordService.add(groupMobileBatchRecord);
 
             GroupShortUrlExecutor myExecutor = new GroupShortUrlExecutor();
-            myExecutor.fun(su, groupMobiles,hsGroupShortUrlRecordService,groupMobileAddress,
+            myExecutor.fun(su, groupMobiles,hsGroupShortUrlRecordService,
                     hsGroupMobileSms,hsGroupShortUrlMobileService,groupMobileBatchRecord);
 
             getSjResult(result, null, true, "0", null, "后台创建中");

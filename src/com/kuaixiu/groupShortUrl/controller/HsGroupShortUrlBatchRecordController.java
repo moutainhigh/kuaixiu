@@ -2,10 +2,8 @@ package com.kuaixiu.groupShortUrl.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlAddress;
 import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlBatchRecord;
 import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlSms;
-import com.kuaixiu.groupShortUrl.service.HsGroupShortUrlAddressService;
 import com.kuaixiu.groupShortUrl.service.HsGroupShortUrlBatchRecordService;
 import com.kuaixiu.groupShortUrl.service.HsGroupShortUrlSmsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +26,6 @@ public class HsGroupShortUrlBatchRecordController extends BaseController {
 
     @Autowired
     private HsGroupShortUrlBatchRecordService hsGroupShortUrlBatchRecordService;
-    @Autowired
-    private HsGroupShortUrlAddressService hsGroupShortUrlAddressService;
     @Autowired
     private HsGroupShortUrlSmsService hsGroupShortUrlSmsService;
 
@@ -69,8 +65,6 @@ public class HsGroupShortUrlBatchRecordController extends BaseController {
         batchRecord.setPage(page);
         List<HsGroupShortUrlBatchRecord> groupMobileBatchRecords = hsGroupShortUrlBatchRecordService.queryListForPage(batchRecord);
         for(HsGroupShortUrlBatchRecord mobileBatchRecord:groupMobileBatchRecords){
-            HsGroupShortUrlAddress groupMobileAddress=hsGroupShortUrlAddressService.queryById(mobileBatchRecord.getAddressId());
-            mobileBatchRecord.setAddress(groupMobileAddress.getAddress());
             HsGroupShortUrlSms hsGroupMobileSms=hsGroupShortUrlSmsService.queryById(mobileBatchRecord.getSmsId());
             mobileBatchRecord.setSmsTemplate(hsGroupMobileSms.getNameLabel());
         }

@@ -1,11 +1,7 @@
 package com.kuaixiu.groupShortUrl.service;
 
 import com.common.util.SmsSendUtil;
-import com.kuaixiu.groupSMS.entity.*;
-import com.kuaixiu.groupSMS.service.HsGroupMobileRecordService;
-import com.kuaixiu.groupSMS.service.HsGroupMobileService;
 import com.kuaixiu.groupShortUrl.entity.*;
-import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.system.basic.user.entity.SessionUser;
 
 import java.util.List;
@@ -19,7 +15,7 @@ public class GroupShortUrlExecutor {
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     public void fun(SessionUser su, List<HsGroupShortUrlMobile> groupMobiles,
-                    HsGroupShortUrlRecordService hsGroupShortUrlRecordService, HsGroupShortUrlAddress groupShortUrlAddress,
+                    HsGroupShortUrlRecordService hsGroupShortUrlRecordService,
                     HsGroupShortUrlSms hsGroupShortUrlSms, HsGroupShortUrlMobileService hsGroupShortUrlMobileService,
                     HsGroupShortUrlBatchRecord groupShortUrlBatchRecord) throws Exception {
 
@@ -35,11 +31,10 @@ public class GroupShortUrlExecutor {
                         groupMobileRecord.setBatchId(groupShortUrlBatchRecord.getId());
                         groupMobileRecord.setMobile(groupMobile.getMobile());
                         groupMobileRecord.setCreateUserid(su.getUserId());
-                        groupMobileRecord.setAddressId(groupShortUrlAddress.getId());
                         groupMobileRecord.setSmsId(hsGroupShortUrlSms.getId());
                         hsGroupShortUrlRecordService.add(groupMobileRecord);
 
-                        SmsSendUtil.groupMobileSendCoupon(hsGroupShortUrlSms.getSmsTemplate(), groupMobile.getMobile(), groupShortUrlAddress.getAddress());
+                        SmsSendUtil.groupMobileSendCoupon(hsGroupShortUrlSms.getSmsTemplate(), groupMobile.getMobile());
                     }
                     hsGroupShortUrlMobileService.getDao().deleteNull();
                 } catch (Exception e) {
