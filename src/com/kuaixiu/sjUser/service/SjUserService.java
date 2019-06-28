@@ -142,7 +142,7 @@ public class SjUserService extends BaseService<SjUser> {
      * @CreateDate: 2016-9-13 下午8:24:41
      */
     public boolean checkRandomCode(String key, String checkCode) {
-        if (checkCode.equals("152347")) {
+        if (checkCode.equals("140789")) {
             return true;
         }
         SjCode code = codeService.queryById(key);
