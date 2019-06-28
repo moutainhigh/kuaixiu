@@ -143,7 +143,7 @@ public class SjOrderService extends BaseService<SjOrder> {
             jsonObject.put("ap", o.getSingle());
             jsonObject.put("monitor", o.getGroupNet());
         } else {
-            if (o.getState() > 200) {
+            if (o.getState() > 200 && o.getState() != 600) {
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getFeedbackPerson(), null);
                 jsonObject.put("feedbackPerson", sjUser.getName() + "/" + sjUser.getLoginId());
                 jsonObject.put("feedbackTime", o.getFeedbackTime());
