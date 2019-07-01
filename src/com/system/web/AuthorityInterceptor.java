@@ -100,10 +100,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
         } else {
             //获取登录用户
             SjSessionUser sessionUser = (SjSessionUser) (request.getSession().getAttribute(SystemConstant.SESSION_SJ_USER_KEY));
-            //对于手机端的用户登录 还需判定用户是否处于唯一登录环境
-            if (sessionUser != null && uri.startsWith("/wechat/order/wechatLogin")) {
-                sjVerifyLogin(sessionUser, sessionId, request);
-            }
             //访问无权限页面，直接放行
             if (checkUriMatch(uri, anonymousUrls)) {
                 // log.info("符合无session通过条件");

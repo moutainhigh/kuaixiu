@@ -2,23 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kuaixiu.sjUser.dao.SjWorkerMapper" >
+<mapper namespace="com.kuaixiu.sjUser.dao.SjWorkerMapper">
     <!-- Result Map-->
-    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.SjWorker" >
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjUser.entity.SjWorker">
         <result column="id" property="id"/>
         <result column="login_id" property="loginId"/>
         <result column="company_login_id" property="companyLoginId"/>
         <result column="is_del" property="isDel"/>
         <result column="building_num" property="buildingNum"/>
     </resultMap>
-    
+
     <!-- sj_worker table all fields -->
-    <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
         id,login_id,company_login_id,is_del,building_num
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object" >
+    <insert id="add" parameterType="Object">
         insert into sj_worker
         (id,login_id,company_login_id,is_del,building_num)
         values
@@ -26,7 +26,7 @@
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object" >
+    <update id="update" parameterType="Object">
         update sj_worker 
         set 
             id=#{id},
@@ -42,74 +42,76 @@
         delete from sj_worker where id = #{id}
     </delete>
 
-    <select id="queryByCompanyId"  resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryByCompanyId" resultMap="BaseResultMap" parameterType="Object">
         select * from sj_worker
         where company_login_id=#{companyLoginId}
         and is_del=0
         ORDER BY building_num
     </select>
     <!-- 根据id查询  -->
-    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_worker where id = #{id}
         and is_del=0
     </select>
 
-    <select id="queryByloginId"  resultMap="BaseResultMap" parameterType="Object">
-        select <include refid="Base_Column_List" />
+    <select id="queryByloginId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_worker where login_id=#{loginId}
         and is_del=0
     </select>
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
         from sj_worker
         where 1=1
         and is_del=0
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and id = #{id}
         </if>
-        <if test="loginId != null and loginId != ''" >
+        <if test="loginId != null and loginId != ''">
             and login_id = #{loginId}
         </if>
-        <if test="companyLoginId != null and companyLoginId != ''" >
+        <if test="companyLoginId != null and companyLoginId != ''">
             and company_login_id = #{companyLoginId}
         </if>
-        <if test="isDel != null and isDel != ''" >
+        <if test="isDel != null and isDel != ''">
             and is_del = #{isDel}
         </if>
-        <if test="buildingNum != null and buildingNum != ''" >
-            and building_num = #{buildingNum}
-        </if>
-    </select>
-    
-    <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
-        select
-        <include refid="Base_Column_List"/>
-        from sj_worker
-        where 1=1
-        and is_del=0
-        <if test="id != null and id != ''" >
-            and id = #{id}
-        </if>
-        <if test="loginId != null and loginId != ''" >
-            and login_id = #{loginId}
-        </if>
-        <if test="companyLoginId != null and companyLoginId != ''" >
-            and company_login_id = #{companyLoginId}
-        </if>
-        <if test="isDel != null and isDel != ''" >
-            and is_del = #{isDel}
-        </if>
-        <if test="buildingNum != null and buildingNum != ''" >
+        <if test="buildingNum != null and buildingNum != ''">
             and building_num = #{buildingNum}
         </if>
     </select>
 
-    <select id="queryWorkerListForPage" resultType="Map"  parameterType="Object">
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_worker
+        where 1=1
+        and is_del=0
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="loginId != null and loginId != ''">
+            and login_id = #{loginId}
+        </if>
+        <if test="companyLoginId != null and companyLoginId != ''">
+            and company_login_id = #{companyLoginId}
+        </if>
+        <if test="isDel != null and isDel != ''">
+            and is_del = #{isDel}
+        </if>
+        <if test="buildingNum != null and buildingNum != ''">
+            and building_num = #{buildingNum}
+        </if>
+    </select>
+
+    <select id="queryWorkerListForPage" resultType="Map" parameterType="Object">
         SELECT u.login_id,u.`name`,u.phone,u.is_cancel,c.login_id company_id,w.building_num,
         date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')create_time
         from sj_worker w
@@ -117,20 +119,21 @@
         LEFT JOIN sj_construction_company c ON w.company_login_id=c.login_id
         where 1=1
         and u.is_del=0
-        <if test="id != null and id != ''" >
+        <if test="id != null and id != ''">
             and w.id = #{id}
         </if>
-        <if test="loginId != null and loginId != ''" >
+        <if test="loginId != null and loginId != ''">
             and w.login_id = #{loginId}
         </if>
-        <if test="companyLoginId != null and companyLoginId != ''" >
+        <if test="companyLoginId != null and companyLoginId != ''">
             and w.company_login_id = #{companyLoginId}
         </if>
-        <if test="isDel != null and isDel != ''" >
+        <if test="isDel != null and isDel != ''">
             and w.is_del = #{isDel}
         </if>
-        <if test="buildingNum != null and buildingNum != ''" >
+        <if test="buildingNum != null and buildingNum != ''">
             and w.building_num = #{buildingNum}
         </if>
     </select>
+
 </mapper>   

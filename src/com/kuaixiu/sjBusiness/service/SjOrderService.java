@@ -100,6 +100,22 @@ public class SjOrderService extends BaseService<SjOrder> {
         return jsonObjects;
     }
 
+    public List<JSONObject> sjListReOrderToObejct(List<SjOrder> orders) {
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        for (SjOrder o : orders) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", o.getType());
+            jsonObject.put("orderNo", o.getOrderNo());
+            jsonObject.put("companyName", o.getCompanyName());
+            jsonObject.put("state", o.getState());
+            jsonObject.put("createTime", o.getCreateTime());
+            jsonObject.put("stayPerson", o.getStayPerson());
+            jsonObject.put("projects", getProject(o.getProjectId()));
+            jsonObjects.add(jsonObject);
+        }
+        return jsonObjects;
+    }
+
     public JSONObject sjOrderToObejct(SjOrder o) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("phone", o.getCreateUserid());

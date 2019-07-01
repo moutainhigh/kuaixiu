@@ -272,7 +272,7 @@ public class SjOrderController extends BaseController {
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(orderNo)) {
                 return getSjResult(result, null, false, "0", null, "参数为空");
             }
-            SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
+            SjOrder sjOrder = orderService.getDao().queryByOrderNoCreateUId(orderNo, phone);
             if (sjOrder == null) {
                 return getSjResult(result, null, false, "0", null, "订单号错误");
             }
@@ -357,7 +357,7 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
             }
 
-            SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo, phone);
+            SjOrder sjOrder = orderService.getDao().queryByOrderNoCreateUId(orderNo, phone);
             sjOrder.setType(type);
             sjOrder.setCrmNo(crmNo);
             sjOrder.setState(100);

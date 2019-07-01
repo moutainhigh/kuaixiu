@@ -23,6 +23,8 @@ public interface SjUserMapper<T> extends BaseDao<T> {
     int updateCancel0(@Param("loginId") String loginId, @Param("type") Integer type);
 
     List<T> queryByType(@Param("type") Integer type);
+
+    List<T> assignReworkWorker(T t);
 }
 
 

@@ -24,7 +24,6 @@ import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
 import com.system.constant.SystemConstant;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -84,6 +83,8 @@ public class SjBackstageController extends BaseController {
     private SjSaveNetService sjSaveNetService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private SjVirtualTeamService virtualTeamService;
 
     /**
      * 订单列表
@@ -158,7 +159,7 @@ public class SjBackstageController extends BaseController {
             String companyName = request.getParameter("companyName");
             String state = request.getParameter("state");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
-            String responsibleName =request.getParameter("responsibleName");//负责人姓名
+            String responsibleName = request.getParameter("responsibleName");//负责人姓名
             String responsibleIdNumber = request.getParameter("responsibleIdNumber");//负责人身份证号
             SjOrder sjOrder = new SjOrder();
             SjSessionUser sjSessionUser = getSjCurrentUser(request);
@@ -331,8 +332,6 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    @Autowired
-    private SjVirtualTeamService virtualTeamService;
 
     /**
      * 订单审批
@@ -474,7 +473,13 @@ public class SjBackstageController extends BaseController {
             String areaId = request.getParameter("addCounty");
             String project = request.getParameter("projectIds");
             ConstructionCompany constructionCompany = new ConstructionCompany();
-            constructionCompany.setProject(project);
+            if (StringUtils.isNotBlank(project)) {
+                if (project.contains(",")) {
+                    constructionCompany.setQueryStatusArray(Arrays.asList(project.split(",")));
+                } else {
+                    constructionCompany.setProject(project);
+                }
+            }
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setServiceArea(areaId);
@@ -967,9 +972,9 @@ public class SjBackstageController extends BaseController {
         try {
             String orderNo = request.getParameter("orderNo");
             //获取图片，保存图片到webapp同级inages/sj_images
-            String imageName= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
+            String imageName = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "sj_images" + System.getProperty("file.separator") + "sj_contract";
-            String logoPath = getPath(request, "file", savePath,imageName);             //图片路径
+            String logoPath = getPath(request, "file", savePath, imageName);             //图片路径
             String imageUrl = getProjectUrl(request) + "/images/sj_images/sj_contract/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
             OrderContractPicture contractPicture = new OrderContractPicture();

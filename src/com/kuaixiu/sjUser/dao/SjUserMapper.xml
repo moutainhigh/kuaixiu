@@ -176,4 +176,25 @@
         and is_del=0
     </select>
 
+
+    <select id="assignReworkWorker" resultMap="BaseResultMap" parameterType="Object">
+        select
+        u.id,u.login_id,u.password,u.name,u.phone,u.type,u.is_cancel,u.is_del,
+        date_format(u.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,
+        date_format(u.`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        from sj_user u
+        LEFT JOIN sj_worker w ON u.id=w.login_id
+        where 1=1
+        and u.is_del=0
+        and u.type = 8
+        <if test="workerUserId != null and workerUserId != ''">
+            and u.login_id = #{workerUserId}
+        </if>
+        <if test="workerName != null and workerName != ''">
+            and u.`name` like CONCAT('%', #{workerName}, '%')
+        </if>
+        <if test="companyLoginId != null and companyLoginId != ''">
+            and w.company_login_id = #{companyLoginId}
+        </if>
+    </select>
 </mapper>   
