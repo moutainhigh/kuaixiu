@@ -184,7 +184,7 @@
                             }
                         ]
                     };
-                    html = template_btn(context);
+                    html += template_btn(context);
                 }
                 return html;
             }

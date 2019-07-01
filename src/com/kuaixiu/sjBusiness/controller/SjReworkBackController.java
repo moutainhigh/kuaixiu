@@ -150,7 +150,9 @@ public class SjReworkBackController extends BaseController {
         try {
             String id = request.getParameter("id");
             SjReworkOrder sjReworkOrder = sjReworkOrderService.getDao().queryById(id);
+            SjSessionUser sjSessionUser = getSjCurrentUser(request);
             sjReworkOrder.setIsDel(1);
+            sjReworkOrder.setUpdateUserid(sjSessionUser.getUserId());
             sjReworkOrderService.saveUpdate(sjReworkOrder);
             getSjResult(result, null, true, "0", null, "取消成功");
         } catch (Exception e) {
@@ -292,6 +294,7 @@ public class SjReworkBackController extends BaseController {
             SjReworkOrder sjReworkOrder=sjReworkOrderService.queryById(reworkId);
             sjReworkOrder.setPictureUrl(imageUrl);
             sjReworkOrder.setState(500);
+            sjReworkOrder.setEndTime(new Date());
             sjReworkOrderService.saveUpdate(sjReworkOrder);
             getSjResult(result, imageUrl, true, "0", null, "上传成功");
         } catch (Exception e) {

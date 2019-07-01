@@ -55,6 +55,7 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getAssignCompanyId(), 3);
         sjReworkOrder.setCompanyId(sjUser.getLoginId());
         sjReworkOrder.setCompanyName(sjUser.getName());
+        sjReworkOrder.setState(200);
         this.saveUpdate(sjReworkOrder);
     }
 

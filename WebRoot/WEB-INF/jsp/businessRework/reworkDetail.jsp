@@ -282,7 +282,7 @@
                 success: function (result) {
                     if (result.success) {
                         AlertText.tips("d_alert", "提示", "上传成功", function () {
-                            func_reload_page("${ctx}/sj/order/reworkOrderDetail.do?id=" + id);
+                            func_reload_page("${ctx}/sj/order/reworkOrderDetail.do?id=" + reworkId);
                         });
                     } else {
                         AlertText.tips("d_alert", "提示", result.resultMessage);
