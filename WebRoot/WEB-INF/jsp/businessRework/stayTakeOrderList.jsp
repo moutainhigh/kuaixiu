@@ -66,6 +66,7 @@
                 <th class="fontWeight_normal tdwidth80">处理公司</th>
                 <th class="fontWeight_normal tdwidth100">等待时间</th>
                 <th class="fontWeight_normal tdwidth50">状态</th>
+                <th class="fontWeight_normal tdwidth50">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -75,7 +76,9 @@
     </div>
 </div>
 
-
+<div id="modal-toAssignReworkFormView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     style="display: none;">
+</div>
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
@@ -117,7 +120,8 @@
         {"data": "note", "class": ""},
         {"data": "companyName", "class": ""},
         {"data": "nowTime", "class": ""},
-        {"data": "state", "class": ""}
+        {"data": "state", "class": ""},
+        {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -141,7 +145,7 @@
             }
         },
         {
-            targets: -2,
+            targets: -3,
             render: function (data, type, row, meta) {
                 var ts = (new Date(row.nowTime)) - (new Date(row.strCreateTime));//计算已等待的毫秒数
                 var remainTime = ts / 1000 + 1;
@@ -153,7 +157,7 @@
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
-            targets: -1,
+            targets: -2,
             render: function (data, type, row, meta) {
                 var state = "";
                 switch (row.state) {
@@ -180,6 +184,26 @@
                 }
                 return state;
             }
+        },
+        {
+            targets: -1,
+            render: function (data, type, row, meta) {
+                var html = '';
+                if ((row.userType == 1 || row.userType == 3) && row.state == 200) {
+                    var context = {
+                        func: [
+                            {
+                                "name": "分配报障单",
+                                "fn": "assign(\'" + row.id + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            }
+                        ]
+                    };
+                    html = template_btn(context);
+                }
+                return html;
+            }
         }
     ]);
     dto.sScrollXInner = "100%";
@@ -193,6 +217,12 @@
         myTable.ajax.reload(null, false);
     }
 
+    function assign(reworkId) {
+        $("#modal-toAssignReworkFormView").html("");
+        $("#modal-toAssignReworkFormView").load("${ctx}/sj/order/toSelectWorker.do?reworkId=" + reworkId, function () {
+            func_after_model_load(this);
+        });
+    }
 
     /**
      * 全选按钮
