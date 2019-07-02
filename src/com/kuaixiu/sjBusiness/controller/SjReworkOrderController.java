@@ -70,6 +70,11 @@ public class SjReworkOrderController extends BaseController {
             sjOrder.setPage(page);
             sjOrder.setPhone(phone);
             sjOrder.setType(type);
+            if (type == 1) {
+                sjOrder.setState(400);
+            } else if (type == 2) {
+                sjOrder.setState(500);
+            }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListReOrderToObejct(sjOrders);
             JSONObject jsonObject = new JSONObject();
@@ -136,9 +141,9 @@ public class SjReworkOrderController extends BaseController {
             JSONObject params = getPrarms(request);
             String orderNo = params.getString("orderNo");
             SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo);
-            String[] projectIds=sjOrder.getProjectId().split(",");
-            for(String projectId:projectIds){
-                SjProject project=projectService.queryById(projectId);
+            String[] projectIds = sjOrder.getProjectId().split(",");
+            for (String projectId : projectIds) {
+                SjProject project = projectService.queryById(projectId);
                 JSONObject object = new JSONObject();
                 object.put("projectId", project.getId());
                 object.put("project", project.getProject());
@@ -153,6 +158,7 @@ public class SjReworkOrderController extends BaseController {
 
     /**
      * 创建报障订单
+     *
      * @param request
      * @param response
      * @return
@@ -169,14 +175,14 @@ public class SjReworkOrderController extends BaseController {
             String orderNo = params.getString("orderNo");
             String projectId = params.getString("projectId");//需求id  ","隔开
             String note = params.getString("note");//报障备注
-            if (StringUtils.isBlank(phone)||StringUtils.isBlank(orderNo)||StringUtils.isBlank(projectId)) {
+            if (StringUtils.isBlank(phone) || StringUtils.isBlank(orderNo) || StringUtils.isBlank(projectId)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             SjOrder sjOrder = orderService.getDao().queryByOrderNo(orderNo);
             //创建报障订单
-            SjReworkOrder sjReworkOrder=sjReworkOrderService.submitReworkOrder(sjOrder,projectId,note,phone);
+            SjReworkOrder sjReworkOrder = sjReworkOrderService.submitReworkOrder(sjOrder, projectId, note, phone);
             //指派订单给原企业
-            sjReworkOrderService.assignReworkOrder(sjReworkOrder,sjOrder);
+            sjReworkOrderService.assignReworkOrder(sjReworkOrder, sjOrder);
 
             getSjResult(result, null, true, "0", null, "创建成功");
         } catch (Exception e) {
