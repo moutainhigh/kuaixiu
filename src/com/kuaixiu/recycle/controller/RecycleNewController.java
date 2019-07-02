@@ -352,9 +352,9 @@ public class RecycleNewController extends BaseController {
                 JSONObject j = (JSONObject) jsonResult.get("datainfo");
                 j.put("quoteid", j.getString("quoteid"));
                 String price = j.getString("price");
-                if (price.equals("0")) {
-                    price = "5";
-                }
+//                if (price.equals("0")) {
+//                    price = "5";
+//                }
                 //异步保存数据
                 if (StringUtils.isBlank(loginMobile)) {
                     Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_NEW_H5_PHONE);
@@ -673,15 +673,20 @@ public class RecycleNewController extends BaseController {
             }
             //通过quoteid获取机型信息
             JSONObject postNews = recycleOrderService.postNews(quoteid);
+            BigDecimal price = new BigDecimal(postNews.getString("price"));
+            //金额小于20不予下单
+            if (price.compareTo(new BigDecimal("20")) == -1) {
+                throw new SystemException("由于估值过低，需要与有价值的手机一起寄出，谢谢！");
+            }
             order.setProductName(postNews.getString("modelname"));
             order.setBrandName(postNews.getString("brandname"));
-            order.setPrice(new BigDecimal(postNews.getString("price")));
+            order.setPrice(price);
             //判断该订单是否来源于微信小程序
             if (StringUtils.isNotBlank(openId)) {
                 order.setWechatOpenId(openId);
             }
 //            //查询回收下单所有加价规则
-            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
+//            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
             List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.queryList(null);
 //            //判断该订单来源确定是否使用加价券
 //            if (isSend10Coupon) {
