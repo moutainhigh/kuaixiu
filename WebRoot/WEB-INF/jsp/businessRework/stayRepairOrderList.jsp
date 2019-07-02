@@ -69,6 +69,7 @@
                 <th class="fontWeight_normal tdwidth80">施工人员</th>
                 <th class="fontWeight_normal tdwidth100">等待时间</th>
                 <th class="fontWeight_normal tdwidth50">状态</th>
+                <th class="fontWeight_normal tdwidth50">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -121,7 +122,8 @@
         {"data": "companyName", "class": ""},
         {"data": "workerName", "class": ""},
         {"data": "nowTime", "class": ""},
-        {"data": "state", "class": ""}
+        {"data": "state", "class": ""},
+        {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
     dto.setColumnDefs([
@@ -145,7 +147,7 @@
             }
         },
         {
-            targets: -2,
+            targets: -3,
             render: function (data, type, row, meta) {
                 var ts = (new Date(row.nowTime)) - (new Date(row.strCreateTime));//计算已等待的毫秒数
                 var remainTime = ts / 1000 + 1;
@@ -157,7 +159,7 @@
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
-            targets: -1,
+            targets: -2,
             render: function (data, type, row, meta) {
                 var state = "";
                 switch (row.state) {
@@ -185,6 +187,23 @@
                 return state;
             }
         },
+        {
+            targets: -1,
+            render: function (data, type, row, meta) {
+                var context = {
+                    func: [
+                        {
+                            "name": "查看",
+                            "fn": "showOrderDetail(\'" + row.id + "\')",
+                            "icon": "am-icon-pencil-square-o",
+                            "class": "am-text-secondary"
+                        }
+                    ]
+                };
+                var html = template_btn(context);
+                return html;
+            }
+        }
     ]);
     dto.sScrollXInner = "100%";
     var myTable = $("#dt").DataTable(dto);
@@ -196,7 +215,12 @@
         $("#pageStatus").val(1);
         myTable.ajax.reload(null, false);
     }
-
+    /**
+     * 查看订单详情
+     */
+    function showOrderDetail(id) {
+        func_reload_page("${ctx}/sj/order/reworkOrderDetail.do?id=" + id);
+    }
 
     /**
      * 全选按钮

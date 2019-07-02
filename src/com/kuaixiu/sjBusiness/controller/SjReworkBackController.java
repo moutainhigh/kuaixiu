@@ -209,8 +209,9 @@ public class SjReworkBackController extends BaseController {
     public ModelAndView toAssignReworkOrder(HttpServletRequest request,
                                             HttpServletResponse response) throws Exception {
         String reworkId = request.getParameter("reworkId");
-        SjSessionUser sjSessionUser = getSjCurrentUser(request);
-        SjUser sjUser = sjUserService.getDao().queryByLoginId(sjSessionUser.getUserId(), 3);
+        SjReworkOrder sjReworkOrder=sjReworkOrderService.queryById(reworkId);
+//        SjSessionUser sjSessionUser = getSjCurrentUser(request);
+        SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
         ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
         request.setAttribute("companyId", company.getLoginId());
         request.setAttribute("reworkId", reworkId);

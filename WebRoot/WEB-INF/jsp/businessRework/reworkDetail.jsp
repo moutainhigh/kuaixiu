@@ -123,26 +123,6 @@
                 </c:if>
             </td>
         </tr>
-        <c:if test="${(loginUserType==3||loginUserType==1)&&sjOrder.state==200}">
-            <td colspan="3" class="tr-space"></td>
-            </tr>
-            <tr>
-                <td class="td-title">
-                    <h4>订单分配：</h4>
-                </td>
-                <td class="td-space"></td>
-                <td class="td-info">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button onclick="assign('${sjOrder.id}');"
-                                    class="am-btn am-btn-default search_btn" type="button">
-                                分配订单
-                            </button>
-                        </div>
-                    </div><!-- /.row -->
-                </td>
-            </tr>
-        </c:if>
         <c:if test="${(loginUserType==8||loginUserType==1)&&sjOrder.state==400}">
             <td colspan="3" class="tr-space"></td>
             </tr>
@@ -159,12 +139,12 @@
                                        accept="image/*"
                                     <%--onchange="contractImgChange(this);"--%>
                                 />
-                                <button onclick="upSignImage('${sjOrder.orderNo}');"
+                                <button onclick="upSignImage('${sjOrder.id}');"
                                         class="am-btn am-btn-default search_btn"
                                         type="button">点击上传
                                 </button>
                                 <button id="contract" onclick="submitReworkSign('${sjOrder.id}');"
-                                        class="am-btn am-btn-default search_btn" type="button"> 竣工
+                                        class="am-btn am-btn-default search_btn" type="button"> 完成
                                 </button>
                             </form>
                         </div>

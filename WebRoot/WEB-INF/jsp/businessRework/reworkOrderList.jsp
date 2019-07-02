@@ -188,7 +188,7 @@
                     };
                     html += template_btn(context);
                 };
-                if(row.userType==1||row.userType==3){
+                if((row.userType==1||row.userType==3)&&row.state==200){
                     context = {
                         func: [
                             {
