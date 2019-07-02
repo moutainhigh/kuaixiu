@@ -142,9 +142,9 @@
                     if (result.success) {
                         AlertText.tips("d_alert", "提示", "分配订单成功", function(){
                             clean();
+                            refreshPage();
                             //全部更新完后关闭弹窗
                             $("#addMissAgainOrderBtn").click();
-                            func_reload_page("${ctx}/sj/order/reworkOrderDetail.do?id=" + reworkId);
                         });
                     } else {
                         AlertText.tips("d_alert", "提示", result.resultMessage);

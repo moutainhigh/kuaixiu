@@ -92,7 +92,9 @@
     </div>
 </div>
 
-
+<div id="modal-toAssignReworkFormView" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     style="display: none;">
+</div>
 <script src="${webResourceUrl}/resource/js/address.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
@@ -185,6 +187,19 @@
                         ]
                     };
                     html += template_btn(context);
+                };
+                if(row.userType==1||row.userType==3){
+                    context = {
+                        func: [
+                            {
+                                "name": "分配报障单",
+                                "fn": "assign(\'" + row.id + "\')",
+                                "icon": "am-icon-pencil-square-o",
+                                "class": "am-text-secondary"
+                            }
+                        ]
+                    };
+                    html += template_btn(context);
                 }
                 return html;
             }
@@ -220,6 +235,13 @@
      */
     function showOrderDetail(id) {
         func_reload_page("${ctx}/sj/order/reworkOrderDetail.do?id=" + id);
+    }
+
+    function assign(reworkId) {
+        $("#modal-toAssignReworkFormView").html("");
+        $("#modal-toAssignReworkFormView").load("${ctx}/sj/order/toSelectWorker.do?reworkId=" + reworkId, function () {
+            func_after_model_load(this);
+        });
     }
 
     function cancel(id) {

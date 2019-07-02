@@ -107,20 +107,23 @@
                 <c:if test="${sjOrder.state==500}">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h4>
-                                <h4>客户签字图片：</h4>
-                                <img src="${sjOrder.pictureUrl}" class="layui-upload-img"
-                                     onclick="zoomImage('${sjOrder.pictureUrl}')"
-                                     width="90" height="80"
-                                     style="cursor:pointer"/>
+                            <h4>客户签字图片：
+                                <c:forEach items="${pictures }" var="item" varStatus="i">
+                                    <img src="${item.signPictureUrl}" class="layui-upload-img"
+                                         onclick="zoomImage('${item.signPictureUrl}')" width="90" height="80"/>
+                                </c:forEach>
                             </h4>
+                                <%--<img src="${sjOrder.pictureUrl}" class="layui-upload-img"--%>
+                                <%--onclick="zoomImage('${sjOrder.pictureUrl}')"--%>
+                                <%--width="90" height="80"--%>
+                                <%--style="cursor:pointer"/>--%>
                         </div><!-- /.col -->
                     </div>
                     <!-- /.row -->
                 </c:if>
             </td>
         </tr>
-        <c:if test="${loginUserType==3&&sjOrder.state==200}">
+        <c:if test="${(loginUserType==3||loginUserType==1)&&sjOrder.state==200}">
             <td colspan="3" class="tr-space"></td>
             </tr>
             <tr>
@@ -140,7 +143,7 @@
                 </td>
             </tr>
         </c:if>
-        <c:if test="${loginUserType==8&&sjOrder.state==400}">
+        <c:if test="${(loginUserType==8||loginUserType==1)&&sjOrder.state==400}">
             <td colspan="3" class="tr-space"></td>
             </tr>
             <tr>
@@ -152,21 +155,30 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <form enctype="multipart/form-data" id="upSignForm">
-                                <input class="col-sm-12" type="file" style="width:420px" name="pic_img" id="pic_img"
+                                <input class="col-sm-12" type="file" name="file" id="pic_img"
                                        accept="image/*"
-                                       onchange="imgChange(this);"/>
-                                <div id="preview" hidden="hidden" class="col-sm-9">
-                                    <img id="imghead" src="" width="260" height="180"/> <!--图片显示位置-->
-                                </div>
+                                    <%--onchange="contractImgChange(this);"--%>
+                                />
+                                <button onclick="upSignImage('${sjOrder.orderNo}');"
+                                        class="am-btn am-btn-default search_btn"
+                                        type="button">点击上传
+                                </button>
+                                <button id="contract" onclick="submitReworkSign('${sjOrder.id}');"
+                                        class="am-btn am-btn-default search_btn" type="button"> 竣工
+                                </button>
                             </form>
                         </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button onclick="upSignImage('${sjOrder.id}');"
-                                    class="am-btn am-btn-default search_btn"
-                                    type="button">点击上传图片并完成订单
-                            </button>
-                        </div>
                     </div><!-- /.row -->
+                    <%--<div class="row">--%>
+                        <%--<div class="col-md-12 col-sm-12 col-xs-12">--%>
+                            <%--<h4>合同图片：--%>
+                                <%--<c:forEach items="${contractPictures }" var="item" varStatus="i">--%>
+                                    <%--<img src="${item.contractPictureUrl}" class="layui-upload-img"--%>
+                                         <%--onclick="zoomImage('${item.contractPictureUrl}')" width="90" height="80"/>--%>
+                                <%--</c:forEach>--%>
+                            <%--</h4>--%>
+                        <%--</div><!-- /.col -->--%>
+                    <%--</div><!-- /.row -->--%>
                 </td>
             </tr>
         </c:if>
@@ -181,41 +193,7 @@
 <script src="${webResourceUrl}/resource/layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     function toList() {
-        func_reload_page("${ctx}/sj/order/list.do");
-    }
-
-    // 选择图片显示
-    function imgChange(obj) {
-        var fileUrl = obj.value;
-        if (!/.(gif|jpg|jpeg|png|GIF|JPG|bmp)$/.test(fileUrl)) {
-            AlertText.tips("d_alert", "提示", "图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
-            return false;
-        } else {
-            if (((obj.files[0].size).toFixed(2)) >= (200 * 1024)) {
-                AlertText.tips("d_alert", "提示", "请上传小于200K的图片");
-                return false;
-            } else {
-                var file = document.getElementById("pic_img");
-                var imgUrl = window.URL.createObjectURL(file.files[0]);
-                var image = new Image();
-                image.src = imgUrl;
-                image.onload = function () {
-                    //加载图片获取图片真实宽度和高度
-                    var width = image.width;
-                    var height = image.height;
-                    if (width < 751 && height < 533) {
-                        var img = document.getElementById('imghead');
-                        img.setAttribute('src', imgUrl); // 修改img标签src属性值
-                        $("#preview").show();
-                    } else {
-                        var msg = "文件尺寸应小于：750*532！,当前图片" + width + "*" + height;
-                        AlertText.tips("d_alert", "提示", msg);
-                        file.value = "";
-                        return false;
-                    }
-                };
-            }
-        }
+        func_reload_page("${ctx}/sj/order/reworkList.do");
     }
 
     $(function () {
@@ -250,9 +228,6 @@
             scrollbar: false,
             title: "图片预览", //不显示标题
             content: imgHtml //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
-//            cancel: function () {
-//                layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });
-//            }
         });
     }
 
@@ -295,5 +270,27 @@
         } else {
             AlertText.tips("d_alert", "提示", "请选择上传文件！");
         }
+    }
+
+    function submitReworkSign(id) {
+        var url_ = AppConfig.ctx + "/sj/order/submitReworkSign.do";
+        $.ajax({
+            url: url_,
+            type: "POST",
+            data: {id: id},
+            dataType: "json",
+            success: function (result) {
+                if (result.success) {
+                    AlertText.tips("d_alert", "提示", "完成成功", function () {
+                        func_reload_page("${ctx}/sj/order/reworkOrderDetail.do?id=" + id);
+                    });
+                } else {
+                    AlertText.tips("d_alert", "提示", result.resultMessage);
+                }
+            },
+            error: function () {
+                AlertText.tips("d_alert", "提示", "系统异常，请稍后再试");
+            }
+        });
     }
 </script>

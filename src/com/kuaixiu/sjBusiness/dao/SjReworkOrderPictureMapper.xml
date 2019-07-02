@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjReworkOrderPictureMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture" >
+        <result column="id" property="id"/>
+        <result column="rework_no" property="reworkNo"/>
+        <result column="sign_picture_url" property="signPictureUrl"/>
+    </resultMap>
+    
+    <!-- sj_rework_order_picture table all fields -->
+    <sql id="Base_Column_List" >
+        id,rework_no,sign_picture_url
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_rework_order_picture
+        (id,rework_no,sign_picture_url)
+        values
+        (#{id},#{reworkNo},#{signPictureUrl})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_rework_order_picture 
+        set 
+            id=#{id},
+            rework_no=#{reworkNo},
+            sign_picture_url=#{signPictureUrl}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_rework_order_picture where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_rework_order_picture where id = #{id}
+    </select>
+
+    <select id="queryByReworkNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_rework_order_picture where rework_no=#{reworkNo}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_rework_order_picture
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="reworkNo != null and reworkNo != ''" >
+            and rework_no = #{reworkNo}
+        </if>
+        <if test="signPictureUrl != null and signPictureUrl != ''" >
+            and sign_picture_url = #{signPictureUrl}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_rework_order_picture
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="reworkNo != null and reworkNo != ''" >
+            and rework_no = #{reworkNo}
+        </if>
+        <if test="signPictureUrl != null and signPictureUrl != ''" >
+            and sign_picture_url = #{signPictureUrl}
+        </if>
+    </select>
+
+</mapper>   

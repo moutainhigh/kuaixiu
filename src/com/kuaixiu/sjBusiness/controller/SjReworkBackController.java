@@ -5,8 +5,11 @@ import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
+import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
+import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
+import com.kuaixiu.sjBusiness.service.SjReworkOrderPictureService;
 import com.kuaixiu.sjBusiness.service.SjReworkOrderService;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Administrator on 2019/6/28/028.
@@ -40,6 +44,10 @@ public class SjReworkBackController extends BaseController {
     private SjOrderService orderService;
     @Autowired
     private SjUserService sjUserService;
+    @Autowired
+    private SjReworkOrderPictureService sjReworkOrderPictureService;
+    @Autowired
+    private ConstructionCompanyService companyService;
 
     /**
      * 报障订单列表
@@ -178,7 +186,9 @@ public class SjReworkBackController extends BaseController {
             List<String> projects = orderService.getProject(sjReworkOrder.getProjectIds());
             String projectName = orderService.listToString(projects);
             sjReworkOrder.setProjectName(projectName);
+            List<SjReworkOrderPicture> pictures=sjReworkOrderPictureService.getDao().queryByReworkNo(sjReworkOrder.getReworkOrderNo());
             request.setAttribute("sjOrder", sjReworkOrder);
+            request.setAttribute("pictures", pictures);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -208,8 +218,7 @@ public class SjReworkBackController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    @Autowired
-    private ConstructionCompanyService companyService;
+
 
     /**
      * 分配订单员工列表
@@ -292,11 +301,38 @@ public class SjReworkBackController extends BaseController {
             String imageUrl = getProjectUrl(request) + "/images/sj_images/sj_sign/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
             SjReworkOrder sjReworkOrder=sjReworkOrderService.queryById(reworkId);
-            sjReworkOrder.setPictureUrl(imageUrl);
+            SjReworkOrderPicture sjReworkOrderPicture=new SjReworkOrderPicture();
+            sjReworkOrderPicture.setSignPictureUrl(imageUrl);
+            sjReworkOrderPicture.setReworkNo(sjReworkOrder.getReworkOrderNo());
+            sjReworkOrderPicture.setId(UUID.randomUUID().toString().replace("-", ""));
+            sjReworkOrderPictureService.add(sjReworkOrderPicture);
+            getSjResult(result, imageUrl, true, "0", null, "上传成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 完成保障订单
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/order/submitReworkSign")
+    @ResponseBody
+    public ResultData contract(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            String id = request.getParameter("id");
+            SjReworkOrder sjReworkOrder = sjReworkOrderService.queryById(id);
             sjReworkOrder.setState(500);
             sjReworkOrder.setEndTime(new Date());
             sjReworkOrderService.saveUpdate(sjReworkOrder);
-            getSjResult(result, imageUrl, true, "0", null, "上传成功");
+
+            getSjResult(result, null, true, "0", null, "报障单完成");
         } catch (Exception e) {
             e.printStackTrace();
         }
