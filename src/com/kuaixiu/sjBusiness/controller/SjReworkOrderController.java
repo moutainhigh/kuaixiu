@@ -55,6 +55,7 @@ public class SjReworkOrderController extends BaseController {
             String phone = params.getString("phone");
             Integer pageIndex = params.getInteger("pageIndex");
             Integer pageSize = params.getInteger("pageSize");
+            Integer type = params.getInteger("type");
 
             if (StringUtils.isBlank(phone)) {
                 return getSjResult(result, null, false, "2", null, "手机号不能为空");
@@ -68,6 +69,7 @@ public class SjReworkOrderController extends BaseController {
             page.setCurrentPage(pageIndex);
             sjOrder.setPage(page);
             sjOrder.setPhone(phone);
+            sjOrder.setType(type);
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
             List<JSONObject> jsonObjects = orderService.sjListReOrderToObejct(sjOrders);
             JSONObject jsonObject = new JSONObject();
