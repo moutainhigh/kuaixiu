@@ -21,6 +21,8 @@ public interface SysMenuMapper<T> extends BaseDao<T> {
      * @CreateDate: 2016-8-27 上午1:01:20
      */
     List<SysMenu> queryMenusByUserId(String uid);
+
+    List<SysMenu> queryMenusByUserIdType(T t);
     
     /**
      * 根据角色id查询角色菜单

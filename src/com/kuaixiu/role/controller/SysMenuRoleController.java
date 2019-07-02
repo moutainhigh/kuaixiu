@@ -54,19 +54,25 @@ public class SysMenuRoleController extends BaseController {
             menu.setCode(null);
             for (SysMenu menu0 : menuses) {
                 menu.setPcode(menu0.getCode());
-                menu.setType(2);
+                menu.setType(1);
                 List<SysMenu> menus = sysMenuService.queryList(menu);
                 menu0.setSubMenuList(menus);
                 for (SysMenu menu1 : menus) {
-                    menu.setType(3);
                     menu.setPcode(menu1.getCode());
-                    List<SysMenu> menus1 = sysMenuService.queryList(menu);
-                    menu1.setSubMenuList(menus1);
-                    for (SysMenu menu2 : menus1) {
-                        menu.setType(4);
-                        menu.setPcode(menu2.getCode());
-                        List<SysMenu> menus2 = sysMenuService.queryList(menu);
-                        menu2.setSubMenuList(menus2);
+                    menu.setType(2);
+                    List<SysMenu> menus2 = sysMenuService.queryList(menu);
+                    menu1.setSubMenuList(menus2);
+                    for (SysMenu menu21 : menus2) {
+                        menu.setType(3);
+                        menu.setPcode(menu21.getCode());
+                        List<SysMenu> menus3 = sysMenuService.queryList(menu);
+                        menu21.setSubMenuList(menus3);
+                        for (SysMenu menu31 : menus3) {
+                            menu.setType(4);
+                            menu.setPcode(menu31.getCode());
+                            List<SysMenu> menus4 = sysMenuService.queryList(menu);
+                            menu31.setSubMenuList(menus4);
+                        }
                     }
                 }
             }
@@ -119,6 +125,7 @@ public class SysMenuRoleController extends BaseController {
             SysUser user1 = new SysUser();
             SysRole role1 = new SysRole();
             List<SysMenu> menus = new ArrayList<>();
+            SysMenu menu = new SysMenu();
             if (StringUtils.isNotBlank(userName)) {
                 SysUser user = new SysUser();
                 user.setUname(userName);
@@ -129,7 +136,8 @@ public class SysMenuRoleController extends BaseController {
                 if (CollectionUtils.isEmpty(users)) {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
-                menus = sysMenuService.queryMenusByUserId(users.get(0).getLoginId());
+                menu.setUserId(users.get(0).getLoginId());
+                menus = sysMenuService.getDao().queryMenuList(menu);
                 List<SysRole> sysRoles = sysRoleService.queryRolesByUserId(users.get(0).getLoginId());
                 user1 = users.get(0);
                 role1 = sysRoles.get(0);
@@ -138,10 +146,11 @@ public class SysMenuRoleController extends BaseController {
                 if (user == null) {
                     return getResult(result, null, false, null, "该用户不存在");
                 }
-                menus = sysMenuService.queryMenusByUserId(userId);
-                List<SysRole> sysRoles=new ArrayList<SysRole>();
+                menu.setUserId(userId);
+                menus = sysMenuService.getDao().queryMenuList(menu);
+                List<SysRole> sysRoles = new ArrayList<SysRole>();
                 sysRoles = sysRoleService.queryRoles1ByUserId(userId);
-                if(CollectionUtils.isEmpty(sysRoles)) {
+                if (CollectionUtils.isEmpty(sysRoles)) {
                     sysRoles = sysRoleService.queryRolesByUserId(userId);
                 }
                 user1 = user;
@@ -231,6 +240,7 @@ public class SysMenuRoleController extends BaseController {
                         userRole.setRoleId(role.getId());
                         List<SysUserRole> sysUserRoles = sysUserRoleService.queryList(userRole);
                         if (CollectionUtils.isEmpty(sysUserRoles)) {
+                            sysUserRoleService.getDao().deleteByUserId(userId);
                             sysUserRoleService.add(userRole);//2--用户绑定新角色
                         }
                         SysRoleMenu roleMenu = new SysRoleMenu();
@@ -256,9 +266,16 @@ public class SysMenuRoleController extends BaseController {
                     }
                 }
             }
+
             //删除权限 查询前端显示的菜单
             SysMenu menu = new SysMenu();
-            menu.setUserId(userId);
+            if (StringUtils.isNotBlank(roleName)) {
+                SysRole sysRole = sysRoleService.getDao().queryRolesByRoleName(roleName);
+                userId = sysRole.getId();
+                menu.setRoleName(roleName);
+            }else{
+                menu.setUserId(userId);
+            }
             List<SysMenu> menuList = sysMenuService.getDao().queryMenuList(menu);
             for (SysMenu menu1 : menuList) {
                 isTrue = true;
@@ -270,6 +287,7 @@ public class SysMenuRoleController extends BaseController {
                 }
                 if (isTrue) {
                     //删除权限
+
                     menu1.setUserId(userId);
                     sysRoleMenuService.getDao().deleteBYCode(menu1);
                 }
