@@ -19,16 +19,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="addressId" class="col-sm-2 control-label"><span style="color:red">*</span> 下单地址</label>
-                    <div class="col-sm-9">
-                        <c:forEach items="${groupMobileAddresses }" var="item" varStatus="i">
-                            <label class="checkbox-inline" style="margin-left: 0px; margin-right: 10px;">
-                                <input type="radio" name="addressId" value="${item.id }"> ${item.nameLabel }
-                            </label>
-                        </c:forEach>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="smsId" class="col-sm-2 control-label"><span style="color:red">*</span> 短信模板</label>
                     <div class="col-sm-9">
                         <c:forEach items="${hsGroupMobileSms }" var="item" varStatus="i">

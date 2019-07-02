@@ -35,8 +35,8 @@
                 <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth80 center">地址名字</th>
-                <th class="fontWeight_normal tdwidth90 center">地址</th>
+                <th class="fontWeight_normal tdwidth80 center">模板名字</th>
+                <th class="fontWeight_normal tdwidth90 center">短信模板</th>
                 <th class="fontWeight_normal tdwidth90 center">创建时间</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
@@ -60,14 +60,14 @@
 
     function addBtnClick() {
         $("#modal-insertView").html("");
-        $("#modal-insertView").load("${ctx}/groupSms/toAddAddress.do", function () {
+        $("#modal-insertView").load("${ctx}/groupShort/toAddSms.do", function () {
             func_after_model_load(this);
         });
     }
 
     function editBtnClick(id) {
         $("#modal-editView").html("");
-        $("#modal-editView").load("${ctx}/groupSms/toEditAddress.do?id="+id, function () {
+        $("#modal-editView").load("${ctx}/groupShort/toEditSms.do?id="+id, function () {
             func_after_model_load(this);
         });
     }
@@ -76,7 +76,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/groupSms/addressListForPage.do",
+        "url": "${ctx}/groupShort/smsListForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -90,7 +90,7 @@
     dto.setColumns([
         {"data": "id", "class": "tdwidth50 center"},
         {"data": "nameLabel", "class": ""},
-        {"data": "address", "class": ""},
+        {"data": "smsTemplate", "class": ""},
         {"data": "strCreateTime", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
@@ -169,7 +169,7 @@
         AlertText.tips("d_confirm", "删除提示", "确定要删除吗？", function () {
             //加载等待
             AlertText.tips("d_loading");
-            var url_ = AppConfig.ctx + "/groupSms/delAddress.do";
+            var url_ = AppConfig.ctx + "/groupShort/delSms.do";
             var data_ = {id: id};
             $.ajax({
                 url: url_,
