@@ -224,6 +224,24 @@
         });
     }
 
+    function updateWaitTime() {
+        $(".waitTimeCountUp").each(function () {
+            var obj = $(this);
+            var remainTime = obj.attr("remainTime");
+            remainTime = Number(remainTime) + 1;
+            if (remainTime < 0) {
+                remainTime = 0;
+            }
+            obj.attr("remainTime", remainTime);
+            obj.html(getHourTimeStr(remainTime));
+        });
+    }
+
+    if ("undefined" != typeof(countIntervalProcess)) {
+        clearInterval(countIntervalProcess);
+    }
+    countIntervalProcess = setInterval("updateWaitTime()", 1000);
+
     /**
      * 全选按钮
      */

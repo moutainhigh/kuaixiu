@@ -149,16 +149,16 @@
                             </form>
                         </div>
                     </div><!-- /.row -->
-                    <%--<div class="row">--%>
-                        <%--<div class="col-md-12 col-sm-12 col-xs-12">--%>
-                            <%--<h4>合同图片：--%>
-                                <%--<c:forEach items="${contractPictures }" var="item" varStatus="i">--%>
-                                    <%--<img src="${item.contractPictureUrl}" class="layui-upload-img"--%>
-                                         <%--onclick="zoomImage('${item.contractPictureUrl}')" width="90" height="80"/>--%>
-                                <%--</c:forEach>--%>
-                            <%--</h4>--%>
-                        <%--</div><!-- /.col -->--%>
-                    <%--</div><!-- /.row -->--%>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h4>签字图片：
+                                <c:forEach items="${pictures }" var="item" varStatus="i">
+                                    <img src="${item.signPictureUrl}" class="layui-upload-img"
+                                         onclick="zoomImage('${item.signPictureUrl}')" width="90" height="80"/>
+                                </c:forEach>
+                            </h4>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
                 </td>
             </tr>
         </c:if>
