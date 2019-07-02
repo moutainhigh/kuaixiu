@@ -71,7 +71,7 @@
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/groupSms/groupMobileBatchRecordForPage.do",
+        "url": "${ctx}/groupShort/groupMobileBatchRecordForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -135,7 +135,7 @@
     }
 
     function toDetail(id) {
-        func_reload_page("${ctx}/groupSms/toGroupMobileRecord.do?batchId=" + id);
+        func_reload_page("${ctx}/groupShort/toGroupMobileRecord.do?batchId=" + id);
     }
 
     /**

@@ -670,9 +670,9 @@ public class SmsSendUtil {
         return sendSmsThread(phone, content.toString());
     }
 
-    public static boolean groupMobileSendCoupon(String contentText,String mobile,String address) {
+    public static boolean groupMobileSendCoupon(String contentText,String mobile) {
         StringBuffer content = new StringBuffer();
-        content.append(contentText).append(address);
+        content.append(contentText);
         return sendSmsThread(mobile, content.toString(),"2");
     }
 

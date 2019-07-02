@@ -467,7 +467,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         }
 
         //excel标题
-        String[] header = new String[]{"订单号", "订单状态", "联系人/手机号", "支付类型", "机型名字", "回收价格",
+        String[] header = new String[]{"订单号", "订单状态", "联系人", "联系人手机号", "支付类型", "机型名字", "回收价格",
                 "订单来源", "使用加价券", "下单时间"};
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
@@ -522,58 +522,69 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
 
     private HSSFRow getRow(HSSFRow row, Map<?, ?> map) {
         // 设置对应单元格的值
+        int count = 0;
         if (map.get("orderNo") == null) {
-            row.createCell(0).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
-            row.createCell(0).setCellValue(map.get("orderNo").toString());
+            row.createCell(count).setCellValue(map.get("orderNo").toString());
         }
+        count = count + 1;
         if (map.get("orderStatus") == null) {
-            row.createCell(1).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
-            row.createCell(1).setCellValue(getState(Integer.valueOf(map.get("orderStatus").toString())));
+            row.createCell(count).setCellValue(getState(Integer.valueOf(map.get("orderStatus").toString())));
         }
-        if (map.get("name") == null && map.get("mobile") == null) {
-            row.createCell(2).setCellValue("");
-        } else if (map.get("name") != null && map.get("mobile") != null) {
-            row.createCell(2).setCellValue(map.get("name").toString() + "/" + map.get("mobile").toString());
-        } else if (map.get("name") != null) {
-            row.createCell(2).setCellValue(map.get("name").toString());
-        } else if (map.get("mobile") != null) {
-            row.createCell(2).setCellValue(map.get("mobile").toString());
+        count = count + 1;
+        if (map.get("name") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("name").toString());
         }
+        count = count + 1;
+        if (map.get("mobile") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("mobile").toString());
+        }
+        count = count + 1;
         if (map.get("exchangeType") == null) {
-            row.createCell(3).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
             if ("1".equals(map.get("exchangeType").toString())) {
-                row.createCell(3).setCellValue("支付宝收款");
+                row.createCell(count).setCellValue("支付宝收款");
             } else {
-                row.createCell(3).setCellValue("话费充值");
+                row.createCell(count).setCellValue("话费充值");
             }
         }
+        count = count + 1;
         if (map.get("productName") == null) {
-            row.createCell(4).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
-            row.createCell(4).setCellValue(map.get("productName").toString());
+            row.createCell(count).setCellValue(map.get("productName").toString());
         }
+        count = count + 1;
         if (map.get("price") == null) {
-            row.createCell(5).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
-            row.createCell(5).setCellValue(map.get("price").toString());
+            row.createCell(count).setCellValue(map.get("price").toString());
         }
+        count = count + 1;
         if (map.get("fm") == null) {
-            row.createCell(6).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
-            row.createCell(6).setCellValue(map.get("fm").toString());
+            row.createCell(count).setCellValue(map.get("fm").toString());
         }
+        count = count + 1;
         if (map.get("couponId") == null) {
-            row.createCell(7).setCellValue("否");
+            row.createCell(count).setCellValue("否");
         } else {
-            row.createCell(7).setCellValue("是");
+            row.createCell(count).setCellValue("是");
         }
+        count = count + 1;
         if (map.get("inTime") == null) {
-            row.createCell(8).setCellValue("");
+            row.createCell(count).setCellValue("");
         } else {
-            row.createCell(8).setCellValue(DateUtil.getDateyyyyMMddHHmmss((Date) map.get("inTime")));
+            row.createCell(count).setCellValue(DateUtil.getDateyyyyMMddHHmmss((Date) map.get("inTime")));
         }
         return row;
     }

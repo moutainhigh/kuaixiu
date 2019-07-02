@@ -1,10 +1,11 @@
-package com.kuaixiu.groupSMS.controller;
+package com.kuaixiu.groupShortUrl.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.kuaixiu.groupSMS.entity.HsGroupMobileBatchRecord;
-import com.kuaixiu.groupSMS.entity.HsGroupMobileSms;
-import com.kuaixiu.groupSMS.service.*;
+import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlBatchRecord;
+import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlSms;
+import com.kuaixiu.groupShortUrl.service.HsGroupShortUrlBatchRecordService;
+import com.kuaixiu.groupShortUrl.service.HsGroupShortUrlSmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,18 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * HsGroupMobileBatchRecord Controller
+ * HsGroupShortUrlBatchRecord Controller
  *
- * @CreateDate: 2019-06-21 上午11:07:52
+ * @CreateDate: 2019-06-26 上午09:27:50
  * @version: V 1.0
  */
 @Controller
-public class HsGroupMobileBatchRecordController extends BaseController {
+public class HsGroupShortUrlBatchRecordController extends BaseController {
 
     @Autowired
-    private HsGroupMobileBatchRecordService hsGroupMobileBatchRecordService;
+    private HsGroupShortUrlBatchRecordService hsGroupShortUrlBatchRecordService;
     @Autowired
-    private HsGroupMobileSmsService hsGroupMobileSmsService;
+    private HsGroupShortUrlSmsService hsGroupShortUrlSmsService;
 
     /**
      * 跳转群发短信批次记录列表
@@ -35,11 +36,11 @@ public class HsGroupMobileBatchRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "groupSms/toGroupMobileBatchRecord")
+    @RequestMapping(value = "groupShort/toGroupMobileBatchRecord")
     public ModelAndView toGroupMobileBatchRecord(HttpServletRequest request,
-                                             HttpServletResponse response) throws Exception {
+                                                 HttpServletResponse response) throws Exception {
 
-        String returnView = "groupSms/groupSmsBatchRecordList";
+        String returnView = "groupShort/groupSmsBatchRecordList";
         return new ModelAndView(returnView);
     }
 
@@ -50,21 +51,21 @@ public class HsGroupMobileBatchRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "groupSms/groupMobileBatchRecordForPage")
+    @RequestMapping(value = "groupShort/groupMobileBatchRecordForPage")
     public void groupMobileBatchRecordForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String mobile = request.getParameter("mobile");
         String queryStartTime = request.getParameter("queryStartTime");
         String queryEndTime = request.getParameter("queryEndTime");
 
         Page page = getPageByRequest(request);
-        HsGroupMobileBatchRecord batchRecord = new HsGroupMobileBatchRecord();
+        HsGroupShortUrlBatchRecord batchRecord = new HsGroupShortUrlBatchRecord();
         batchRecord.setMobile(mobile);
         batchRecord.setQueryStartTime(queryStartTime);
         batchRecord.setQueryEndTime(queryEndTime);
         batchRecord.setPage(page);
-        List<HsGroupMobileBatchRecord> groupMobileBatchRecords = hsGroupMobileBatchRecordService.queryListForPage(batchRecord);
-        for(HsGroupMobileBatchRecord mobileBatchRecord:groupMobileBatchRecords){
-            HsGroupMobileSms hsGroupMobileSms=hsGroupMobileSmsService.queryById(mobileBatchRecord.getSmsId());
+        List<HsGroupShortUrlBatchRecord> groupMobileBatchRecords = hsGroupShortUrlBatchRecordService.queryListForPage(batchRecord);
+        for(HsGroupShortUrlBatchRecord mobileBatchRecord:groupMobileBatchRecords){
+            HsGroupShortUrlSms hsGroupMobileSms=hsGroupShortUrlSmsService.queryById(mobileBatchRecord.getSmsId());
             mobileBatchRecord.setSmsTemplate(hsGroupMobileSms.getNameLabel());
         }
         page.setData(groupMobileBatchRecords);

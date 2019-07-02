@@ -60,7 +60,6 @@
                         <th class="fontWeight_normal tdwidth30">序号
                         </th>
                         <th class="fontWeight_normal tdwidth80 center">手机号</th>
-                        <th class="fontWeight_normal tdwidth50 center">加价券编码</th>
                         <th class="fontWeight_normal tdwidth60 center">短信模板名字</th>
                         <th class="fontWeight_normal tdwidth60 center">发起人</th>
                         <th class="fontWeight_normal tdwidth80 center">发起时间</th>
@@ -79,13 +78,13 @@
 
 <script type="text/javascript">
     function toList() {
-        func_reload_page("${ctx}/groupSms/toGroupMobileBatchRecord.do");
+        func_reload_page("${ctx}/groupShort/toGroupMobileBatchRecord.do");
     }
     //自定义datatable的数据
     var dto = new DtOptions();
     //设置数据刷新路径
     dto.ajax = {
-        "url": "${ctx}/groupSms/groupMobileRecordForPage.do",
+        "url": "${ctx}/groupShort/groupMobileRecordForPage.do",
         "data": function (d) {
             //将表单中的查询条件追加到请求参数中
             var array = $("#searchForm").serializeArray();
@@ -99,7 +98,6 @@
     dto.setColumns([
         {"data": "id", "class": "tdwidth50 center"},
         {"data": "mobile", "class": ""},
-        {"data": "couponCode", "class": ""},
         {"data": "smsTemplate", "class": ""},
         {"data": "createUserid", "class": ""},
         {"data": "strCreateTime", "class": ""}
