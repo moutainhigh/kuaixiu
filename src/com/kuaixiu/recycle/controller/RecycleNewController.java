@@ -128,12 +128,7 @@ public class RecycleNewController extends BaseController {
             //将搜索关键字空格去除
             if (StringUtils.isNotBlank(keyword)) {
                 //存储搜索关键字
-                SearchModel searchModel = new SearchModel();
-                seachId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-                searchModel.setId(seachId);
-                searchModel.setKeyWord(keyword);
-                searchModel.setIsTrue("0");
-                searchModelService.getDao().add(searchModel);
+                seachId = recycleOrderService.saveKeyword(seachId, keyword);
                 keyword = keyword.replaceAll(" ", "");
             }
             JSONObject requestNews = new JSONObject();
@@ -173,10 +168,7 @@ public class RecycleNewController extends BaseController {
                 }
 
             } else {
-                SearchModel searchModel = searchModelService.queryById(seachId);
-                searchModel.setIsTrue("1");
-                searchModel.setMessage("该机型未找到");
-                searchModelService.getDao().update(searchModel);
+                recycleOrderService.saveException(seachId, "该机型未找到");
                 getResult(result, null, false, "3", "该机型未找到");
                 log.info("该机型未找到");
             }
@@ -188,10 +180,7 @@ public class RecycleNewController extends BaseController {
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
-            SearchModel searchModel = searchModelService.queryById(seachId);
-            searchModel.setIsTrue("1");
-            searchModel.setMessage(e.getMessage());
-            searchModelService.getDao().update(searchModel);
+            recycleOrderService.saveException(seachId, e.getMessage());
             e.printStackTrace();
             sessionUserService.getException(result);
         }
@@ -277,18 +266,6 @@ public class RecycleNewController extends BaseController {
             String getResult = AES.post(url, requestNews);
             //对得到结果进行解密
             jsonResult = getResult(AES.Decrypt(getResult));
-            //数据中vdescription字段的值转化为json格式前端解析错误 将其删除
-//            if (StringUtil.isNotBlank(jsonResult.getString("datainfo"))) {
-//                JSONArray j = jsonResult.getJSONArray("datainfo");
-//                for (int i = 0; i < j.size(); i++) {
-//                    JSONObject js = (JSONObject) j.get(i);
-//                    JSONArray next = js.getJSONArray("value");
-//                    for (int m = 0; m < next.size(); m++) {
-//                        JSONObject n = (JSONObject) next.get(m);
-//                        n.remove("vdescription");
-//                    }
-//                }
-//            }
             //session储存机型名称
             request.setAttribute("selectModelName", modelName);
             result.setResult(jsonResult);
@@ -322,7 +299,6 @@ public class RecycleNewController extends BaseController {
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
             String source = params.getString("fm");//来源
-//            Integer source = params.getInteger("fm");//来源
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
             String[] itemses = items.split("\\|");
@@ -379,7 +355,6 @@ public class RecycleNewController extends BaseController {
             sessionUserService.getException(result);
         }
         renderJson(response, result);
-
     }
 
 
@@ -422,11 +397,7 @@ public class RecycleNewController extends BaseController {
                 jsonResult.put("news", news);
             }
             jsonResult.put("isCheck", tip);
-
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
-
+            getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -524,20 +495,15 @@ public class RecycleNewController extends BaseController {
                 order.setTakeTime(takeTime);
                 order.setOrderStatus(1); //已提交
                 order.setMailType(1);    //邮寄方式超人系统推送
-                //调用顺丰快递接口
-                // String mailNo=postSfOrder(order);
-                // order.setSfOrderNo(mailNo);
 
                 //更新记录存入订单号
                 recycleOrderService.saveUpdate(order);
-
-
-                if (order.getRecycleType() == 0) {
-                    //下单成功后如果是信用回收则调用转账接口
-                    //	alipayService.transfer(order, "1", "3");
-                    //转账成功后提交数据反馈模板 预支付
-                    //	TestZhimaDataBatchFeedback.testZhimaDataBatchFeedback(order,cust,request,ReadJson.PREPARE);
-                }
+//                if (order.getRecycleType() == 0) {
+//                    //下单成功后如果是信用回收则调用转账接口
+//                    	alipayService.transfer(order, "1", "3");
+//                    //转账成功后提交数据反馈模板 预支付
+//                    	TestZhimaDataBatchFeedback.testZhimaDataBatchFeedback(order,cust,request,ReadJson.PREPARE);
+//                }
             }
             getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
@@ -549,19 +515,6 @@ public class RecycleNewController extends BaseController {
         renderJson(response, result);
     }
 
-//    @RequestMapping(value = "recycleNew/updateSubmitOrder")
-//    public void updateSubmitOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//        List<String> ids = recycleOrderService.getDao().querySubmitOrderIdsBy();
-//        log.info("修改回收订单数量："+ids.size());
-//        for (String id : ids) {
-//            log.info("修改回收订单id："+id);
-//            RecycleOrder o = recycleOrderService.queryById(id);
-//            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
-//            RecycleCoupon recycleCoupon = recycleOrderService.getCouponCodeTest(o.getMobile(), addValues, o.getPrice());
-//            o.setCouponId(recycleCoupon.getId());
-//            recycleOrderService.saveUpdate(o);
-//        }
-//    }
 
     /**
      * 微信平台回收提交订单  先保存超人平台    调用回收接口成功后再转为正常订单
@@ -610,15 +563,8 @@ public class RecycleNewController extends BaseController {
             }
             //确定来源，没有则默认微信公众号来源
             source = recycleOrderService.isHaveSource(order, source);
-//            List<String> sources = sourceService.getDao().queryByType(1);
-//            Boolean isSend10Coupon = false;
-//            if (sources.contains(source)) {
-//                isSend10Coupon = true;
-//            }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
-            if (StringUtils.isNotBlank(couponCode)
-//                    && !isSend10Coupon
-                    ) {
+            if (StringUtils.isNotBlank(couponCode)) {
                 recycleCoupon = recycleCouponService.queryByCode(couponCode);
                 if (recycleCoupon == null) {
                     throw new SystemException("加价码输入错误");
@@ -681,21 +627,7 @@ public class RecycleNewController extends BaseController {
                 order.setWechatOpenId(openId);
             }
 //            //查询回收下单所有加价规则
-            List<CouponAddValue> addValues = couponAddValueService.getDao().queryByType(1);
             List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.queryList(null);
-//            //判断该订单来源确定是否使用加价券
-//            if (isSend10Coupon) {
-//                recycleCoupon = recycleOrderService.getCouponCode(mobile, request, addValues, order.getPrice());
-//                if (recycleCoupon != null) {
-//                    couponCode = recycleCoupon.getCouponCode();
-//                }
-//            } else {
-//                if (StringUtils.isNotBlank(couponCode)) {
-//                    if (order.getPrice().intValue() < recycleCoupon.getSubtraction_price().intValue()) {
-//                        throw new SystemException("加价券的使用不满足条件");
-//                    }
-//                }
-//            }
             if (StringUtils.isNotBlank(recycleCoupon.getId())) {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
@@ -729,7 +661,6 @@ public class RecycleNewController extends BaseController {
             code.put("address", address);                                      //详细地址
             if (StringUtils.isNotBlank(couponCode)) {
                 //发送给回收平台加价券
-//                recycleOrderService.sendRecycleCoupon(code, recycleCoupon, addValues);
                 recycleOrderService.sendActivityRecycleCoupon(code, recycleCoupon, activityCouponRoles);
             }
             String realCode = AES.Encrypt(code.toString());  //加密
@@ -888,7 +819,6 @@ public class RecycleNewController extends BaseController {
                                         String orderPrice = quote.getString("orderprice");
 //                                        orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
                                         if (recycleCoupon.getPricingType() == 1) {
-//                                        json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                             if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
                                                 if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
                                                     quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper());
@@ -908,7 +838,6 @@ public class RecycleNewController extends BaseController {
                                                 }
                                             }
                                         } else {
-//                                        json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                             quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
                                             quote.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
                                         }
@@ -1000,7 +929,6 @@ public class RecycleNewController extends BaseController {
                                 String orderPrice = info.getString("orderprice");
 //                                orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
                                 if (recycleCoupon.getPricingType() == 1) {
-//                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString() + "%");
                                     if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
                                         if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
                                             info.put("addCouponPrice", recycleCoupon.getAddPriceUpper());
@@ -1020,7 +948,6 @@ public class RecycleNewController extends BaseController {
                                         }
                                     }
                                 } else {
-//                                json.put("couponPrice", recycleCoupon.getStrCouponPrice().toString());
                                     info.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
                                     info.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
                                 }
@@ -1135,7 +1062,6 @@ public class RecycleNewController extends BaseController {
             String brand = params.getString("brand");
             String modelName = params.getString("modelName");
             String openId = params.getString("openId");
-//            String categoryid = params.getString("categoryid");
             if (StringUtil.isBlank(brand) || StringUtil.isBlank(modelName) || StringUtil.isBlank(openId)) {
                 throw new SystemException("参数不完整");
             }
@@ -1165,9 +1091,6 @@ public class RecycleNewController extends BaseController {
                 throw new SystemException("对应机型id不存在");
             }
 
-            //获取该机型的良品价
-            //Map<String, Object> maps = getGoodPirce(map.get("brandId"), productId, categoryid);
-            //int goodPirce = (int) maps.get("maxPrice");
             //获取该用户该机型上次的评估价
             Integer lastPrice = null;
             RecycleCheckItems checkItems = new RecycleCheckItems();
@@ -1177,33 +1100,18 @@ public class RecycleNewController extends BaseController {
             if (!checkList.isEmpty() && checkList.get(0).getLastPrice() != null) {
                 lastPrice = checkList.get(0).getLastPrice().intValue();
             }
-//            //将图片的http的链接转换为https返回  图片保存位置   项目根目录的 resource/brandLogo下
-//            String imageUrl = map.get("modelLogo");
-//            //String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + "webapps" + System.getProperty("file.separator") + "ROOT" + System.getProperty("file.separator") + "resource" + System.getProperty("file.separator") + "brandLogo";
-//            String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "recycleModel";
-//            log.info("图片保存路径:" + savePath);
-//            //String modelUrl = getProjectUrl(request) + "/resource/brandLogo/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-//            String modelUrl = getProjectUrl(request) + "/images/recycleModel/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-//            //先判断文件是否存在  不存在则下载
-//            File f = new File(savePath + System.getProperty("file.separator") + (imageUrl.substring(imageUrl.lastIndexOf("/") + 1)));
-//            if (!f.exists()) {
-//                log.info("图片不存在，开始下载");
-//                FileUtil.download(imageUrl, imageUrl.substring(imageUrl.lastIndexOf("/") + 1), savePath);
-//            }
 
             //返回数据
             jsonResult.put("brandName", o.get("brandname"));
             jsonResult.put("brandId", o.get("brandid"));
             jsonResult.put("modelName", ((JSONObject) sublist.get(0)).getString("modelname"));
             jsonResult.put("productId", productId);
-//            jsonResult.put("modelId", map.get("modelId"));
             jsonResult.put("goodPrice", goodPirce);
             jsonResult.put("lastPrice", lastPrice);
             jsonResult.put("modelLogo", ((JSONObject) sublist.get(0)).getString("modellogo"));
             result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
-
 
             // 将用户手机品牌  品牌id  微信小程序检测的机型  以及对应的回收平台的进行名称存入数据库
             if (checkList.isEmpty()) {
@@ -1533,26 +1441,6 @@ public class RecycleNewController extends BaseController {
         } else if (realPrice >= 3000) {
             percent = 95;
         }
-
-
-//
-//    	  if(realPrice<300){
-//    		  percent=12;
-//    		  msg="勤俭持家，吃土";
-//    	  }else if(realPrice>=300&&realPrice<500){
-//    		  percent=21;
-//    		  msg="爱的深沉，喝粥";
-//    	  }else if(realPrice>=500&&realPrice<1000){
-//              percent=36;
-//              msg="小家生活，吃饭";
-//    	  }else if(realPrice>=1000&&realPrice<2000){
-//              percent=58;
-//              msg="高端大气，吃肉";
-//    	  }else if(realPrice>=2000){
-//              percent=66;
-//    		  msg="挥金如土，大鱼大肉";
-//    	  }
-
         return percent + "-" + msg;
     }
 

@@ -273,36 +273,11 @@ public class RecycleCouponController extends BaseController {
             recycleCoupon.setReceiveMobile(mobile);
 
             JSONArray array = new JSONArray();
-
             //查询所有可使用加价券
             List<RecycleCoupon> recycleCoupons = recycleCouponService.queryUnReceive(recycleCoupon);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            for (RecycleCoupon recycleCoupon1 : recycleCoupons) {
-                JSONObject json = new JSONObject();
-                if (sdf.parse(recycleCoupon1.getEndTime()).getTime() - new Date().getTime() < 0) {
-                    if (recycleCoupon1.getStatus() == 1) {
-                        recycleCouponService.updateStatusByBatchId(recycleCoupon1.getBatchId());
-                    }
-                    continue;
-                }
-                json.put("couponCode", recycleCoupon1.getCouponCode());
-                json.put("couponName", recycleCoupon1.getCouponName());
-                if (recycleCoupon1.getPricingType() == 1) {
-                    json.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "%");
-                } else if (recycleCoupon1.getPricingType() == 2) {
-                    json.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "元");
-                }
-                json.put("upperLimit", recycleCoupon1.getUpperLimit());
-                json.put("subtractionPrice", recycleCoupon1.getSubtraction_price());
-                json.put("ruleDescription", recycleCoupon1.getRuleDescription());
-                json.put("beginTime", recycleCoupon1.getBeginTime());
-                json.put("endTime", recycleCoupon1.getEndTime());
-                array.add(json);
-            }
+            recycleCouponService.getCouponList(recycleCoupons,array);
             jsonResult.put("Coupons", array);
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result,jsonResult,true,"0","成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -337,9 +312,7 @@ public class RecycleCouponController extends BaseController {
             String isCheckCode = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
             request.getSession().setAttribute("isCheckCode", isCheckCode);
             jsonResult.put("isCheckCode", isCheckCode);
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result,jsonResult,true,"0","成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -418,23 +391,7 @@ public class RecycleCouponController extends BaseController {
             recycleCoupon.setCouponCode(recycleCode);
             recycleCouponService.updateForReceive(recycleCoupon);
             RecycleCoupon recycleCoupon1 = recycleCouponService.queryByCode(recycleCode);
-
-            jsonResult.put("id", recycleCoupon1.getId());
-            jsonResult.put("batchId", recycleCoupon1.getBatchId());
-            jsonResult.put("couponCode", recycleCoupon1.getCouponCode());
-            jsonResult.put("couponName", recycleCoupon1.getCouponName());
-            jsonResult.put("pricingType", String.valueOf(recycleCoupon1.getPricingType()));
-            jsonResult.put("ruleDescription", recycleCoupon1.getRuleDescription());
-            jsonResult.put("subtractionPrice", recycleCoupon1.getSubtraction_price().toString());
-            if (recycleCoupon1.getPricingType() == 1) {
-                jsonResult.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "%");
-            } else {
-                jsonResult.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString());
-            }
-
-            jsonResult.put("beginTime", recycleCoupon1.getBeginTime());
-            jsonResult.put("endTime", recycleCoupon1.getEndTime());
-            jsonResult.put("receiveMobile", recycleCoupon1.getReceiveMobile());
+            recycleCouponService.getRecycleCoupon(jsonResult,recycleCoupon1);
 
             if (StringUtils.isBlank(openId)) {
                 //发短信
@@ -450,10 +407,7 @@ public class RecycleCouponController extends BaseController {
                         "将有机会赢取iPhone XS！立即使用请点击http://t.cn/EztuvoQ。\n");
                 Boolean isBoolean = SmsSendUtil.sendSmsThread(mobile, content.toString());
                 if (isBoolean == false) {
-                    result.setResultMessage("短信发送失败");
-                    result.setResultCode("5");
-                    result.setSuccess(false);
-                    return result;
+                    return getResult(result,jsonResult,false,"5","短信发送失败");
                 }
             } else {
                 //微信推送
@@ -489,9 +443,7 @@ public class RecycleCouponController extends BaseController {
                 log.info("模板消息发送结果：" + json);
             }
 
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result,jsonResult,true,"0","成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
