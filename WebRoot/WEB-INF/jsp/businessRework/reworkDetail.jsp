@@ -56,7 +56,7 @@
                         <h4>报障单号：${sjOrder.reworkOrderNo }</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>原订单号：${sjOrder.orderNo }</h4>
+                        <h4>原订单号：<a href="javascript:void(0);" onclick="toDetail('${sjOrder.orderId}');"> + ${sjOrder.orderNo} + </a></h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
@@ -216,6 +216,10 @@
         $("#modal-toAssignReworkFormView").load("${ctx}/sj/order/toSelectWorker.do?reworkId=" + reworkId, function () {
             func_after_model_load(this);
         });
+    }
+
+    function toDetail(id) {
+        func_reload_page("${ctx}/sj/order/detail.do?id=" + id);
     }
 
     function upSignImage(reworkId) {

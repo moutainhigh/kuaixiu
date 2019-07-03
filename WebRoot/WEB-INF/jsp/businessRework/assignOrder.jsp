@@ -126,6 +126,16 @@
         }
     ]);
 
+    var myDtAgainTable = $("#dtAgain").DataTable(dtAgain);
+
+    /**
+     * 刷新列表
+     */
+    function refreshPage() {
+        $("#pageStatus").val(1);
+        myDtAgainTable.ajax.reload(null, false);
+    }
+
     function resetOrder(id){
         AlertText.tips("d_confirm", "系统提示", "确定要分配订单给该员工吗？。", function() {
             var reworkId = $("#reworkId").val();

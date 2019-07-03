@@ -108,6 +108,7 @@ public class SjReworkBackController extends BaseController {
         try {
             //获取查询条件
             String state = request.getParameter("state");
+            String reworkNo = request.getParameter("reworkNo");
             String queryStartTime = request.getParameter("query_startTime");
             String queryEndTime = request.getParameter("query_endTime");
             String createUser = request.getParameter("createUser");
@@ -122,6 +123,7 @@ public class SjReworkBackController extends BaseController {
             }else if(sjSessionUser.getType() == 8){
                 sjReworkOrder.setWorkerId(sjSessionUser.getUserId());
             }
+            sjReworkOrder.setReworkOrderNo(reworkNo);
             sjReworkOrder.setQueryStartTime(queryStartTime);
             sjReworkOrder.setQueryEndTime(queryEndTime);
             sjReworkOrder.setCreateUserid(createUser);

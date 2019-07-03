@@ -15,7 +15,7 @@
             <%--<input type="hidden" id="state" name="state" value="1"/><br/>--%>
             <tr>
                 <td class="search_th "><label class="control-label">单 号 ：</label></td>
-                <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
+                <td class="search_td"><input type="text" name="reworkNo" class="form-control"></td>
                 <td class="search_th"><label class="control-label">状 态：</label></td>
                 <td class="search_td">
                     <select name="state" class="form-control">
