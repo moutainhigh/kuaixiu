@@ -25,7 +25,7 @@
                         <%--<option value="300">待施工</option>--%>
                         <option value="400">待完成</option>
                         <option value="500">已完成</option>
-                        <option value="600">已取消</option>
+                        <%--<option value="600">已取消</option>--%>
                     </select>
                 </td>
             </tr>
@@ -82,6 +82,7 @@
                 <th class="fontWeight_normal tdwidth100">处理人员</th>
                 <th class="fontWeight_normal tdwidth50">接单时间</th>
                 <th class="fontWeight_normal tdwidth70">完成时间</th>
+                <th class="fontWeight_normal tdwidth70">状态</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
             </tr>
             </thead>
@@ -138,6 +139,7 @@
         {"data": "workerName", "class": ""},
         {"data": "strWorkerTakeOrderTime", "class": ""},
         {"data": "strEndTime", "class": ""},
+        {"data": "state", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性
@@ -161,6 +163,35 @@
                 return html;
             }
         },
+        {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
+            targets: -2,
+            render: function (data, type, row, meta) {
+                var state = "";
+                switch (row.state) {
+                    case 100:
+                        state = "已创建";
+                        break;
+                    case 200:
+                        state = "待分配";
+                        break;
+                    case 300:
+                        state = "待施工";
+                        break;
+                    case 400:
+                        state = "待完成";
+                        break;
+                    case 500:
+                        state = "已完成";
+                        break;
+                    case 600:
+                        state = "已取消";
+                        break;
+                    default:
+                        state = "未知";
+                }
+                return state;
+            }
+        },
         {
             targets: -1,
             render: function (data, type, row, meta) {
@@ -175,7 +206,7 @@
                     ]
                 };
                 var html = template_btn(context);
-                if(row.userType==1){
+                if (row.userType == 1 && row.state != 500 && row.state != 600) {
                     context = {
                         func: [
                             {
@@ -187,8 +218,9 @@
                         ]
                     };
                     html += template_btn(context);
-                };
-                if((row.userType==1||row.userType==3)&&row.state==200){
+                }
+                ;
+                if ((row.userType == 1 || row.userType == 3) && row.state == 200) {
                     context = {
                         func: [
                             {

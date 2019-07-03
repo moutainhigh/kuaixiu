@@ -40,7 +40,7 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
     public SjReworkOrder submitReworkOrder(SjOrder sjOrder, String projects, String note, String phone) {
         SjReworkOrder sjReworkOrder = new SjReworkOrder();
         sjReworkOrder.setId(UUID.randomUUID().toString().replace("-", ""));
-        sjReworkOrder.setReworkOrderNo(NOUtil.getNo("NBR-"));
+        sjReworkOrder.setReworkOrderNo(NOUtil.getNo("NR-"));
         sjReworkOrder.setOrderId(sjOrder.getId());
         sjReworkOrder.setOrderNo(sjOrder.getOrderNo());
         sjReworkOrder.setState(100);

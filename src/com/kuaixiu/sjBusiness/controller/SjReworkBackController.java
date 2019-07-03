@@ -159,7 +159,7 @@ public class SjReworkBackController extends BaseController {
             String id = request.getParameter("id");
             SjReworkOrder sjReworkOrder = sjReworkOrderService.getDao().queryById(id);
             SjSessionUser sjSessionUser = getSjCurrentUser(request);
-            sjReworkOrder.setIsDel(1);
+            sjReworkOrder.setState(600);
             sjReworkOrder.setUpdateUserid(sjSessionUser.getUserId());
             sjReworkOrderService.saveUpdate(sjReworkOrder);
             getSjResult(result, null, true, "0", null, "取消成功");
