@@ -11,6 +11,7 @@ import com.common.base.dao.BaseDao;
  */
 public interface SjReworkOrderMapper<T> extends BaseDao<T> {
 
+    T queryByReworkOrderNo(String reworkOrderNo);
 }
 
 

@@ -76,6 +76,11 @@
         from sj_rework_order where id = #{id}
     </select>
 
+    <select id="queryByReworkOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_rework_order where  rework_order_no=#{reworkOrderNo}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select

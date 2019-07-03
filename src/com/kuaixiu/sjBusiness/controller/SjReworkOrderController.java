@@ -7,14 +7,17 @@ import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjProject;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
+import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjBusiness.service.SjProjectService;
+import com.kuaixiu.sjBusiness.service.SjReworkOrderPictureService;
 import com.kuaixiu.sjBusiness.service.SjReworkOrderService;
 import com.system.api.entity.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +39,8 @@ public class SjReworkOrderController extends BaseController {
     private SjOrderService orderService;
     @Autowired
     private SjProjectService projectService;
+    @Autowired
+    private SjReworkOrderPictureService sjReworkOrderPictureService;
 
     /**
      * 联系人手机号查询甩单订单列表
@@ -185,6 +190,62 @@ public class SjReworkOrderController extends BaseController {
             sjReworkOrderService.assignReworkOrder(sjReworkOrder, sjOrder);
 
             getSjResult(result, null, true, "0", null, "创建成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/sj/reworkOrder/getReworkOrderList")
+    @ResponseBody
+    public ResultData getReworkOrderList(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            Integer state = params.getInteger("state");
+            String phone = params.getString("phone");
+            Integer pageIndex = params.getInteger("pageIndex");
+            Integer pageSize = params.getInteger("pageSize");
+            if (StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, false, "2", null, "手机号不能为空");
+            }
+            SjReworkOrder sjOrder = new SjReworkOrder();
+            Page page = new Page();
+            //将值转化为绝对值
+            pageIndex = Math.abs(pageIndex);
+            pageSize = Math.abs(pageSize);
+            page.setPageSize(pageSize);
+            page.setCurrentPage(pageIndex);
+            sjOrder.setPage(page);
+            sjOrder.setCreateUserid(phone);
+            sjOrder.setState(state);
+            List<SjReworkOrder> sjReworkOrders = sjReworkOrderService.queryListForPage(sjOrder);
+            List<JSONObject> jsonObjects = sjReworkOrderService.getObjectList(sjReworkOrders);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("pageSize", page.getPageSize());
+            jsonObject.put("pageIndex", page.getCurrentPage());
+            jsonObject.put("recordsTotal", page.getRecordsTotal());
+            jsonObject.put("totalPage", page.getTotalPage());
+            jsonObject.put("reworkOrders", jsonObjects);
+            getSjResult(result, jsonObject, true, "0", null, "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/sj/reworkOrder/reworkOrderDetail")
+    @ResponseBody
+    public ResultData reworkOrderDetail(HttpServletRequest request,
+                                        HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String reworkNo = params.getString("reworkNo");
+            SjReworkOrder sjReworkOrder = sjReworkOrderService.getDao().queryByReworkOrderNo(reworkNo);
+            JSONObject jsonObject=sjReworkOrderService.getObjectDetail(sjReworkOrder);
+            getSjResult(result, jsonObject, true, "0", null, "成功");
         } catch (Exception e) {
             e.printStackTrace();
         }

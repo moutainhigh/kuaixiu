@@ -1,18 +1,25 @@
 package com.kuaixiu.sjBusiness.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.util.NOUtil;
+import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjReworkOrderMapper;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
 
+import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.SjUserService;
+import com.system.basic.address.entity.Address;
+import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,6 +36,10 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
     private SjReworkOrderMapper<SjReworkOrder> mapper;
     @Autowired
     private SjUserService sjUserService;
+    @Autowired
+    private SjOrderService orderService;
+    @Autowired
+    private AddressService addressService;
 
 
     public SjReworkOrderMapper<SjReworkOrder> getDao() {
@@ -59,4 +70,59 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         this.saveUpdate(sjReworkOrder);
     }
 
+
+    public List<JSONObject> getObjectList(List<SjReworkOrder> sjReworkOrders) {
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        for (SjReworkOrder sjReworkOrder1 : sjReworkOrders) {
+            JSONObject jsonObject = new JSONObject();
+            List<String> projects = orderService.getProject(sjReworkOrder1.getProjectIds());
+            jsonObject.put("reworkNo", sjReworkOrder1.getReworkOrderNo());
+            jsonObject.put("companyName", sjReworkOrder1.getCompanyName());
+            jsonObject.put("state", sjReworkOrder1.getState());
+            jsonObject.put("createTime", sjReworkOrder1.getCreateTime());
+            jsonObject.put("projects", projects);
+            jsonObjects.add(jsonObject);
+        }
+        return jsonObjects;
+    }
+
+    public JSONObject getObjectDetail(SjReworkOrder sjReworkOrder) {
+        JSONObject jsonObject = new JSONObject();
+        List<String> projects = orderService.getProject(sjReworkOrder.getProjectIds());
+        String projectName = orderService.listToString(projects);
+        SjOrder o = orderService.getDao().queryByOrderNo(sjReworkOrder.getOrderNo());
+        jsonObject.put("reworkNo", sjReworkOrder.getReworkOrderNo());
+        jsonObject.put("createTime", sjReworkOrder.getStrCreateTime());
+        jsonObject.put("state", sjReworkOrder.getState());
+        jsonObject.put("orderNo", sjReworkOrder.getOrderNo());
+        String stayPerson = "";
+        if (sjReworkOrder.getState() == 200) {
+            stayPerson = sjReworkOrder.getCompanyName();
+        } else if (sjReworkOrder.getState() == 400) {
+            stayPerson = sjReworkOrder.getWorkerName();
+        }
+        jsonObject.put("stayPerson", stayPerson);
+        jsonObject.put("companyName", sjReworkOrder.getCompanyName());
+        String province = addressService.queryByAreaId(o.getProvinceId()).getArea();
+        String city = addressService.queryByAreaId(o.getCityId()).getArea();
+        String area = addressService.queryByAreaId(o.getAreaId()).getArea();
+//        jsonObject.put("provinceId", o.getProvinceId());
+//        jsonObject.put("provinceName", province);
+//        jsonObject.put("cityId", o.getCityId());
+//        jsonObject.put("cityName", city);
+//        jsonObject.put("areaId", o.getAreaId());
+//        jsonObject.put("areaName", area);
+        String addressDetail = "";
+        if (StringUtils.isNotBlank(o.getAddressDetail())) {
+            addressDetail = o.getAddressDetail();
+//            jsonObject.put("addressDetail", addressDetail);
+        }
+        jsonObject.put("address", province + city + area + addressDetail);
+        jsonObject.put("projectNames", projectName);
+        jsonObject.put("person", o.getPerson());
+        jsonObject.put("personPhone", o.getPhone());
+        jsonObject.put("ap", o.getSingle());
+        jsonObject.put("monitor", o.getGroupNet());
+        return jsonObject;
+    }
 }
