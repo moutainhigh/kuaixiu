@@ -189,7 +189,11 @@ public class SjReworkOrderController extends BaseController {
             //指派订单给原企业
             sjReworkOrderService.assignReworkOrder(sjReworkOrder, sjOrder);
 
-            getSjResult(result, null, true, "0", null, "创建成功");
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("reworkNo",sjReworkOrder.getReworkOrderNo());
+            jsonObject.put("reworkId",sjReworkOrder.getId());
+            jsonObject.put("orderNo",sjReworkOrder.getOrderNo());
+            getSjResult(result, jsonObject, true, "0", null, "创建成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
