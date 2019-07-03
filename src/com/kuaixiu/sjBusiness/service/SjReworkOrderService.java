@@ -10,7 +10,9 @@ import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
 
 import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
+import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
+import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
@@ -40,6 +42,8 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
     private SjOrderService orderService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private ConstructionCompanyService companyService;
 
 
     public SjReworkOrderMapper<SjReworkOrder> getDao() {
@@ -80,6 +84,15 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
             jsonObject.put("companyName", sjReworkOrder1.getCompanyName());
             jsonObject.put("state", sjReworkOrder1.getState());
             jsonObject.put("createTime", sjReworkOrder1.getCreateTime());
+            String stayPerson = "";
+            if (sjReworkOrder1.getState() == 200) {
+                SjUser sjUser=sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(),3);
+                ConstructionCompany company=companyService.getDao().queryByLoginId(sjUser.getId());
+                stayPerson = company.getPerson();
+            } else if (sjReworkOrder1.getState() == 400) {
+                stayPerson = sjReworkOrder1.getWorkerName();
+            }
+            jsonObject.put("stayPerson", stayPerson);
             jsonObject.put("projects", projects);
             jsonObjects.add(jsonObject);
         }
@@ -97,7 +110,9 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         jsonObject.put("orderNo", sjReworkOrder.getOrderNo());
         String stayPerson = "";
         if (sjReworkOrder.getState() == 200) {
-            stayPerson = sjReworkOrder.getCompanyName();
+            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(),3);
+            ConstructionCompany company=companyService.getDao().queryByLoginId(sjUser.getId());
+            stayPerson = company.getPerson();
         } else if (sjReworkOrder.getState() == 400) {
             stayPerson = sjReworkOrder.getWorkerName();
         }

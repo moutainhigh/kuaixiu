@@ -207,7 +207,7 @@ public class SjReworkOrderController extends BaseController {
             String phone = params.getString("phone");
             Integer pageIndex = params.getInteger("pageIndex");
             Integer pageSize = params.getInteger("pageSize");
-            if (StringUtils.isBlank(phone)) {
+            if (StringUtils.isBlank(phone) || null == pageIndex || null == pageSize) {
                 return getSjResult(result, null, false, "2", null, "手机号不能为空");
             }
             SjReworkOrder sjOrder = new SjReworkOrder();
@@ -243,8 +243,11 @@ public class SjReworkOrderController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String reworkNo = params.getString("reworkNo");
+            if (StringUtils.isBlank(reworkNo)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
             SjReworkOrder sjReworkOrder = sjReworkOrderService.getDao().queryByReworkOrderNo(reworkNo);
-            JSONObject jsonObject=sjReworkOrderService.getObjectDetail(sjReworkOrder);
+            JSONObject jsonObject = sjReworkOrderService.getObjectDetail(sjReworkOrder);
             getSjResult(result, jsonObject, true, "0", null, "成功");
         } catch (Exception e) {
             e.printStackTrace();
