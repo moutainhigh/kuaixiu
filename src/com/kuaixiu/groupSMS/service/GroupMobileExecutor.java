@@ -3,6 +3,7 @@ package com.kuaixiu.groupSMS.service;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.groupSMS.entity.*;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
+import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.system.basic.user.entity.SessionUser;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class GroupMobileExecutor {
     public void fun(SessionUser su, List<HsGroupMobile> groupMobiles, HsGroupCouponRole hsGroupCouponRole,
                     HsGroupMobileRecordService hsGroupMobileRecordService,
                     HsGroupMobileSms hsGroupMobileSms,HsGroupMobileService hsGroupMobileService,
-                    HsGroupMobileBatchRecord groupMobileBatchRecord) throws Exception {
+                    HsGroupMobileBatchRecord groupMobileBatchRecord,RecycleSystemService recycleSystemService) throws Exception {
 
         executor.submit(new Runnable() {
             @Override
@@ -38,7 +39,7 @@ public class GroupMobileExecutor {
                         groupMobileRecord.setSmsId(hsGroupMobileSms.getId());
                         hsGroupMobileRecordService.add(groupMobileRecord);
 
-                        SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile());
+                        SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile(),recycleSystemService);
                     }
                     hsGroupMobileService.getDao().deleteNull();
                 } catch (Exception e) {

@@ -15,12 +15,17 @@
             <input type="text" id="upName" name="upName" value="${fromSystem.name }" class="form-control" placeholder="请输入来源系统名称">
           </div>
         </div>
-        <%--<div class="form-group">--%>
-          <%--<label for="upSort" class="col-sm-3 control-label">排序</label>--%>
-          <%--<div class="col-sm-8">--%>
-            <%--<input type="text" id="upSort" name="upSort" value="${fromSystem.sort }" class="form-control" placeholder="请输入显示序号" value="99">--%>
-          <%--</div>--%>
-        <%--</div>--%>
+        <div class="form-group">
+          <label for="smsTypes" class="col-sm-3 control-label"><span style="color:red">*</span> 短信通道</label>
+          <div class="col-sm-9">
+            <label class="radio-inline">
+              <input type="radio" name="smsType" value="1" ${fromSystem.smsType == 1 ? 'checked="checked"' : '' }> M-超人
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="smsType" value="2" ${fromSystem.smsType == 2 ? 'checked="checked"' : '' }> 天翼回收
+            </label>
+          </div>
+        </div>
         <button type="submit" class="hide" id="upSubmitBtn"></button>
       </form>
     </div>
@@ -55,15 +60,14 @@ function updateValidatorForm() {
                             message : "不能为空"
                         }
                     }
+                },
+                smsType: {
+                    validators : {
+                        notEmpty : {
+                            message : "不能为空"
+                        }
+                    }
                 }
-//                upSort: {
-//                	validators : {
-//                    	regexp: {
-//                            regexp: /^\d+$/,
-//                            message: '请输入正确数字'
-//                        }
-//                    }
-//                }
             }// end fields
         }).on("success.form.bv", function(e) {
             // 阻止表单提交

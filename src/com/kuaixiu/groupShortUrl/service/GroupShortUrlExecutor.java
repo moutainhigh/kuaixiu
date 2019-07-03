@@ -2,6 +2,7 @@ package com.kuaixiu.groupShortUrl.service;
 
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.groupShortUrl.entity.*;
+import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.system.basic.user.entity.SessionUser;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class GroupShortUrlExecutor {
     public void fun(SessionUser su, List<HsGroupShortUrlMobile> groupMobiles,
                     HsGroupShortUrlRecordService hsGroupShortUrlRecordService,
                     HsGroupShortUrlSms hsGroupShortUrlSms, HsGroupShortUrlMobileService hsGroupShortUrlMobileService,
-                    HsGroupShortUrlBatchRecord groupShortUrlBatchRecord) throws Exception {
+                    HsGroupShortUrlBatchRecord groupShortUrlBatchRecord,RecycleSystemService recycleSystemService) throws Exception {
 
         executor.submit(new Runnable() {
             @Override
@@ -34,7 +35,7 @@ public class GroupShortUrlExecutor {
                         groupMobileRecord.setSmsId(hsGroupShortUrlSms.getId());
                         hsGroupShortUrlRecordService.add(groupMobileRecord);
 
-                        SmsSendUtil.groupMobileSendCoupon(hsGroupShortUrlSms.getSmsTemplate(), groupMobile.getMobile());
+                        SmsSendUtil.groupMobileSendCoupon(hsGroupShortUrlSms.getSmsTemplate(), groupMobile.getMobile(),recycleSystemService);
                     }
                     hsGroupShortUrlMobileService.getDao().deleteNull();
                 } catch (Exception e) {

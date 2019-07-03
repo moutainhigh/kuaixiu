@@ -10,11 +10,14 @@ import com.kuaixiu.nbTelecomSJ.entity.NBArea;
 import com.kuaixiu.nbTelecomSJ.entity.NBBusiness;
 import com.kuaixiu.nbTelecomSJ.entity.NBManager;
 import com.kuaixiu.order.entity.ReworkOrder;
+import com.kuaixiu.recycle.entity.RecycleSystem;
+import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.kuaixiu.sjBusiness.entity.SjVirtualTeam;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
 import org.apache.commons.lang3.StringUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import sun.misc.BASE64Encoder;
 
 import com.alibaba.fastjson.JSONObject;
@@ -643,12 +646,12 @@ public class SmsSendUtil {
         return sendSmsThread(virtualTeam.getPhone(), content.toString());
     }
 
-    public static boolean submitRecycleOrder(String mobile, String source) {
+    public static boolean submitRecycleOrder(String mobile, String source,RecycleSystemService recycleSystemService) {
         StringBuffer content = new StringBuffer();
         content.append("订单提交成功，价格有效期10天，等待顺丰快递上门取件，" +
                 "收货地址 浙江省杭州市下城区武林广场电信营业厅三楼售后维修中心0571-87162535  ，" +
                 "寄出前请解除机器所有账号和密码（flyme，iCloud）等并取出手机卡和内存卡。");
-        return sendSmsThread(mobile, content.toString(), source);
+        return sendSmsThread(mobile, content.toString(), source,recycleSystemService);
     }
 
 
@@ -670,10 +673,10 @@ public class SmsSendUtil {
         return sendSmsThread(phone, content.toString());
     }
 
-    public static boolean groupMobileSendCoupon(String contentText,String mobile) {
+    public static boolean groupMobileSendCoupon(String contentText,String mobile,RecycleSystemService recycleSystemService) {
         StringBuffer content = new StringBuffer();
         content.append(contentText);
-        return sendSmsThread(mobile, content.toString(),"2");
+        return sendSmsThread(mobile, content.toString(),"2",recycleSystemService);
     }
 
 
@@ -693,15 +696,15 @@ public class SmsSendUtil {
      * @param content 短信内容
      * @CreateDate: 2016-9-26 下午8:10:21
      */
-    public static Boolean sendSmsThread(String mobile, String content, String source) {
-        SmsSendThread sst = new SmsSendThread(mobile, content, source);
+    public static Boolean sendSmsThread(String mobile, String content, String source,RecycleSystemService recycleSystemService) {
+        SmsSendThread sst = new SmsSendThread(mobile, content, source,recycleSystemService);
         new Thread(sst).start();
         System.out.println("started ...");
         return true;
     }
 
     public static Boolean sendSmsThread(String mobile, String content) {
-        SmsSendThread sst = new SmsSendThread(mobile, content, null);
+        SmsSendThread sst = new SmsSendThread(mobile, content, null,null);
         new Thread(sst).start();
         System.out.println("started ...");
         return true;
@@ -821,19 +824,23 @@ public class SmsSendUtil {
 }
 
 class SmsSendThread implements Runnable {
+
+    private RecycleSystemService recycleSystemService;
     private String mobile;
     private String content;
     private String source;
 
-    public SmsSendThread(String mobile, String content, String source) {
+    public SmsSendThread(String mobile, String content, String source,RecycleSystemService recycleSystemService) {
         this.mobile = mobile;
         this.content = content;
         this.source = source;
+        this.recycleSystemService=recycleSystemService;
     }
 
     @Override
     public void run() {
-        List<String> sources= Arrays.asList("2","4","9","10","15");
+        List<String> sources=recycleSystemService.getDao().queryIdBySmsType(2);
+//        List<String> sources= Arrays.asList("2","4","9","10","15");
         if (sources.contains(source) && StringUtils.isNotBlank(source)) {
             SmsSendUtil.sendSms2(mobile, content);
         } else {
