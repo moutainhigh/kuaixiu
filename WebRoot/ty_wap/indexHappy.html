@@ -64,7 +64,7 @@
             background-size: contain;
         }
 
-        .join-active-btn {
+        .join-active-btn.special {
             display: block;
             width: 100%;
             height: .32rem;
@@ -80,15 +80,17 @@
 <body>
     <div id="wrap" class="indexWrap">
 
-        <!-- start of 首页弹窗 -->
-      <!--  <div class="dialog-active">
+      <!-- start of 首页弹窗 -->
+        <div class="dialog-active">
             <div class="mask-hide"></div>
             <div class="img-active-wrap">
-                <i class="close-active-btn js-close-active"></i>
-                <img class="img-active" src="./img/51_image.png" alt="">
-                <a class="join-active-btn" href="./product.html">立即参加</a>
+                <a class="join-active-btn" href="http://m-super.com/hs_hd/index.html#/?hd=ayll003&fm=24">
+                    <i class="close-active-btn js-close-active"></i>
+                    <img class="img-active" src="./img/72_image.png" alt="">
+                </a>
+                <a class="join-active-btn special" href="http://m-super.com/hs_hd/index.html#/?hd=ayll003&fm=24">立即参加</a>
             </div>
-        </div>  -->
+        </div>
         <!-- end of 首页弹窗 -->
 
         <div class="main">
@@ -458,6 +460,20 @@
                 var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
                 if(loginPhone || HappyGoMobile) {
                     $("#isLogin").html('个人中心')
+                    let str = $(".join-active-btn").attr('href');
+                    if(str.indexOf('phone') < 0) {
+                        if(HappyGoMobile) {
+                            str = str + "&phone="+HappyGoMobile
+                            console.log(str)
+                            $(".join-active-btn").attr('href',str)
+                        }else if(loginPhone){
+                            str = str + "&phone="+loginPhone
+                            console.log(str)
+                            $(".join-active-btn").attr('href',str)
+                        }
+                    }
+
+
                 }else {
 
                     $("#isLogin").html('立即登录')
