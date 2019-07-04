@@ -7,17 +7,14 @@ import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjProject;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
-import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjBusiness.service.SjProjectService;
-import com.kuaixiu.sjBusiness.service.SjReworkOrderPictureService;
 import com.kuaixiu.sjBusiness.service.SjReworkOrderService;
 import com.system.api.entity.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,8 +36,6 @@ public class SjReworkOrderController extends BaseController {
     private SjOrderService orderService;
     @Autowired
     private SjProjectService projectService;
-    @Autowired
-    private SjReworkOrderPictureService sjReworkOrderPictureService;
 
     /**
      * 联系人手机号查询甩单订单列表
@@ -81,13 +76,7 @@ public class SjReworkOrderController extends BaseController {
                 sjOrder.setState(500);
             }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
-            List<JSONObject> jsonObjects = orderService.sjListReOrderToObejct(sjOrders);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("pageSize", page.getPageSize());
-            jsonObject.put("pageIndex", page.getCurrentPage());
-            jsonObject.put("recordsTotal", page.getRecordsTotal());
-            jsonObject.put("totalPage", page.getTotalPage());
-            jsonObject.put("sjOrders", jsonObjects);
+            JSONObject jsonObject = orderService.sjListReOrderToObejct(sjOrders,page);
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();

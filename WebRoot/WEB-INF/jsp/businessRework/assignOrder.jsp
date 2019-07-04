@@ -54,27 +54,28 @@
 
 <script type="text/javascript">
 
-    <%--清空--%>
-    function clean() {
-        $('#dtAgain tbody').html("");
-        $('#engName').val("");
-        $('#engCode').val("");
-    }
+    <%--&lt;%&ndash;清空&ndash;%&gt;--%>
+    <%--function clean() {--%>
+        <%--$('#dtAgain tbody').html("");--%>
+        <%--$('#engName').val("");--%>
+        <%--$('#engCode').val("");--%>
+    <%--}--%>
 
-    var myTable2=null;
+    <%--var myTable2=null;--%>
 
     $("#queryListAgainOrder").click(function() {
-        var engCode=$("#engCode").val();
-        var engName=$("#engName").val();
-        if(engName==""&&engCode==""){
-            alert("不能为空");
-        } else {
-            if(myTable2==null){
-                myTable2=$("#dtAgain").DataTable(dtAgain);
-            }else{
-                myTable2.ajax.reload(null, false);
-            }
-        }
+//        var engCode=$("#engCode").val();
+//        var engName=$("#engName").val();
+//        if(engName==""&&engCode==""){
+//            alert("不能为空");
+//        } else {
+//            if(myTable2==null){
+//                myTable2=$("#dtAgain").DataTable(dtAgain);
+//            }else{
+//                myTable2.ajax.reload(null, false);
+//            }
+//        }
+        dtAgainRefreshPage();
     });
 
     //自定义datatable的数据
@@ -131,7 +132,7 @@
     /**
      * 刷新列表
      */
-    function refreshPage() {
+    function dtAgainRefreshPage() {
         $("#pageStatus").val(1);
         myDtAgainTable.ajax.reload(null, false);
     }

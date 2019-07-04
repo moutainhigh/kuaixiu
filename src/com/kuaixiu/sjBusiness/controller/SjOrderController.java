@@ -52,7 +52,6 @@ public class SjOrderController extends BaseController {
 
     private String Ext_Name = "jpg,jpeg,png";
 
-
     /**
      * 获取所有产品需求
      *
@@ -237,13 +236,7 @@ public class SjOrderController extends BaseController {
                 sjOrder.setState(orderState);
             }
             List<SjOrder> sjOrders = orderService.getDao().queryWebListForPage(sjOrder);
-            List<JSONObject> jsonObjects = orderService.sjListOrderToObejct(sjOrders);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("pageSize", page.getPageSize());
-            jsonObject.put("pageIndex", page.getCurrentPage());
-            jsonObject.put("recordsTotal", page.getRecordsTotal());
-            jsonObject.put("totalPage", page.getTotalPage());
-            jsonObject.put("sjOrders", jsonObjects);
+            JSONObject jsonObject = orderService.sjListOrderToObejct(sjOrders,page);
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -277,7 +270,6 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "0", null, "订单号错误");
             }
             JSONObject jsonObject = orderService.sjOrderToObejct(sjOrder);
-
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -380,9 +372,7 @@ public class SjOrderController extends BaseController {
             sjOrder.setCreateName(user.getName());
             sjOrder.setStayPerson(orderService.setStayPerson(1));
             orderService.saveUpdate(sjOrder);
-
             orderCompanyPictureService.getDao().deleteByOrderNo(orderNo);
-
             for (int i = 0; i < imagesList.size(); i++) {
                 String image = imagesList.get(i).toString();
                 OrderCompanyPicture companyPicture = new OrderCompanyPicture();
@@ -450,7 +440,6 @@ public class SjOrderController extends BaseController {
             fileName = mfile.getOriginalFilename();                             //获得文件名
             // 处理获取到的上传文件的文件名的路径部分，只保留文件名部分
             fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
-
             // 得到上传文件的扩展名
             String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
             // 检查扩展名

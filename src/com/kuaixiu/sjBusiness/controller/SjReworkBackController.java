@@ -4,8 +4,6 @@ import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.sjBusiness.entity.OrderContractPicture;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
@@ -14,10 +12,8 @@ import com.kuaixiu.sjBusiness.service.SjReworkOrderService;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
-import com.kuaixiu.sjUser.entity.SjWorker;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.SjUserService;
-import com.kuaixiu.sjUser.service.SjWorkerService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,7 +208,6 @@ public class SjReworkBackController extends BaseController {
                                             HttpServletResponse response) throws Exception {
         String reworkId = request.getParameter("reworkId");
         SjReworkOrder sjReworkOrder=sjReworkOrderService.queryById(reworkId);
-//        SjSessionUser sjSessionUser = getSjCurrentUser(request);
         SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
         ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
         request.setAttribute("companyId", company.getLoginId());
@@ -220,8 +215,6 @@ public class SjReworkBackController extends BaseController {
         String returnView = "businessRework/assignOrder";
         return new ModelAndView(returnView);
     }
-
-
 
     /**
      * 分配订单员工列表
@@ -334,7 +327,6 @@ public class SjReworkBackController extends BaseController {
             sjReworkOrder.setState(500);
             sjReworkOrder.setEndTime(new Date());
             sjReworkOrderService.saveUpdate(sjReworkOrder);
-
             getSjResult(result, null, true, "0", null, "报障单完成");
         } catch (Exception e) {
             e.printStackTrace();
