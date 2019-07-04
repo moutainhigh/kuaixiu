@@ -262,7 +262,7 @@ public class HsActivityCouponController extends BaseController {
             for (RecycleCoupon recycleCoupon : recycleCoupons) {
                 if (sdf.parse(recycleCoupon.getEndTime()).getTime() - new Date().getTime() < 0) {
                     if (recycleCoupon.getStatus() == 1) {
-                        recycleCouponService.updateStatusByBatchId(recycleCoupon.getBatchId());
+                        recycleCouponService.updateStatusByCouponCode(recycleCoupon.getCouponCode());
                     }
                     continue;
                 }

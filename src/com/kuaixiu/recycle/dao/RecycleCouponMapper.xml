@@ -126,6 +126,13 @@
         where batch_id=#{batchId}
     </update>
 
+    <update id="updateStatusByCouponCode" parameterType="String">
+        update hs_coupon
+        set
+        status=2
+        where coupon_code=#{couponCode}
+    </update>
+
     <!-- 根据批次号 批量修改信息-->
     <update id="updateByBatchId" parameterType="Object">
         update hs_coupon

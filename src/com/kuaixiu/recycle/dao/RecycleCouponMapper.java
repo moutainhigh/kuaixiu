@@ -59,6 +59,8 @@ public interface RecycleCouponMapper<T> extends BaseDao<T> {
      */
     int updateStatusByBatchId(String batchId);
 
+    int updateStatusByCouponCode(String batchId);
+
     /**
      * 查询列表。可通过手机号查询
      * @param t

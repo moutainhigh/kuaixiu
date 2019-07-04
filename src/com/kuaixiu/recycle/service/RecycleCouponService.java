@@ -135,6 +135,10 @@ public class RecycleCouponService extends BaseService<RecycleCoupon>{
         return getDao().updateStatusByBatchId(batchId);
     }
 
+    public Integer updateStatusByCouponCode(String batchId){
+        return getDao().updateStatusByCouponCode(batchId);
+    }
+
     /**
      * 根据批次修改
      * @param recycleCoupon
@@ -160,7 +164,7 @@ public class RecycleCouponService extends BaseService<RecycleCoupon>{
             JSONObject json = new JSONObject();
             if (sdf.parse(recycleCoupon1.getEndTime()).getTime() - new Date().getTime() < 0) {
                 if (recycleCoupon1.getStatus() == 1) {
-                    this.updateStatusByBatchId(recycleCoupon1.getBatchId());
+                    this.updateStatusByCouponCode(recycleCoupon1.getCouponCode());
                 }
                 continue;
             }
