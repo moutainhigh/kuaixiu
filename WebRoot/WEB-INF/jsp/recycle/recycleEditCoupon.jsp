@@ -10,39 +10,39 @@
       <form id="insertForm" method="post" class="form-horizontal">
         <input type="hidden" name="id" value="${coupon.id }" />
         <div class="form-group">
-          <label for="addName" class="col-sm-2 control-label"> 加价券编码</label>
+          <label for="couponCode" class="col-sm-2 control-label"> 加价券编码</label>
           <div class="col-sm-9">
-            <input type="text" id="couponCode" readOnly="true" name="couponCode" value="${coupon.couponCode }" class="form-control" placeholder="请输入负责人姓名">
+            <input type="text" id="couponCode" readOnly="true" name="couponCode" value="${coupon.couponCode }" class="form-control" placeholder="请输入加价券编码">
           </div>
         </div>
         <div class="form-group">
-          <label for="addManagerName" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券名称</label>
+          <label for="couponName" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券名称</label>
           <div class="col-sm-9">
-            <input type="text" id="couponName" name="name" value="${coupon.couponName }" class="form-control" placeholder="请输入负责人姓名">
+            <input type="text" id="couponName" name="name" value="${coupon.couponName }" class="form-control" placeholder="请输入加价券名称">
           </div>
         </div>
           <div class="form-group">
-              <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
+              <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
               <div class="col-sm-9">
-                  <input type="text" id="subtractionPrice" name="subtractionPrice" value="${coupon.subtraction_price }" class="form-control" placeholder="请输入负责人手机号">
+                  <input type="text" id="subtractionPrice" name="subtractionPrice" value="${coupon.subtraction_price }" class="form-control" placeholder="请输入加价券额度条件下限">
               </div>
           </div>
           <div class="form-group">
-              <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券类型  1：百分比 2:：固定加价</label>
+              <label for="pricingType" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券类型  1：百分比 2:：固定加价</label>
               <div class="col-sm-9">
-                  <input type="text" id="pricingType" name="pricingType" value="${coupon.pricingType }" class="form-control" placeholder="请输入负责人手机号">
+                  <input type="text" id="pricingType" name="pricingType" value="${coupon.pricingType }" class="form-control">
               </div>
           </div>
         <div class="form-group" id="upperLimits">
-          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
+          <label for="upperLimit" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
           <div class="col-sm-9">
-            <input type="text" id="upperLimit" name="upperLimit" value="${coupon.upperLimit }" class="form-control" placeholder="请输入负责人手机号">
+            <input type="text" id="upperLimit" name="upperLimit" value="${coupon.upperLimit }" class="form-control" placeholder="请输入加价券额度条件上限">
           </div>
         </div>
         <div class="form-group" id="addPriceUppers">
-          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券加价额度上限</label>
+          <label for="addPriceUppers" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券加价额度上限</label>
           <div class="col-sm-9">
-            <input type="text" id="addPriceUpper" name="addPriceUpper" value="${coupon.addPriceUpper }" class="form-control" placeholder="请输入负责人手机号">
+            <input type="text" id="addPriceUpper" name="addPriceUpper" value="${coupon.addPriceUpper }" class="form-control" placeholder="请输入加价券加价额度上限">
           </div>
         </div>
           <div class="form-group" id="prices">
@@ -52,12 +52,12 @@
               </div>
           </div>
         <div class="form-group">
-          <label for="addManagerMobile" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券金额</label>
+          <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券金额</label>
           <div class="col-sm-9">
-            <input type="text" id="couponPrice" name="price" value="${coupon.couponPrice }" class="form-control" placeholder="请输入负责人手机号">
+            <input type="text" id="couponPrice" name="price" value="${coupon.couponPrice }" class="form-control" placeholder="请输入加价券金额">
           </div>
         </div>
-        <div class="form-group" id="projects">
+        <div class="form-group" id="validTimes">
        	  <input type="hidden" id="validBeginTime" name="startTime" value="${coupon.beginTime}" />
        	  <input type="hidden" id="validEndTime" name="endTime" value="${coupon.endTime}" />
           <label for="validTime" class="col-sm-2 control-label"><span style="color:red">*</span> 有效时间</label>
@@ -65,7 +65,7 @@
             <input type="text" id="validTime" value="${coupon.beginTime}-${coupon.endTime}" class="form-control" placeholder="请选择加价券有效时间" readonly="readonly">
           </div>
         </div>
-        <div class="form-group" id="projects">
+        <div class="form-group" id="notes">
           <label for="note" class="col-sm-2 control-label"> 备注</label>
           <div class="col-sm-9">
             <input type="text" id="note" name="note" value="${coupon.note }" class="form-control" placeholder="请输入备注信息">

@@ -138,10 +138,18 @@ public class RecycleCouponController extends BaseController {
                 recycleCoupon.setCouponName(name);
                 recycleCoupon.setPricingType(Integer.valueOf(pricingType));
                 recycleCoupon.setRuleDescription(description);
-                recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
-                recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
-                recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
-                recycleCoupon.setStrCouponPrice(new BigDecimal(price));
+                if(StringUtils.isNotBlank(upperLimit)){
+                    recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
+                }
+                if(StringUtils.isNotBlank(addPriceUpper)){
+                    recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
+                }
+                if(StringUtils.isNotBlank(subtractionPrice)){
+                    recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
+                }
+                if(StringUtils.isNotBlank(price)){
+                    recycleCoupon.setStrCouponPrice(new BigDecimal(price));
+                }
                 recycleCoupon.setBeginTime(startTime);
                 recycleCoupon.setEndTime(endTime);
                 recycleCoupon.setNote(note);
@@ -566,9 +574,15 @@ public class RecycleCouponController extends BaseController {
             recycleCoupon.setCouponName(name);
             recycleCoupon.setPricingType(Integer.valueOf(pricingType));
             recycleCoupon.setRuleDescription(description);
-            recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
-            recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
-            recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
+            if(StringUtils.isNotBlank(upperLimit)){
+                recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
+            }
+            if(StringUtils.isNotBlank(addPriceUpper)){
+                recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
+            }
+            if(StringUtils.isNotBlank(subtractionPrice)){
+                recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
+            }
             if (price.contains("%")) {
                 price = StringUtils.remove(price, "%");
             }

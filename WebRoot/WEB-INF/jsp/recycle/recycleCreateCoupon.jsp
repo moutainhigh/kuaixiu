@@ -6,7 +6,7 @@
     <div class="am-fl am-cf" style="width: 100%;">
         <strong class="am-text-primary am-text-lg"><a href="javascript:void(0);" onclick="toList();">加价券管理</a></strong>
         /
-        <small>生成优惠券</small>
+        <small>生成加价券</small>
     </div>
 </div>
 
@@ -99,7 +99,7 @@
 
 <script type="text/javascript">
     function toList() {
-        func_reload_page("${ctx}/coupon/list.do");
+        func_reload_page("${ctx}/recycle/couponList.do");
     }
     $(function () {
         $('input:radio[name="pricingType"]').change(function () {

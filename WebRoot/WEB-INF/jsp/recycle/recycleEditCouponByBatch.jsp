@@ -25,13 +25,13 @@
         <div class="form-group">
           <label for="subtractionPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件下限</label>
           <div class="col-sm-9">
-            <input type="text" id="subtractionPrice" name="subtractionPrice" value="${coupon.subtraction_price }" class="form-control" placeholder="请输入负责人手机号">
+            <input type="text" id="subtractionPrice" name="subtractionPrice" value="${coupon.subtraction_price }" class="form-control" placeholder="请输入加价券额度条件下限">
           </div>
         </div>
         <div class="form-group">
           <label for="pricingType" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券类型  1：百分比 2:：固定加价</label>
           <div class="col-sm-9">
-            <input type="text" id="pricingType" name="pricingType" value="${coupon.pricingType }" class="form-control" placeholder="请输入负责人手机号">
+            <input type="text" id="pricingType" name="pricingType" value="${coupon.pricingType }" class="form-control">
           </div>
         </div>
         <div class="form-group" id="upperLimits">
