@@ -763,7 +763,7 @@ public class RecycleNewController extends BaseController {
             //更新回收订单
             recycleOrderService.saveUpdate(order);
             //下单成功发送短信
-            SmsSendUtil.submitRecycleOrder(order.getMobile(), source);
+            SmsSendUtil.submitRecycleOrder(order.getMobile(), source,recycleSystemService);
 
             getResult(result, jsonResult, true, "0", "成功");
             //下单成功后更新下单间隔时间
@@ -776,7 +776,8 @@ public class RecycleNewController extends BaseController {
         }
         renderJson(response, result);
     }
-
+    @Autowired
+    private RecycleSystemService recycleSystemService;
     /**
      * 支付宝地址 为    上海 上海 黄浦          ------ 浙江 杭州 江干
      * 回收地址规范     上海市 黄浦区            ------ 浙江省 杭州市 江干区

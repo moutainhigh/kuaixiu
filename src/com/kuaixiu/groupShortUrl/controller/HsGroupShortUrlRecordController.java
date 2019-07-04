@@ -6,6 +6,7 @@ import com.kuaixiu.groupSMS.entity.*;
 import com.kuaixiu.groupSMS.service.*;
 import com.kuaixiu.groupShortUrl.entity.*;
 import com.kuaixiu.groupShortUrl.service.*;
+import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.system.api.entity.ResultData;
 import com.system.basic.sequence.util.SeqUtil;
 import com.system.basic.user.entity.SessionUser;
@@ -116,7 +117,8 @@ public class HsGroupShortUrlRecordController extends BaseController {
 
             GroupShortUrlExecutor myExecutor = new GroupShortUrlExecutor();
             myExecutor.fun(su, groupMobiles,hsGroupShortUrlRecordService,
-                    hsGroupMobileSms,hsGroupShortUrlMobileService,groupMobileBatchRecord);
+                    hsGroupMobileSms,hsGroupShortUrlMobileService,
+                    groupMobileBatchRecord,recycleSystemService);
 
             getSjResult(result, null, true, "0", null, "后台创建中");
         } catch (Exception e) {
@@ -126,4 +128,6 @@ public class HsGroupShortUrlRecordController extends BaseController {
         return result;
 
     }
+    @Autowired
+    private RecycleSystemService recycleSystemService;
 }

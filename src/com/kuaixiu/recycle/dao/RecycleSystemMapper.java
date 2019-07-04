@@ -20,6 +20,8 @@ public interface RecycleSystemMapper<T> extends BaseDao<T> {
      * @CreateDate: 2016-9-29 下午7:55:09
      */
     List<T> queryByName(String name);
+
+    List<String> queryIdBySmsType(Integer smsType);
 }
 
 

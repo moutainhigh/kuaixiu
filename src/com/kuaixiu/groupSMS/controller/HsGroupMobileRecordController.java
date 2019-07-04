@@ -6,6 +6,7 @@ import com.kuaixiu.groupSMS.entity.*;
 import com.kuaixiu.groupSMS.service.*;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.RecycleCouponService;
+import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.system.api.entity.ResultData;
 import com.system.basic.sequence.util.SeqUtil;
 import com.system.basic.user.entity.SessionUser;
@@ -126,7 +127,7 @@ public class HsGroupMobileRecordController extends BaseController {
 
             GroupMobileExecutor myExecutor = new GroupMobileExecutor();
             myExecutor.fun(su, groupMobiles, hsGroupCouponRole, hsGroupMobileRecordService,
-                    hsGroupMobileSms, hsGroupMobileService, groupMobileBatchRecord);
+                    hsGroupMobileSms, hsGroupMobileService, groupMobileBatchRecord,recycleSystemService);
 
             getSjResult(result, null, true, "0", null, "后台创建中");
         } catch (Exception e) {
@@ -136,4 +137,6 @@ public class HsGroupMobileRecordController extends BaseController {
         return result;
 
     }
+    @Autowired
+    private RecycleSystemService recycleSystemService;
 }
