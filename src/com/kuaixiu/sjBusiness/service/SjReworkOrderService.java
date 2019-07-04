@@ -117,6 +117,7 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
             stayPerson = sjReworkOrder.getWorkerName();
         }
         jsonObject.put("stayPerson", stayPerson);
+        jsonObject.put("note", sjReworkOrder.getNote());
         jsonObject.put("companyName", sjReworkOrder.getCompanyName());
         String province = addressService.queryByAreaId(o.getProvinceId()).getArea();
         String city = addressService.queryByAreaId(o.getCityId()).getArea();
