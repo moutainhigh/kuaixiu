@@ -217,7 +217,7 @@ public class SjOrderController extends BaseController {
     }
 
 
-
+    //推送数据给公安
     public String postNews(SjOrder sjOrder) throws Exception {
         String areaname = recycleOrderService.getAreaname(sjOrder.getProvinceId(), sjOrder.getCityId(), sjOrder.getAreaId());
         StringBuilder ascription = new StringBuilder();

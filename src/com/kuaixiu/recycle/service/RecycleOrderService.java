@@ -49,6 +49,8 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
     private AddressService addressService;
     @Autowired
     private PushsfExceptionService pushsfExceptionService;
+    @Autowired
+    private SearchModelService searchModelService;
 
     private static final String baseNewUrl = SystemConstant.RECYCLE_NEW_URL;
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
@@ -134,6 +136,23 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         return source;
     }
 
+    //存储搜索关键字
+    public String saveKeyword(String seachId,String keyword){
+        SearchModel searchModel = new SearchModel();
+        seachId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        searchModel.setId(seachId);
+        searchModel.setKeyWord(keyword);
+        searchModel.setIsTrue("0");
+        searchModelService.getDao().add(searchModel);
+        return seachId;
+    }
+    //存储搜索异常
+    public void saveException(String seachId,String log){
+        SearchModel searchModel = searchModelService.queryById(seachId);
+        searchModel.setIsTrue("1");
+        searchModel.setMessage(log);
+        searchModelService.getDao().update(searchModel);
+    }
 
     //判断该订单来源确定是否使用加价券
     public RecycleCoupon getCouponCode(String mobile, HttpServletRequest request, List<CouponAddValue> addValues, BigDecimal price) {
