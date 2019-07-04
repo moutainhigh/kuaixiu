@@ -6,14 +6,14 @@ import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
+import com.common.util.UrlUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
-import com.kuaixiu.sjBusiness.entity.SjProject;
-import com.kuaixiu.sjBusiness.service.OrderCompanyPictureService;
-import com.kuaixiu.sjBusiness.service.SjOrderService;
-import com.kuaixiu.sjBusiness.service.SjProjectService;
+import com.kuaixiu.recycle.service.RecycleOrderService;
+import com.kuaixiu.sjBusiness.entity.*;
+import com.kuaixiu.sjBusiness.service.*;
+import com.kuaixiu.sjUser.entity.CustomerDetail;
 import com.kuaixiu.sjUser.entity.SjUser;
+import com.kuaixiu.sjUser.service.CustomerDetailService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
@@ -49,8 +49,22 @@ public class SjOrderController extends BaseController {
     private OrderCompanyPictureService orderCompanyPictureService;
     @Autowired
     private SjUserService userService;
+    @Autowired
+    private RecycleOrderService recycleOrderService;
+    @Autowired
+    private CustomerDetailService customerDetailService;
+    @Autowired
+    private AreaCityCompanyService cityCompanyService;
+    @Autowired
+    private AreaManagementUnitService managementUnitService;
+    @Autowired
+    private AreaBranchOfficeService branchOfficeService;
+    @Autowired
+    private AreaContractBodyService contractBodyService;
 
     private String Ext_Name = "jpg,jpeg,png";
+    
+    private static final String poilceUrl = "https://sh.keepwan.com/api/ningbo/merchants";
 
     /**
      * 获取所有产品需求
@@ -174,9 +188,9 @@ public class SjOrderController extends BaseController {
             sjOrder.setCreateUserid(phone);
             sjOrder.setCreateName(user.getName());
             sjOrder.setStayPerson("admin");
-            if(type==2){
-                orderService.createOrder(projectId,sjOrder);
-            }else{
+            if (type == 2) {
+                orderService.createOrder(projectId, sjOrder);
+            } else {
                 sjOrder.setOrderNo(NOUtil.getNo("NB-"));
                 orderService.add(sjOrder);
             }
@@ -189,12 +203,65 @@ public class SjOrderController extends BaseController {
                 orderCompanyPictureService.add(companyPicture);
             }
 
+            if (type == 2) {
+                if (projectId.contains("1")) {
+                    postNews(sjOrder);
+                }
+            }
+
             getSjResult(result, null, true, "0", null, "提交成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
         }
         return result;
+    }
+
+
+    //推送数据给公安
+    public String postNews(SjOrder sjOrder) throws Exception {
+        String areaname = recycleOrderService.getAreaname(sjOrder.getProvinceId(), sjOrder.getCityId(), sjOrder.getAreaId());
+        StringBuilder ascription = new StringBuilder();
+        SjUser sjUser = userService.getDao().queryByLoginId(sjOrder.getCreateUserid(), 2);
+        CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(sjUser.getId());
+        AreaCityCompany areaCityCompany = cityCompanyService.queryById(customerDetail.getCityCompanyId());
+        String cityCompany = areaCityCompany.getCityCompany();
+        ascription.append(cityCompany);
+        if (customerDetail.getManagementUnitId() != null) {
+            AreaManagementUnit managementUnit1 = managementUnitService.queryById(customerDetail.getManagementUnitId());
+            if (managementUnit1 != null) {
+                String managementUnit = managementUnit1.getManagementUnit();
+                ascription.append("/" + managementUnit);
+            }
+        }
+        if (customerDetail.getBranchOfficeId() != null) {
+            AreaBranchOffice branchOffice1 = branchOfficeService.queryById(customerDetail.getBranchOfficeId());
+            if (branchOffice1 != null) {
+                String branchOffice = branchOffice1.getBranchOffice();
+                ascription.append("/" + branchOffice);
+            }
+        }
+        if (customerDetail.getContractBodyId() != null) {
+            AreaContractBody contractBody1 = contractBodyService.queryById(customerDetail.getContractBodyId());
+            if (contractBody1 != null) {
+                String contractBody = contractBody1.getContractBody();
+                ascription.append("/" + contractBody);
+            }
+        }
+        //调用接口需要加密的数据
+        JSONObject code = new JSONObject();
+        code.put("name", sjOrder.getCompanyName());
+        code.put("address", areaname + sjOrder.getAddressDetail());
+        code.put("linkman_name", sjOrder.getPerson());
+        code.put("linkman_phone", sjOrder.getPhone());
+        code.put("corporation_name", sjOrder.getResponsibleName());
+        code.put("corporation_id_no", sjOrder.getResponsibleIdNumber());
+        code.put("order_no", sjOrder.getOrderNo());
+        code.put("cm_name", sjOrder.getCreateName());
+        code.put("cm_phone", sjOrder.getCreateUserid());
+        code.put("cm_unit", ascription.toString());
+        //发起请求
+        return UrlUtil.sendPost(poilceUrl, code);
     }
 
     /**

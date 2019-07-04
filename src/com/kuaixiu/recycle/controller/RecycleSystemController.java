@@ -100,6 +100,7 @@ public class RecycleSystemController extends BaseController {
         Map<String, Object> resultMap = Maps.newHashMap();
         //获取项目名称
         String name = request.getParameter("addName");
+        String smsType = request.getParameter("smsType");
         //序号
         String sortStr= request.getParameter("addSort");
         if(StringUtils.isBlank(sortStr)){
@@ -112,6 +113,7 @@ public class RecycleSystemController extends BaseController {
 		}
         RecycleSystem t = new RecycleSystem();
         t.setName(name);
+        t.setSmsType(Integer.valueOf(smsType));
         t.setSort(Integer.parseInt(sortStr));
         t.setCreateUserid(su.getUserId());
         t.setIsDel(0);
@@ -164,6 +166,7 @@ public class RecycleSystemController extends BaseController {
         String id = request.getParameter("id");
         //获取项目名称
         String name = request.getParameter("upName");
+        String smsType = request.getParameter("smsType");
         //序号
         String sortStr= request.getParameter("upSort");
         if(StringUtils.isBlank(sortStr)){
@@ -174,6 +177,7 @@ public class RecycleSystemController extends BaseController {
         	throw new SystemException("该记录不存在");
         }
         t.setName(name);
+        t.setSmsType(Integer.valueOf(smsType));
         t.setSort(Integer.parseInt(sortStr));
         t.setUpdateUserid(su.getUserId());
         recycleSystemService.saveUpdate(t);

@@ -1,5 +1,7 @@
 package com.kuaixiu.recycle.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.common.util.NOUtil;
@@ -9,7 +11,10 @@ import com.kuaixiu.recycle.entity.RecycleCoupon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2018/9/13/013.
@@ -146,5 +151,51 @@ public class RecycleCouponService extends BaseService<RecycleCoupon>{
      */
     public int couponCodeUpdate(RecycleCoupon recycleCoupon){
         return getDao().couponCodeUpdate(recycleCoupon);
+    }
+
+
+    public void getCouponList(List<RecycleCoupon> recycleCoupons,JSONArray array)throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        for (RecycleCoupon recycleCoupon1 : recycleCoupons) {
+            JSONObject json = new JSONObject();
+            if (sdf.parse(recycleCoupon1.getEndTime()).getTime() - new Date().getTime() < 0) {
+                if (recycleCoupon1.getStatus() == 1) {
+                    this.updateStatusByBatchId(recycleCoupon1.getBatchId());
+                }
+                continue;
+            }
+            json.put("couponCode", recycleCoupon1.getCouponCode());
+            json.put("couponName", recycleCoupon1.getCouponName());
+            if (recycleCoupon1.getPricingType() == 1) {
+                json.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "%");
+            } else if (recycleCoupon1.getPricingType() == 2) {
+                json.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "元");
+            }
+            json.put("upperLimit", recycleCoupon1.getUpperLimit());
+            json.put("subtractionPrice", recycleCoupon1.getSubtraction_price());
+            json.put("ruleDescription", recycleCoupon1.getRuleDescription());
+            json.put("beginTime", recycleCoupon1.getBeginTime());
+            json.put("endTime", recycleCoupon1.getEndTime());
+            array.add(json);
+        }
+    }
+
+    public void getRecycleCoupon(JSONObject jsonResult,RecycleCoupon recycleCoupon1){
+        jsonResult.put("id", recycleCoupon1.getId());
+        jsonResult.put("batchId", recycleCoupon1.getBatchId());
+        jsonResult.put("couponCode", recycleCoupon1.getCouponCode());
+        jsonResult.put("couponName", recycleCoupon1.getCouponName());
+        jsonResult.put("pricingType", String.valueOf(recycleCoupon1.getPricingType()));
+        jsonResult.put("ruleDescription", recycleCoupon1.getRuleDescription());
+        jsonResult.put("subtractionPrice", recycleCoupon1.getSubtraction_price().toString());
+        if (recycleCoupon1.getPricingType() == 1) {
+            jsonResult.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString() + "%");
+        } else {
+            jsonResult.put("couponPrice", recycleCoupon1.getStrCouponPrice().stripTrailingZeros().toPlainString());
+        }
+
+        jsonResult.put("beginTime", recycleCoupon1.getBeginTime());
+        jsonResult.put("endTime", recycleCoupon1.getEndTime());
+        jsonResult.put("receiveMobile", recycleCoupon1.getReceiveMobile());
     }
 }

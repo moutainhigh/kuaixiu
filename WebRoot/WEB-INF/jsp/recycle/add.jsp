@@ -14,12 +14,17 @@
             <input type="text" id="addName" name="addName" class="form-control" placeholder="请输入来源系统名称">
           </div>
         </div>
-        <%--<div class="form-group">--%>
-          <%--<label for="addSort" class="col-sm-3 control-label">排序</label>--%>
-          <%--<div class="col-sm-8">--%>
-            <%--<input type="text" id="addSort" name="addSort" class="form-control" placeholder="请输入显示序号" value="99">--%>
-          <%--</div>--%>
-        <%--</div>--%>
+        <div class="form-group">
+          <label for="smstypes" class="col-sm-3 control-label"><span style="color:red">*</span> 短信通道</label>
+          <div class="col-sm-9">
+            <label class="radio-inline">
+              <input type="radio" name="smsType" value="1"> M-超人
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="smsType" value="2"> 天翼回收
+            </label>
+          </div>
+        </div>
         <button type="submit" class="hide" id="addSubmitBtn"></button>
       </form>
     </div>
@@ -54,15 +59,14 @@ function insertValidatorForm() {
                             message : "不能为空"
                         }
                     }
+                },
+                smsType: {
+                    validators : {
+                        notEmpty : {
+                            message : "不能为空"
+                        }
+                    }
                 }
-//                addSort: {
-//                    validators : {
-//                    	regexp: {
-//                            regexp: /^\d+$/,
-//                            message: '请输入正确数字'
-//                        }
-//                    }
-//                }
             }// end fields
         }).on("success.form.bv", function(e) {
             // 阻止表单提交
