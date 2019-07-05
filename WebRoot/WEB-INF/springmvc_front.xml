@@ -99,6 +99,7 @@
                 <value>^/sj/admin/forgot\.do.*</value>
                 <value>^/sj/admin/forgotCheck\.do.*</value>
                 <value>^/sj/wechat/.*</value>
+                <value>^/sj/reworkOrder/.*</value>
 
                 <!--微信端-->
                 <value>^/wechat/repair/.*</value>

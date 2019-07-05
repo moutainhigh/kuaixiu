@@ -191,7 +191,6 @@
                                     class="am-btn am-btn-default search_btn" type="button"> 完结
                             </button>
                         </div>
-
                     </td>
                 </tr>
             </c:if>

@@ -24,7 +24,6 @@ import com.system.basic.address.service.AddressService;
 import com.system.basic.sequence.util.SeqUtil;
 import com.system.constant.SystemConstant;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -84,6 +83,8 @@ public class SjBackstageController extends BaseController {
     private SjSaveNetService sjSaveNetService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private SjVirtualTeamService virtualTeamService;
 
     /**
      * 订单列表
@@ -158,7 +159,7 @@ public class SjBackstageController extends BaseController {
             String companyName = request.getParameter("companyName");
             String state = request.getParameter("state");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
-            String responsibleName =request.getParameter("responsibleName");//负责人姓名
+            String responsibleName = request.getParameter("responsibleName");//负责人姓名
             String responsibleIdNumber = request.getParameter("responsibleIdNumber");//负责人身份证号
             SjOrder sjOrder = new SjOrder();
             SjSessionUser sjSessionUser = getSjCurrentUser(request);
@@ -198,11 +199,6 @@ public class SjBackstageController extends BaseController {
                 List<String> projects = orderService.getProject(sjOrder1.getProjectId());
                 String projectName = orderService.listToString(projects);
                 sjOrder1.setProjectNames(projectName);
-                sjOrder1.setStrCreateTime(sdf.format(sjOrder1.getCreateTime()));
-                sjOrder1.setNewDate(sdf.format(new Date()));
-                if (sjOrder1.getApprovalTime() != null) {
-                    sjOrder1.setStrApprovalTime(sdf.format(sjOrder1.getApprovalTime()));
-                }
             }
             page.setData(sjOrders);
         } catch (Exception e) {
@@ -264,33 +260,8 @@ public class SjBackstageController extends BaseController {
                                HttpServletResponse response) throws Exception {
         String id = request.getParameter("id");
         SjOrder sjOrder = orderService.queryById(id);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String province = addressService.queryByAreaId(sjOrder.getProvinceId()).getArea();
-        String city = addressService.queryByAreaId(sjOrder.getCityId()).getArea();
-        String area = addressService.queryByAreaId(sjOrder.getAreaId()).getArea();
-        Address address = addressService.queryByAreaId(sjOrder.getStreetId());
-        String street = "";
-        if (address != null) {
-            street = address.getArea();
-        }
-        sjOrder.setAddress(province + " " + city + " " + area + " " + street);
-        List<String> projects = orderService.getProject(sjOrder.getProjectId());
-        String projectName = orderService.listToString(projects);
-        sjOrder.setProjectNames(projectName);
-        sjOrder.setStrCreateTime(sdf.format(sjOrder.getCreateTime()));
+        orderService.getSjDetail(sjOrder);
         List<OrderCompanyPicture> companyPictures = orderCompanyPictureService.getDao().queryByOrderNo(sjOrder.getOrderNo());
-        if (sjOrder.getApprovalPerson() != null) {
-            String user = sjUserService.userIdToUserIdName(sjOrder.getApprovalPerson());
-            sjOrder.setApprovalPerson(user);
-        }
-        if (sjOrder.getAssignPerson() != null) {
-            String user = sjUserService.userIdToUserIdName(sjOrder.getAssignPerson());
-            sjOrder.setAssignPerson(user);
-        }
-        if (sjOrder.getBuildPerson() != null) {
-            String user = sjUserService.userIdToUserIdName(sjOrder.getBuildPerson());
-            sjOrder.setBuildPerson(user);
-        }
         if (sjOrder.getState() >= 300) {
             if (sjOrder.getCompletedPerson() != null) {
                 String user = sjUserService.userIdToUserIdName(sjOrder.getCompletedPerson());
@@ -327,12 +298,9 @@ public class SjBackstageController extends BaseController {
             }
             returnView = "business/detail";
         }
-
         return new ModelAndView(returnView);
     }
 
-    @Autowired
-    private SjVirtualTeamService virtualTeamService;
 
     /**
      * 订单审批
@@ -364,8 +332,8 @@ public class SjBackstageController extends BaseController {
             } else if ("2".equals(isPast)) {
                 sjOrder.setState(600);
             }
-
             if (sjOrder.getType() == 1) {
+                //商机爆料审核通过发送短信给虚拟团队
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(), null);
                 CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(sjUser.getId());
                 SjVirtualTeam virtualTeam = virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
@@ -375,9 +343,7 @@ public class SjBackstageController extends BaseController {
             } else {
                 sjOrder.setStayPerson(orderService.setStayPerson(2));
             }
-
             orderService.saveUpdate(sjOrder);
-
             ApprovalNote approvalNote = new ApprovalNote();
             approvalNote.setOrderNo(sjOrder.getOrderNo());
             approvalNote.setNote(note);
@@ -474,23 +440,19 @@ public class SjBackstageController extends BaseController {
             String areaId = request.getParameter("addCounty");
             String project = request.getParameter("projectIds");
             ConstructionCompany constructionCompany = new ConstructionCompany();
-            constructionCompany.setProject(project);
+            if (StringUtils.isNotBlank(project)) {
+                if (project.contains(",")) {
+                    constructionCompany.setQueryStatusArray(Arrays.asList(project.split(",")));
+                } else {
+                    constructionCompany.setProject(project);
+                }
+            }
             constructionCompany.setProvince(provinceId);
             constructionCompany.setCity(cityId);
             constructionCompany.setServiceArea(areaId);
             constructionCompany.setPage(page);
             List<ConstructionCompany> companies = constructionCompanyService.queryListForPage(constructionCompany);
-            for (ConstructionCompany company : companies) {
-                String province = addressService.queryByAreaId(company.getProvince()).getArea();
-                String city = addressService.queryByAreaId(company.getCity()).getArea();
-                String area = addressService.queryByAreaId(company.getArea()).getArea();
-                company.setAddress(province + city + area);
-                List<String> projects1 = orderService.getProject(company.getProject());
-                String projectName = orderService.listToString(projects1);
-                company.setProjectNames(projectName);
-                SjUser sjUser = sjUserService.getDao().queryById(company.getLoginId());
-                company.setCompanyName(sjUser.getName());
-            }
+            orderService.getCompanies(companies);
             page.setData(companies);
         } catch (Exception e) {
             e.printStackTrace();
@@ -583,7 +545,7 @@ public class SjBackstageController extends BaseController {
             //获取省份地址
             List<Address> provinceL = addressService.queryByPid("0");
             List<SjProject> projects = projectService.queryList(null);
-            List<Address> countyList = addressService.queryByPid("1158");
+            List<Address> countyList = addressService.queryByPid("1158");//默认搜索宁波市
             request.setAttribute("projects", projects);
             request.setAttribute("provinceL", provinceL);
             request.setAttribute("countyList", countyList);
@@ -796,38 +758,7 @@ public class SjBackstageController extends BaseController {
             //loginId,companyName,province,city,area,addressDetail,person,phone,
             // project,createTime,personNum,endOrderNum,isCancel
             List<Map<String, Object>> companies = constructionCompanyService.getDao().queryCompanyListForPage(constructionCompany);
-            for (Map<String, Object> company : companies) {
-                String province = addressService.queryByAreaId(company.get("province").toString()).getArea();
-                String city = addressService.queryByAreaId(company.get("city").toString()).getArea();
-                String area = addressService.queryByAreaId(company.get("area").toString()).getArea();
-                if (company.get("addressDetail") == null) {
-                    company.put("address", province + city + area);
-                } else {
-                    company.put("address", province + city + area + company.get("addressDetail").toString());
-                }
-                if (company.get("service_area") != null) {
-                    String serviceArea = company.get("service_area").toString();
-                    StringBuilder sb = new StringBuilder();
-                    if (serviceArea.contains(",")) {
-                        String[] serviceAreas = serviceArea.split(",");
-                        for (int i = 0; i < serviceAreas.length; i++) {
-                            Address address = addressService.queryByAreaId(serviceAreas[i]);
-                            sb.append(address.getArea());
-                            sb.append(",");
-                        }
-                    } else {
-                        Address address = addressService.queryByAreaId(serviceArea);
-                        sb.append(address.getArea());
-                    }
-                    company.put("serviceArea", sb.toString());
-                } else {
-                    company.put("serviceArea", "");
-                }
-
-                List<String> projects1 = orderService.getProject(company.get("project").toString());
-                String projectName = orderService.listToString(projects1);
-                company.put("projectName", projectName);
-            }
+            orderService.getCompany(companies);
             page.setData(companies);
         } catch (Exception e) {
             e.printStackTrace();
@@ -967,9 +898,9 @@ public class SjBackstageController extends BaseController {
         try {
             String orderNo = request.getParameter("orderNo");
             //获取图片，保存图片到webapp同级inages/sj_images
-            String imageName= NOUtil.getNo("img-")+NOUtil.getRandomInteger(4);
+            String imageName = NOUtil.getNo("img-") + NOUtil.getRandomInteger(4);
             String savePath = serverPath(request.getServletContext().getRealPath("")) + System.getProperty("file.separator") + SystemConstant.IMAGE_PATH + System.getProperty("file.separator") + "sj_images" + System.getProperty("file.separator") + "sj_contract";
-            String logoPath = getPath(request, "file", savePath,imageName);             //图片路径
+            String logoPath = getPath(request, "file", savePath, imageName);             //图片路径
             String imageUrl = getProjectUrl(request) + "/images/sj_images/sj_contract/" + logoPath.substring(logoPath.lastIndexOf("/") + 1);
             System.out.println("图片路径：" + savePath);
             OrderContractPicture contractPicture = new OrderContractPicture();

@@ -134,24 +134,35 @@ public class CustomerDetailController extends BaseController {
             JSONObject params = getPrarms(request);
             String phone = params.getString("phone");
             String code = params.getString("checkCode");
+            Integer userType = params.getInteger("userType");//用户类型   1：客户经理  2用户/联系人
             Integer isLogin = params.getInteger("isRememberLogin");//是否记住登录
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(code)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
-            SjUser user = userService.checkWechatLogin(phone, 2);
             if (!userService.checkRandomCode(phone, code)) {
                 return getSjResult(result, null, false, "3", null, "验证码错误");
-            } else if (user == null) {
-                return getSjResult(result, null, false, "1", null, "该手机用户不存在");
+            }
+            SjUser user = new SjUser();
+            if (userType == 2) {
+                userType = 2;
+            } else {
+                userType = 1;
+                user = userService.checkWechatLogin(phone, 2);
+                if (user == null) {
+                    return getSjResult(result, null, false, "1", null, "该手机用户不存在");
+                }
+                sessionUserService.customerInitSessionUser(user, request);
             }
             if (isLogin != null && isLogin == 1) {
                 String[] dname = request.getServerName().split("\\.");
-                String phoneBase64 = Base64Util.getBase64(phone);
+                String phoneAndUserType = phone + Consts.COOKIE_SJ_INFO_SIGN + String.valueOf(userType);
+                String phoneBase64 = Base64Util.getBase64(phoneAndUserType);
                 CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
             }
-            //初始化SessionUser
-            sessionUserService.customerInitSessionUser(user, request);
-            getSjResult(result, null, true, "0", null, "登录成功");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("mobile", phone);
+            jsonObject.put("userType", userType);
+            getSjResult(result, jsonObject, true, "0", null, "登录成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -214,15 +225,22 @@ public class CustomerDetailController extends BaseController {
                 e.printStackTrace();
             }
             //3.base64解密用户名
-            String phone = Base64Util.getFromBase64(phoneStr);
-            SjUser user = userService.checkWechatLogin(phone, 2);
-            if (user == null) {
-                return getSjResult(result, null, false, "1", null, "该手机用户不存在");
+            String phoneAndUserType = Base64Util.getFromBase64(phoneStr);
+            String phone = phoneAndUserType.substring(0, phoneAndUserType.indexOf(Consts.COOKIE_SJ_INFO_SIGN));
+            String userType = phoneAndUserType.substring(phoneAndUserType.indexOf(Consts.COOKIE_SJ_INFO_SIGN) + Consts.COOKIE_SJ_INFO_SIGN.length());
+            SjUser user = new SjUser();
+            if ("2".equals(userType)) {
+            } else {
+                user = userService.checkWechatLogin(phone, 2);
+                if (user == null) {
+                    return getSjResult(result, null, false, "1", null, "该手机用户不存在");
+                }
+                sessionUserService.customerInitSessionUser(user, request);
             }
-            sessionUserService.customerInitSessionUser(user, request);
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("mobile", phone);
+            jsonObject.put("userType", userType);
             getSjResult(result, jsonObject, true, "0", null, "已登录");
         } catch (Exception e) {
             e.printStackTrace();

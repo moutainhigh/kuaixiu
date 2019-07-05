@@ -3,13 +3,10 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
+import com.common.paginate.Page;
 import com.common.util.ConverterUtil;
-import com.common.util.DateUtil;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.recycle.entity.RecycleCheckItems;
-import com.kuaixiu.recycle.entity.RecycleOrder;
-import com.kuaixiu.recycle.entity.RecycleSystem;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.*;
 
@@ -21,15 +18,12 @@ import com.kuaixiu.sjSetMeal.service.SjPoeService;
 import com.kuaixiu.sjSetMeal.service.SjSaveNetService;
 import com.kuaixiu.sjSetMeal.service.SjSetMealService;
 import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
+import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
-import com.system.basic.user.entity.SessionUser;
-import com.system.constant.SystemConstant;
-import jodd.util.StringUtil;
-import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -38,13 +32,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -56,7 +47,6 @@ import java.util.regex.Pattern;
  */
 @Service("sjOrderService")
 public class SjOrderService extends BaseService<SjOrder> {
-    private static final Logger log = Logger.getLogger(SjOrderService.class);
 
     @Autowired
     private SjOrderMapper<SjOrder> mapper;
@@ -84,7 +74,7 @@ public class SjOrderService extends BaseService<SjOrder> {
 
     //**********自定义方法***********
 
-    public List<JSONObject> sjListOrderToObejct(List<SjOrder> orders) {
+    public JSONObject sjListOrderToObejct(List<SjOrder> orders,Page page) {
         List<JSONObject> jsonObjects = new ArrayList<>();
         for (SjOrder o : orders) {
             JSONObject jsonObject = new JSONObject();
@@ -97,7 +87,36 @@ public class SjOrderService extends BaseService<SjOrder> {
             jsonObject.put("projects", getProject(o.getProjectId()));
             jsonObjects.add(jsonObject);
         }
-        return jsonObjects;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("pageSize", page.getPageSize());
+        jsonObject.put("pageIndex", page.getCurrentPage());
+        jsonObject.put("recordsTotal", page.getRecordsTotal());
+        jsonObject.put("totalPage", page.getTotalPage());
+        jsonObject.put("sjOrders", jsonObjects);
+        return jsonObject;
+    }
+
+    public JSONObject sjListReOrderToObejct(List<SjOrder> orders,Page page) {
+
+        List<JSONObject> jsonObjects = new ArrayList<>();
+        for (SjOrder o : orders) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", o.getType());
+            jsonObject.put("orderNo", o.getOrderNo());
+            jsonObject.put("companyName", o.getCompanyName());
+            jsonObject.put("state", o.getState());
+            jsonObject.put("createTime", o.getCreateTime());
+            jsonObject.put("stayPerson", o.getStayPerson());
+            jsonObject.put("projects", getProject(o.getProjectId()));
+            jsonObjects.add(jsonObject);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("pageSize", page.getPageSize());
+        jsonObject.put("pageIndex", page.getCurrentPage());
+        jsonObject.put("recordsTotal", page.getRecordsTotal());
+        jsonObject.put("totalPage", page.getTotalPage());
+        jsonObject.put("sjOrders", jsonObjects);
+        return jsonObject;
     }
 
     public JSONObject sjOrderToObejct(SjOrder o) {
@@ -201,6 +220,84 @@ public class SjOrderService extends BaseService<SjOrder> {
             this.add(sjOrder);
         }
 
+    }
+
+    public void getSjDetail(SjOrder sjOrder){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String province = addressService.queryByAreaId(sjOrder.getProvinceId()).getArea();
+        String city = addressService.queryByAreaId(sjOrder.getCityId()).getArea();
+        String area = addressService.queryByAreaId(sjOrder.getAreaId()).getArea();
+        Address address = addressService.queryByAreaId(sjOrder.getStreetId());
+        String street = "";
+        if (address != null) {
+            street = address.getArea();
+        }
+        sjOrder.setAddress(province + " " + city + " " + area + " " + street);
+        List<String> projects = this.getProject(sjOrder.getProjectId());
+        String projectName = this.listToString(projects);
+        sjOrder.setProjectNames(projectName);
+        sjOrder.setStrCreateTime(sdf.format(sjOrder.getCreateTime()));
+        if (sjOrder.getApprovalPerson() != null) {
+            String user = sjUserService.userIdToUserIdName(sjOrder.getApprovalPerson());
+            sjOrder.setApprovalPerson(user);
+        }
+        if (sjOrder.getAssignPerson() != null) {
+            String user = sjUserService.userIdToUserIdName(sjOrder.getAssignPerson());
+            sjOrder.setAssignPerson(user);
+        }
+        if (sjOrder.getBuildPerson() != null) {
+            String user = sjUserService.userIdToUserIdName(sjOrder.getBuildPerson());
+            sjOrder.setBuildPerson(user);
+        }
+    }
+
+    public void getCompanies(List<ConstructionCompany> companies){
+        for (ConstructionCompany company : companies) {
+            String province = addressService.queryByAreaId(company.getProvince()).getArea();
+            String city = addressService.queryByAreaId(company.getCity()).getArea();
+            String area = addressService.queryByAreaId(company.getArea()).getArea();
+            company.setAddress(province + city + area);
+            List<String> projects1 = this.getProject(company.getProject());
+            String projectName = this.listToString(projects1);
+            company.setProjectNames(projectName);
+            SjUser sjUser = sjUserService.getDao().queryById(company.getLoginId());
+            company.setCompanyName(sjUser.getName());
+        }
+    }
+
+    public void getCompany(List<Map<String, Object>> companies){
+        for (Map<String, Object> company : companies) {
+            String province = addressService.queryByAreaId(company.get("province").toString()).getArea();
+            String city = addressService.queryByAreaId(company.get("city").toString()).getArea();
+            String area = addressService.queryByAreaId(company.get("area").toString()).getArea();
+            if (company.get("addressDetail") == null) {
+                company.put("address", province + city + area);
+            } else {
+                company.put("address", province + city + area + company.get("addressDetail").toString());
+            }
+            if (company.get("service_area") != null) {
+                String serviceArea = company.get("service_area").toString();
+                StringBuilder sb = new StringBuilder();
+                if (serviceArea.contains(",")) {
+                    String[] serviceAreas = serviceArea.split(",");
+                    for (int i = 0; i < serviceAreas.length; i++) {
+                        Address address = addressService.queryByAreaId(serviceAreas[i]);
+                        sb.append(address.getArea());
+                        sb.append(",");
+                    }
+                } else {
+                    Address address = addressService.queryByAreaId(serviceArea);
+                    sb.append(address.getArea());
+                }
+                company.put("serviceArea", sb.toString());
+            } else {
+                company.put("serviceArea", "");
+            }
+
+            List<String> projects1 = this.getProject(company.get("project").toString());
+            String projectName = this.listToString(projects1);
+            company.put("projectName", projectName);
+        }
     }
 
     private List<String> getImages(String orderNo) {

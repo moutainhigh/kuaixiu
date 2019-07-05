@@ -165,7 +165,19 @@
     <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
+        from sj_order where order_no=#{orderNo}
+    </select>
+
+    <select id="queryByOrderNoCreateUId" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
         from sj_order where order_no=#{orderNo} and create_userid=#{createUserid}
+    </select>
+
+    <select id="queryByPhoneOrderNo" resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_order where order_no=#{orderNo} and phone=#{phone}
     </select>
 
     <!-- 查询列表无分页 -->

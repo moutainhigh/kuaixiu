@@ -15,7 +15,12 @@ import java.util.Map;
  */
 public interface SjOrderMapper<T> extends BaseDao<T> {
 
-    T queryByOrderNo(@Param("orderNo") String orderNo, @Param("createUserid")String phone);
+    T queryByOrderNo(@Param("orderNo") String orderNo);
+
+    T queryByOrderNoCreateUId(@Param("orderNo") String orderNo, @Param("createUserid")String phone);
+
+    T queryByPhoneOrderNo(@Param("orderNo") String orderNo, @Param("phone")String phone);
+
     List<T> queryWebListForPage(T t);
 
     List<Map<String,Object>> queryImportList(T t);

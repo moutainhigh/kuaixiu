@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.sjBusiness.dao.SjReworkOrderMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.sjBusiness.entity.SjReworkOrder" >
+        <result column="id" property="id"/>
+        <result column="rework_order_no" property="reworkOrderNo"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="state" property="state"/>
+        <result column="project_ids" property="projectIds"/>
+        <result column="note" property="note"/>
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="worker_id" property="workerId"/>
+        <result column="worker_name" property="workerName"/>
+        <result column="worker_take_order_time" property="workerTakeOrderTime"/>
+        <result column="picture_url" property="pictureUrl"/>
+        <result column="end_time" property="endTime"/>
+        <result column="is_del" property="isDel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_userid" property="updateUserid"/>
+    </resultMap>
+    
+    <!-- sj_rework_order table all fields -->
+    <sql id="Base_Column_List" >
+        id,rework_order_no,order_id,order_no,state,project_ids,note,company_id,company_name,worker_id,worker_name,date_format(`worker_take_order_time`,'%Y-%m-%d %H:%i:%s')worker_take_order_time,picture_url,date_format(`end_time`,'%Y-%m-%d %H:%i:%s')end_time,is_del,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into sj_rework_order
+        (id,rework_order_no,order_id,order_no,state,project_ids,note,company_id,company_name,worker_id,worker_name,worker_take_order_time,picture_url,end_time,is_del,create_time,create_userid,update_time,update_userid)
+        values
+        (#{id},#{reworkOrderNo},#{orderId},#{orderNo},#{state},#{projectIds},#{note},#{companyId},#{companyName},#{workerId},#{workerName},#{workerTakeOrderTime},#{pictureUrl},#{endTime},0,now(),#{createUserid},#{updateTime},#{updateUserid})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update sj_rework_order 
+        set 
+            id=#{id},
+            rework_order_no=#{reworkOrderNo},
+            order_id=#{orderId},
+            order_no=#{orderNo},
+            state=#{state},
+            project_ids=#{projectIds},
+            note=#{note},
+            company_id=#{companyId},
+            company_name=#{companyName},
+            worker_id=#{workerId},
+            worker_name=#{workerName},
+            worker_take_order_time=#{workerTakeOrderTime},
+            picture_url=#{pictureUrl},
+            end_time=#{endTime},
+            is_del=#{isDel},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=now(),
+            update_userid=#{updateUserid}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from sj_rework_order where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_rework_order where id = #{id}
+    </select>
+
+    <select id="queryByReworkOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from sj_rework_order where  rework_order_no=#{reworkOrderNo}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_rework_order
+        where 1=1
+        and is_del=0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="reworkOrderNo != null and reworkOrderNo != ''" >
+            and rework_order_no = #{reworkOrderNo}
+        </if>
+        <if test="orderId != null and orderId != ''" >
+            and order_id = #{orderId}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+        <if test="projectIds != null and projectIds != ''" >
+            and project_ids = #{projectIds}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="companyId != null and companyId != ''" >
+            and company_id = #{companyId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="workerId != null and workerId != ''" >
+            and worker_id = #{workerId}
+        </if>
+        <if test="workerName != null and workerName != ''" >
+            and worker_name = #{workerName}
+        </if>
+        <if test="workerTakeOrderTime != null and workerTakeOrderTime != ''" >
+            and worker_take_order_time = #{workerTakeOrderTime}
+        </if>
+        <if test="pictureUrl != null and pictureUrl != ''" >
+            and picture_url = #{pictureUrl}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from sj_rework_order
+        where 1=1
+        and is_del=0
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="reworkOrderNo != null and reworkOrderNo != ''" >
+            and rework_order_no = #{reworkOrderNo}
+        </if>
+        <if test="orderId != null and orderId != ''" >
+            and order_id = #{orderId}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="state != null and state != ''" >
+            and state = #{state}
+        </if>
+        <if test="projectIds != null and projectIds != ''" >
+            and project_ids = #{projectIds}
+        </if>
+        <if test="note != null and note != ''" >
+            and note = #{note}
+        </if>
+        <if test="companyId != null and companyId != ''" >
+            and company_id = #{companyId}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and company_name = #{companyName}
+        </if>
+        <if test="workerId != null and workerId != ''" >
+            and worker_id = #{workerId}
+        </if>
+        <if test="workerName != null and workerName != ''" >
+            and worker_name = #{workerName}
+        </if>
+        <if test="workerTakeOrderTime != null and workerTakeOrderTime != ''" >
+            and worker_take_order_time = #{workerTakeOrderTime}
+        </if>
+        <if test="pictureUrl != null and pictureUrl != ''" >
+            and picture_url = #{pictureUrl}
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            and end_time = #{endTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="queryStartTime != null and queryStartTime != ''">
+            and create_time &gt;= #{queryStartTime}
+        </if>
+        <if test="queryEndTime != null and queryEndTime != ''">
+            and create_time &lt;= #{queryEndTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''">
+            and create_userid like CONCAT('%', #{createUserid}, '%')
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="updateUserid != null and updateUserid != ''" >
+            and update_userid = #{updateUserid}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>   
