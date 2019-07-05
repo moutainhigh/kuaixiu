@@ -143,21 +143,21 @@ public class CustomerDetailController extends BaseController {
                 return getSjResult(result, null, false, "3", null, "验证码错误");
             }
             SjUser user = new SjUser();
-            if (userType == 1) {
+            if (userType == 2) {
+                userType = 2;
+            } else {
+                userType = 1;
                 user = userService.checkWechatLogin(phone, 2);
                 if (user == null) {
                     return getSjResult(result, null, false, "1", null, "该手机用户不存在");
                 }
+                sessionUserService.customerInitSessionUser(user, request);
             }
             if (isLogin != null && isLogin == 1) {
                 String[] dname = request.getServerName().split("\\.");
                 String phoneAndUserType = phone + Consts.COOKIE_SJ_INFO_SIGN + String.valueOf(userType);
                 String phoneBase64 = Base64Util.getBase64(phoneAndUserType);
                 CookiesUtil.setCookie(response, Consts.COOKIE_SJ_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
-            }
-            if (userType == 1) {
-                //初始化SessionUser
-                sessionUserService.customerInitSessionUser(user, request);
             }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("mobile", phone);
@@ -228,8 +228,9 @@ public class CustomerDetailController extends BaseController {
             String phoneAndUserType = Base64Util.getFromBase64(phoneStr);
             String phone = phoneAndUserType.substring(0, phoneAndUserType.indexOf(Consts.COOKIE_SJ_INFO_SIGN));
             String userType = phoneAndUserType.substring(phoneAndUserType.indexOf(Consts.COOKIE_SJ_INFO_SIGN) + Consts.COOKIE_SJ_INFO_SIGN.length());
-            SjUser user =new SjUser();
-            if("1".equals(userType)){
+            SjUser user = new SjUser();
+            if ("2".equals(userType)) {
+            } else {
                 user = userService.checkWechatLogin(phone, 2);
                 if (user == null) {
                     return getSjResult(result, null, false, "1", null, "该手机用户不存在");
