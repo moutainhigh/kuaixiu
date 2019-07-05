@@ -1,21 +1,5 @@
 package com.kuaixiu.recycle.controller;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-/**
-* @author: anson
-* @CreateDate: 2017年11月23日 下午4:59:39
-* @version: V 1.0
-* 信用套餐-商户扣款
-* 接入商户通过该API发起扣款
-* https://b.zmxy.com.cn/technology/openDoc.htm?id=845
-*/
 import com.antgroup.zmxy.openplatform.api.DefaultZhimaClient;
 import com.antgroup.zmxy.openplatform.api.ZhimaApiException;
 import com.antgroup.zmxy.openplatform.api.request.ZhimaMerchantCreditlifeFundPayRequest;
@@ -29,7 +13,23 @@ import com.kuaixiu.recycle.service.RecycleCustomerService;
 import com.kuaixiu.recycle.service.RecycleOrderService;
 import com.kuaixiu.recycle.service.RecyclePayService;
 import com.system.constant.SystemConstant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * @author: anson
+ * @CreateDate: 2017年11月23日 下午4:59:39
+ * @version: V 1.0
+ * 信用套餐-商户扣款
+ * 接入商户通过该API发起扣款
+ * https://b.zmxy.com.cn/technology/openDoc.htm?id=845
+ */
 @Service
 public class TestZhimaMerchantCreditlifeFundPay {
 	    // 芝麻开放平台地址
@@ -48,7 +48,6 @@ public class TestZhimaMerchantCreditlifeFundPay {
         private RecycleOrderService recycleOrderService;
 		/**
 		 * 支付宝接入商户发起扣款  测试方法
-		 * @param order
 		 */
     public void testZhimaMerchantCreditlifeFundPay() {
         ZhimaMerchantCreditlifeFundPayRequest req = new ZhimaMerchantCreditlifeFundPayRequest();
@@ -81,10 +80,10 @@ public class TestZhimaMerchantCreditlifeFundPay {
     
     /**
 	 * 支付宝接入商户发起扣款
-	 * @param order
+	 * @param order 订单
 	 * @param type  扣款 发起类型 1-回收系统发起  2-财务管理系统发起 3-系统订单发起
 	 */
-    public boolean OrderFundPay(RecycleOrder order,int type) {
+    boolean OrderFundPay(RecycleOrder order,int type) {
         boolean tip=false;
     	ZhimaMerchantCreditlifeFundPayRequest req = new ZhimaMerchantCreditlifeFundPayRequest();
         String transactionId=new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date())+ UUID.randomUUID().toString();
@@ -146,7 +145,7 @@ public class TestZhimaMerchantCreditlifeFundPay {
      * @param cust
      * @param type
      */
-    public RecyclePay addPay(RecycleOrder order,RecycleCustomer cust,int type){
+    private RecyclePay addPay(RecycleOrder order,RecycleCustomer cust,int type){
     	 RecyclePay pay = new RecyclePay();    
          pay.setId(UUID.randomUUID().toString().replace("-", ""));
          pay.setRecycleOrderNo(order.getOrderNo());

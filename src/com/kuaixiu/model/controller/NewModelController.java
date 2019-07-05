@@ -1,38 +1,25 @@
 package com.kuaixiu.model.controller;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.google.common.collect.Maps;
-import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.entity.NewBrand;
-import com.kuaixiu.brand.service.BrandService;
 import com.kuaixiu.brand.service.NewBrandService;
-import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.model.entity.NewModel;
-import com.kuaixiu.model.entity.RepairCost;
 import com.kuaixiu.model.service.NewModelService;
-import com.kuaixiu.project.entity.Project;
 import com.system.basic.user.entity.SessionUser;
-
 import jodd.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author: anson

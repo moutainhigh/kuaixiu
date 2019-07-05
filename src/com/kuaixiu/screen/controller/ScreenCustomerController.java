@@ -1,18 +1,20 @@
 package com.kuaixiu.screen.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSONObject;
+import com.common.base.controller.BaseController;
+import com.common.exception.SystemException;
+import com.common.importExcel.ImportReport;
+import com.common.paginate.Page;
+import com.common.util.NOUtil;
+import com.kuaixiu.screen.entity.ScreenCustomer;
+import com.kuaixiu.screen.entity.ScreenOrder;
+import com.kuaixiu.screen.service.ScreenCustomerService;
+import com.kuaixiu.screen.service.ScreenOrderService;
+import com.kuaixiu.screen.service.ScreenProjectService;
+import com.system.api.entity.ResultData;
+import com.system.basic.user.entity.SessionUser;
+import com.system.basic.user.service.SessionUserService;
+import com.system.constant.SystemConstant;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +24,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.common.base.controller.BaseController;
-import com.common.exception.SystemException;
-import com.common.importExcel.ImportReport;
-import com.common.paginate.Page;
-import com.common.util.NOUtil;
-import com.kuaixiu.screen.entity.ScreenCustomer;
-import com.kuaixiu.screen.entity.ScreenOrder;
-import com.kuaixiu.screen.entity.ScreenProject;
-import com.kuaixiu.screen.service.ScreenCustomerService;
-import com.kuaixiu.screen.service.ScreenOrderService;
-import com.kuaixiu.screen.service.ScreenProjectService;
-import com.system.api.entity.ResultData;
-import com.system.basic.user.entity.SessionUser;
-import com.system.basic.user.service.SessionUserService;
-import com.system.constant.SystemConstant;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
 * @author: anson

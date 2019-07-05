@@ -1,7 +1,6 @@
 package com.kuaixiu.shop.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.shop.entity.ShopModel;
 import com.kuaixiu.shop.service.ShopModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

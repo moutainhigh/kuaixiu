@@ -4,16 +4,8 @@ package com.kuaixiu.groupSMS.service;
 import com.common.base.service.BaseService;
 import com.common.importExcel.ImportError;
 import com.common.importExcel.ImportReport;
-import com.common.util.MD5Util;
 import com.kuaixiu.groupSMS.dao.HsGroupMobileMapper;
 import com.kuaixiu.groupSMS.entity.HsGroupMobile;
-
-import com.kuaixiu.sjBusiness.entity.SjVirtualTeam;
-import com.kuaixiu.sjUser.entity.ConstructionCompany;
-import com.kuaixiu.sjUser.entity.SjUser;
-import com.kuaixiu.sjUser.entity.SjWorker;
-import com.kuaixiu.sjUser.entity.UserRole;
-import com.system.basic.sequence.util.SeqUtil;
 import com.system.basic.user.entity.SessionUser;
 import net.sf.jxls.exception.ParsePropertyException;
 import org.apache.commons.io.FilenameUtils;

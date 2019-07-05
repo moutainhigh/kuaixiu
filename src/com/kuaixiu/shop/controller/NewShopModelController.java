@@ -1,9 +1,8 @@
 package com.kuaixiu.shop.controller;
 
+import com.kuaixiu.shop.service.NewShopModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
-import com.kuaixiu.shop.service.NewShopModelService;
 
 /**
 * @author: anson

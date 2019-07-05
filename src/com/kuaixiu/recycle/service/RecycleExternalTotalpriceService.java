@@ -6,7 +6,6 @@ import com.common.util.DateUtil;
 import com.kuaixiu.recycle.dao.RecycleExternalTotalpriceMapper;
 import com.kuaixiu.recycle.entity.RecycleExternalTest;
 import com.kuaixiu.recycle.entity.RecycleExternalTotalprice;
-
 import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 
 /**

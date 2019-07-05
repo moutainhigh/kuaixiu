@@ -6,8 +6,6 @@ import com.common.exception.SystemException;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.dao.RecycleExternalLoginMapper;
 import com.kuaixiu.recycle.entity.RecycleExternalLogin;
-
-import com.system.api.entity.ResultData;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

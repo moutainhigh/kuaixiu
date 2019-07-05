@@ -1,15 +1,13 @@
 package com.kuaixiu.oldtonew.service;
 
-import java.util.UUID;
-
+import com.common.base.service.BaseService;
+import com.kuaixiu.oldtonew.dao.AgreedMapper;
+import com.kuaixiu.oldtonew.entity.Agreed;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.kuaixiu.oldtonew.dao.AgreedMapper;
-import com.kuaixiu.oldtonew.entity.Agreed;
+import java.util.UUID;
 
 /**
 * @author: anson

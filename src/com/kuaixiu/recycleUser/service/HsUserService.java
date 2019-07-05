@@ -4,7 +4,6 @@ package com.kuaixiu.recycleUser.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.recycleUser.dao.HsUserMapper;
 import com.kuaixiu.recycleUser.entity.HsUser;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

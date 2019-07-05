@@ -5,7 +5,6 @@ import com.common.base.service.BaseService;
 import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.kuaixiu.recycleCoupon.dao.HsActivityCouponRoleMapper;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

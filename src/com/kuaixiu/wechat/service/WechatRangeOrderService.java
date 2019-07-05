@@ -4,7 +4,6 @@ package com.kuaixiu.wechat.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.wechat.dao.WechatRangeOrderMapper;
 import com.kuaixiu.wechat.entity.WechatRangeOrder;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

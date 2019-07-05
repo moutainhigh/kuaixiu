@@ -4,7 +4,6 @@ package com.kuaixiu.engineer.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.engineer.dao.EngineerSignInMapper;
 import com.kuaixiu.engineer.entity.EngineerSignIn;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,25 +1,9 @@
 package com.kuaixiu.integral.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.google.common.collect.Maps;
-import com.kuaixiu.clerk.controller.ClerkController;
 import com.kuaixiu.clerk.entity.Clerk;
-import com.kuaixiu.clerk.page.ClerkOrderList;
 import com.kuaixiu.clerk.service.ClerkService;
 import com.kuaixiu.integral.dao.IntegralMapper;
 import com.kuaixiu.integral.entity.GetIntegral;
@@ -28,6 +12,17 @@ import com.kuaixiu.integral.service.GetIntegralService;
 import com.kuaixiu.integral.service.IntegralService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
 * @author: anson

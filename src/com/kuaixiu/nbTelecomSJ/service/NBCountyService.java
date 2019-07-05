@@ -4,7 +4,6 @@ package com.kuaixiu.nbTelecomSJ.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.nbTelecomSJ.dao.NBCountyMapper;
 import com.kuaixiu.nbTelecomSJ.entity.NBCounty;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

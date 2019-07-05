@@ -7,7 +7,6 @@ import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
 import com.kuaixiu.wechat.entity.WechatRangeOrder;
 import com.kuaixiu.wechat.service.WechatRangeOrderService;
-import com.system.basic.address.entity.Address;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**

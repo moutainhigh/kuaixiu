@@ -1,24 +1,5 @@
 package com.kuaixiu.clerk.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.paginate.Page;
@@ -40,7 +21,6 @@ import com.kuaixiu.coupon.service.CouponModelService;
 import com.kuaixiu.coupon.service.CouponProjectService;
 import com.kuaixiu.coupon.service.CouponService;
 import com.kuaixiu.customer.entity.Customer;
-import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.integral.entity.GetIntegral;
 import com.kuaixiu.integral.entity.Integral;
 import com.kuaixiu.integral.service.GetIntegralService;
@@ -49,8 +29,6 @@ import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.model.entity.RepairCost;
 import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.model.service.RepairCostService;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.oldtonew.entity.OrderShow;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.dao.OrderMapper;
 import com.kuaixiu.order.entity.Order;
@@ -59,16 +37,24 @@ import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.service.OrderCommentService;
 import com.kuaixiu.order.service.OrderDetailService;
 import com.kuaixiu.order.service.OrderService;
-import com.kuaixiu.provider.entity.Provider;
-import com.kuaixiu.shop.entity.Shop;
-import com.kuaixiu.shop.entity.ShopModel;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-import freemarker.template.utility.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
 * @author: anson

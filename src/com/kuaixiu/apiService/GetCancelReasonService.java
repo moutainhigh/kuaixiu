@@ -1,17 +1,15 @@
 package com.kuaixiu.apiService;
 
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.kuaixiu.project.entity.CancelReason;
+import com.kuaixiu.project.service.CancelReasonService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.kuaixiu.brand.entity.NewBrand;
-import com.kuaixiu.project.entity.CancelReason;
-import com.kuaixiu.project.service.CancelReasonService;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author: anson

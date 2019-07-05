@@ -4,7 +4,6 @@ package com.kuaixiu.sjBusiness.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.sjBusiness.dao.AreaBranchOfficeMapper;
 import com.kuaixiu.sjBusiness.entity.AreaBranchOffice;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

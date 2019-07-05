@@ -3,11 +3,7 @@ package com.kuaixiu.recycle.service;
 import com.alibaba.fastjson.JSONObject;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.RecycleCheckItems;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,20 +1,5 @@
 package com.kuaixiu.apiService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.kuaixiu.order.entity.ReworkOrder;
-import com.kuaixiu.order.entity.UpdateOrderPrice;
-import com.kuaixiu.order.service.ReworkOrderService;
-import com.kuaixiu.order.service.UpdateOrderPriceService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.ApiServiceException;
@@ -25,10 +10,23 @@ import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderDetail;
+import com.kuaixiu.order.entity.UpdateOrderPrice;
 import com.kuaixiu.order.service.OrderDetailService;
 import com.kuaixiu.order.service.OrderService;
+import com.kuaixiu.order.service.ReworkOrderService;
+import com.kuaixiu.order.service.UpdateOrderPriceService;
 import com.system.api.ApiServiceInf;
 import com.system.constant.ApiResultConstant;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 订单操作接口实现类

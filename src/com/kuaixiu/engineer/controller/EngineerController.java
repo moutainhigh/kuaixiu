@@ -1,8 +1,5 @@
 package com.kuaixiu.engineer.controller;
 
-import java.math.BigDecimal;
-import java.util.*;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
@@ -13,16 +10,13 @@ import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.engineer.service.NewEngineerService;
 import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderDetail;
-import com.kuaixiu.order.service.OrderDetailService;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.provider.entity.Provider;
 import com.kuaixiu.provider.service.ProviderService;
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
-import com.system.constant.SystemConstant;
 import com.system.basic.user.entity.SessionUser;
-
+import com.system.constant.SystemConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +25,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Engineer Controller

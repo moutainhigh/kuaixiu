@@ -4,7 +4,6 @@ package com.kuaixiu.sjUser.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.sjUser.dao.MenuMapper;
 import com.kuaixiu.sjUser.entity.Menu;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

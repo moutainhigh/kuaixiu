@@ -1,14 +1,5 @@
 package com.kuaixiu.recycle.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.transaction.SystemException;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -20,6 +11,13 @@ import com.kuaixiu.recycle.entity.RecycleCustomer;
 import com.kuaixiu.recycle.entity.RecycleOrder;
 import com.kuaixiu.recycle.entity.RecyclePay;
 import com.system.constant.SystemConstant;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.SystemException;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author: anson

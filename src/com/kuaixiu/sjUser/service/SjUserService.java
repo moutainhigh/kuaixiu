@@ -14,7 +14,6 @@ import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.dao.SjUserMapper;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
-
 import com.kuaixiu.sjUser.entity.SjWorker;
 import com.kuaixiu.sjUser.entity.UserRole;
 import com.system.basic.address.entity.Address;

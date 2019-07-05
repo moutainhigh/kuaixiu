@@ -2,7 +2,6 @@ package com.kuaixiu.recycle.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
-import com.common.exception.SystemException;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.BrandText;
 import com.kuaixiu.recycle.service.BrandTextService;
@@ -47,10 +46,7 @@ public class BrandTextController extends BaseController {
             String brandName = params.getString("brandName");
             String modelNo = params.getString("modelNo");
             if(StringUtils.isBlank(brandName)||StringUtils.isBlank(modelNo)){
-                resultData.setSuccess(false);
-                resultData.setResult(jsonObject);
-                resultData.setResultMessage("参数为空");
-                return resultData;
+                return getResult(resultData,jsonObject,false,"2","参数为空");
             }
             BrandText brandText=new BrandText();
             brandText.setBrand(brandName);
@@ -61,9 +57,7 @@ public class BrandTextController extends BaseController {
             }else {
                 jsonObject.put("isTrue","1");
             }
-            resultData.setSuccess(true);
-            resultData.setResult(jsonObject);
-            resultData.setResultMessage("成功");
+            getResult(resultData,jsonObject,true,"0","成功");
         }catch (Exception e){
             e.printStackTrace();
         }

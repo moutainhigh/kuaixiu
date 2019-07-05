@@ -5,7 +5,6 @@ import com.common.util.Base64Util;
 import com.common.util.Consts;
 import com.common.util.CookiesUtil;
 import com.common.util.MD5Util;
-import com.google.common.collect.Maps;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.SjSessionUserService;
 import com.kuaixiu.sjUser.service.SjUserService;
@@ -21,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 
 /**

@@ -15,7 +15,6 @@ import com.kuaixiu.recycle.service.RecycleOrderService;
 import com.kuaixiu.recycleCoupon.dao.HsActivityCouponMapper;
 import com.kuaixiu.recycleCoupon.entity.HsActivityAndCoupon;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCoupon;
-
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.kuaixiu.recycleUser.entity.HsUser;
 import com.kuaixiu.recycleUser.service.HsUserService;

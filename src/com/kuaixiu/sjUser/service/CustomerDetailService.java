@@ -4,14 +4,11 @@ package com.kuaixiu.sjUser.service;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.util.SmsSendUtil;
-import com.kuaixiu.card.entity.TelecomCard;
 import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjBusiness.service.*;
 import com.kuaixiu.sjUser.dao.CustomerDetailMapper;
 import com.kuaixiu.sjUser.entity.CustomerDetail;
-
 import com.kuaixiu.sjUser.entity.SjUser;
-import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;

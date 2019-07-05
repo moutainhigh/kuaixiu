@@ -1,9 +1,8 @@
 package com.kuaixiu.oldtonew.controller;
 
-import org.springframework.stereotype.Controller;
-
 import com.common.base.controller.BaseController;
 import com.kuaixiu.oldtonew.service.AgreedService;
+import org.springframework.stereotype.Controller;
 
 /**
 * @author: anson

@@ -4,7 +4,6 @@ package com.kuaixiu.version.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.version.dao.VersionMapper;
 import com.kuaixiu.version.entity.Version;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,6 @@
 package com.kuaixiu.recycleCoupon.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.recycleCoupon.entity.HsActivityAndCoupon;
 import com.kuaixiu.recycleCoupon.service.HsActivityAndCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

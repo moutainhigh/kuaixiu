@@ -4,8 +4,6 @@ package com.kuaixiu.order.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.order.dao.OrderLogMapper;
 import com.kuaixiu.order.entity.OrderLog;
-import com.kuaixiu.order.entity.OrderPayLog;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

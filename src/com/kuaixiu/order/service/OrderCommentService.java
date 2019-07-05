@@ -11,13 +11,10 @@ import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderComment;
 import com.kuaixiu.order.entity.ReworkOrder;
 import com.system.basic.user.entity.SessionUser;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 /**
  * OrderComment Service

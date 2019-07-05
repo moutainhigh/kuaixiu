@@ -1,21 +1,16 @@
 package com.kuaixiu.sfApi.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.sfApiService.SfOpenApiService;
 import com.kuaixiu.sfEntity.SfToken;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
 * @author: anson

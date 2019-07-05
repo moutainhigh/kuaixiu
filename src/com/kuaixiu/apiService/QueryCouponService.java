@@ -1,16 +1,5 @@
 package com.kuaixiu.apiService;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.ApiServiceException;
 import com.common.util.DateUtil;
@@ -24,6 +13,13 @@ import com.kuaixiu.wechat.entity.WechatUser;
 import com.kuaixiu.wechat.service.WechatUserService;
 import com.system.api.ApiServiceInf;
 import com.system.constant.ApiResultConstant;
+import org.apache.commons.collections.MapUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: anson

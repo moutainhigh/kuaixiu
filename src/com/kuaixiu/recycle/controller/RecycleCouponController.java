@@ -18,7 +18,6 @@ import com.system.api.entity.ResultData;
 import com.system.basic.sequence.util.SeqUtil;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
-import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,19 +32,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 回收加价券
- *
  * @author najy
  *         Created by Administrator on 2018/9/13/013.
  */
 
 @Controller
 public class RecycleCouponController extends BaseController {
-
     private static final Logger log = Logger.getLogger(RecycleCouponController.class);
 
     @Autowired
@@ -57,13 +55,11 @@ public class RecycleCouponController extends BaseController {
     //回收订单状态变化时调用，更改状态  参数签名
     private static final String autograph = "HZYNKJ@SUPER2017";
 
-
     /**
      * 回收加价券列表
      */
     @RequestMapping(value = "/recycle/couponList")
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         String returnView = "recycle/recycleCouponList";
         return new ModelAndView(returnView);
     }
@@ -79,9 +75,6 @@ public class RecycleCouponController extends BaseController {
     @RequestMapping(value = "/recycle/createCoupon")
     public ModelAndView create(HttpServletRequest request,
                                HttpServletResponse response) throws Exception {
-
-        //获取登录用户
-        SessionUser su = getCurrentUser(request);
         String returnView = "recycle/recycleCreateCoupon";
         return new ModelAndView(returnView);
     }
@@ -107,7 +100,7 @@ public class RecycleCouponController extends BaseController {
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
             String subtractionPrice = request.getParameter("subtractionPrice");//满减金额下限额度
             String upperLimit = request.getParameter("upperLimit");//订单金额上限额度
-            String addPriceUpper=request.getParameter("addPriceUpper");//加价金额上限
+            String addPriceUpper = request.getParameter("addPriceUpper");//加价金额上限
             String price = request.getParameter("price");//优惠券金额
             String description = request.getParameter("ruleDescription");//加价规则描述
             String startTime = request.getParameter("startTime");//优惠券开始时间
@@ -129,39 +122,37 @@ public class RecycleCouponController extends BaseController {
             }
 
             RecycleCoupon recycleCoupon = new RecycleCoupon();
+            //获取登录用户
+            recycleCoupon.setCreateUserid(su.getUserId());
             recycleCoupon.setBatchId(SeqUtil.getNext("A"));
             recycleCoupon.setCreateUserid(su.getUserId());
+            recycleCoupon.setCouponName(name);
+            recycleCoupon.setPricingType(Integer.valueOf(pricingType));
+            recycleCoupon.setRuleDescription(description);
+            if (StringUtils.isNotBlank(upperLimit)) {
+                recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
+            }
+            if (StringUtils.isNotBlank(addPriceUpper)) {
+                recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
+            }
+            if (StringUtils.isNotBlank(subtractionPrice)) {
+                recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
+            }
+            if (StringUtils.isNotBlank(price)) {
+                recycleCoupon.setStrCouponPrice(new BigDecimal(price));
+            }
+            recycleCoupon.setBeginTime(startTime);
+            recycleCoupon.setEndTime(endTime);
+            recycleCoupon.setNote(note);
             for (int i = 0; i < Integer.valueOf(number); i++) {
-                //获取登录用户
-                recycleCoupon.setCreateUserid(su.getUserId());
                 recycleCoupon.setId(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 16));
-                recycleCoupon.setCouponName(name);
-                recycleCoupon.setPricingType(Integer.valueOf(pricingType));
-                recycleCoupon.setRuleDescription(description);
-                if(StringUtils.isNotBlank(upperLimit)){
-                    recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
-                }
-                if(StringUtils.isNotBlank(addPriceUpper)){
-                    recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
-                }
-                if(StringUtils.isNotBlank(subtractionPrice)){
-                    recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
-                }
-                if(StringUtils.isNotBlank(price)){
-                    recycleCoupon.setStrCouponPrice(new BigDecimal(price));
-                }
-                recycleCoupon.setBeginTime(startTime);
-                recycleCoupon.setEndTime(endTime);
-                recycleCoupon.setNote(note);
                 recycleCoupon.setCouponCode(recycleCouponService.createNewCode());
                 recycleCouponService.add(recycleCoupon);
             }
-
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "保存成功");
             resultMap.put("batchId", recycleCoupon.getBatchId());
             resultMap.put("count", number);
-
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
@@ -181,8 +172,6 @@ public class RecycleCouponController extends BaseController {
     @RequestMapping(value = "/recycle/reflashCount")
     public void reflashCount(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-
         Map<String, Object> resultMap = Maps.newHashMap();
         //批次ID
         String batchId = request.getParameter("batchId");
@@ -283,9 +272,9 @@ public class RecycleCouponController extends BaseController {
             JSONArray array = new JSONArray();
             //查询所有可使用加价券
             List<RecycleCoupon> recycleCoupons = recycleCouponService.queryUnReceive(recycleCoupon);
-            recycleCouponService.getCouponList(recycleCoupons,array);
+            recycleCouponService.getCouponList(recycleCoupons, array);
             jsonResult.put("Coupons", array);
-            getResult(result,jsonResult,true,"0","成功");
+            getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -297,11 +286,10 @@ public class RecycleCouponController extends BaseController {
 
 
     /**
-     * //     * 获取加价券手机号验证
-     * //     * @param request
-     * //     * @param response
-     * //     * @return
-     * //
+     * 获取加价券手机号验证
+     * @param request
+     * @param response
+     * @return
      */
     @RequestMapping("recycle/receiveRole")
     @ResponseBody
@@ -320,7 +308,7 @@ public class RecycleCouponController extends BaseController {
             String isCheckCode = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
             request.getSession().setAttribute("isCheckCode", isCheckCode);
             jsonResult.put("isCheckCode", isCheckCode);
-            getResult(result,jsonResult,true,"0","成功");
+            getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -351,23 +339,16 @@ public class RecycleCouponController extends BaseController {
             if (StringUtils.isBlank(batchId) ||
                     (StringUtils.isBlank(isCheckCode) && StringUtils.isBlank(mobile)
                             && StringUtils.isBlank(openId))) {
-                result.setResultMessage("参数不完整");
-                result.setResultCode("3");
-                result.setSuccess(false);
-                return result;
+                return getResult(result,null,false,"3","参数不完整");
             }
             if (StringUtils.isNotBlank(isCheckCode)) {
                 if (request.getSession().getAttribute("isCheckCode") != null) {
                     String CheckCode = request.getSession().getAttribute("isCheckCode").toString();
                     if (!CheckCode.equals(isCheckCode)) {
-                        result.setResultMessage("isCheckCode不正确,请稍后再试");
-                        result.setSuccess(false);
-                        return result;
+                        return getResult(result,null,false,"2","isCheckCode不正确,请稍后再试");
                     }
                 } else {
-                    result.setResultMessage("isCheckCode不正确,请稍后再试");
-                    result.setSuccess(false);
-                    return result;
+                    return getResult(result,null,false,"2","isCheckCode不正确,请稍后再试");
                 }
             }
             RecycleCoupon recycleCoupon = new RecycleCoupon();
@@ -379,19 +360,13 @@ public class RecycleCouponController extends BaseController {
             //查询该批次所有未领取可用加价券
             List<RecycleCoupon> recycleCoupons = recycleCouponService.queryList(recycleCoupon);
             if (CollectionUtils.isEmpty(recycleCoupons)) {
-                result.setResultMessage("该加价券已被领完");
-                result.setResultCode("2");
-                result.setSuccess(false);
-                return result;
+                return getResult(result,null,false,"2","该加价券已被领完");
             }
             recycleCoupon.setReceiveMobile(mobile);
             recycleCoupon.setIsReceive(1);
             List<RecycleCoupon> recycleCoupons1 = recycleCouponService.queryList(recycleCoupon);
             if (!CollectionUtils.isEmpty(recycleCoupons1)) {
-                result.setResultMessage("您已领取过该加价券");
-                result.setResultCode("1");
-                result.setSuccess(false);
-                return result;
+                return getResult(result,null,false,"1","您已领取过该加价券");
             }
             //加价券绑定手机号
             recycleCoupon.setReceiveMobile(mobile);
@@ -399,7 +374,7 @@ public class RecycleCouponController extends BaseController {
             recycleCoupon.setCouponCode(recycleCode);
             recycleCouponService.updateForReceive(recycleCoupon);
             RecycleCoupon recycleCoupon1 = recycleCouponService.queryByCode(recycleCode);
-            recycleCouponService.getRecycleCoupon(jsonResult,recycleCoupon1);
+            recycleCouponService.getRecycleCoupon(jsonResult, recycleCoupon1);
 
             if (StringUtils.isBlank(openId)) {
                 //发短信
@@ -415,7 +390,7 @@ public class RecycleCouponController extends BaseController {
                         "将有机会赢取iPhone XS！立即使用请点击http://t.cn/EztuvoQ。\n");
                 Boolean isBoolean = SmsSendUtil.sendSmsThread(mobile, content.toString());
                 if (isBoolean == false) {
-                    return getResult(result,jsonResult,false,"5","短信发送失败");
+                    return getResult(result, jsonResult, false, "5", "短信发送失败");
                 }
             } else {
                 //微信推送
@@ -445,13 +420,11 @@ public class RecycleCouponController extends BaseController {
                 param.put("keyword3", wechatTemplate.item(recycleCoupon.getBeginTime() + "-" + recycleCoupon.getEndTime(), "#000000"));
                 param.put("keyword4", wechatTemplate.item(recycleCoupon.getRuleDescription(), "#000000"));
                 param.put("remark", wechatTemplate.item("祝您生活愉快,谢谢！", "#000000"));
-
                 String json = HttpClientUtil.sendJsonPost(resultUrl2, param.toJSONString());
-
                 log.info("模板消息发送结果：" + json);
             }
 
-            getResult(result,jsonResult,true,"0","成功");
+            getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -574,13 +547,13 @@ public class RecycleCouponController extends BaseController {
             recycleCoupon.setCouponName(name);
             recycleCoupon.setPricingType(Integer.valueOf(pricingType));
             recycleCoupon.setRuleDescription(description);
-            if(StringUtils.isNotBlank(upperLimit)){
+            if (StringUtils.isNotBlank(upperLimit)) {
                 recycleCoupon.setUpperLimit(new BigDecimal(upperLimit));
             }
-            if(StringUtils.isNotBlank(addPriceUpper)){
+            if (StringUtils.isNotBlank(addPriceUpper)) {
                 recycleCoupon.setAddPriceUpper(new BigDecimal(addPriceUpper));
             }
-            if(StringUtils.isNotBlank(subtractionPrice)){
+            if (StringUtils.isNotBlank(subtractionPrice)) {
                 recycleCoupon.setSubtraction_price(new BigDecimal(subtractionPrice));
             }
             if (price.contains("%")) {
@@ -662,47 +635,28 @@ public class RecycleCouponController extends BaseController {
             String MD5sign = "orderNo=" + orderNo + autograph;
             MD5sign = MD5Util.md5Encode(MD5sign);
             if (StringUtils.isBlank(orderNo) || StringUtils.isBlank(sign)) {
-                result.setSuccess(false);
-                result.setResultCode(ApiResultConstant.resultCode_1001);
-                result.setResultMessage(ApiResultConstant.resultCode_str_1001);
-                return result;
+                return getResult(result, null, false, "1001", "参数为空");
             } else if (!sign.equals(MD5sign)) {
-                result.setSuccess(false);
-                result.setResultCode(ApiResultConstant.resultCode_1003);
-                result.setResultMessage(ApiResultConstant.resultCode_str_1003);
-                return result;
+                return getResult(result, null, false, "3003", "参数值不正确");
             }
             RecycleOrder order = recycleOrderService.queryByOrderNo(orderNo);
             if (order == null) {
-                result.setSuccess(false);
-                result.setResultCode(ApiResultConstant.resultCode_3003);
-                result.setResultMessage(ApiResultConstant.resultCode_str_3003);
-                return result;
+                return getResult(result, null, false, "3003", "订单不存在");
             }
             //删除订单加价券使用记录
             recycleOrderService.deleteCouponIdByOrderStatus(orderNo);
             RecycleCoupon recycleCoupon = recycleCouponService.queryById(order.getCouponId());
             if (recycleCoupon == null) {
-                result.setSuccess(false);
-                result.setResultCode(ApiResultConstant.resultCode_3003);
-                result.setResultMessage(ApiResultConstant.resultCode_str_3003);
-                return result;
+                return getResult(result, null, false, "3003", "加价券不存在");
             }
             recycleCouponService.updateForNoUse(order.getCouponId());
-
             //发短信
             StringBuffer content = sendThread(recycleCoupon);
             Boolean isBoolean = SmsSendUtil.sendSmsThread(order.getMobile(), content.toString());
-            if (isBoolean == false) {
-                result.setResultMessage("短信发送失败");
-                result.setResultCode("5");
-                result.setSuccess(false);
-                return result;
+            if (!isBoolean) {
+                return getResult(result, null, false, "5", "短信发送失败");
             }
-
-            result.setSuccess(true);
-            result.setResultCode(ApiResultConstant.resultCode_0);
-            result.setResultMessage(ApiResultConstant.resultCode_str_0);
+            getResult(result, null, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {

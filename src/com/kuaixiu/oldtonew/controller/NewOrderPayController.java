@@ -1,10 +1,9 @@
 package com.kuaixiu.oldtonew.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-
 import com.common.base.controller.BaseController;
 import com.kuaixiu.oldtonew.service.NewOrderPayService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 /**
 * @author: anson

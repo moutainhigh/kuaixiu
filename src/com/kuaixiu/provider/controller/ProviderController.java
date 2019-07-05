@@ -1,32 +1,15 @@
 package com.kuaixiu.provider.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
-import com.common.exception.SystemException;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
-import com.common.util.SmsSendUtil;
-import com.common.util.ValidatorUtil;
 import com.google.common.collect.Maps;
 import com.kuaixiu.provider.entity.Provider;
 import com.kuaixiu.provider.service.ProviderService;
-import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
-import com.system.api.entity.ResultData;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
-import com.system.basic.user.service.SessionUserService;
-import com.system.constant.ApiResultConstant;
-
-import jodd.util.StringUtil;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Provider Controller

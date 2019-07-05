@@ -47,6 +47,12 @@
                 固定金额加价卷
             </label>
         </div>
+        <div class="form-group" id="addPriceUppers">
+            <label for="addPriceUpper" class="col-sm-2 control-label"><span style="color:red">*</span> 最高加价金额</label>
+            <div class="col-sm-9">
+                <input type="text" id="addPriceUpper" name="addPriceUpper" class="form-control" placeholder="请输入最高加价金额">
+            </div>
+        </div>
         <div class="form-group" id="upperLimits">
             <label for="couponPrice" class="col-sm-2 control-label"><span style="color:red">*</span> 加价券额度条件上限</label>
             <div class="col-sm-9">
@@ -106,8 +112,10 @@
             var v = $(this).val();
             if (v == 2) {
                 $("#upperLimits").hide();
+                $("#addPriceUppers").hide();
             } else {
                 $("#upperLimits").show();
+                $("#addPriceUppers").show();
             }
         });
     });

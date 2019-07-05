@@ -1,18 +1,17 @@
 package com.kuaixiu.recycle.service;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.kuaixiu.recycle.dao.RecycleCompanyMapper;
 import com.kuaixiu.recycle.entity.RecycleCompany;
 import com.kuaixiu.recycle.entity.RecycleCompanyNews;
 import com.system.basic.user.entity.SessionUser;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
 * @author: anson

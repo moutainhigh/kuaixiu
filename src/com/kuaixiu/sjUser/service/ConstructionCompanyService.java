@@ -2,7 +2,6 @@ package com.kuaixiu.sjUser.service;
 
 
 import com.common.base.service.BaseService;
-import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjSetMeal.service.SjPoeService;
@@ -11,18 +10,12 @@ import com.kuaixiu.sjSetMeal.service.SjSetMealService;
 import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
 import com.kuaixiu.sjUser.dao.ConstructionCompanyMapper;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
-
-import com.kuaixiu.sjUser.entity.CustomerDetail;
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.Map;
 
 /**
  * ConstructionCompany Service

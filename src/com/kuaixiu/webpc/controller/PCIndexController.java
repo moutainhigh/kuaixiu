@@ -1,30 +1,8 @@
 package com.kuaixiu.webpc.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
-import com.common.paginate.Page;
 import com.common.util.SmsSendUtil;
 import com.common.util.ValidatorUtil;
 import com.google.common.collect.Maps;
@@ -43,15 +21,26 @@ import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.model.service.RepairCostService;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.service.OrderService;
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.system.api.entity.ResultData;
-import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.entity.SysUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.basic.user.service.SysUserService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 首页控制类.

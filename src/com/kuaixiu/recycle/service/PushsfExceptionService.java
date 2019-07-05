@@ -4,7 +4,6 @@ package com.kuaixiu.recycle.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.recycle.dao.PushsfExceptionMapper;
 import com.kuaixiu.recycle.entity.PushsfException;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

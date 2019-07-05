@@ -1,7 +1,6 @@
 package com.kuaixiu.wechat.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.common.exception.SystemException;
 import com.common.util.GlobalConstants;
 import com.common.util.HttpClientUtil;
 import com.common.wechat.aes.AesSignUtil;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

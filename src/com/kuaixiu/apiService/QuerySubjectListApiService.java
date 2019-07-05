@@ -1,14 +1,5 @@
 package com.kuaixiu.apiService;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.ApiServiceException;
@@ -17,6 +8,14 @@ import com.kuaixiu.model.service.RepairCostService;
 import com.kuaixiu.order.service.OrderService;
 import com.system.api.ApiServiceInf;
 import com.system.constant.ApiResultConstant;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**

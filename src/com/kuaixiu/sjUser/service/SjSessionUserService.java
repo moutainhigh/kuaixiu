@@ -1,7 +1,6 @@
 package com.kuaixiu.sjUser.service;
 
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.SystemException;
 import com.common.util.Base64Util;
@@ -11,7 +10,6 @@ import com.kuaixiu.sjUser.entity.Menu;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.system.api.entity.ResultData;
-import com.system.basic.user.entity.SysMenu;
 import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,7 +1,6 @@
 package com.kuaixiu.order.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.order.entity.OrderLog;
 import com.kuaixiu.order.service.OrderLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

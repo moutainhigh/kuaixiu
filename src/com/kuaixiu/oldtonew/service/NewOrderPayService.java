@@ -1,14 +1,11 @@
 package com.kuaixiu.oldtonew.service;
 
+import com.common.base.service.BaseService;
+import com.kuaixiu.oldtonew.dao.NewOrderPayMapper;
+import com.kuaixiu.oldtonew.entity.NewOrderPay;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.kuaixiu.oldtonew.dao.NewOrderPayMapper;
-import com.kuaixiu.oldtonew.entity.Agreed;
-import com.kuaixiu.oldtonew.entity.NewOrderPay;
 
 /**
 * @author: anson

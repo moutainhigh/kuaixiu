@@ -2,7 +2,6 @@ package com.kuaixiu.groupShortUrl.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.kuaixiu.groupSMS.entity.HsGroupMobileSms;
 import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlSms;
 import com.kuaixiu.groupShortUrl.service.HsGroupShortUrlSmsService;
 import com.system.api.entity.ResultData;

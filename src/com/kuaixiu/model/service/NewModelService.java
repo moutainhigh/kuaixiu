@@ -1,26 +1,20 @@
 package com.kuaixiu.model.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.kuaixiu.model.dao.NewModelMapper;
+import com.kuaixiu.model.entity.NewModel;
+import com.system.basic.user.entity.SessionUser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.common.exception.SystemException;
-import com.kuaixiu.model.dao.NewModelMapper;
-import com.kuaixiu.model.entity.Model;
-import com.kuaixiu.model.entity.NewModel;
-import com.kuaixiu.model.entity.RepairCost;
-import com.system.basic.user.entity.SessionUser;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 ;
 
 /**

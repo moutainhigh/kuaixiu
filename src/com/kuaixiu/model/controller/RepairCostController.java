@@ -1,7 +1,6 @@
 package com.kuaixiu.model.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.model.entity.RepairCost;
 import com.kuaixiu.model.service.RepairCostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

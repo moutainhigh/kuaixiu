@@ -1,15 +1,10 @@
 package com.kuaixiu.recycle.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.common.base.service.BaseService;
 import com.kuaixiu.recycle.dao.RecycleCustomerMapper;
-import com.kuaixiu.recycle.dao.RecycleOrderMapper;
 import com.kuaixiu.recycle.entity.RecycleCustomer;
-import com.kuaixiu.recycle.entity.RecycleOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
 * @author: anson

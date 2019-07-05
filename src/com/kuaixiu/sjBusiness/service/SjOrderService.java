@@ -8,8 +8,9 @@ import com.common.util.ConverterUtil;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
-import com.kuaixiu.sjBusiness.entity.*;
-
+import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
+import com.kuaixiu.sjBusiness.entity.SjOrder;
+import com.kuaixiu.sjBusiness.entity.SjProject;
 import com.kuaixiu.sjSetMeal.entity.SjPoe;
 import com.kuaixiu.sjSetMeal.entity.SjSaveNet;
 import com.kuaixiu.sjSetMeal.entity.SjSetMeal;
@@ -25,18 +26,21 @@ import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import org.apache.commons.collections.MapUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**

@@ -1,32 +1,25 @@
 package com.kuaixiu.oldtonew.service;
 
-import java.util.List;
-import java.util.Map;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.kuaixiu.oldtonew.dao.OldToNewMapper;
+import com.kuaixiu.oldtonew.entity.OldToNewUser;
+import com.system.basic.user.entity.SessionUser;
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.common.exception.SystemException;
-import com.kuaixiu.customer.entity.Customer;
-import com.kuaixiu.oldtonew.dao.OldToNewMapper;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.provider.entity.Provider;
-import com.system.basic.user.entity.SessionUser;
-import com.system.constant.SystemConstant;
-
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service("oldToNewService")
 public class OldToNewService extends BaseService<OldToNewUser> {
 	

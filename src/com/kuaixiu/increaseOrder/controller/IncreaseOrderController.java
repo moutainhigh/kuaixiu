@@ -15,7 +15,6 @@ import com.kuaixiu.increaseOrder.service.IncreaseOrderService;
 import com.kuaixiu.increaseOrder.service.IncreaseRecordService;
 import com.kuaixiu.recycle.controller.RecycleController;
 import com.kuaixiu.recycle.entity.RecycleOrder;
-import com.kuaixiu.recycle.service.RecycleExternalSubmitService;
 import com.kuaixiu.recycle.service.RecycleOrderService;
 import com.kuaixiu.wechat.entity.WechatUser;
 import com.kuaixiu.wechat.service.WechatUserService;
