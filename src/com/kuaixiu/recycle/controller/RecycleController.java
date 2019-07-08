@@ -1404,9 +1404,9 @@ public class RecycleController extends BaseController {
         if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         // 获取查询条件
         String orderNo = request.getParameter("query_orderNo");
         String status = request.getParameter("query_orderStates");
@@ -1476,9 +1476,9 @@ public class RecycleController extends BaseController {
         if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         String id = request.getParameter("id");
         RecycleOrder o = recycleOrderService.queryById(id);
         if (o == null) {
@@ -1538,9 +1538,9 @@ public class RecycleController extends BaseController {
         if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Map<String, Object> resultMap = Maps.newHashMap();
         // 获取查询条件
         String id = request.getParameter("id");
@@ -1577,9 +1577,9 @@ public class RecycleController extends BaseController {
         if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Map<String, Object> resultMap = Maps.newHashMap();
         // 获取查询条件
         String id = request.getParameter("id");
@@ -1613,9 +1613,9 @@ public class RecycleController extends BaseController {
         if (su == null) {
             throw new SystemException("您离开系统时间过长，请重新登录");
         }
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Map<String, Object> resultMap = Maps.newHashMap();
         // 获取查询条件
         String id = request.getParameter("id");

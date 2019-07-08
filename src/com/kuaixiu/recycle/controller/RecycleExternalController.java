@@ -477,10 +477,10 @@ public class RecycleExternalController extends BaseController {
     public void getTestList(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Page page = getPageByRequest(request);
         try {
-            SessionUser su = getCurrentUser(request);
-            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
-                throw new SystemException("对不起，您没有操作权限!");
-            }
+//            SessionUser su = getCurrentUser(request);
+//            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
+//                throw new SystemException("对不起，您没有操作权限!");
+//            }
             //获取查询条件
             String loginMobile = request.getParameter("loginMobile");//登录手机号
             String isOrder = request.getParameter("isOrder");//是否成单
@@ -552,10 +552,10 @@ public class RecycleExternalController extends BaseController {
     @RequestMapping(value = "recycle/testDetail")
     public ModelAndView getDetail(HttpServletRequest request, HttpServletResponse response) {
         try {
-            SessionUser su = getCurrentUser(request);
-            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-                throw new SystemException("对不起，您没有操作权限!");
-            }
+//            SessionUser su = getCurrentUser(request);
+//            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//                throw new SystemException("对不起，您没有操作权限!");
+//            }
             String id = request.getParameter("id");
             if (org.apache.commons.lang3.StringUtils.isBlank(id)) {
                 throw new SystemException("参数不完整");
@@ -604,10 +604,10 @@ public class RecycleExternalController extends BaseController {
     @RequestMapping(value = "recycle/totalPriceListForPage")
     @ResponseBody
     public void totalPriceList(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Page page = getPageByRequest(request);
         try {
             //获取查询条件
@@ -651,10 +651,10 @@ public class RecycleExternalController extends BaseController {
     @RequestMapping(value = "recycle/getTotalPrice")
     @ResponseBody
     public void getTotalPrice(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Map<String, Object> resultMap = Maps.newHashMap();
         try {
             //获取查询条件

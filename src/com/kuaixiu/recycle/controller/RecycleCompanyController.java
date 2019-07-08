@@ -151,10 +151,10 @@ public class RecycleCompanyController extends BaseController {
      */
     @RequestMapping(value = "recycle/companyList/queryListForPage")
     public void systemForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         //获取查询条件
         String mobile = request.getParameter("query_mobile");
         String name = request.getParameter("query_name");
@@ -195,10 +195,10 @@ public class RecycleCompanyController extends BaseController {
     @RequestMapping(value = "recycle/company/delete")
     public void delete(HttpServletRequest request,
                        HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Map<String, Object> resultMap = Maps.newHashMap();
         //获取项目id
         String id = request.getParameter("id");
@@ -222,10 +222,10 @@ public class RecycleCompanyController extends BaseController {
      */
     @RequestMapping(value = "recycle/company/detail")
     public String detail(HttpServletRequest request, HttpServletResponse response) {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         String id = request.getParameter("id");
         if (StringUtils.isBlank(id)) {
             throw new SystemException("参数不完整");
@@ -423,10 +423,10 @@ public class RecycleCompanyController extends BaseController {
         ResultData result = new ResultData();
         JSONArray jsonResult = new JSONArray();
         try {
-            SessionUser su = getCurrentUser(request);
-            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-                throw new SystemException("对不起，您没有操作权限!");
-            }
+//            SessionUser su = getCurrentUser(request);
+//            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//                throw new SystemException("对不起，您没有操作权限!");
+//            }
             String id = request.getParameter("id");
             String note = request.getParameter("note");
             RecycleCompany company = recycleCompanyService.queryById(id);

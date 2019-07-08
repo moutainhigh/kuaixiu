@@ -405,10 +405,10 @@ public class RecycleWechatController extends BaseController {
      */
     @RequestMapping(value = "recycle/recycleWechatList/queryListForPage")
     public void systemForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         //获取查询条件
         String mobile = request.getParameter("query_mobile");
         String queryStartTime = request.getParameter("query_startTime");
@@ -460,10 +460,10 @@ public class RecycleWechatController extends BaseController {
      */
     @RequestMapping(value = "recycle/wechat/detail")
     public String detail(HttpServletRequest request, HttpServletResponse response) {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         String id = request.getParameter("id");
         if (StringUtils.isBlank(id)) {
             throw new SystemException("参数不完整");
@@ -502,9 +502,9 @@ public class RecycleWechatController extends BaseController {
     public Map<String, Object> delete(HttpServletRequest request,
                                       HttpServletResponse response) {
         SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-            throw new SystemException("对不起，您没有操作权限!");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//            throw new SystemException("对不起，您没有操作权限!");
+//        }
         Map<String, Object> resultMap = Maps.newHashMap();
         //获取项目id
         String id = request.getParameter("id");

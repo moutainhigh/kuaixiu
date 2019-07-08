@@ -110,10 +110,10 @@ public class JoinController extends BaseController {
 	 */
 	@RequestMapping(value = "join/queryListForPage")
 	public void queryListForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		// 获取查询条件
 		String name = request.getParameter("query_name");
 		String mobile = request.getParameter("query_customerMobile");
@@ -150,9 +150,9 @@ public class JoinController extends BaseController {
 		// 获取品牌id
 		String id = request.getParameter("id");
 		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		joinNewsService.deleteById(id, su);
 		resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
 		resultMap.put(RESULTMAP_KEY_MSG, "保存成功");

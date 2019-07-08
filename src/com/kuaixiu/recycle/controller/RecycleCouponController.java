@@ -100,9 +100,9 @@ public class RecycleCouponController extends BaseController {
         Map<String, Object> resultMap = Maps.newHashMap();
         try {
             SessionUser su = getCurrentUser(request);
-            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
-                throw new SystemException("对不起，您没有操作权限!");
-            }
+//            if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
+//                throw new SystemException("对不起，您没有操作权限!");
+//            }
             String name = request.getParameter("name");//优惠券名称
             String pricingType = request.getParameter("pricingType");//加价类型 1：百分比 2:：固定加价
             String subtractionPrice = request.getParameter("subtractionPrice");//满减金额下限额度
@@ -181,7 +181,7 @@ public class RecycleCouponController extends BaseController {
     @RequestMapping(value = "/recycle/reflashCount")
     public void reflashCount(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
+//        SessionUser su = getCurrentUser(request);
 
         Map<String, Object> resultMap = Maps.newHashMap();
         //批次ID
@@ -212,10 +212,10 @@ public class RecycleCouponController extends BaseController {
     @RequestMapping("recycle/getCouponListForPage")
     public void getCouponListForPage(HttpServletRequest request,
                                      HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
-            throw new SystemException("没有权限");
-        }
+//        SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
+//            throw new SystemException("没有权限");
+//        }
         Page page = getPageByRequest(request);
         try {
             //获取查询条件
@@ -549,9 +549,9 @@ public class RecycleCouponController extends BaseController {
         Map<String, Object> resultMap = Maps.newHashMap();
         try {
             SessionUser su = getCurrentUser(request);
-            if (su.getType() != SystemConstant.USER_TYPE_SUPPER && su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-                throw new SystemException("对不起，您没有操作权限!");
-            }
+//            if (su.getType() != SystemConstant.USER_TYPE_SUPPER && su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//                throw new SystemException("对不起，您没有操作权限!");
+//            }
             String batchId = request.getParameter("batchId");//批次
             String couponCode = request.getParameter("couponCode");//加价券编码
             String name = request.getParameter("name");//优惠券名称

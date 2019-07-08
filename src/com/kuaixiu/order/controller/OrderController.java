@@ -1121,10 +1121,10 @@ public class OrderController extends BaseController {
 
         Map<String, Object> resultMap = Maps.newHashMap();
         SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE
-                && su.getType() != SystemConstant.USER_TYPE_SHOP && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
-            throw new SystemException("对不起您没有权限");
-        }
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM && su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE
+//                && su.getType() != SystemConstant.USER_TYPE_SHOP && su.getType() != SystemConstant.USER_TYPE_SUPPER) {
+//            throw new SystemException("对不起您没有权限");
+//        }
         //获取网点id
         String id = request.getParameter("id");
         if (StringUtils.isNotBlank(id)) {

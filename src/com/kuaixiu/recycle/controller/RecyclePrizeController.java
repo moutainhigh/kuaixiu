@@ -67,10 +67,10 @@ public class RecyclePrizeController extends BaseController {
 	 */
 	@RequestMapping(value = "recycle/prize/queryListForPage")
 	public void systemForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		// 获取查询条件
 		String name = request.getParameter("query_name");
 		String batch = request.getParameter("query_batch");
@@ -100,10 +100,10 @@ public class RecyclePrizeController extends BaseController {
 	 */
 	@RequestMapping(value = "recycle/prize/edit")
 	public ModelAndView add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		String prizeId=request.getParameter("prizeId");
 		if(StringUtils.isBlank(prizeId)){
 			throw new SystemException("请求参数不完整");
@@ -126,9 +126,9 @@ public class RecyclePrizeController extends BaseController {
 	@RequestMapping(value = "recycle/prize/save")
 	public void save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		Map<String, Object> resultMap = Maps.newHashMap();
 
 		RecyclePrize r = new RecyclePrize();
@@ -190,10 +190,10 @@ public class RecyclePrizeController extends BaseController {
 	@RequestMapping(value = "/recycle/updatePrize")
     public void updatePrize(HttpServletRequest request,
                               HttpServletResponse response) throws SystemException, IOException {
-		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         Map<String, Object> resultMap = Maps.newHashMap();
         String id = request.getParameter("prizeId");
         RecyclePrize prize = recyclePrizeService.queryById(id);
@@ -264,10 +264,10 @@ public class RecyclePrizeController extends BaseController {
      */
     @RequestMapping(value = "recycle/prizeRecord/queryListForPage")
     public void prizeRecordForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//        SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         // 获取查询条件
 		String mobile=request.getParameter("query_mobile");
         String isGet = request.getParameter("query_isGet");

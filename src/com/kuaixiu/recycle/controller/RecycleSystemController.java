@@ -51,10 +51,10 @@ public class RecycleSystemController extends BaseController {
 	 */
 	@RequestMapping(value = "recycle/recycleSystem/queryListForPage")
 	public void systemForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		SessionUser su = getCurrentUser(request);
-        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		 //获取查询条件
         String name = request.getParameter("query_name");
 		
@@ -78,10 +78,10 @@ public class RecycleSystemController extends BaseController {
     @RequestMapping(value = "recycle/recycleSystem/add")
     public ModelAndView add(HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
-    	SessionUser su = getCurrentUser(request);
-    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//    	SessionUser su = getCurrentUser(request);
+//    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         String returnView ="recycle/add";
         return new ModelAndView(returnView);
     }
@@ -108,9 +108,9 @@ public class RecycleSystemController extends BaseController {
         }
             
         SessionUser su = getCurrentUser(request);
-    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         RecycleSystem t = new RecycleSystem();
         t.setName(name);
         t.setSmsType(Integer.valueOf(smsType));
@@ -133,10 +133,10 @@ public class RecycleSystemController extends BaseController {
     @RequestMapping(value = "recycle/recycleSystem/edit")
     public ModelAndView edit(HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
-    	SessionUser su = getCurrentUser(request);
-    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//    	SessionUser su = getCurrentUser(request);
+//    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         //获取项目id
         String id = request.getParameter("id");
         //查询项目内容
@@ -158,9 +158,9 @@ public class RecycleSystemController extends BaseController {
     public void update(HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
     	SessionUser su = getCurrentUser(request);
-    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         Map<String, Object> resultMap = Maps.newHashMap();
         //获取项目id
         String id = request.getParameter("id");
@@ -198,9 +198,9 @@ public class RecycleSystemController extends BaseController {
     public void delete(HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
     	SessionUser su = getCurrentUser(request);
-    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
         Map<String, Object> resultMap = Maps.newHashMap();
         //获取项目id
         String id = request.getParameter("id");
