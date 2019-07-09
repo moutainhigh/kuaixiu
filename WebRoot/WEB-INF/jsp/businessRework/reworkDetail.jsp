@@ -123,7 +123,7 @@
                 </c:if>
             </td>
         </tr>
-        <c:if test="${(loginUserType==8||loginUserType==1)&&sjOrder.state==400}">
+        <c:if test="${(loginUserType==8||loginUserType==3||loginUserType==1)&&sjOrder.state==400}">
             <td colspan="3" class="tr-space"></td>
             </tr>
             <tr>
