@@ -25,7 +25,7 @@
         <div id="content_bady_area_0" class="admin-content-body">
             <script type="text/javascript">
                 $(function () {
-                    func_reload_page("${ctx}${imdexUrl}");
+                    func_reload_page("${ctx}${sjIndexUrl}");
                 });
             </script>
         </div>

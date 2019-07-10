@@ -73,7 +73,7 @@ public class SjSessionUserService {
             List<Menu> menuList = su.getMenuList();
             Menu menu = menuList.get(0);
             List<Menu> menuList1 = menu.getSubMenuList();
-            session.setAttribute("imdexUrl", menuList1.get(0).getHref());
+            session.setAttribute("sjIndexUrl", menuList1.get(0).getHref());
         } catch (IndexOutOfBoundsException i) {
 
         }
