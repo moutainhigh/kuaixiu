@@ -839,13 +839,16 @@ class SmsSendThread implements Runnable {
 
     @Override
     public void run() {
-        List<String> sources=recycleSystemService.getDao().queryIdBySmsType(2);
+        if(recycleSystemService!=null){
+            List<String> sources=recycleSystemService.getDao().queryIdBySmsType(2);
 //        List<String> sources= Arrays.asList("2","4","9","10","15");
-        if (sources.contains(source) && StringUtils.isNotBlank(source)) {
-            SmsSendUtil.sendSms2(mobile, content);
-        } else {
+            if (sources.contains(source) && StringUtils.isNotBlank(source)) {
+                SmsSendUtil.sendSms2(mobile, content);
+            } else {
+                SmsSendUtil.sendSms(mobile, content);
+            }
+        }else{
             SmsSendUtil.sendSms(mobile, content);
         }
     }
-
 }
