@@ -290,6 +290,8 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             exception.setOrderNo(order.getOrderNo());
             exception.setShExceptin(e.getMessage());
             pushsfExceptionService.add(exception);
+            order.setIsDel(1);
+            this.saveUpdate(order);
             request.getSession().setAttribute("newTimes", time);
             throw new SystemException("推送顺丰快递失败");
         }
