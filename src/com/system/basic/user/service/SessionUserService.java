@@ -92,7 +92,9 @@ public class SessionUserService {
             List<SysMenu> menuList = su.getSysMenuList();
             SysMenu menu = menuList.get(0);
             List<SysMenu> menuList1 = menu.getSubMenuList();
-            session.setAttribute("imdexUrl", menuList1.get(0).getHref());
+            SysMenu menu2 = menuList1.get(0);
+            List<SysMenu> menuList2 = menu2.getSubMenuList();
+            session.setAttribute("indexUrl", menuList2.get(0).getHref());
         } catch (IndexOutOfBoundsException i) {
 
         }

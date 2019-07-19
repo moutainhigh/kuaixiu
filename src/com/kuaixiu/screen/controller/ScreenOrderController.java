@@ -169,10 +169,10 @@ public class ScreenOrderController extends BaseController {
 	 */
 	@RequestMapping(value = "screen/order/queryListForPage")
 	public void queryListForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType()!=SystemConstant.USER_TYPE_SCREEN) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType()!=SystemConstant.USER_TYPE_SCREEN) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		// 获取查询条件
 		String orderNo = request.getParameter("query_orderNo");
 		String status = request.getParameter("query_orderStates");
@@ -203,10 +203,10 @@ public class ScreenOrderController extends BaseController {
 	 */
 	@RequestMapping(value = "screen/order/detail")
 	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		SessionUser su = getCurrentUser(request);
-		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType()!=SystemConstant.USER_TYPE_SCREEN) {
-			throw new SystemException("对不起，您没有操作权限!");
-		}
+//		SessionUser su = getCurrentUser(request);
+//		if (su.getType() != SystemConstant.USER_TYPE_SYSTEM&&su.getType()!=SystemConstant.USER_TYPE_SCREEN) {
+//			throw new SystemException("对不起，您没有操作权限!");
+//		}
 		String id = request.getParameter("id");
 		ScreenOrder o = screenOrderService.queryById(id);
 		if (o == null) {
@@ -310,11 +310,11 @@ public class ScreenOrderController extends BaseController {
 	public void delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ResultData result = new ResultData();
 		JSONObject jsonResult = new JSONObject();
-		SessionUser su = getCurrentUser(request);
+//		SessionUser su = getCurrentUser(request);
 		try {
-			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-				throw new SystemException("对不起，您没有操作权限!");
-			}
+//			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//				throw new SystemException("对不起，您没有操作权限!");
+//			}
 			String id = request.getParameter("id");
 			ScreenOrder order = screenOrderService.queryById(id);
 			if (order == null) {
@@ -340,11 +340,11 @@ public class ScreenOrderController extends BaseController {
 	public void commitOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ResultData result = new ResultData();
 		JSONObject jsonResult = new JSONObject();
-		SessionUser su = getCurrentUser(request);
+//		SessionUser su = getCurrentUser(request);
 		try {
-			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-				throw new SystemException("对不起，您没有操作权限!");
-			}
+//			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//				throw new SystemException("对不起，您没有操作权限!");
+//			}
 			String id = request.getParameter("id");
 			ScreenOrder order = screenOrderService.queryById(id);
 			orderPayService.screenPaySuccess(order); // 再次向碎屏险公司发起订单提交申请
@@ -366,14 +366,14 @@ public class ScreenOrderController extends BaseController {
 	@RequestMapping(value = "screen/order/queryRefundNews")
 	public void queryRefundNews(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ResultData result = new ResultData();
-		SessionUser su = getCurrentUser(request);
+//		SessionUser su = getCurrentUser(request);
 		try {
 			String id = request.getParameter("id");
 			ScreenOrder o = screenOrderService.queryById(id);
-			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM
-					&& su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
-				throw new SystemException("对不起，您无权操作该订单！");
-			}
+//			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM
+//					&& su.getType() != SystemConstant.USER_TYPE_CUSTOMER_SERVICE) {
+//				throw new SystemException("对不起，您无权操作该订单！");
+//			}
 			if (o == null) {
 				throw new SystemException("订单不存在!");
 			} else {
@@ -410,11 +410,11 @@ public class ScreenOrderController extends BaseController {
 	public void upload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ResultData result = new ResultData();
 		JSONObject jsonResult = new JSONObject();
-		SessionUser su = getCurrentUser(request);
+//		SessionUser su = getCurrentUser(request);
 		try {
-			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-				throw new SystemException("对不起，您无权操作该订单！");
-			}
+//			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//				throw new SystemException("对不起，您无权操作该订单！");
+//			}
 			String id = request.getParameter("filename"); // 品牌id
 			String logoPath = getPath(request); // 图片路径
 			ScreenBrand b = screenBrandService.queryById(id);
@@ -546,10 +546,10 @@ public class ScreenOrderController extends BaseController {
 		 */
 		@RequestMapping(value = "screen/account/queryListForPage")
 		public void accountQueryListForPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-			SessionUser su = getCurrentUser(request);
-			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-				throw new SystemException("对不起，您没有操作权限!");
-			}
+//			SessionUser su = getCurrentUser(request);
+//			if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//				throw new SystemException("对不起，您没有操作权限!");
+//			}
 			SysUser user=new SysUser();
 			user.setType(SystemConstant.USER_TYPE_SCREEN);
 			user.setIsDel(0);
@@ -587,9 +587,9 @@ public class ScreenOrderController extends BaseController {
 	    public void save(HttpServletRequest request,
 	                              HttpServletResponse response) throws Exception {
 	    	SessionUser su = getCurrentUser(request);
-	    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-				throw new SystemException("对不起，您没有操作权限!");
-			}
+//	    	if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//				throw new SystemException("对不起，您没有操作权限!");
+//			}
 	        Map<String, Object> resultMap = Maps.newHashMap();
 	        String account = request.getParameter("addAccount");
 	        String password = request.getParameter("addPassword");
@@ -643,9 +643,9 @@ public class ScreenOrderController extends BaseController {
 	        //login_id
 	        String id = request.getParameter("id");
 	        SessionUser su = getCurrentUser(request);
-	        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
-				throw new SystemException("对不起，您没有操作权限!");
-			}
+//	        if (su.getType() != SystemConstant.USER_TYPE_SYSTEM) {
+//				throw new SystemException("对不起，您没有操作权限!");
+//			}
 	        sysUserService.deleteUser(id, su.getUserId());
 	        
 	        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
