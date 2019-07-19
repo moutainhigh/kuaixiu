@@ -1,15 +1,13 @@
 package com.kuaixiu.shop.service;
 
-import java.util.Map;
-
+import com.common.base.service.BaseService;
+import com.kuaixiu.shop.dao.NewShopModelMapper;
+import com.kuaixiu.shop.entity.NewShopModel;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.kuaixiu.shop.dao.NewShopModelMapper;
-import com.kuaixiu.shop.entity.NewShopModel;
+import java.util.Map;
 
 /**
 * @author: anson

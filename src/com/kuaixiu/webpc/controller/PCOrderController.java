@@ -1,67 +1,41 @@
 package com.kuaixiu.webpc.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
-import com.common.paginate.Page;
 import com.common.util.QRCodeUtil;
-import com.common.wechat.bean.result.WxMpOAuth2AccessToken;
 import com.google.common.collect.Maps;
 import com.google.zxing.WriterException;
-import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.coupon.service.CouponService;
-import com.kuaixiu.customer.entity.Customer;
 import com.kuaixiu.customer.service.CustomerService;
-import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
-import com.kuaixiu.oldtonew.entity.Agreed;
-import com.kuaixiu.oldtonew.entity.InTimeCompare;
 import com.kuaixiu.oldtonew.entity.NewOrder;
-import com.kuaixiu.oldtonew.entity.NewOrderList;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.oldtonew.entity.OrderShow;
-import com.kuaixiu.oldtonew.entity.UpdateTimeCompare;
 import com.kuaixiu.oldtonew.service.AgreedService;
 import com.kuaixiu.oldtonew.service.NewOrderService;
 import com.kuaixiu.oldtonew.service.OldToNewService;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderComment;
-import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.entity.OrderPayLog;
 import com.kuaixiu.order.service.OrderCommentService;
 import com.kuaixiu.order.service.OrderDetailService;
 import com.kuaixiu.order.service.OrderPayService;
 import com.kuaixiu.order.service.OrderService;
-import com.kuaixiu.project.entity.CancelReason;
 import com.kuaixiu.project.service.CancelReasonService;
-import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.system.api.entity.ResultData;
-import com.system.basic.user.entity.LoginUser;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.entity.SysUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.basic.user.service.SysUserService;
 import com.system.constant.ApiResultConstant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import jodd.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * 微信订单controller

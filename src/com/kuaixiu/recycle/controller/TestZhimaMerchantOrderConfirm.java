@@ -145,15 +145,12 @@ public class TestZhimaMerchantOrderConfirm extends BaseController {
 				throw new SystemException("回收流水号不存在");
 			}
 
-
-
 			// 开始向芝麻发起请求
 			TestZhimaMerchantOrderConfirm confirm = new TestZhimaMerchantOrderConfirm();
 			ZhimaMerchantOrderConfirmResponse news = confirm.testZhimaMerchantOrderConfirm(orderNo,request);
 			JSONObject zhimaNews=getNews(news,request);
 			String str = JSONObject.toJSONString(zhimaNews,SerializerFeature.WriteMapNullValue);
 			System.out.println("芝麻返回数据"+str);
-
 
 			//风控条件判断
 			Integer type=null;                              //0表示信用回收  1表示普通回收
@@ -197,7 +194,6 @@ public class TestZhimaMerchantOrderConfirm extends BaseController {
 				log.info("芝麻信用评估失败");
 			}
 
-
 			//保证流水号对应订单的唯一性
 			RecycleOrder recycle=recycleOrderService.queryByQuoteId(quoteId);
 			if(recycle!=null){
@@ -208,8 +204,6 @@ public class TestZhimaMerchantOrderConfirm extends BaseController {
 					throw new SystemException("请求重复该订单!");
 				}
 			}
-
-
 
 			JSONObject zhima=new JSONObject();
 			zhima.put("quoteid", quoteId);

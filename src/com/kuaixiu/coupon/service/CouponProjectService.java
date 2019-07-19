@@ -4,12 +4,11 @@ import com.common.base.service.BaseService;
 import com.kuaixiu.coupon.dao.CouponProjectMapper;
 import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.coupon.entity.CouponProject;
-
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * CouponProject Service

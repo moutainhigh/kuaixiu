@@ -1,26 +1,10 @@
 package com.kuaixiu.wap.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
-import com.common.paginate.Page;
 import com.common.util.SmsSendUtil;
 import com.common.util.ValidatorUtil;
 import com.google.common.collect.Maps;
-import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.service.BrandService;
 import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.coupon.entity.CouponModel;
@@ -28,21 +12,22 @@ import com.kuaixiu.coupon.entity.CouponProject;
 import com.kuaixiu.coupon.service.CouponModelService;
 import com.kuaixiu.coupon.service.CouponProjectService;
 import com.kuaixiu.coupon.service.CouponService;
-import com.kuaixiu.customer.entity.Customer;
-import com.kuaixiu.model.entity.Model;
-import com.kuaixiu.model.entity.RepairCost;
 import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.model.service.RepairCostService;
-import com.kuaixiu.order.constant.OrderConstant;
-import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.service.OrderService;
-import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
-import com.system.basic.user.entity.SessionUser;
-import com.system.basic.user.entity.SysUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.basic.user.service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 首页控制类.

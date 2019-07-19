@@ -6,7 +6,6 @@ import com.common.exception.SystemException;
 import com.common.util.SmsSendUtil;
 import com.common.util.ValidatorUtil;
 import com.system.api.CodeService;
-import com.system.api.entity.Code;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.ApiResultConstant;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.UUID;
 
 /**

@@ -1,18 +1,17 @@
 package com.kuaixiu.customer.service;
 
 
-import java.util.UUID;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.common.base.service.BaseService;
 import com.kuaixiu.customer.dao.CustomerMapper;
 import com.kuaixiu.customer.entity.Customer;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.service.SysUserService;
 import com.system.constant.SystemConstant;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * Customer Service

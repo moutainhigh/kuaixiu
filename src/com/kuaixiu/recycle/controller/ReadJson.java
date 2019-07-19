@@ -1,21 +1,20 @@
 package com.kuaixiu.recycle.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.kuaixiu.recycle.entity.RecycleCustomer;
+import com.kuaixiu.recycle.entity.RecycleOrder;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.kuaixiu.recycle.entity.RecycleCustomer;
-import com.kuaixiu.recycle.entity.RecycleOrder;
 
 /**
  * @author: anson
@@ -46,14 +45,13 @@ public class ReadJson {
 
 	/**
 	 * 创建文件
-	 * 
-	 * @param fileName
-	 *            文件名称
-	 * @param filecontent
-	 *            文件内容
-	 * @return 是否创建成功，成功则返回true
+	 * @param order
+	 * @param cust
+	 * @param path
+	 * @param type
+	 * @return
 	 */
-	public static String createFile(RecycleOrder order,RecycleCustomer cust,String path,Integer type) {
+	static String createFile(RecycleOrder order,RecycleCustomer cust,String path,Integer type) {
 		// 根据回收订单号加当前时间存入
 		filenameTemp = path + "/" +(order.getOrderNo()+"-"+System.currentTimeMillis()) + ".json";// 文件路径+名称+文件类型
 		File file = new File(filenameTemp);
@@ -63,7 +61,6 @@ public class ReadJson {
 				file.createNewFile();
 				System.out.println("success create file,the file is " + filenameTemp);
 			}
-			
 			// 创建文件成功后，写入内容到文件里
 			writeFileContent(filenameTemp, order,cust,type);
 		} catch (Exception e) {
@@ -75,15 +72,14 @@ public class ReadJson {
 
 	/**
 	 * 向文件中写入内容
-	 * 
 	 * @param filepath
-	 *            文件路径与名称
-	 * @param newstr
-	 *            写入的内容
+	 * @param order
+	 * @param cust
+	 * @param type
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean writeFileContent(String filepath, RecycleOrder order, RecycleCustomer cust,Integer type) throws IOException {
+	private static boolean writeFileContent(String filepath, RecycleOrder order, RecycleCustomer cust,Integer type) throws IOException {
 		Date now = new Date();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		Boolean bool = false;
@@ -102,26 +98,6 @@ public class ReadJson {
 		js.put("order_status", type.toString());
 		js.put("order_status_date", sf.format(now));
 		js.put("object_name", order.getProductName());
-
-//		if(type==7){
-//			//预支付
-//			js.put("evaluate_amt", order.getPrice());
-//			js.put("advance_amt", order.getPreparePrice());
-//		}else if(type==2){
-//			//流程结束
-//		}else if(type==4){
-//			//退货 
-//			js.put("evaluate_amt", order.getPrice());
-//			js.put("advance_amt", order.getPreparePrice());
-//			js.put("bill_amt", order.getPreparePrice());      //根据实际评估后，客户应返还商户的实际金额
-//		}else if(type==9){
-//			//异议 
-//			js.put("evaluate_amt", order.getPrice());         //物品的初评金额
-//			js.put("actual_eva_amt", order.getFinalPrice());  //物品的实际评估金额             
-//			js.put("advance_amt", order.getPreparePrice());   //打给用户的预付金额
-//			
-//		}
-		
 		js.put("evaluate_amt", 0.2);                 //物品的初评金额
 		js.put("actual_eva_amt", 0.2);               //物品的实际评估金额
 		js.put("advance_amt", 0.1);                  //打给用户的预付金额

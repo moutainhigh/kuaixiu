@@ -1,15 +1,13 @@
 package com.kuaixiu.clerk.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.common.base.dao.BaseDao;
 import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.common.util.MD5Util;
 import com.common.util.SmsSendUtil;
 import com.kuaixiu.clerk.dao.ClerkMapper;
 import com.kuaixiu.clerk.entity.Clerk;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
 * @author: anson

@@ -1,17 +1,14 @@
 package com.kuaixiu.join.service;
 
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.kuaixiu.join.dao.JoinNewsMapper;
+import com.kuaixiu.join.entity.JoinNews;
+import com.system.basic.user.entity.SessionUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.common.exception.SystemException;
-import com.kuaixiu.brand.entity.Brand;
-import com.kuaixiu.join.dao.JoinNewsMapper;
-import com.kuaixiu.join.entity.JoinNews;
-import com.system.basic.user.entity.SessionUser;
 
 /**
  * @author: anson

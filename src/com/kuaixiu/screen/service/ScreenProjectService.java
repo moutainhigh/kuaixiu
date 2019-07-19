@@ -1,17 +1,14 @@
 package com.kuaixiu.screen.service;
 
-import java.util.List;
-
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.kuaixiu.screen.dao.ScreenProjectMapper;
+import com.kuaixiu.screen.entity.ScreenProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.common.base.dao.BaseDao;
-import com.common.base.service.BaseService;
-import com.common.exception.SystemException;
-import com.kuaixiu.project.entity.Project;
-import com.kuaixiu.screen.dao.ScreenProjectMapper;
-import com.kuaixiu.screen.entity.ScreenProject;
+import java.util.List;
 
 /**
 * @author: anson

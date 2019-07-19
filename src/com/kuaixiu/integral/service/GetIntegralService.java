@@ -1,12 +1,5 @@
 package com.kuaixiu.integral.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.common.base.dao.BaseDao;
 import com.common.base.service.BaseService;
 import com.kuaixiu.clerk.entity.Clerk;
 import com.kuaixiu.clerk.service.ClerkService;
@@ -16,6 +9,11 @@ import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.service.OrderDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
 * @author: anson

@@ -1,8 +1,7 @@
 package com.kuaixiu.timer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.system.basic.statistic.service.StatisticService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 定时统计.

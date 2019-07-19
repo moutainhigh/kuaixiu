@@ -1,7 +1,6 @@
 package com.kuaixiu.coupon.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.coupon.entity.CouponProject;
 import com.kuaixiu.coupon.service.CouponProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

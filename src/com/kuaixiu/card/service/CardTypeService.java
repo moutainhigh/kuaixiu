@@ -4,7 +4,6 @@ package com.kuaixiu.card.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.card.dao.CardTypeMapper;
 import com.kuaixiu.card.entity.CardType;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

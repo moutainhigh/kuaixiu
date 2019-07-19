@@ -7,20 +7,12 @@ import com.common.exception.SystemException;
 import com.common.paginate.Page;
 import com.common.util.AES;
 import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.brand.entity.Brand;
-import com.kuaixiu.brand.entity.NewBrand;
-import com.kuaixiu.provider.entity.Provider;
-import com.kuaixiu.provider.service.ProviderService;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
-import com.kuaixiu.shop.entity.NewShopModel;
-import com.kuaixiu.shop.entity.Shop;
-import com.kuaixiu.shop.entity.ShopModel;
 import com.system.api.entity.ResultData;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
-import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;
 import org.apache.log4j.Logger;
@@ -127,7 +119,6 @@ public class RecycleTestController extends BaseController {
     @ResponseBody
     public ResultData login(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonObject = new JSONObject();
         try {
             String categoryid = request.getParameter("categoryid");
             String brandId = request.getParameter("brandId");
@@ -570,7 +561,6 @@ public class RecycleTestController extends BaseController {
             cust.setAddress(address);
             recycleCustomerService.add(cust);  //添加用户信息
 
-
             //请求回收平台调用下单接口
             JSONObject requestNews = new JSONObject();
             //调用接口需要加密的数据
@@ -648,13 +638,8 @@ public class RecycleTestController extends BaseController {
             //下单成功后更新下单间隔时间
             request.getSession().setAttribute("times", time);
             getResult(result, null, true, "0", "成功");
-        } catch (SystemException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            getResult(result, null, false, "2", e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            log.error(e.getMessage());
             getResult(result, null, false, "2", e.getMessage());
         }
         return result;

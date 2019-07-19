@@ -1,11 +1,10 @@
 package com.kuaixiu.recycle.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.common.base.service.BaseService;
 import com.kuaixiu.recycle.dao.RecycleCheckItemsMapper;
 import com.kuaixiu.recycle.entity.RecycleCheckItems;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("recycleCheckItemsService")
 public class RecycleCheckItemsService extends BaseService<RecycleCheckItems>{

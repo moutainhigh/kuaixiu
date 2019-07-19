@@ -4,7 +4,6 @@ package com.kuaixiu.groupSMS.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.groupSMS.dao.HsGroupMobileSmsMapper;
 import com.kuaixiu.groupSMS.entity.HsGroupMobileSms;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

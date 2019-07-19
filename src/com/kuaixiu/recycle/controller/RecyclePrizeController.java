@@ -23,11 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
  * Description:奖品控制
- * 
  * @author anson
- * 
  * @date 2018年6月13日
  */
 @Controller
@@ -38,10 +35,7 @@ public class RecyclePrizeController extends BaseController {
     @Autowired
 	private PrizeRecordService prizeRecordService;
 
-
 	/**
-	 * 
-	 * 
 	 * Description: 奖品列表
 	 * 
 	 * @param request
@@ -57,10 +51,7 @@ public class RecyclePrizeController extends BaseController {
 	}
 
 	/**
-	 * 
-	 * 
 	 * Description: 刷新奖品列表数据
-	 * 
 	 * @param request
 	 * @param response
 	 * @throws Exception
@@ -89,10 +80,7 @@ public class RecyclePrizeController extends BaseController {
 	}
 
 	/**
-	 * 
-	 * 
 	 * Description: 编辑奖品页面
-	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -115,10 +103,7 @@ public class RecyclePrizeController extends BaseController {
 	}
 
 	/**
-	 * 
-	 * 
 	 * Description: 保存奖品
-	 * 
 	 * @param request
 	 * @param response
 	 * @throws Exception
@@ -179,10 +164,7 @@ public class RecyclePrizeController extends BaseController {
 	
 	
 	/**
-	 * 
-	
 	 * Description: 修改奖品
-	
 	 * @param request
 	 * @param response
 	 * @throws Exception

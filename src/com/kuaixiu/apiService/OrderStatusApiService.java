@@ -1,16 +1,5 @@
 package com.kuaixiu.apiService;
 
-import java.util.Date;
-import java.util.Map;
-
-import com.kuaixiu.order.entity.ReworkOrder;
-import com.kuaixiu.order.service.ReworkOrderService;
-import org.apache.commons.collections.MapUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.ApiServiceException;
 import com.common.exception.SystemException;
@@ -25,15 +14,24 @@ import com.kuaixiu.oldtonew.service.NewOrderService;
 import com.kuaixiu.oldtonew.service.OldToNewService;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.entity.Order;
+import com.kuaixiu.order.entity.ReworkOrder;
 import com.kuaixiu.order.service.OrderService;
+import com.kuaixiu.order.service.ReworkOrderService;
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.system.api.ApiServiceInf;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
-
 import jodd.util.StringUtil;
+import org.apache.commons.collections.MapUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.Map;
 
 
 /**

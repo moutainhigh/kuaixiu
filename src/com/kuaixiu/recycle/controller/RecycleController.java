@@ -11,7 +11,6 @@ import com.google.common.collect.Maps;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.system.api.entity.ResultData;
-import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.ApiResultConstant;

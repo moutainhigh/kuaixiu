@@ -1,9 +1,7 @@
 package com.kuaixiu.zhuanzhuan.service;
 
-import com.common.base.dao.BaseDao;
 import com.common.base.service.BaseService;
 import com.kuaixiu.zhuanzhuan.dao.AuctionReturnOrderMapper;
-import com.kuaixiu.zhuanzhuan.entity.AuctionOrder;
 import com.kuaixiu.zhuanzhuan.entity.AuctionReturnOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

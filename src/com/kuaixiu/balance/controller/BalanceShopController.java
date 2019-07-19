@@ -1,7 +1,6 @@
 package com.kuaixiu.balance.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.balance.entity.BalanceShop;
 import com.kuaixiu.balance.service.BalanceShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

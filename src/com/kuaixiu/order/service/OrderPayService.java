@@ -1,21 +1,5 @@
 package com.kuaixiu.order.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.domain.TradeFundBill;
@@ -23,19 +7,10 @@ import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.common.alipay.api.AliPayService;
 import com.common.alipay.api.impl.AliPayServiceImpl;
 import com.common.exception.SystemException;
-import com.common.util.Base64Util;
-import com.common.util.DateUtil;
-import com.common.util.NOUtil;
-import com.common.util.NumberUtils;
-import com.common.util.SmsSendUtil;
+import com.common.util.*;
 import com.common.wechat.api.WxMpService;
-import com.common.wechat.bean.result.WxMpPayCloseResult;
-import com.common.wechat.bean.result.WxMpPayQueryRefundState;
-import com.common.wechat.bean.result.WxMpPayRefundResult;
-import com.common.wechat.bean.result.WxMpPayResult;
-import com.common.wechat.bean.result.WxMpPrepayIdResult;
+import com.common.wechat.bean.result.*;
 import com.common.wechat.common.exception.WxErrorException;
-import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.integral.service.GetIntegralService;
 import com.kuaixiu.oldtonew.entity.NewOrder;
@@ -50,18 +25,26 @@ import com.kuaixiu.screen.entity.ScreenOrder;
 import com.kuaixiu.screen.entity.ScreenProject;
 import com.kuaixiu.screen.service.ScreenOrderService;
 import com.kuaixiu.screen.service.ScreenProjectService;
-import com.system.constant.SystemConstant;
-
-import com.system.wechat.controller.PaymentController;
-import jodd.util.StringUtil;
-
 import com.system.basic.user.entity.SessionUser;
-
+import com.system.constant.SystemConstant;
+import jodd.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 订单支付服务类.

@@ -5,7 +5,6 @@ import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.common.util.NOUtil;
 import com.common.util.SmsSendUtil;
-import com.kuaixiu.coupon.entity.Coupon;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.engineer.service.NewEngineerService;
@@ -14,7 +13,6 @@ import com.kuaixiu.order.dao.ReworkOrderMapper;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.order.entity.ReworkOrder;
-
 import com.kuaixiu.shop.entity.Shop;
 import com.kuaixiu.shop.service.ShopService;
 import com.system.basic.user.entity.SessionUser;

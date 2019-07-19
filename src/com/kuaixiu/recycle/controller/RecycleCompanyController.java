@@ -1,23 +1,5 @@
 package com.kuaixiu.recycle.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.kuaixiu.recycle.entity.RecyclePrize;
-import com.kuaixiu.recycle.service.RecyclePrizeService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
@@ -26,11 +8,27 @@ import com.common.paginate.Page;
 import com.google.common.collect.Maps;
 import com.kuaixiu.recycle.entity.RecycleCompany;
 import com.kuaixiu.recycle.entity.RecycleCompanyNews;
+import com.kuaixiu.recycle.entity.RecyclePrize;
 import com.kuaixiu.recycle.service.RecycleCompanyService;
+import com.kuaixiu.recycle.service.RecyclePrizeService;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.entity.SessionUser;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: anson
@@ -436,9 +434,7 @@ public class RecycleCompanyController extends BaseController {
             company.setNote(note);
             company.setOrderStatus(1);
             recycleCompanyService.saveUpdate(company);
-            result.setResult(jsonResult);
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result,jsonResult,true,"0","成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {

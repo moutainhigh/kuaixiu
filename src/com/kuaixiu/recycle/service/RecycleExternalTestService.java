@@ -5,21 +5,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.common.util.AES;
-import com.common.util.DateUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.dao.RecycleExternalTestMapper;
 import com.kuaixiu.recycle.entity.RecycleExternalLogin;
 import com.kuaixiu.recycle.entity.RecycleExternalTest;
-
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 /**

@@ -5,7 +5,6 @@ import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.kuaixiu.recycle.dao.RecycleExternalSubmitMapper;
 import com.kuaixiu.recycle.entity.RecycleExternalSubmit;
-
 import com.kuaixiu.recycle.entity.RecycleExternalTest;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;

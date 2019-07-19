@@ -1,24 +1,16 @@
 package com.kuaixiu.order.service;
 
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.UUID;
-
 import com.common.base.service.BaseService;
-import com.common.util.DateUtil;
-import com.common.wechat.api.WxMpService;
-import com.common.wechat.bean.result.WxMpPayResult;
-import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.dao.OrderPayLogMapper;
-import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.OrderPayLog;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * OrderPayLog Service

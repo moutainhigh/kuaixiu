@@ -4,12 +4,11 @@ package com.kuaixiu.shop.service;
 import com.common.base.service.BaseService;
 import com.kuaixiu.shop.dao.ShopModelMapper;
 import com.kuaixiu.shop.entity.ShopModel;
-
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * ShopModel Service

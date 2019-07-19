@@ -2,9 +2,10 @@ package com.kuaixiu.groupShortUrl.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.kuaixiu.groupSMS.entity.*;
-import com.kuaixiu.groupSMS.service.*;
-import com.kuaixiu.groupShortUrl.entity.*;
+import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlBatchRecord;
+import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlMobile;
+import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlRecord;
+import com.kuaixiu.groupShortUrl.entity.HsGroupShortUrlSms;
 import com.kuaixiu.groupShortUrl.service.*;
 import com.kuaixiu.recycle.service.RecycleSystemService;
 import com.system.api.entity.ResultData;

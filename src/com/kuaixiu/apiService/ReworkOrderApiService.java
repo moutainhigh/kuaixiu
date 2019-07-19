@@ -2,7 +2,6 @@ package com.kuaixiu.apiService;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.exception.ApiServiceException;
-import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.entity.ReworkOrder;

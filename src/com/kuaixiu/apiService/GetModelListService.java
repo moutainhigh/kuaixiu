@@ -1,35 +1,23 @@
 package com.kuaixiu.apiService;
 
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.common.exception.ApiServiceException;
+import com.kuaixiu.model.entity.NewModel;
+import com.kuaixiu.model.service.NewModelService;
+import com.kuaixiu.oldtonew.service.AgreedService;
+import com.kuaixiu.oldtonew.service.NewOrderService;
+import com.kuaixiu.oldtonew.service.OldToNewService;
+import com.kuaixiu.shop.service.ShopService;
+import com.system.api.ApiServiceInf;
+import com.system.constant.ApiResultConstant;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.common.exception.ApiServiceException;
-import com.kuaixiu.brand.entity.NewBrand;
-import com.kuaixiu.brand.service.NewBrandService;
-import com.kuaixiu.coupon.entity.Coupon;
-import com.kuaixiu.coupon.entity.CouponModel;
-import com.kuaixiu.coupon.entity.CouponProject;
-import com.kuaixiu.model.entity.NewModel;
-import com.kuaixiu.model.service.NewModelService;
-import com.kuaixiu.oldtonew.entity.Agreed;
-import com.kuaixiu.oldtonew.entity.NewOrder;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.oldtonew.service.AgreedService;
-import com.kuaixiu.oldtonew.service.NewOrderService;
-import com.kuaixiu.oldtonew.service.OldToNewService;
-import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderDetail;
-import com.kuaixiu.shop.entity.Shop;
-import com.kuaixiu.shop.service.ShopService;
-import com.system.api.ApiServiceInf;
-import com.system.constant.ApiResultConstant;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author: anson

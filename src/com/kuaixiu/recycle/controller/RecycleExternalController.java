@@ -54,7 +54,6 @@ public class RecycleExternalController extends BaseController {
 
     private static final Logger log = Logger.getLogger(RecycleExternalController.class);
 
-
     @Autowired
     private RecycleExternalLoginService recycleExternalLoginService;
     @Autowired
@@ -108,10 +107,7 @@ public class RecycleExternalController extends BaseController {
             //保存登录信息,返回本次登录操作验证token
             String token = recycleExternalLoginService.addLogin(loginMobile, source);
             jsonObject.put("token", token);
-            result.setResult(jsonObject);
-            result.setSuccess(true);
-            result.setResultCode("0");
-            result.setResultMessage("登录成功");
+            getResult(result, jsonObject, true, "0", "登录成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -140,10 +136,7 @@ public class RecycleExternalController extends BaseController {
             String detail = params.getString("detail");
             if (StringUtils.isBlank(brandId) || StringUtils.isBlank(token) || StringUtils.isBlank(productId)
                     || StringUtils.isBlank(items) || StringUtils.isBlank(detail)) {
-                result.setResultCode("1");
-                result.setSuccess(false);
-                result.setResultMessage("参数不完整");
-                return result;
+                return getResult(result, null, false, "1", "参数不完整");
             }
             //通过检测项获取数据
             JSONObject jsonResult = recycleExternalTestService.getPrice(productId, imei, items);
@@ -154,10 +147,7 @@ public class RecycleExternalController extends BaseController {
                 recycleExternalTestService.add(jsonObject, token, detail, brandId, productId);
             }
             jsonObject.put("token", token);
-            result.setResult(jsonResult);
-            result.setResultMessage("成功");
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -185,23 +175,20 @@ public class RecycleExternalController extends BaseController {
             String detail = params.getString("detail");
             if (StringUtils.isBlank(brandId) || StringUtils.isBlank(token) || StringUtils.isBlank(productId)
                     || StringUtils.isBlank(items) || StringUtils.isBlank(detail)) {
-                result.setResultCode("1");
-                result.setSuccess(false);
-                result.setResultMessage("参数不完整");
-                return result;
+                return getResult(result, null, false, "1", "参数不完整");
             }
 
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
-            StringBuilder sb=new StringBuilder();
-            String[] itemses=items.split("\\|");
-            for(int i=0;i<itemses.length;i++){
-                String[] item=itemses[i].split(",");
+            StringBuilder sb = new StringBuilder();
+            String[] itemses = items.split("\\|");
+            for (int i = 0; i < itemses.length; i++) {
+                String[] item = itemses[i].split(",");
                 sb.append(item[1]);
-                if(itemses.length-1!=i){
+                if (itemses.length - 1 != i) {
                     sb.append(",");
                 }
             }
-            items=sb.toString();
+            items = sb.toString();
 
             //通过检测项获取数据
             JSONObject jsonResult = recycleExternalTestService.getNewUrlPrice(productId, imei, items);
@@ -212,10 +199,7 @@ public class RecycleExternalController extends BaseController {
                 recycleExternalTestService.newUrlAdd(jsonObject, token, detail, brandId, productId);
             }
             jsonObject.put("token", token);
-            result.setResult(jsonResult);
-            result.setResultMessage("成功");
-            result.setResultCode("0");
-            result.setSuccess(true);
+            getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -249,24 +233,15 @@ public class RecycleExternalController extends BaseController {
                     StringUtil.isBlank(name) || StringUtil.isBlank(mobile) || StringUtil.isBlank(province) ||
                     StringUtil.isBlank(city) || StringUtil.isBlank(area) || StringUtil.isBlank(street) ||
                     StringUtils.isBlank(imagePath)) {
-                result.setResultMessage("参数不完整");
-                result.setSuccess(false);
-                result.setResultCode("1");
-                return result;
+                return getResult(result, null, false, "1", "参数不完整");
             }
             //判断数据 是否符合规范
             if (name.length() > 12 || street.length() > 64) {
-                result.setResultMessage("部分信息长度过长");
-                result.setSuccess(false);
-                result.setResultCode("2");
-                return result;
+                return getResult(result, null, false, "2", "部分信息长度过长");
             }
             Boolean isTrue = recycleExternalSubmitService.timeVerification(request);
             if (!isTrue) {
-                result.setResultMessage("您下单过于频繁，请稍后重试!");
-                result.setSuccess(false);
-                result.setResultCode("3");
-                return result;
+                return getResult(result, null, false, "3", "您下单过于频繁，请稍后重试!");
             }
             //获取转化地址
             String areaname = recycleExternalSubmitService.getProvince(province, city, area);
@@ -306,9 +281,7 @@ public class RecycleExternalController extends BaseController {
             submit.setTSMessage(getResult);
             recycleExternalSubmitService.getDao().updateByToken(submit);
             log.info(externalUrl + "的返回结果:" + getResult);
-            result.setSuccess(true);
-            result.setResultCode("0");
-            result.setResultMessage("成功");
+            getResult(result, null, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -354,7 +327,7 @@ public class RecycleExternalController extends BaseController {
             resultMap.put(RESULTMAP_KEY_DATA, jq);
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "保存成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         renderJson(response, resultMap);
@@ -385,7 +358,7 @@ public class RecycleExternalController extends BaseController {
             resultMap.put(RESULTMAP_KEY_DATA, jq);
             resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
             resultMap.put(RESULTMAP_KEY_MSG, "保存成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         renderJson(response, resultMap);

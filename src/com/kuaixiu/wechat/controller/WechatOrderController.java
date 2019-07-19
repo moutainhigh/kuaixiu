@@ -1,22 +1,5 @@
 package com.kuaixiu.wechat.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.util.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.kuaixiu.order.entity.*;
-import com.kuaixiu.order.service.*;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
@@ -42,15 +25,13 @@ import com.kuaixiu.customer.entity.Customer;
 import com.kuaixiu.customer.service.CustomerService;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
-import com.kuaixiu.oldtonew.entity.Agreed;
-import com.kuaixiu.oldtonew.entity.NewOrder;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.oldtonew.entity.OrderShow;
-import com.kuaixiu.oldtonew.entity.UpdateTimeCompare;
+import com.kuaixiu.oldtonew.entity.*;
 import com.kuaixiu.oldtonew.service.AgreedService;
 import com.kuaixiu.oldtonew.service.NewOrderService;
 import com.kuaixiu.oldtonew.service.OldToNewService;
 import com.kuaixiu.order.constant.OrderConstant;
+import com.kuaixiu.order.entity.*;
+import com.kuaixiu.order.service.*;
 import com.kuaixiu.project.entity.CancelReason;
 import com.kuaixiu.project.entity.Project;
 import com.kuaixiu.project.service.CancelReasonService;
@@ -71,6 +52,19 @@ import com.system.basic.user.service.SysUserService;
 import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
 import com.system.util.SystemUtil;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * 微信订单controller

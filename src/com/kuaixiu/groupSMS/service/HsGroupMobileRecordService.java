@@ -6,20 +6,15 @@ import com.common.util.DateUtil;
 import com.kuaixiu.groupSMS.dao.HsGroupMobileRecordMapper;
 import com.kuaixiu.groupSMS.entity.HsGroupCouponRole;
 import com.kuaixiu.groupSMS.entity.HsGroupMobileRecord;
-
 import com.kuaixiu.recycle.entity.RecycleCoupon;
 import com.kuaixiu.recycle.service.RecycleCouponService;
-import com.kuaixiu.recycleCoupon.entity.HsActivityAndCoupon;
-import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 /**

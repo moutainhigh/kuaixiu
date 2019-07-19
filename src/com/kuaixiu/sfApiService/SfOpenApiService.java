@@ -1,5 +1,12 @@
 package com.kuaixiu.sfApiService;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.common.util.NOUtil;
+import com.kuaixiu.sfConstant.Constant;
+import com.kuaixiu.sfEntity.SfToken;
+import com.system.constant.SystemConstant;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,14 +14,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.common.base.service.BaseService;
-import com.common.util.NOUtil;
-import com.kuaixiu.sfConstant.Constant;
-import com.kuaixiu.sfEntity.SfToken;
-import com.system.constant.SystemConstant;
 
 
 

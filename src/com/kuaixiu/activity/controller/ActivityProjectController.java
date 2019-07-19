@@ -2,8 +2,6 @@ package com.kuaixiu.activity.controller;
 
 import com.common.base.controller.BaseController;
 import com.common.paginate.Page;
-import com.common.wechat.common.util.StringUtils;
-import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.entity.ActivityProject;
 import com.kuaixiu.activity.service.ActivityCompanyService;
 import com.kuaixiu.activity.service.ActivityProjectService;
@@ -16,8 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**

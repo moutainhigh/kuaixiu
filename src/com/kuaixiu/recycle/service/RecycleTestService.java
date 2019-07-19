@@ -6,11 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.exception.SystemException;
 import com.common.util.AES;
-import com.kuaixiu.card.entity.TelecomCard;
 import com.kuaixiu.recycle.dao.RecycleTestMapper;
 import com.kuaixiu.recycle.entity.RecycleCheckItems;
 import com.kuaixiu.recycle.entity.RecycleTest;
-
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
 import jodd.util.StringUtil;

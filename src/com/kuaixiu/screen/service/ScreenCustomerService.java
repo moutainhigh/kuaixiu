@@ -1,20 +1,15 @@
 package com.kuaixiu.screen.service;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.common.importExcel.ExcelUtil;
+import com.common.importExcel.ImportError;
+import com.common.importExcel.ImportReport;
+import com.kuaixiu.screen.dao.ScreenCustomerMapper;
+import com.kuaixiu.screen.entity.ScreenCustomer;
+import com.system.basic.user.entity.SessionUser;
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,17 +25,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.common.base.service.BaseService;
-import com.common.exception.SystemException;
-import com.common.importExcel.ExcelUtil;
-import com.common.importExcel.ImportError;
-import com.common.importExcel.ImportReport;
-import com.kuaixiu.screen.dao.ScreenCustomerMapper;
-import com.kuaixiu.screen.entity.ScreenCustomer;
-import com.system.basic.user.entity.SessionUser;
-
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author: anson

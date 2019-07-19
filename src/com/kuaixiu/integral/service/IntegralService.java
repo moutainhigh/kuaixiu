@@ -1,12 +1,11 @@
 package com.kuaixiu.integral.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.common.base.dao.BaseDao;
 import com.common.base.service.BaseService;
 import com.kuaixiu.integral.dao.IntegralMapper;
 import com.kuaixiu.integral.entity.Integral;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
 * @author: anson

@@ -1,21 +1,23 @@
 package com.kuaixiu.provider.service;
 
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.common.importExcel.ExcelUtil;
+import com.common.importExcel.ImportError;
+import com.common.importExcel.ImportReport;
+import com.common.util.ConverterUtil;
+import com.common.util.SmsSendUtil;
+import com.kuaixiu.provider.dao.ProviderMapper;
+import com.kuaixiu.provider.entity.Provider;
+import com.system.basic.address.entity.Address;
+import com.system.basic.address.service.AddressService;
+import com.system.basic.sequence.util.SeqUtil;
+import com.system.basic.user.entity.SessionUser;
+import com.system.basic.user.service.SysUserService;
+import com.system.constant.SystemConstant;
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
-
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,22 +35,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.common.base.service.BaseService;
-import com.common.exception.SystemException;
-import com.common.importExcel.ExcelUtil;
-import com.common.importExcel.ImportError;
-import com.common.importExcel.ImportReport;
-import com.common.util.ConverterUtil;
-import com.common.util.SmsSendUtil;
-import com.kuaixiu.model.entity.Model;
-import com.kuaixiu.provider.dao.ProviderMapper;
-import com.kuaixiu.provider.entity.Provider;
-import com.system.basic.address.entity.Address;
-import com.system.basic.address.service.AddressService;
-import com.system.basic.sequence.util.SeqUtil;
-import com.system.basic.user.entity.SessionUser;
-import com.system.basic.user.service.SysUserService;
-import com.system.constant.SystemConstant;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Provider Service

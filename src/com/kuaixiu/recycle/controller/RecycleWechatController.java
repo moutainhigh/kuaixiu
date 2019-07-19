@@ -12,10 +12,8 @@ import com.common.wechat.common.util.StringUtils;
 import com.google.common.collect.Maps;
 import com.kuaixiu.activity.entity.ActivityCompany;
 import com.kuaixiu.activity.entity.ActivityLogin;
-import com.kuaixiu.activity.entity.ActivityUser;
 import com.kuaixiu.activity.service.ActivityCompanyService;
 import com.kuaixiu.activity.service.ActivityLoginService;
-import com.kuaixiu.activity.service.ActivityUserService;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.service.*;
 import com.kuaixiu.wechat.service.WechatUserService;
@@ -172,7 +170,6 @@ public class RecycleWechatController extends BaseController {
     @ResponseBody
     public ResultData getUserInfo(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
             String openId = params.getString("openId");
@@ -196,7 +193,6 @@ public class RecycleWechatController extends BaseController {
             u.setCountry(info.getString("country"));
             u.setUrl(info.getString("avatarUrl"));
             recycleWechatService.updateByOpenId(u);
-            result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {
@@ -220,7 +216,6 @@ public class RecycleWechatController extends BaseController {
     @ResponseBody
     public ResultData getModel(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
             String openId = params.getString("openId");
@@ -233,7 +228,6 @@ public class RecycleWechatController extends BaseController {
             u.setModel(model);
             u.setBrand(brand);
             recycleWechatService.updateByOpenId(u);
-            result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {
@@ -257,7 +251,6 @@ public class RecycleWechatController extends BaseController {
     @ResponseBody
     public ResultData getMobile(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
             String openId = params.getString("openId");
@@ -272,7 +265,6 @@ public class RecycleWechatController extends BaseController {
             JSONObject info = AesCbcUtil.decrypt(sessionKey, encryptedData, iv);
             u.setMobile(info.getString("phoneNumber"));
             recycleWechatService.updateByOpenId(u);
-            result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {
@@ -283,7 +275,6 @@ public class RecycleWechatController extends BaseController {
         }
         return result;
     }
-
 
     /**
      * 储存用户详细地址 经纬度
@@ -296,7 +287,6 @@ public class RecycleWechatController extends BaseController {
     @ResponseBody
     public ResultData saveAddress(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
             String openId = params.getString("openId");
@@ -311,7 +301,6 @@ public class RecycleWechatController extends BaseController {
             u.setLongitude(longitude);
             u.setLatitude(latitude);
             recycleWechatService.updateByOpenId(u);
-            result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {
@@ -443,8 +432,6 @@ public class RecycleWechatController extends BaseController {
                     break;
                 }
             }
-
-
         }
         page.setData(list);
         this.renderJson(response, page);
@@ -620,9 +607,6 @@ public class RecycleWechatController extends BaseController {
         JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
-            //request.getSession().setAttribute("wechat_openId", openId);
-            //String wechatOpenId=(String) request.getSession().getAttribute("wechat_openId");
-
             //机型名称和微信openId
             String openId = params.getString("openId");
             String model = params.getString("model");
@@ -690,20 +674,17 @@ public class RecycleWechatController extends BaseController {
                 result.setSuccess(false);
                 throw new SystemException("用户不存在");
             }
-
             //新增分享记录
             TransmitRecord record = new TransmitRecord();
             record.setMobile(wechat.getLoginMobile());
             record.setWechatGroupId(groupId);
             record.setWechatId(wechat.getOpenId());
             transmitRecordService.add(record);
-
             //每次分享 将用户抽奖次数设为1
             if (wechat.getTotalUse() < 2) {
                 wechat.setTotalUse(1);
                 recycleWechatService.saveUpdate(wechat);
             }
-
             result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
@@ -789,7 +770,6 @@ public class RecycleWechatController extends BaseController {
             } else if (StringUtils.isNotBlank(loginMobile)) {
                 recycleWechat = recycleWechatService.queryLoginMobile(loginMobile);
             }
-
             if (recycleWechat == null || StringUtils.isBlank(recycleWechat.getPrizeMobile())
                     || StringUtils.isBlank(recycleWechat.getPrizeProvince()) || StringUtils.isBlank(recycleWechat.getPrizeCity())
                     || StringUtils.isBlank(recycleWechat.getPrizeArea()) || StringUtils.isBlank(recycleWechat.getPrizeStreet())) {
@@ -821,7 +801,6 @@ public class RecycleWechatController extends BaseController {
     @ResponseBody
     public ResultData savePrizeNews(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
 
@@ -847,7 +826,6 @@ public class RecycleWechatController extends BaseController {
             recycleWechat.setPrizeStreet(street);
             recycleWechatService.saveUpdate(recycleWechat);
 
-            result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {
@@ -871,7 +849,6 @@ public class RecycleWechatController extends BaseController {
     @ResponseBody
     public ResultData saveAddressNews(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
-        JSONObject jsonResult = new JSONObject();
         try {
             JSONObject params = getPrarms(request);
             String mobile = params.getString("mobile");
@@ -906,7 +883,6 @@ public class RecycleWechatController extends BaseController {
                 recycleWechatService.updateByLoginMobile(recycleWechat);
             }
 
-            result.setResult(jsonResult);
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {
@@ -917,113 +893,6 @@ public class RecycleWechatController extends BaseController {
         }
         return result;
     }
-
-
-    /**
-     * 微信小程序抽奖并发请求测试
-     * @param request
-     * @param response
-     * @return
-     */
-//	@RequestMapping("/recycle/getManyPrize")
-//	@ResponseBody
-//	public ResultData mangyGetPrize(HttpServletRequest request, HttpServletResponse response) {
-//		ResultData result = new ResultData();
-//		JSONObject jsonResult = new JSONObject();
-//		JSONObject j = new JSONObject();
-//		boolean tip=true;
-//		try {
-//			PrizeRecord record = new PrizeRecord();
-//			record.setMobile("15356152347");
-//			record.setWechatId("123456");
-//			record.setBatch(SystemConstant.NOW_PRIZE_BATCH);
-//			record.setType(0);
-//
-//			//3 查询奖品剩余情况
-//			RecyclePrize rPrize = new RecyclePrize();
-//			rPrize.setBatch(SystemConstant.NOW_PRIZE_BATCH);
-//			List<RecyclePrize> rList = recyclePrizeService.queryListByGrade(rPrize);
-//			//4 开始抽奖
-//			int prize = lottery(rList);
-//			PrizeRecord user = new PrizeRecord();
-//			user.setMobile("15356152347");
-//			user.setWechatId("123456");
-//			user.setBatch(SystemConstant.NOW_PRIZE_BATCH);
-//			user.setIsGet(1);
-//			List<PrizeRecord> prizeRecords = prizeRecordService.queryList(user);
-//			if (prize != 0) {
-//				//中奖了  判断奖品是否还有
-//				RecyclePrize p = new RecyclePrize();
-//				p.setGrade(prize);
-//				p.setBatch(SystemConstant.NOW_PRIZE_BATCH);
-//				List<RecyclePrize> recyclePrizeList = recyclePrizeService.queryList(p);
-//				if (recyclePrizeList.isEmpty()) {
-//					throw new SystemException("系统繁忙，请稍后重试");
-//				}
-//				RecyclePrize prize1 = recyclePrizeList.get(0);
-//				if (prize1.getTotalSum() <= prize1.getUseSum()) {
-//					//奖品没有了  此次中奖当作未中奖处理
-//					record.setIsGet(0);
-//				} else {
-//					//System.out.println("中了几等奖：" + prize);
-//					System.out.println("当前"+prize+"等奖目前抽中次数"+prize1.getUseSum());
-//					//6 抽中了则将奖品更新为最新状态
-//					if((prize1.getUseSum()+1)<=prize1.getTotalSum()) {
-//						int i = recyclePrizeService.updateById(prize1.getPrizeId());
-//						if(i!=1){
-//							tip=false;
-//						}
-//					}
-//					//防止多并发 引起脏数据  tip为true最终才为获奖
-//					if(tip) {
-//						//如果抽中四等奖 则生成一张微信通用优惠券
-//						String coupon = "";  //优惠码
-//						if (prize == 4) {
-//							//System.out.println("四等奖");
-//						}
-//						record.setCouponCode(coupon);
-//						j.put("couponCode", coupon);
-//						j.put("prizeName", prize1.getPrizeName());
-//						j.put("grade", prize1.getGrade());
-//						j.put("inTime", prize1.getInTime());
-//						String detail = prize1.getDetails();
-//						if (detail.contains(";")) {
-//							//分段显示
-//							j.put("firstDetails", detail.substring(0, detail.indexOf(";")));
-//							j.put("secondDetails", detail.substring(detail.indexOf(";") + 1));
-//						} else {
-//							j.put("firstDetails", detail);
-//							j.put("secondDetails", "");
-//						}
-//						record.setIsGet(1);
-//						record.setGrade(prize);
-//						record.setPrizeId(prize1.getPrizeId());
-//					}
-//				}
-//			} else {
-//				//未中奖
-//				record.setIsGet(0);
-//			}
-//			//7 新增一条抽奖记录
-//			prizeRecordService.add(record);
-//
-//			jsonResult.put("prizeInfo", j);
-//			result.setResult(jsonResult);
-//			result.setResultCode("0");
-//			result.setSuccess(true);
-//		} catch (SystemException e) {
-//			sessionUserService.getSystemException(e, result);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			sessionUserService.getException(result);
-//		}
-//
-//
-//
-//
-//		return result;
-//	}
-
 
     /**
      * 欢GO抽奖  每个手机号每天可抽三次  目前先关闭
@@ -1069,9 +938,7 @@ public class RecycleWechatController extends BaseController {
                         }
                     }
                 }
-
             }
-
 
             // 满足条件才给予抽奖
             if (tip) {
@@ -1145,7 +1012,6 @@ public class RecycleWechatController extends BaseController {
                 happyPrize.setLastPrizeTime(new Date());
                 happyPrize.setAlreadyUse(happyPrize.getAlreadyUse() + 1);
                 happyPrizeService.saveUpdate(happyPrize);
-
             }
             jsonResult.put("status", status);
             jsonResult.put("surplusLotteryNumber", surplusLotteryNumber);
@@ -1244,7 +1110,6 @@ public class RecycleWechatController extends BaseController {
                             }
                         }
                     }
-
                 }
             }
 
@@ -1255,7 +1120,6 @@ public class RecycleWechatController extends BaseController {
             } else {
                 //得到剩余抽奖次数
                 surplusLotteryNumber = rw.getTotalUse();
-
             }
 
             // 满足条件才给予抽奖
@@ -1445,7 +1309,6 @@ public class RecycleWechatController extends BaseController {
     public ResultData queryPrizeBatch(HttpServletRequest request, HttpServletResponse response) {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
-        boolean tip = false;    //判断是否需要验证码
         try {
             JSONObject params = getPrarms(request);
             String batch = params.getString("batch");//批次
@@ -1523,8 +1386,6 @@ public class RecycleWechatController extends BaseController {
             String mobile = "";
             //通过集团webservice接口获取信息
             String data = HttpClientUtil.webService(SystemConstant.SINGLE_LOGIN_URL, getXMLTicket(ticket));
-            //String data=getFailNews();   测试数据
-            //String data=getSuccess();
             if (StringUtils.isBlank(data)) {
                 throw new SystemException("单点请求获取信息失败");
             }
@@ -1567,7 +1428,6 @@ public class RecycleWechatController extends BaseController {
                 singleLogin.setTicket(ticket);
                 singleLoginService.saveUpdate(singleLogin);
             }
-
 
             //保存用户抽奖手机号
             HappyPrize happyPrize = happyPrizeService.queryByMobile(mobile);

@@ -1,10 +1,5 @@
 package com.kuaixiu.shop.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.importExcel.ImportReport;
@@ -26,12 +21,9 @@ import com.kuaixiu.shop.service.ShopModelService;
 import com.kuaixiu.shop.service.ShopService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
-import com.system.constant.SystemConstant;
-
-import jodd.util.StringUtil;
-
 import com.system.basic.user.entity.SessionUser;
-
+import com.system.constant.SystemConstant;
+import jodd.util.StringUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +35,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Shop Controller

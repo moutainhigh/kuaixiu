@@ -1,25 +1,5 @@
 package com.kuaixiu.oldtonew.service;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.exception.ApiServiceException;
@@ -40,12 +20,7 @@ import com.kuaixiu.model.service.ModelService;
 import com.kuaixiu.model.service.NewModelService;
 import com.kuaixiu.model.service.RepairCostService;
 import com.kuaixiu.oldtonew.dao.NewOrderMapper;
-import com.kuaixiu.oldtonew.entity.Agreed;
-import com.kuaixiu.oldtonew.entity.NewOrder;
-import com.kuaixiu.oldtonew.entity.NewOrderList;
-import com.kuaixiu.oldtonew.entity.NewOrderPay;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.oldtonew.entity.OrderShow;
+import com.kuaixiu.oldtonew.entity.*;
 import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.order.entity.Order;
 import com.kuaixiu.order.service.OrderDetailService;
@@ -55,9 +30,21 @@ import com.kuaixiu.shop.service.ShopService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.ApiResultConstant;
 import com.system.constant.SystemConstant;
-
 import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author: anson

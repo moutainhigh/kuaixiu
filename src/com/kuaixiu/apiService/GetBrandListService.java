@@ -1,25 +1,16 @@
 package com.kuaixiu.apiService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.MapUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.kuaixiu.brand.entity.NewBrand;
+import com.kuaixiu.brand.service.NewBrandService;
+import com.system.api.ApiServiceInf;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.common.exception.ApiServiceException;
-import com.google.gson.JsonObject;
-import com.kuaixiu.brand.entity.AppBrand;
-import com.kuaixiu.brand.entity.NewBrand;
-import com.kuaixiu.brand.service.NewBrandService;
-
-
-import com.system.api.ApiServiceInf;
-import com.system.constant.ApiResultConstant;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author: anson

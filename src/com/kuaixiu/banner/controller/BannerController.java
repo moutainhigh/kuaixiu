@@ -1,7 +1,6 @@
 package com.kuaixiu.banner.controller;
 
 import com.common.base.controller.BaseController;
-import com.kuaixiu.banner.entity.Banner;
 import com.kuaixiu.banner.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

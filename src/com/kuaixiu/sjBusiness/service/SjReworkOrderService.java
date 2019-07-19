@@ -8,13 +8,10 @@ import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.sjBusiness.dao.SjReworkOrderMapper;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjReworkOrder;
-
-import com.kuaixiu.sjBusiness.entity.SjReworkOrderPicture;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.ConstructionCompanyService;
 import com.kuaixiu.sjUser.service.SjUserService;
-import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

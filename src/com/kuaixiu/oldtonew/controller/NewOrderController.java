@@ -1,22 +1,5 @@
 package com.kuaixiu.oldtonew.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.paginate.Page;
@@ -25,25 +8,17 @@ import com.kuaixiu.brand.entity.Brand;
 import com.kuaixiu.brand.entity.NewBrand;
 import com.kuaixiu.brand.service.BrandService;
 import com.kuaixiu.brand.service.NewBrandService;
-import com.kuaixiu.customer.entity.Customer;
 import com.kuaixiu.customer.service.CustomerService;
 import com.kuaixiu.engineer.entity.Engineer;
 import com.kuaixiu.engineer.service.EngineerService;
-import com.kuaixiu.model.entity.Model;
 import com.kuaixiu.model.entity.NewModel;
 import com.kuaixiu.model.service.NewModelService;
-import com.kuaixiu.oldtonew.entity.Agreed;
-import com.kuaixiu.oldtonew.entity.NewOrder;
-import com.kuaixiu.oldtonew.entity.NewOrderList;
-import com.kuaixiu.oldtonew.entity.OldToNewUser;
-import com.kuaixiu.oldtonew.entity.NewOrderPay;
+import com.kuaixiu.oldtonew.entity.*;
 import com.kuaixiu.oldtonew.service.AgreedService;
+import com.kuaixiu.oldtonew.service.NewOrderPayService;
 import com.kuaixiu.oldtonew.service.NewOrderService;
 import com.kuaixiu.oldtonew.service.OldToNewService;
-import com.kuaixiu.oldtonew.service.NewOrderPayService;
 import com.kuaixiu.order.constant.OrderConstant;
-import com.kuaixiu.order.entity.Order;
-import com.kuaixiu.order.entity.OrderDetail;
 import com.kuaixiu.project.entity.CancelReason;
 import com.kuaixiu.project.service.CancelReasonService;
 import com.kuaixiu.shop.entity.Shop;
@@ -52,8 +27,21 @@ import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
 import com.system.basic.user.entity.SessionUser;
 import com.system.constant.SystemConstant;
-
 import jodd.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author: anson
