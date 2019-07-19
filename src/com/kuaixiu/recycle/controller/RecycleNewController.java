@@ -806,6 +806,9 @@ public class RecycleNewController extends BaseController {
                 for (int i = 0; i < array.size(); i++) {
                     JSONObject quote = (JSONObject) array.get(i);
                     String orderId = quote.getString("orderid");
+                    if ("202".equals(quote.getString("processstatus"))) {
+                        quote.put("processstatus_name", "检测完成，请保持电话畅通");
+                    }
                     if (StringUtil.isNotBlank(orderId)) {
                         RecycleOrder order = recycleOrderService.queryByOrderNo(orderId);
                         if (order != null) {
@@ -924,6 +927,9 @@ public class RecycleNewController extends BaseController {
                     } else {
                         info.put("alert", "0");
                         info.put("mail_order_no", r.getSfOrderNo());
+                    }
+                    if ("202".equals(info.getString("processstatus"))) {
+                        info.put("processstatus_name", "检测完成，请保持电话畅通");
                     }
                     if (!"204".equals(info.getString("processstatus"))) {
                         if (StringUtils.isNotBlank(r.getCouponId())) {
