@@ -856,6 +856,7 @@ public class WechatOrderController extends BaseController {
             j.put("shopManagerMobile", shop.getManagerMobile());
         }
         //优惠券信息
+        j.put("isUpdatePrice", order.getIsUpdatePrice());
         j.put("isUseCoupon", order.getIsUseCoupon());
         if (order.getIsUseCoupon() == 1) {
             JSONObject c = new JSONObject();
