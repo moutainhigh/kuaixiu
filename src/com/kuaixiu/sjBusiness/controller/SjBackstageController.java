@@ -158,6 +158,7 @@ public class SjBackstageController extends BaseController {
             String createUser = request.getParameter("createUser");
             String companyName = request.getParameter("companyName");
             String state = request.getParameter("state");
+            String isImport = request.getParameter("isImport");
             String isAssign = request.getParameter("isAssign");//是否查询指派订单
             String responsibleName = request.getParameter("responsibleName");//负责人姓名
             String responsibleIdNumber = request.getParameter("responsibleIdNumber");//负责人身份证号
@@ -179,6 +180,9 @@ public class SjBackstageController extends BaseController {
             if (StringUtils.isNotBlank(type)) {
                 sjOrder.setType(Integer.valueOf(type));
             }
+            if (StringUtils.isNotBlank(isImport)) {
+                sjOrder.setIsImport(Integer.valueOf(isImport));
+            }
             if (StringUtils.isNotBlank(state)) {
                 sjOrder.setState(Integer.valueOf(state));
             }
@@ -194,7 +198,6 @@ public class SjBackstageController extends BaseController {
             }
             sjOrder.setPage(page);
             List<SjOrder> sjOrders = orderService.queryListForPage(sjOrder);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (SjOrder sjOrder1 : sjOrders) {
                 List<String> projects = orderService.getProject(sjOrder1.getProjectId());
                 String projectName = orderService.listToString(projects);
@@ -1078,6 +1081,15 @@ public class SjBackstageController extends BaseController {
                                            HttpServletResponse response) throws Exception {
 
         String returnView = "business/importCompany";
+        return new ModelAndView(returnView);
+    }
+
+    //派单导入导入
+    @RequestMapping(value = "/sj/sjOrder/importIndex")
+    public ModelAndView importSjOrderIndex(HttpServletRequest request,
+                                           HttpServletResponse response) throws Exception {
+
+        String returnView = "business/importSjOrder";
         return new ModelAndView(returnView);
     }
 

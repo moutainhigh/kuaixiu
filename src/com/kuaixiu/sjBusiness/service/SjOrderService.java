@@ -3,14 +3,21 @@ package com.kuaixiu.sjBusiness.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
+import com.common.importExcel.ExcelUtil;
+import com.common.importExcel.ImportError;
+import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.ConverterUtil;
+import com.common.util.MD5Util;
 import com.common.util.NOUtil;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.card.entity.BatchCard;
+import com.kuaixiu.card.entity.BatchImport;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
 import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
 import com.kuaixiu.sjBusiness.entity.SjOrder;
 import com.kuaixiu.sjBusiness.entity.SjProject;
+import com.kuaixiu.sjBusiness.entity.SjVirtualTeam;
 import com.kuaixiu.sjSetMeal.entity.SjPoe;
 import com.kuaixiu.sjSetMeal.entity.SjSaveNet;
 import com.kuaixiu.sjSetMeal.entity.SjSetMeal;
@@ -22,25 +29,36 @@ import com.kuaixiu.sjSetMeal.service.SjWifiMonitorTypeService;
 import com.kuaixiu.sjUser.entity.ConstructionCompany;
 import com.kuaixiu.sjUser.entity.SjSessionUser;
 import com.kuaixiu.sjUser.entity.SjUser;
+import com.kuaixiu.sjUser.entity.UserRole;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.basic.address.entity.Address;
 import com.system.basic.address.service.AddressService;
+import com.system.basic.sequence.util.SeqUtil;
+import com.system.basic.user.entity.SessionUser;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -76,9 +94,11 @@ public class SjOrderService extends BaseService<SjOrder> {
         return mapper;
     }
 
+    private static Map<Integer, String> titleMap = new HashMap<Integer, String>();
+
     //**********自定义方法***********
 
-    public JSONObject sjListOrderToObejct(List<SjOrder> orders,Page page) {
+    public JSONObject sjListOrderToObejct(List<SjOrder> orders, Page page) {
         List<JSONObject> jsonObjects = new ArrayList<>();
         for (SjOrder o : orders) {
             JSONObject jsonObject = new JSONObject();
@@ -100,7 +120,7 @@ public class SjOrderService extends BaseService<SjOrder> {
         return jsonObject;
     }
 
-    public JSONObject sjListReOrderToObejct(List<SjOrder> orders,Page page) {
+    public JSONObject sjListReOrderToObejct(List<SjOrder> orders, Page page) {
 
         List<JSONObject> jsonObjects = new ArrayList<>();
         for (SjOrder o : orders) {
@@ -188,45 +208,98 @@ public class SjOrderService extends BaseService<SjOrder> {
                 (projectId.contains("3") || projectId.contains("4") || projectId.contains("5") || projectId.contains("6"))) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("1");
-            this.add(sjOrder);
+            this.add(removeSjOrder(sjOrder));
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("2");
-            this.add(sjOrder);
+            this.add(removeWifiSjOrder(sjOrder));
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId, "1,2,"));
-            this.add(sjOrder);
+            this.add(removeAllSjOrder(sjOrder));
         } else if (projectId.contains("1") &&
                 (projectId.contains("3") || projectId.contains("4") || projectId.contains("5") || projectId.contains("6"))) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("1");
-            this.add(sjOrder);
+            this.add(removeSjOrder(sjOrder));
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId, "1,"));
-            this.add(sjOrder);
+            this.add(removeAllSjOrder(sjOrder));
         } else if (projectId.contains("2") &&
                 (projectId.contains("3") || projectId.contains("4") || projectId.contains("5") || projectId.contains("6"))) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("2");
-            this.add(sjOrder);
+            this.add(removeWifiSjOrder(sjOrder));
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId(org.apache.commons.lang3.StringUtils.remove(projectId, "2,"));
-            this.add(sjOrder);
+            this.add(removeAllSjOrder(sjOrder));
         } else if (projectId.contains("1") && projectId.contains("2")) {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("1");
-            this.add(sjOrder);
+            this.add(removeSjOrder(sjOrder));
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId("2");
-            this.add(sjOrder);
+            this.add(removeWifiSjOrder(sjOrder));
+        }  else if (projectId.equals("1")) {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("1");
+            this.add(removeSjOrder(sjOrder));
+        } else if (projectId.equals("2")) {
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setProjectId("2");
+            this.add(removeWifiSjOrder(sjOrder));
         } else {
             sjOrder.setOrderNo(NOUtil.getNo("NB-"));
             sjOrder.setProjectId(projectId);
-            this.add(sjOrder);
+            this.add(removeAllSjOrder(sjOrder));
         }
-
     }
 
-    public void getSjDetail(SjOrder sjOrder){
+    private SjOrder removeSjOrder(SjOrder sjOrder) {
+        SjOrder sjOrder1 = new SjOrder();
+        BeanUtils.copyProperties(sjOrder, sjOrder1);
+        sjOrder1.setMealId(0);
+        sjOrder1.setModelId(0);
+        sjOrder1.setModelNum(0);
+        sjOrder1.setPoeId(0);
+        sjOrder1.setPoeNum(0);
+        sjOrder1.setStorageId(0);
+        sjOrder1.setStorageNum(0);
+        return sjOrder1;
+    }
+
+    private SjOrder removeWifiSjOrder(SjOrder sjOrder) {
+        SjOrder sjOrder1 = new SjOrder();
+        BeanUtils.copyProperties(sjOrder, sjOrder1);
+        sjOrder1.setMealWifiId(0);
+        sjOrder1.setModelWifiId(0);
+        sjOrder1.setModelWifiNum(0);
+        sjOrder1.setPoeWifiId(0);
+        sjOrder1.setPoeWifiNum(0);
+        sjOrder1.setStorageWifiId(0);
+        sjOrder1.setStorageWifiNum(0);
+        return sjOrder1;
+    }
+
+    private SjOrder removeAllSjOrder(SjOrder sjOrder) {
+        SjOrder sjOrder1 = new SjOrder();
+        BeanUtils.copyProperties(sjOrder, sjOrder1);
+        sjOrder1.setMealId(0);
+        sjOrder1.setModelId(0);
+        sjOrder1.setModelNum(0);
+        sjOrder1.setPoeId(0);
+        sjOrder1.setPoeNum(0);
+        sjOrder1.setStorageId(0);
+        sjOrder1.setStorageNum(0);
+        sjOrder1.setMealWifiId(0);
+        sjOrder1.setModelWifiId(0);
+        sjOrder1.setModelWifiNum(0);
+        sjOrder1.setPoeWifiId(0);
+        sjOrder1.setPoeWifiNum(0);
+        sjOrder1.setStorageWifiId(0);
+        sjOrder1.setStorageWifiNum(0);
+        return sjOrder1;
+    }
+
+    public void getSjDetail(SjOrder sjOrder) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String province = addressService.queryByAreaId(sjOrder.getProvinceId()).getArea();
         String city = addressService.queryByAreaId(sjOrder.getCityId()).getArea();
@@ -255,7 +328,7 @@ public class SjOrderService extends BaseService<SjOrder> {
         }
     }
 
-    public void getCompanies(List<ConstructionCompany> companies){
+    public void getCompanies(List<ConstructionCompany> companies) {
         for (ConstructionCompany company : companies) {
             String province = addressService.queryByAreaId(company.getProvince()).getArea();
             String city = addressService.queryByAreaId(company.getCity()).getArea();
@@ -269,7 +342,7 @@ public class SjOrderService extends BaseService<SjOrder> {
         }
     }
 
-    public void getCompany(List<Map<String, Object>> companies){
+    public void getCompany(List<Map<String, Object>> companies) {
         for (Map<String, Object> company : companies) {
             String province = addressService.queryByAreaId(company.get("province").toString()).getArea();
             String city = addressService.queryByAreaId(company.get("city").toString()).getArea();
@@ -555,7 +628,7 @@ public class SjOrderService extends BaseService<SjOrder> {
                     "负责人姓名/身份证号", "产品需求", "地址", "审批人", "审批备注", "审批时间", "ORM编号", "指派人",
                     "指派时间", "施工人", "施工单位", "完成时间", "竣工人", "竣工时间", "监控机型", "监控机型数量",
                     "监控poe", "监控poe数量", "监控存储", "监控存储数量", "wifi无线", "wifi无线数量", "wifipoe",
-                    "wifipoe数量", "wifi网关", "wifi网关数量", "状态"};
+                    "wifipoe数量", "wifi网关", "wifi网关数量", "是否导入安装资产", "状态"};
         }
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
@@ -828,6 +901,12 @@ public class SjOrderService extends BaseService<SjOrder> {
             } else {
                 row.createCell(count).setCellValue(map.get("storage_wifi_num").toString());
             }
+            count = count + 1;
+            if (map.get("is_import") == null || map.get("is_import").toString().equals("0")) {
+                row.createCell(count).setCellValue("否");
+            } else {
+                row.createCell(count).setCellValue("是");
+            }
         }
         count = count + 1;
         if (map.get("state") == null) {
@@ -870,6 +949,542 @@ public class SjOrderService extends BaseService<SjOrder> {
                 return "未知";
             }
         }
+    }
 
+
+    /**
+     * 商机派单导入
+     *
+     * @param file
+     * @param report
+     * @param su
+     * @param type
+     */
+    @Transactional
+    public void importExcel(MultipartFile file, ImportReport report, SessionUser su, Integer type) {
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        Workbook workbook = null;
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+            // 根据后缀实例化，xls实例化HSSFWorkbook,xlsx实例化XSSFWorkbook
+            if (extension.equalsIgnoreCase("xls")) {
+                workbook = new HSSFWorkbook(inputStream);
+            } else {
+                workbook = new XSSFWorkbook(inputStream);
+            }
+            //检查模板是否正确
+            if (checkExcelModel(workbook, report)) {
+                List<SjOrder> list = checkData(workbook, report);
+                if (report.isPass() && list.size() > 0) {
+                    //保存数据
+                    saveData(list, su);
+                }
+            } else {
+                report.setContinueNext(false);
+                report.setPass(false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+
+                }
+            }
+        }
+    }
+
+    @Transactional
+    private List<SjOrder> saveData(List<SjOrder> sjOrders, SessionUser su) {
+        List<SjOrder> sjOrders1 = new ArrayList<>();
+        for (SjOrder sjOrder : sjOrders) {
+            sjOrder.setType(2);
+            sjOrder.setState(500);
+            sjOrder.setIsImport(1);
+            sjOrder.setOrderNo(NOUtil.getNo("NB-"));
+            sjOrder.setCreateTime(new Date());
+            this.createOrder(sjOrder.getProjectId(), sjOrder);
+        }
+        return sjOrders1;
+    }
+
+    /**
+     * 检查表格数据  将数据转化为对应卡号批次实体类  自动生成一个批次
+     *
+     * @param workbook
+     * @param report
+     * @return
+     */
+    private List<SjOrder> checkData(Workbook workbook, ImportReport report) {
+        Sheet sheet = workbook.getSheetAt(0);
+        int rowNum = sheet.getLastRowNum();
+        List<SjOrder> sjOrders = new ArrayList<SjOrder>();
+
+        for (int i = 1; i <= rowNum; i++) {
+            Row row = sheet.getRow(i);
+            if (row == null) {
+                continue;
+            }
+            SjOrder o = new SjOrder();
+
+            int col = 0;
+            //用户手机号
+            String value = ExcelUtil.getCellValue(row, col).trim();
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 11) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMessage("用户手机号不能为空，长度不能超过11个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            } else {
+                o.setCreateUserid(value);
+            }
+            //单位名字
+            col++;
+            value = ExcelUtil.getCellValue(row, col).trim();
+            if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("单位名字错误");
+                error.setMessage("单位名字不能为空");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            } else {
+                o.setCompanyName(value);
+            }
+
+            StringBuffer areas = new StringBuffer();
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 64) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("地址信息错误");
+                error.setMessage("地址信息不能为空，长度不能超过64个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            }
+
+            Address addr = addressService.queryByAreaAndPid(value, "0");
+            if (addr == null) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("地址信息错误");
+                error.setMessage("地址信息未找到！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+
+            o.setProvinceId(addr.getAreaId());
+            areas.append(addr.getArea()).append(" ");
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 64) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("地址信息错误");
+                error.setMessage("地址信息不能为空，长度不能超过64个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            }
+
+            addr = addressService.queryByAreaAndPid(value, o.getProvinceId());
+
+            if (addr == null) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("地址信息错误");
+                error.setMessage("地址信息未找到！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+            o.setCityId(addr.getAreaId());
+            areas.append(addr.getArea()).append(" ");
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 64) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("地址信息错误");
+                error.setMessage("地址信息不能为空，长度不能超过64个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            }
+            addr = addressService.queryByAreaAndPid(value, o.getCityId());
+            if (addr == null) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("地址信息错误");
+                error.setMessage("地址信息未找到！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
+            o.setAreaId(addr.getAreaId());
+            areas.append(addr.getArea());
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            o.setAddressDetail(value);
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 50) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("联系人错误");
+                error.setMessage("联系人不能为空，长度不能超过50个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            } else {
+                o.setPerson(value);
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 11) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("联系人手机号错误");
+                error.setMessage("联系人手机号不能为空，长度不能超过11位！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            } else {
+                o.setPhone(value);
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("负责人姓名错误");
+                error.setMessage("负责人姓名不能为空");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            } else {
+                o.setResponsibleName(value);
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 18) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("负责人身份证号错误");
+                error.setMessage("负责人身份证号不能为空，长度不能超过18位！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            } else {
+                o.setResponsibleIdNumber(value);
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() != 18) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("CRM编号错误");
+                error.setMessage("CRM编号不能为空，长度不能超过18位！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            } else {
+                o.setCrmNo(value);
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (org.apache.commons.lang3.StringUtils.isBlank(value) || value.length() > 50) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMsgType("需求错误");
+                error.setMessage("产品需求不能为空，长度不能超过50个字符！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+                continue;
+            }
+            if (value.contains(",")) {
+                String[] projectIds1 = value.split(",");
+                for (int p = 0; p < projectIds1.length; p++) {
+                    String project1 = projectIds1[p];
+                    SjProject sjProject = projectService.queryById(project1);
+                    if (sjProject == null) {
+                        ImportError error = new ImportError();
+                        error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                        error.setMsgType("产品需求错误");
+                        error.setMessage("产品需求" + project1 + "未找到！");
+                        report.getErrorList().add(error);
+                        report.setPass(false);
+                    }
+                }
+            }
+            o.setProjectId(value);
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("AP错误");
+                    error.setMessage("AP不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setSingle(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("监控错误");
+                    error.setMessage("监控不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setGroupNet(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("监控型号错误");
+                    error.setMessage("监控型号不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setModelId(Integer.valueOf(value));
+                    o.setMealId(1);
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("监控型号个数错误");
+                    error.setMessage("监控型号个数不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setModelNum(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("监控poe错误");
+                    error.setMessage("监控poe不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setPoeId(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("监控poe个数错误");
+                    error.setMessage("监控poe个数不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setPoeNum(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("存储错误");
+                    error.setMessage("存储不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setStorageId(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("2")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("存储个数错误");
+                    error.setMessage("存储个数不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setStorageNum(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("云wifi错误");
+                    error.setMessage("云wifi不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setModelWifiId(Integer.valueOf(value) + 6);
+                    o.setMealWifiId(2);
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("云wifi个数错误");
+                    error.setMessage("云wifi个数不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setModelWifiNum(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("云wifipoe错误");
+                    error.setMessage("云wifipoe不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setPoeWifiId(Integer.valueOf(value) + 4);
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("云wifipoe个数错误");
+                    error.setMessage("云wifipoe个数不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setPoeWifiNum(Integer.valueOf(value));
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("NET/网关/路由错误");
+                    error.setMessage("NET/网关/路由不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setStorageWifiId(Integer.valueOf(value) + 6);
+                }
+            }
+
+            col++;
+            value = ExcelUtil.getCellValue(row, col);
+            if (o.getProjectId().contains("1")) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+                    ImportError error = new ImportError();
+                    error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                    error.setMsgType("NET/网关/路由个数错误");
+                    error.setMessage("NET/网关/路由个数不能为空");
+                    report.getErrorList().add(error);
+                    report.setPass(false);
+                    continue;
+                } else {
+                    o.setStorageWifiNum(Integer.valueOf(value));
+                }
+            }
+
+            sjOrders.add(o);
+        }
+        return sjOrders;
+    }
+
+    /**
+     * 检查模板是否正确
+     *
+     * @param workbook
+     * @return
+     */
+    private boolean checkExcelModel(Workbook workbook, ImportReport report) {
+        Sheet sheet = workbook.getSheetAt(0);
+        Row row0 = sheet.getRow(0);
+        if (row0 == null) {
+            return false;
+        }
+        //模板数据
+        Set<Integer> set = titleMap.keySet();
+        for (Integer key : set) {
+            String t1 = row0.getCell(key).toString().trim();
+            String t2 = titleMap.get(key);
+            if (t1 == null || !t1.equals(t2)) {
+                report.setContinueNext(false);
+                return false;
+            }
+        }
+        return true;
     }
 }

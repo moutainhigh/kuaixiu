@@ -14,9 +14,9 @@
         <table id="searchTable">
             <input type="hidden" id="type" name="type" value="2"/><br/>
             <tr>
-                <td class="search_th "><label class="control-label">单  号 ：</label></td>
+                <td class="search_th "><label class="control-label">单 号 ：</label></td>
                 <td class="search_td"><input type="text" name="orderNo" class="form-control"></td>
-                <td class="search_th"><label class="control-label">状   态：</label></td>
+                <td class="search_th"><label class="control-label">状 态：</label></td>
                 <td class="search_td">
                     <select name="state" class="form-control">
                         <option value="">--选择状态--</option>
@@ -55,6 +55,14 @@
             <tr>
                 <td class="search_th "><label class="control-label">负责人身份证号：</label></td>
                 <td class="search_td"><input type="number" name="responsibleIdNumber" class="form-control"></td>
+                <td class="search_th "><label class="control-label">是否导入单：</label></td>
+                <td class="search_td">
+                    <select name="isImport" class="form-control">
+                        <option value="">--请选择--</option>
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </td>
             </tr>
 
         </table>
@@ -93,6 +101,7 @@
                 <th class="fontWeight_normal table-title tdwidth80">企业负责人/电话</th>
                 <th class="fontWeight_normal table-title tdwidth80">负责人姓名/身份证号</th>
                 <th class="fontWeight_normal tdwidth100">需求</th>
+                <th class="fontWeight_normal tdwidth50">是否导入单</th>
                 <th class="fontWeight_normal tdwidth50">状态</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
             </tr>
@@ -148,6 +157,7 @@
         {"data": "person", "class": ""},
         {"data": "responsibleName", "class": ""},
         {"data": "projectNames", "class": ""},
+        {"data": "isImport", "class": ""},
         {"data": "state", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
@@ -183,22 +193,32 @@
         {
             targets: 4,
             render: function (data, type, row, meta) {
-                return row.createName+"/<br/>"+row.createUserid;
+                return row.createName + "/<br/>" + row.createUserid;
+            }
+        },
+        {
+            targets: -6,
+            render: function (data, type, row, meta) {
+                return row.person + "/<br/>" + row.phone;
             }
         },
         {
             targets: -5,
             render: function (data, type, row, meta) {
-                    return row.person+"/<br/>"+row.phone;
+                if (row.responsibleName != null && row.responsibleIdNumber != null) {
+                    return row.responsibleName + "/<br/>" + row.responsibleIdNumber;
+                } else {
+                    return "";
+                }
             }
         },
         {
-            targets: -4,
+            targets: -3,
             render: function (data, type, row, meta) {
-                if(row.responsibleName!=null&&row.responsibleIdNumber!=null){
-                    return row.responsibleName+"/<br/>"+row.responsibleIdNumber;
-                }else{
-                    return "";
+                if (row.isImport != null && row.isImport == 1) {
+                    return "是";
+                } else {
+                    return "否";
                 }
             }
         },

@@ -58,6 +58,7 @@
         <result column="storage_wifi_num" property="storageWifiNum"/>
         <result column="assign_company_id" property="assignCompanyId"/>
         <result column="assign_worker_id" property="assignWorkerId"/>
+        <result column="is_import" property="isImport"/>
     </resultMap>
 
     <!-- sj_order table all fields -->
@@ -71,7 +72,7 @@
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
         feedback_person,feedback_note,feedback_time,meal_id,model_id,model_num,poe_id,poe_num,
         storage_id,storage_num,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,
-        storage_wifi_id,storage_wifi_num,assign_company_id,assign_worker_id
+        storage_wifi_id,storage_wifi_num,assign_company_id,assign_worker_id,is_import
     </sql>
 
     <!-- 插入记录 -->
@@ -81,14 +82,18 @@
         person,responsible_id_number,responsible_name,phone,project_id,group_net,single,stayPerson,approval_person,approval_note,approval_time,
         assign_person,assign_time,build_person,build_phone,build_company,end_time,completed_person,
         completed_phone,completed_time,create_time,create_userid,create_name,feedback_person,
-        feedback_note,feedback_time,assign_company_id,assign_worker_id)
+        feedback_note,feedback_time,assign_company_id,assign_worker_id,is_import
+        ,meal_id,model_id,model_num,poe_id,poe_num,storage_id,storage_num
+        ,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,storage_wifi_id,storage_wifi_num)
         values
         (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},
         #{streetId},#{addressDetail},#{person},#{responsibleIdNumber},#{responsibleName},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
         #{approvalPerson},#{approvalNote},#{approvalTime},#{assignPerson},#{assignTime},#{buildPerson},
         #{buildPhone},#{buildCompany},#{endTime},#{completedPerson},#{completedPhone},#{completedTime},
         now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime},#{assignCompanyId}
-        ,#{assignWorkerId})
+        ,#{assignWorkerId},#{isImport}
+        ,#{mealId},#{modelId},#{modelNum},#{poeId},#{poeNum},#{storageId},#{storageNum},
+        #{mealWifiId},#{modelWifiId},#{modelWifiNum},#{poeWifiId},#{poeWifiNum},#{storageWifiId},#{storageWifiNum})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -146,7 +151,8 @@
             storage_wifi_id=#{storageWifiId},
             storage_wifi_num=#{storageWifiNum},
             assign_company_id=#{assignCompanyId},
-            assign_worker_id=#{assignWorkerId}
+            assign_worker_id=#{assignWorkerId},
+            is_import=#{isImport}
         where id=#{id}
     </update>
 
@@ -325,6 +331,9 @@
         </if>
         <if test="type != null and type != ''">
             and type = #{type}
+        </if>
+        <if test="isImport != null and isImport != ''">
+            and is_import = #{isImport}
         </if>
         <if test="state != null and state != ''">
             and state = #{state}
@@ -563,7 +572,7 @@
     </select>
 
     <select id="queryImportList" resultType="Map" parameterType="Object">
-        SELECT o.order_no,o.type,o.state,o.company_name,
+        SELECT o.order_no,o.type,o.state,o.company_name,o.is_import,
         CONCAT(o.person,'/',o.phone)person,CONCAT(o.responsible_name,'/',o.responsible_id_number)responsibleName,
         CONCAT(a1.area,a2.area,a3.area,o.address_detail)address,o.project_id,o.group_net,o.single,
         CONCAT(o.create_userid,'/',o.create_name)create_userid,date_format(o.`create_time`,'%Y-%m-%d %H:%i:%s')create_time,o.crm_no,

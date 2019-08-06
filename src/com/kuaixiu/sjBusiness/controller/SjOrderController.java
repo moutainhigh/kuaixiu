@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
+import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
 import com.common.util.UrlUtil;
@@ -17,10 +18,12 @@ import com.kuaixiu.sjUser.service.CustomerDetailService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.api.entity.ResultData;
 import com.system.constant.SystemConstant;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -29,7 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Order Controller
@@ -483,6 +488,41 @@ public class SjOrderController extends BaseController {
             log.error(e.getMessage());
         }
         return result;
+    }
+
+    @RequestMapping(value = "/sj/sjOrder/import")
+    public void doImportWorker(
+            @RequestParam("fileInput") MultipartFile myfile,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        // 返回结果，默认失败
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
+        ImportReport report = new ImportReport();
+        StringBuffer errorMsg = new StringBuffer();
+        try {
+            if (myfile != null && org.apache.commons.lang3.StringUtils.isNotBlank(myfile.getOriginalFilename())) {
+                String fileName = myfile.getOriginalFilename();
+                //扩展名
+                String extension = FilenameUtils.getExtension(fileName);
+                if (!extension.equalsIgnoreCase("xls")) {
+                    errorMsg.append("导入文件格式错误！只能导入excel文件！");
+                } else {
+                    orderService.importExcel(myfile, report, getCurrentUser(request), 1);
+                    resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
+                    resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
+                }
+            } else {
+                errorMsg.append("导入文件为空");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorMsg.append("导入失败");
+            resultMap.put(RESULTMAP_KEY_MSG, "导入失败");
+        }
+        request.setAttribute("report", report);
+        resultMap.put(RESULTMAP_KEY_DATA, report);
+        renderJson(response, resultMap);
     }
 
     /**

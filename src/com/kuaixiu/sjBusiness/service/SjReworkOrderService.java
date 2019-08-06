@@ -83,8 +83,8 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
             jsonObject.put("createTime", sjReworkOrder1.getCreateTime());
             String stayPerson = "";
             if (sjReworkOrder1.getState() == 200) {
-                SjUser sjUser=sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(),3);
-                ConstructionCompany company=companyService.getDao().queryByLoginId(sjUser.getId());
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(), 3);
+                ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
                 stayPerson = company.getPerson();
             } else if (sjReworkOrder1.getState() == 400) {
                 stayPerson = sjReworkOrder1.getWorkerName();
@@ -105,10 +105,23 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         jsonObject.put("createTime", sjReworkOrder.getStrCreateTime());
         jsonObject.put("state", sjReworkOrder.getState());
         jsonObject.put("orderNo", sjReworkOrder.getOrderNo());
+        if (StringUtils.isNotBlank(sjReworkOrder.getCompanyId())) {
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
+            if (sjUser != null && StringUtils.isNotBlank(sjUser.getPhone())) {
+                jsonObject.put("handlerPhone", sjUser.getPhone());//处理方式电话
+            } else {
+                if (StringUtils.isNotBlank(sjReworkOrder.getWorkerId())) {
+                    SjUser sjWorkerUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getWorkerId(), 8);
+                    if (sjWorkerUser != null && StringUtils.isNotBlank(sjWorkerUser.getPhone())) {
+                        jsonObject.put("handlerPhone", sjWorkerUser.getPhone());//处理方式电话
+                    }
+                }
+            }
+        }
         String stayPerson = "";
         if (sjReworkOrder.getState() == 200) {
-            SjUser sjUser=sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(),3);
-            ConstructionCompany company=companyService.getDao().queryByLoginId(sjUser.getId());
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
+            ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
             stayPerson = company.getPerson();
         } else if (sjReworkOrder.getState() == 400) {
             stayPerson = sjReworkOrder.getWorkerName();
@@ -119,16 +132,9 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         String province = addressService.queryByAreaId(o.getProvinceId()).getArea();
         String city = addressService.queryByAreaId(o.getCityId()).getArea();
         String area = addressService.queryByAreaId(o.getAreaId()).getArea();
-//        jsonObject.put("provinceId", o.getProvinceId());
-//        jsonObject.put("provinceName", province);
-//        jsonObject.put("cityId", o.getCityId());
-//        jsonObject.put("cityName", city);
-//        jsonObject.put("areaId", o.getAreaId());
-//        jsonObject.put("areaName", area);
         String addressDetail = "";
         if (StringUtils.isNotBlank(o.getAddressDetail())) {
             addressDetail = o.getAddressDetail();
-//            jsonObject.put("addressDetail", addressDetail);
         }
         jsonObject.put("address", province + city + area + addressDetail);
         jsonObject.put("projectNames", projectName);
@@ -136,6 +142,9 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         jsonObject.put("personPhone", o.getPhone());
         jsonObject.put("ap", o.getSingle());
         jsonObject.put("monitor", o.getGroupNet());
+        if (sjReworkOrder.getState() == 500) {
+            jsonObject.put("endTime", sjReworkOrder.getStrEndTime());
+        }
         return jsonObject;
     }
 }
