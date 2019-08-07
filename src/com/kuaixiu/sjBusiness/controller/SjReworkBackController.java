@@ -185,6 +185,20 @@ public class SjReworkBackController extends BaseController {
             String projectName = orderService.listToString(projects);
             sjReworkOrder.setProjectName(projectName);
             List<SjReworkOrderPicture> pictures=sjReworkOrderPictureService.getDao().queryByReworkNo(sjReworkOrder.getReworkOrderNo());
+            //处理方电话
+            if (StringUtils.isNotBlank(sjReworkOrder.getCompanyId())) {
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
+                if (sjUser != null && StringUtils.isNotBlank(sjUser.getPhone())) {
+                    request.setAttribute("handlerPhone", sjUser.getPhone());
+                } else {
+                    if (StringUtils.isNotBlank(sjReworkOrder.getWorkerId())) {
+                        SjUser sjWorkerUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getWorkerId(), 8);
+                        if (sjWorkerUser != null && StringUtils.isNotBlank(sjWorkerUser.getPhone())) {
+                            request.setAttribute("handlerPhone", sjWorkerUser.getPhone());
+                        }
+                    }
+                }
+            }
             request.setAttribute("sjOrder", sjReworkOrder);
             request.setAttribute("pictures", pictures);
         } catch (Exception e) {

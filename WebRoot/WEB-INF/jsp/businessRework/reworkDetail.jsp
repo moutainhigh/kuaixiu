@@ -56,7 +56,8 @@
                         <h4>报障单号：${sjOrder.reworkOrderNo }</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>原订单号：<a href="javascript:void(0);" onclick="toDetail('${sjOrder.orderId}');">${sjOrder.orderNo}</a></h4>
+                        <h4>原订单号：<a href="javascript:void(0);"
+                                    onclick="toDetail('${sjOrder.orderId}');">${sjOrder.orderNo}</a></h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 
@@ -104,6 +105,17 @@
                         <!-- /.col -->
                     </c:if>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>处理方电话：${handlerPhone}</h4>
+                    </div><!-- /.col -->
+                    <c:if test="${sjOrder.endTime!=null}">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>等待时间：${sjOrder.endTime-sjOrder.createTime}</h4>
+                        </div>
+                        <!-- /.col -->
+                    </c:if>
+                </div><!-- /.row -->
                 <c:if test="${sjOrder.state==500}">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">

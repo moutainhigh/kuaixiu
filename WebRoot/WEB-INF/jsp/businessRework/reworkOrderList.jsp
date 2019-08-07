@@ -82,6 +82,7 @@
                 <th class="fontWeight_normal tdwidth100">处理人员</th>
                 <th class="fontWeight_normal tdwidth50">接单时间</th>
                 <th class="fontWeight_normal tdwidth70">完成时间</th>
+                <th class="fontWeight_normal tdwidth70">等待时间</th>
                 <th class="fontWeight_normal tdwidth70">状态</th>
                 <th class="fontWeight_normal tdwidth70">操作</th>
             </tr>
@@ -139,6 +140,7 @@
         {"data": "workerName", "class": ""},
         {"data": "strWorkerTakeOrderTime", "class": ""},
         {"data": "strEndTime", "class": ""},
+        {"data": "endTime", "class": ""},
         {"data": "state", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
@@ -161,6 +163,15 @@
             render: function (data, type, row, meta) {
                 var html = "<a href=\"javascript:void(0);\" onclick=\"toDetail('" + row.orderId + "');\">" + row.orderNo + "</a>";
                 return html;
+            }
+        },
+        {
+            targets: -3,//原订单号
+            render: function (data, type, row, meta) {
+                if(row.endTime!=null){
+                    return row.endTime-row.createTime;
+                }
+                return "";
             }
         },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
