@@ -140,7 +140,7 @@
         {"data": "workerName", "class": ""},
         {"data": "strWorkerTakeOrderTime", "class": ""},
         {"data": "strEndTime", "class": ""},
-        {"data": "endTime", "class": ""},
+        {"data": "strWaitTime", "class": ""},
         {"data": "state", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
@@ -165,15 +165,15 @@
                 return html;
             }
         },
-        {
-            targets: -3,//原订单号
-            render: function (data, type, row, meta) {
-                if(row.endTime!=null){
-                    return row.endTime-row.createTime;
-                }
-                return "";
-            }
-        },
+//        {
+//            targets: -3,//原订单号
+//            render: function (data, type, row, meta) {
+//                if(row.endTime!=null){
+//                    return row.endTime;
+//                }
+//                return "";
+//            }
+//        },
         {//订单状态  待审核100，带指派200，待施工300，待竣工400，已完成500，未通过600
             targets: -2,
             render: function (data, type, row, meta) {

@@ -111,7 +111,7 @@
                     </div><!-- /.col -->
                     <c:if test="${sjOrder.endTime!=null}">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h4>等待时间：${sjOrder.endTime-sjOrder.createTime}</h4>
+                            <h4>等待时间：${sjOrder.strWaitTime}</h4>
                         </div>
                         <!-- /.col -->
                     </c:if>
