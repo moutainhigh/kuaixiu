@@ -157,6 +157,11 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <h4>检测详情：${order.detail}</h4>
                     </div><!-- /.col -->
+                    <c:if test="${order.orderStatus == 9}">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h4>完成时间：<fmt:formatDate value="${order.updateTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
+                        </div><!-- /.col -->
+                    </c:if>
                 </div>
 
         <tr>
