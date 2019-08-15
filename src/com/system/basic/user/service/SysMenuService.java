@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public class SysMenuService extends BaseService<SysMenu> {
         SysMenu menu = new SysMenu();
         menu.setType(1);
         menu.setIsShow(1);
-        menu.setPcode("101");
+        menu.setPcode("0");
         List<SysMenu> menuses = this.getDao().queryList(menu);
         Iterator<SysMenu> it = menuses.iterator();
         while (it.hasNext()) {
@@ -99,6 +100,7 @@ public class SysMenuService extends BaseService<SysMenu> {
                 it.remove();
             }
         }
+        System.out.println("返回菜单："+ JSONObject.toJSONString(menuses));
         return menuses;
     }
 

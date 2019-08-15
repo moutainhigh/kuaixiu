@@ -7,10 +7,16 @@ import com.common.exception.SystemException;
 import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.entity.*;
+import com.kuaixiu.recycle.recycleCard.CardEnum;
 import com.kuaixiu.recycle.service.*;
 import com.kuaixiu.recycleCoupon.entity.HsActivityCouponRole;
 import com.kuaixiu.recycleCoupon.service.HsActivityCouponRoleService;
 import com.kuaixiu.recycleCoupon.service.HsActivityCouponService;
+import com.kuaixiu.videoCard.dao.VideoCardMapper;
+import com.kuaixiu.videoCard.entity.VideoCard;
+import com.kuaixiu.videoCard.service.VideoCardService;
+import com.kuaixiu.videoUserRel.entity.VideoUserRel;
+import com.kuaixiu.videoUserRel.service.VideoUserRelService;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
@@ -692,6 +698,8 @@ public class RecycleNewController extends BaseController {
             recycleOrderService.saveUpdate(order);
             //下单成功发送短信
             SmsSendUtil.submitRecycleOrder(order.getMobile(), source,recycleSystemService);
+            //下单成功，根据回收价格分配对应等级卡密
+            String msg = getVideoCard(order);
 
             getResult(result, jsonResult, true, "0", "成功");
             //下单成功后更新下单间隔时间
@@ -704,6 +712,42 @@ public class RecycleNewController extends BaseController {
         }
         renderJson(response, result);
     }
+
+
+    @Autowired
+    private VideoCardMapper videoCardMapper;
+
+    @Autowired
+    private VideoUserRelService videoUserRelService;
+
+
+    private String getVideoCard(RecycleOrder order){
+        String msg="";
+        if(order.getPrice()==null){
+            return msg;
+        }
+        Integer cardType = CardEnum.getCardType(order.getPrice());
+        VideoCard videoCard=new VideoCard();
+        videoCard.setIsUse(0);
+        videoCard.setType(cardType);
+        VideoCard card = videoCardMapper.queryOne(videoCard);
+        if(card!=null){
+            card.setIsUse(1);
+            videoCardMapper.update(card);
+            VideoUserRel rel=new VideoUserRel();
+            rel.setMobile(order.getMobile());
+            rel.setCardId(card.getCardId());
+            rel.setOrderNo(order.getOrderNo());
+            rel.setCreateTime(new Date());
+            videoUserRelService.add(rel);
+        }
+        return msg;
+    }
+
+
+
+
+
     @Autowired
     private RecycleSystemService recycleSystemService;
     /**

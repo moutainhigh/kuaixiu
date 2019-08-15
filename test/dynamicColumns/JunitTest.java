@@ -1,6 +1,7 @@
 package dynamicColumns;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,9 @@ import com.kuaixiu.card.entity.TelecomCard;
 import com.kuaixiu.card.service.TelecomCardService;
 import com.kuaixiu.station.entity.Station;
 import com.kuaixiu.station.service.StationService;
+import com.kuaixiu.videoCard.entity.VideoCard;
+import com.kuaixiu.videoCard.service.VideoCardService;
+import com.system.util.ExcelUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +62,32 @@ public class JunitTest extends BaseJunitTest{
 	private StationService stationService;
 	@Autowired
 	private TelecomCardService telecomCardService;
+
+    @Autowired
+	private VideoCardService videoCardService;
+
+
+
+    @Test
+	public  void projectNews() throws Exception {
+		String file = "E:\\code\\爱奇艺卡密类型.xlsx";
+		Object o = ExcelUtil.testProjectList(file);
+		List<VideoCard> list = (List<VideoCard>) o;   //获取excel信息
+		System.out.println("卡密信息："+ JSONObject.toJSONString(list));
+        for (VideoCard card:list){
+			card.setCreateTime(new Date());
+			card.setIsUse(0);
+			card.setUpdateTime(new Date());
+			videoCardService.add(card);
+		}
+		System.out.println("插入完毕");
+
+	}
+
+
+
+
+
 	
 	@Test
 	public void add(){

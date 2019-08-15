@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.videoCard.dao.VideoCardMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.videoCard.entity.VideoCard" >
+        <result column="id" property="id"/>
+        <result column="card_id" property="cardId"/>
+        <result column="type" property="type"/>
+        <result column="price" property="price"/>
+        <result column="validity_time" property="validityTime"/>
+        <result column="is_use" property="isUse"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_userid" property="createUserid"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- video_card table all fields -->
+    <sql id="Base_Column_List" >
+        id,card_id,type,price,validity_time,is_use,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into video_card
+        (card_id,type,price,validity_time,is_use,create_time,create_userid,update_time)
+        values
+        (#{cardId},#{type},#{price},#{validityTime},#{isUse},#{createTime},#{createUserid},#{updateTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update video_card 
+        set 
+            id=#{id},
+            card_id=#{cardId},
+            type=#{type},
+            price=#{price},
+            validity_time=#{validityTime},
+            is_use=#{isUse},
+            create_time=#{createTime},
+            create_userid=#{createUserid},
+            update_time=#{updateTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from video_card where id = #{id}
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from video_card where id = #{id}
+    </select>
+
+
+    <!-- 根据id查询  -->
+    <select id="queryOne"  resultMap="BaseResultMap" parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from video_card
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="cardId != null and cardId != ''" >
+            and card_id = #{cardId}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="price != null and price != ''" >
+            and price = #{price}
+        </if>
+        <if test="validityTime != null and validityTime != ''" >
+            and validity_time = #{validityTime}
+        </if>
+        <if test="isUse != null and isUse != ''" >
+            and is_use = #{isUse}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        limit 1 for update
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from video_card
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="cardId != null and cardId != ''" >
+            and card_id = #{cardId}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="price != null and price != ''" >
+            and price = #{price}
+        </if>
+        <if test="validityTime != null and validityTime != ''" >
+            and validity_time = #{validityTime}
+        </if>
+        <if test="isUse != null and isUse != ''" >
+            and is_use = #{isUse}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from video_card
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="cardId != null and cardId != ''" >
+            and card_id = #{cardId}
+        </if>
+        <if test="type != null and type != ''" >
+            and type = #{type}
+        </if>
+        <if test="price != null and price != ''" >
+            and price = #{price}
+        </if>
+        <if test="validityTime != null and validityTime != ''" >
+            and validity_time = #{validityTime}
+        </if>
+        <if test="isUse != null and isUse != ''" >
+            and is_use = #{isUse}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createUserid != null and createUserid != ''" >
+            and create_userid = #{createUserid}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+    </select>
+
+
+
+    <select id="getVideoUser"  resultMap="BaseResultMap" parameterType="Object">
+        select v.* from video_user_rel r LEFT JOIN video_card v on r.card_id=v.card_id where r.mobile=#{mobile}
+    </select>
+
+
+
+</mapper>

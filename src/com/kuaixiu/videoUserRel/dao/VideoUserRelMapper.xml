@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.videoUserRel.dao.VideoUserRelMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.videoUserRel.entity.VideoUserRel" >
+        <result column="id" property="id"/>
+        <result column="mobile" property="mobile"/>
+        <result column="card_id" property="cardId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <!-- video_user_rel table all fields -->
+    <sql id="Base_Column_List" >
+        id,mobile,card_id,order_no,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" useGeneratedKeys="true"
+            keyProperty="id" >
+        insert into video_user_rel
+        (mobile,card_id,order_no,create_time)
+        values
+        (#{mobile},#{cardId},#{orderNo},#{createTime})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update video_user_rel 
+        set 
+            id=#{id},
+            mobile=#{mobile},
+            card_id=#{cardId},
+            order_no=#{orderNo},
+            create_time=#{createTime}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from video_user_rel where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from video_user_rel where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from video_user_rel
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="cardId != null and cardId != ''" >
+            and card_id = #{cardId}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from video_user_rel
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="mobile != null and mobile != ''" >
+            and mobile = #{mobile}
+        </if>
+        <if test="cardId != null and cardId != ''" >
+            and card_id = #{cardId}
+        </if>
+        <if test="orderNo != null and orderNo != ''" >
+            and order_no = #{orderNo}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+    </select>
+
+</mapper>   
