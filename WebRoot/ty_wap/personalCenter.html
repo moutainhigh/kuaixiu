@@ -39,7 +39,7 @@
             <div class="main_item" id="myDiscount">
                 <img src="img/add_icon.png" alt="">我的加券  <span></span>
             </div>
-            <div class="main_item">
+            <div class="main_item" id="myOtherCard">
                 <img src="img/other_icon.png" alt="">我的其它券 <span></span>
 
             </div>
@@ -186,6 +186,9 @@
                })//
 
        }
+    })
+    $("#myOtherCard").click(function (e) {
+        window.location.href = './card.html'
     })
 </script>
 
