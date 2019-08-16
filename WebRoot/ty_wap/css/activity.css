@@ -1,0 +1,173 @@
+.content-box{
+    background: url("../img/bg.png") no-repeat;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background-size: 100%;
+    text-align: center;
+
+}
+.header-box .main-box{
+    text-align: center;
+    padding-top: 40px;
+}
+.header-box img{
+    padding-bottom: 15px;
+}
+.header-box .img1{
+    width:auto;
+    height:auto;
+    max-width:17%;
+    max-height:17%;
+    display: block;
+    margin: 0 auto;
+    padding-top: 25px;
+}
+.header-box .img2{
+    width:auto;
+    height:auto;
+    max-width:92%;
+    max-height:92%;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 23px;
+}
+.main-box{
+    width: 100%;
+    padding-bottom: 22px;
+    border-bottom: 5px solid #f0eff5;
+}
+.header-box .img3{
+    width:auto;
+    height:auto;
+    max-width:85%;
+    max-height:85%;
+    display: block;
+    margin: 0 auto;
+}
+.main-box .img4{
+    width:auto;
+    height:auto;
+    max-width:95%;
+    max-height:95%;
+    display: block;
+    margin: 0 auto;
+    padding-top: 40px;
+    padding-bottom: 15px;
+}
+.main-box .img5{
+    width:auto;
+    height:auto;
+    max-width:95%;
+    max-height:95%;
+    display: block;
+    margin: 0 auto;
+}
+.content{
+    text-align: center;
+    padding-top: 33px;
+    border-bottom: 25px solid #f0eff5;
+    /*position:relative;*/
+}
+.text{
+    font-size: 24px;
+    padding-bottom: 20px;
+    font-family: '微软雅黑';
+}
+.content .img6{
+    width:auto;
+    height:auto;
+    max-width:98%;
+    max-height:98%;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 23px;
+}
+.content .img7{
+    width:auto;
+    height:auto;
+    max-width:82%;
+    max-height:82%;
+    display: block;
+    margin: 0 auto;
+}
+.ruletitle{
+    padding-top: 27px;
+    padding-bottom: 5px;
+    font-size: 16px;
+    text-align: left;
+    padding-left: 15px;
+    letter-spacing: 1.2px;
+    font-family: '微软雅黑';
+}
+.ruletext{
+    font-family: '微软雅黑';
+    color: #4f4f4f;
+    display: inline-block;
+}
+.rule span{
+    line-height: 0.2rem;
+    position: absolute;
+    left: 15px;
+}
+.rule{
+    font-size: 14px;
+    margin: 0 18px 2px 30px;
+}
+.rule p{
+    line-height: 0.2rem;
+    letter-spacing: 0.8px;
+    text-align: left;
+    text-indent: 3px;
+    margin: 2px 0;
+}
+.foot{
+    text-align: center;
+    padding-top: 30px;
+    /*position: relative;*/
+}
+.foot .img7{
+    width:auto;
+    height:auto;
+    max-width:95%;
+    max-height:95%;
+    display: block;
+    margin: 0 auto;
+}
+/*.footimg{*/
+    /*position: relative;*/
+/*}*/
+.foot .img8{
+    width:auto;
+    height:auto;
+    max-width: 28%;
+    max-height:28%;
+    margin-top: 20px;
+    /*position: absolute;*/
+    /*left: 5px;*/
+    /*top: 10px;*/
+}
+.foot .img9{
+    width:auto;
+    height:auto;
+    max-width:55%;
+    max-height:55%;
+    float: right;
+    margin-top: 35px;
+    margin-right: 20px;
+    display: inline-block;
+    /*position: absolute;*/
+    /*right: 10px;*/
+    /*top: 10px;*/
+}
+.foot .img10{
+    width:auto;
+    height:auto;
+    max-width:58%;
+    max-height:58%;
+    float: right;
+    position: absolute;
+    right: 20px;
+    bottom: 50px;
+}
