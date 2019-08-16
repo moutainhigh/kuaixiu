@@ -92,14 +92,17 @@
     display: block;
     margin: 0 auto;
 }
-.ruletitle{
-    padding-top: 27px;
+.ruletitle,.ruletitle2{
+
     padding-bottom: 5px;
     font-size: 16px;
     text-align: left;
     padding-left: 15px;
     letter-spacing: 1.2px;
     font-family: '微软雅黑';
+}
+.ruletitle{
+    padding-top: 27px;
 }
 .ruletext{
     font-family: '微软雅黑';
@@ -170,4 +173,7 @@
     position: absolute;
     right: 20px;
     bottom: 50px;
+}
+.footimg{
+    position: relative;
 }
