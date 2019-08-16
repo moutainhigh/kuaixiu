@@ -1,21 +1,13 @@
 package com.kuaixiu.videoCard.controller;
-import java.util.List;
-import java.util.Date;
-import com.common.paginate.Page;
 
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.importExcel.ImportReport;
+import com.common.paginate.Page;
 import com.google.common.collect.Maps;
-import com.kuaixiu.order.constant.OrderConstant;
 import com.kuaixiu.videoCard.entity.VideoCard;
 import com.kuaixiu.videoCard.service.VideoCardService;
-import com.kuaixiu.videoUserRel.entity.VideoUserRel;
-import com.kuaixiu.videoUserRel.service.VideoUserRelService;
-import com.system.basic.user.entity.SessionUser;
-import com.system.constant.SystemConstant;
 import com.system.util.ExcelUtil;
-import jodd.util.StringUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -72,6 +63,25 @@ public class VideoCardController extends BaseController {
 
 
 
+    @RequestMapping(value = "/videoCard/queryListForPage")
+    public void cardListForPage(HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+        Page page = getPageByRequest(request);
+        String cardId=request.getParameter("cardId");
+        String type=request.getParameter("type");
+        String use=request.getParameter("isUse");
+        VideoCard s=new VideoCard();
+        s.setCardId(cardId);
+        if(type!=null){
+            s.setType(Integer.parseInt(type));
+        }
+        s.setPage(page);
+        List<VideoCard> list = videoCardService.queryListForPage(s);
+        page.setData(list);
+        this.renderJson(response, page);
+    }
+
+
     /**
      * 卡密模板导入
      * @param myfile
@@ -98,7 +108,7 @@ public class VideoCardController extends BaseController {
                     errorMsg.append("导入文件格式错误！只能导入excel  xls文件！");
                 }
                 else{
-//                    stationService.importExcel(myfile,report,getCurrentUser(request));
+                    videoCardService.importExcel(myfile,report,getCurrentUser(request));
                     resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
                     resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
                 }

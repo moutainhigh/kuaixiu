@@ -20,7 +20,7 @@
 	      <div class="form-group">
             <label class="col-sm-3 control-label">步骤：</label>
             <div class="col-sm-9">
-              <p class="form-control-static">1、点击 <a href="${ctx}/file/download.do?fileId=20" target="_blank">这里</a> 打开Excel表格，在Excel表格中录入数据。</p>
+              <p class="form-control-static">1、点击 <a href="${ctx}/file/download.do?fileId=37" target="_blank">这里</a> 打开Excel表格，在Excel表格中录入数据。</p>
             </div>
           </div>
           <div class="form-group">
@@ -60,7 +60,7 @@ function uploadModelExcel(){
 	//加载等待
     AlertText.tips("d_loading");
     $.ajaxFileUpload({
-        url: "${ctx}/telecom/station/startImport.do",
+        url: "${ctx}/videoCard/startImport.do",
         type: "post",
         secureuri: false, //一般设置为false
         fileElementId: "fileInput", // 上传文件的name属性名
