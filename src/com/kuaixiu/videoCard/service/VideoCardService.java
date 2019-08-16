@@ -1,61 +1,61 @@
-//package com.kuaixiu.videoCard.service;
-//
-//
-//import com.common.base.service.BaseService;
-//import com.common.exception.SystemException;
-//import com.common.importExcel.ExcelUtil;
-//import com.common.importExcel.ImportError;
-//import com.common.importExcel.ImportReport;
-//import com.kuaixiu.station.entity.Station;
-//import com.kuaixiu.videoCard.dao.VideoCardMapper;
-//import com.kuaixiu.videoCard.entity.VideoCard;
-//
-//import com.kuaixiu.videoUserRel.entity.VideoUserRel;
-//import com.system.basic.user.entity.SessionUser;
-//import net.sf.jxls.exception.ParsePropertyException;
-//import org.apache.commons.io.FilenameUtils;
-//import org.apache.commons.lang3.StringUtils;
-//import org.apache.log4j.Logger;
-//import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-//import org.apache.poi.ss.usermodel.Row;
-//import org.apache.poi.ss.usermodel.Sheet;
-//import org.apache.poi.ss.usermodel.Workbook;
-//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import java.io.FileInputStream;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.text.SimpleDateFormat;
-//import java.util.*;
-//
-///**
-// * VideoCard Service
-// * @CreateDate: 2019-08-15 下午03:37:26
-// * @version: V 1.0
-// */
-//@Service("videoCardService")
-//public class VideoCardService extends BaseService<VideoCard> {
-//    private static final Logger log= Logger.getLogger(VideoCardService.class);
-//
-//    @Autowired
-//    private VideoCardMapper<VideoCard> mapper;
-//
-//
-//    public VideoCardMapper<VideoCard> getDao() {
-//        return mapper;
-//    }
-//
-//    //**********自定义方法***********
-//    public List<VideoCard> getVideoUser(VideoUserRel rel) {
-//        return mapper.getVideoUser(rel);
-//    }
-//
-//
+package com.kuaixiu.videoCard.service;
+
+
+import com.common.base.service.BaseService;
+import com.common.exception.SystemException;
+import com.common.importExcel.ExcelUtil;
+import com.common.importExcel.ImportError;
+import com.common.importExcel.ImportReport;
+import com.kuaixiu.station.entity.Station;
+import com.kuaixiu.videoCard.dao.VideoCardMapper;
+import com.kuaixiu.videoCard.entity.VideoCard;
+
+import com.kuaixiu.videoUserRel.entity.VideoUserRel;
+import com.system.basic.user.entity.SessionUser;
+import net.sf.jxls.exception.ParsePropertyException;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * VideoCard Service
+ * @CreateDate: 2019-08-15 下午03:37:26
+ * @version: V 1.0
+ */
+@Service("videoCardService")
+public class VideoCardService extends BaseService<VideoCard> {
+    private static final Logger log= Logger.getLogger(VideoCardService.class);
+
+    @Autowired
+    private VideoCardMapper<VideoCard> mapper;
+
+
+    public VideoCardMapper<VideoCard> getDao() {
+        return mapper;
+    }
+
+    //**********自定义方法***********
+    public List<VideoCard> getVideoUser(VideoUserRel rel) {
+        return mapper.getVideoUser(rel);
+    }
+
+
 //    @Transactional
 //    public void importExcel(MultipartFile file, ImportReport report, SessionUser su){
 //        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
@@ -243,28 +243,28 @@
 //        return stationList;
 //    }
 //
-//
-//
-//    /**
-//     * 下载导入模板
-//     *
-//     * @param params
-//     */
-//    @SuppressWarnings("rawtypes")
-//    public void expImportTemplate(Map<String, Object> params) {
-//        String templateFileName = params.get("tempFileName") + "";
-//        String outFileName = params.get("outFileName") + "";
-//        try {
-//            Workbook workbook = new HSSFWorkbook(new FileInputStream(templateFileName));
-//            FileOutputStream fileOut = new FileOutputStream(outFileName);
-//            workbook.write(fileOut);
-//            fileOut.close();
-//        } catch (ParsePropertyException e) {
-//            e.printStackTrace();
-//            log.error("文件导出--ParsePropertyException", e);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            log.error("文件导出--IOException", e);
-//        }
-//    }
-//}
+
+
+    /**
+     * 下载导入模板
+     *
+     * @param params
+     */
+    @SuppressWarnings("rawtypes")
+    public void expImportTemplate(Map<String, Object> params) {
+        String templateFileName = params.get("tempFileName") + "";
+        String outFileName = params.get("outFileName") + "";
+        try {
+            Workbook workbook = new HSSFWorkbook(new FileInputStream(templateFileName));
+            FileOutputStream fileOut = new FileOutputStream(outFileName);
+            workbook.write(fileOut);
+            fileOut.close();
+        } catch (ParsePropertyException e) {
+            e.printStackTrace();
+            log.error("文件导出--ParsePropertyException", e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("文件导出--IOException", e);
+        }
+    }
+}
