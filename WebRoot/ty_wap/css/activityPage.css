@@ -1,0 +1,158 @@
+.content-box{
+    background: url("../img/acbg.png");
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background-size: 100%;
+    text-align: center;
+}
+.header-box{
+    text-align: center;
+    padding-top: 40px;
+}
+.header-box .img1{
+    width:auto;
+    height:auto;
+    max-width:80%;
+    max-height:80%;
+}
+.header-box .img2{
+    width:auto;
+    height:auto;
+    max-width:85%;
+    max-height:85%;
+}
+.main-box{
+    width: 90%;
+    height: 247px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 7px 3px #f8cb02;
+    display: inline-block;
+    position: relative;
+}
+.main-box .imgset{
+    width:auto;
+    height:auto;
+    max-width:35%;
+    max-height:35%;
+    position: absolute;
+    top: -25px;
+    left: 35%;
+}
+.main-box .img3{
+    width:auto;
+    height:auto;
+    max-width:52%;
+    max-height:52%;
+}
+.main-box .img5, .main-box .img6{
+    width:auto;
+    height:auto;
+    max-width:21%;
+    max-height:21%;
+    position: absolute;
+    top: 40px;
+}
+.main-box .img3{
+    position: absolute;
+    left: 0px;
+    top: 23%;
+}
+.main-box .img4{
+    width:auto;
+    height:auto;
+    max-width:47%;
+    max-height:47%;
+    position: absolute;
+    left: 61%;
+    top: 23%;
+}
+.main-box .img5{
+    position: absolute;
+    left: 31%;
+}
+.main-box .img6{
+    position:absolute;
+    right: 10px;
+}
+.main-box .text1{
+    font-family: PingFangSC-Regular, sans-serif;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.02rem;
+    line-height: 1.5rem;
+    position: absolute;
+    left: 2%;
+    bottom: 10px;
+}
+.main-box .text2{
+    font-family: PingFangSC-Regular, sans-serif;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.5rem;
+    letter-spacing: 0.02rem;
+    position: absolute;
+    right: 2%;
+    bottom: 10px;
+}
+.bot-box{
+    width: 90%;
+    /*height: 600px;*/
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 7px 3px #f8cb02;
+    display: inline-block;
+    position: relative;
+    margin-top: 30px;
+}
+.bot-box .imgrule{
+    width:auto;
+    height:auto;
+    max-width:35%;
+    max-height:35%;
+    position: absolute;
+    top: -25px;
+    left: 35%;
+}
+.text{
+    font-family: PingFangSC-Regular, sans-serif;
+    color: #333;
+    display: inline-block;
+    /*position:absolute;*/
+    /*top: 10px;*/
+    margin-top: 30px;
+}
+.text span{
+    line-height: 1.5rem;
+    position: absolute;
+    left: 15px;
+}
+.content{
+    margin: 0 18px 18px 30px;
+}
+.content p{
+    line-height: 1.5rem;
+    letter-spacing: 1px;
+    text-align: left;
+    text-indent: 3px;
+}
+.bottom-box{
+    font-family: PingFangSC-Regular, sans-serif;
+    font-size: 22px;
+    color: #fff;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    margin-top: 30px;
+   /*padding-bottom: 10px;*/
+    background: url("../img/acbottom.png") no-repeat 100% 100%;
+    background-size: 100% 100%;
+    vertical-align: center;
+}
+.lastbottom{
+    margin-top: 10px;
+}
