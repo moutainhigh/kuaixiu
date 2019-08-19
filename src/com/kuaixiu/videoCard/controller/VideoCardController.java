@@ -72,8 +72,11 @@ public class VideoCardController extends BaseController {
         String use=request.getParameter("isUse");
         VideoCard s=new VideoCard();
         s.setCardId(cardId);
-        if(type!=null){
+        if(StringUtils.isNotBlank(type)){
             s.setType(Integer.parseInt(type));
+        }
+        if(StringUtils.isNotBlank(use)){
+            s.setIsUse(Integer.parseInt(use));
         }
         s.setPage(page);
         List<VideoCard> list = videoCardService.queryListForPage(s);

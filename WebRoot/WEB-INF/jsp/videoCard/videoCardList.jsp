@@ -12,12 +12,30 @@
     <form id="searchForm" class="form form-horizontal">
         <table id="searchTable">
             <tr>
-                <td class="search_th search_th_frist"><label class="control-label">&nbsp&nbsp&nbsp类型 ：</label></td>
-                <td class="search_td"><input type="text" name="type" class="form-control" ></td>
+                <td class="search_th "><label class="control-label">类型：</label></td>
+                <td class="search_td">
+                    <select name="type" onchange="brandChange(this.value);" class="form-control">
+                        <option value="">--选择类型--</option>
+                        <option value="1">周卡</option>
+                        <option value="2">月卡</option>
+                        <option value="3">季卡</option>
+                        <option value="4">半年卡</option>
+                        <option value="5">年卡</option>
+                    </select>
+                </td>
 
-                <td class="search_th search_th_frist"><label class="control-label">是否领用 ：</label></td>
-                <td class="search_td"><input type="text" name="isUse" class="form-control" ></td>
-                <td></td>
+                <td class="search_th "><label class="control-label">是否领用：</label></td>
+                <td class="search_td">
+                    <select name="isUse" onchange="brandChange(this.value);" class="form-control">
+                        <option value="">--请选择--</option>
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="search_th "><label class="control-label">卡密ID：</label></td>
+                <td class="search_td"><input type="text" name="cardId" class="form-control"></td>
             </tr>
 
         </table>
@@ -99,32 +117,33 @@
         {//号卡类型
             targets: 3,
             render: function (data, type, row, meta) {
-                if(row.type==0){
-                    return '未领取';
-                }
-                else{
-                    return '已领取';
+                if(row.type==1){
+                    return '周卡';
+                }else if(row.type==2){
+                    return '月卡';
+                }else if(row.type==3){
+                    return '季卡';
+                }else if(row.type==4){
+                    return '半年卡';
+                }else if(row.type==5){
+                    return '年卡';
+                }else{
+                    return '';
                 }
             }
         },
         {//号卡类型
             targets: 6,
             render: function (data, type, row, meta) {
-                if(row.isUse==1){
-                    return '周卡';
-                }else if(row.isUse==2){
-                    return '月卡';
-                }else if(row.isUse==3){
-                    return '季卡';
-                }else if(row.isUse==4){
-                    return '半年卡';
-                }else if(row.isUse==5){
-                    return '年卡';
-                }else{
-                    return '';
+                if(row.isUse==0){
+                    return '未领取';
+                }
+                else{
+                    return '已领取';
                 }
             }
         }
+
 
     ]);
 

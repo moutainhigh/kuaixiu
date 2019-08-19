@@ -119,7 +119,11 @@ public class VideoCardService extends BaseService<VideoCard> {
             v.setIsUse(0);
             v.setCreateTime(new Date());
             v.setCreateUserid(su.getUserId());
-            mapper.add(s);
+            v.setCardId(s.getCardId());
+            v.setType(s.getType());
+            v.setPrice(s.getPrice());
+            v.setValidityTime(s.getValidityTime());
+            mapper.add(v);
         }
     }
 
@@ -128,10 +132,10 @@ public class VideoCardService extends BaseService<VideoCard> {
      */
     private static Map<Integer,String> titleMap=new HashMap<Integer, String>();
     static {
-        titleMap.put(0, "卡类型");
-        titleMap.put(1, "金额");
-        titleMap.put(2, "卡密");
-        titleMap.put(3, "有效期");
+        titleMap.put(0, "卡类型（必填）");
+        titleMap.put(1, "金额（必填）");
+        titleMap.put(2, "卡密（必填）");
+        titleMap.put(3, "有效期（必填）");
     }
 
 
