@@ -463,7 +463,7 @@
                     $("#isLogin").html('个人中心')
                     let str = $(".join-active-btn").attr('href');
                     if(str.indexOf('phone') < 0) {
-                        if(HappyGoMobile) {
+                       /** if(HappyGoMobile) {
                             str = str + "&phone="+HappyGoMobile
                             console.log(str)
                             $(".join-active-btn").attr('href',str)
@@ -471,8 +471,8 @@
                             str = str + "&phone="+loginPhone
                             console.log(str)
                             $(".join-active-btn").attr('href',str)
-                        }
-                    }
+                        }     **/
+                    } 
 
 
                 }else {

@@ -84,12 +84,22 @@
 		</div>
     </div>
 	<script src="js/jquery.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/util.js"></script>
     <script>
           G = window.G || {};
 		  $('#bottom-box').click( function(){
 				window.location.href ='product.html'
 		  });
+		  
+		  	var phone = GetQueryString( 'phone' ) ;
+			var fm = GetQueryString( 'fm' ) ;
 
+
+          eCacheUtil.storage.cache( CacheKey.source, fm );
+		   eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phone);
+           eCacheUtil.storage.cache(CacheKey.loginPhone,phone);
     </script>
 </body>
 </html>
