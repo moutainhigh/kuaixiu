@@ -17,59 +17,109 @@
         <div class="money">
             ￥<span id="money"></span>
         </div>
+
+    </div>
+    <div class="text">
+        您当前没有优惠券哦！
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
-    <script>
+    <script type="text/javascript">
         $.post(
             linkUrl+'/videoCard/personList.do',
             function(data){
-                if(data.success){
-                    var list = data.data;
-                    var cardStr = ""
-                    // console.log(list)
-                    for(var i=0;i< list.length;i++){
-                        var type = list[i].type
-                        list[i].grayClass = ''
-                        if(type === 1){
-                            type='周卡';
-                        }else  if(type === 2){
-                            type='月卡';
-                        }else  if(type === 3){
-                            type ='季卡';
-                        }else  if(type === 4){
-                            type ='半年卡';
-                        }else  if(type === 5){
-                            type ='年卡';
+                if(data.success) {
+                    if (data.data.length) {
+                        var list = data.data;
+                        var cardStr = ""
+                        // console.log(list)
+                        for (var i = 0; i < list.length; i++) {
+                            var type = list[i].type
+                            list[i].grayClass = ''
+                            if (type === 1) {
+                                type = '周卡';
+                            } else if (type === 2) {
+                                type = '月卡';
+                            } else if (type === 3) {
+                                type = '季卡';
+                            } else if (type === 4) {
+                                type = '半年卡';
+                            } else if (type === 5) {
+                                type = '年卡';
+                            }
+                            var date = new Date(list[i].validityTime).getTime()
+                            var time = new Date(list[i].validityTime)
+                            var dateStr = time.getFullYear() + '年' + (Number(time.getMonth()) + 1) + '月' + time.getDate() + '日'
+                            var currentDate = new Date().getTime()
+                            // console.log(date)
+                            // console.log(currentDate)
+                            if (currentDate > date) {
+                                list[i].grayClass = 'gray'
+                            }
+                            list[i].grayId = 'card'+[i]
+                            var Ids = list[i].grayId;
+                            // console.log(Ids)
+                            // console.log(list[i].grayId)
+                            // console.log(list[i])
+                            cardStr +=
+                                '<div class="card ' + list[i].grayClass + '" id="card">\n' +
+                                '        <div class="message">\n' +
+                                '            <p>爱奇艺会员卡<span id="cardType">' + type + '</span></p>\n' +
+                                '            <p>兑换码：  <span id="'+Ids+'"    onclick="copy(\''+ Ids +'\')"  class="classId">' + list[i].cardId + '</span></p>\n' +
+                                '            <p>有效期至<span id="endTime">' + dateStr + '</span></p>\n' +
+                                '        </div>\n' +
+                                '        <div class="money">\n' +
+                                '            ￥<span id="money">' + list[i].price + '</span>\n' +
+                                '        </div>\n' +
+                                '    </div>'
                         }
-                        var date = new Date(list[i].validityTime).getTime()
-                        var time = new Date(list[i].validityTime)
-                        var dateStr = time.getFullYear() + '年' + (Number(time.getMonth())+1) + '月' + time.getDate() + '日'
-                        var currentDate = new Date().getTime()
-                        // console.log(date)
-                        // console.log(currentDate)
-                        if(currentDate > date) {
-                            list[i].grayClass = 'gray'
-                        }
-                        console.log(list[i])
-                        cardStr +=
-                            '<div class="card ' + list[i].grayClass +'" id="card">\n' +
-                            '        <div class="message">\n' +
-                            '            <p>爱奇艺会员卡<span id="cardType">' + type + '</span></p>\n' +
-                            '            <p>兑换码：  <span id="cardId">'+ list[i].cardId +'</span></p>\n' +
-                            '            <p>有效期至<span id="endTime">' + dateStr + '</span></p>\n' +
-                            '        </div>\n' +
-                            '        <div class="money">\n' +
-                            '            ￥<span id="money">' + list[i].price + '</span>\n' +
-                            '        </div>\n' +
-                            '    </div>'
-
+                        document.body.innerHTML = cardStr
+                    }else{
+                        var cardString = '       <div class="text">\n' +
+                            '            卡包中不存在优惠券哦！\n' +
+                            '        </div>'
+                        document.body.innerHTML = cardString;
 
                     }
-                    document.body.innerHTML = cardStr
+
+                }else{
+                    console.log('数据连接失败')
                 }
             }
         )
+       function copy(Ids){
+            // console.log(77777+Ids)
+           var text =document.getElementById(Ids).innerText;
+           var input = document.createElement('input');
+           input.setAttribute('id', 'copyInput');
+           input.setAttribute('value', text);
+           document.getElementsByTagName('body')[0].appendChild(input);
+           document.getElementById('copyInput').select();
+           if (document.execCommand('copy')) {
+               // alert('复制成功');
+               alertMsg('复制成功')
+
+           }
+           document.getElementById('copyInput').remove();
+        }
+
+        window.alertMsg = function (txt) {
+            var alertFram = document.createElement("DIV");
+            alertFram.id = "alertFram";
+            alertFram.style.position = "fixed";
+            alertFram.style.width = "100%";
+            alertFram.style.textAlign = "center";
+            alertFram.style.top = "40%";
+            alertFram.style.zIndex = "10001";
+            strHtml = " <span style=\"font-family: 微软雅黑;display:inline-block;background:#333;color:#fff;padding:0 20px;line-height:36px;border-radius:6px; \">" + txt + "</span>";
+            alertFram.innerHTML = strHtml;
+            document.body.appendChild(alertFram);
+            setTimeout((function () {
+                alertFram.style.display = "none";
+            }), 2000);
+        };
+
+
     </script>
 </body>
 </html>

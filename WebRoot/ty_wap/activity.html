@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--欢GO  5G爱奇艺活动首页 acitivity.html?fm=26&ticket=$ticket$-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -113,5 +114,117 @@
 
         </div>
     </div>
+
+      <script src="js/jquery.js"></script>
+      <script src="js/swiper.min.js"></script>
+      <script src="js/common.js"></script>
+      <script src="js/util.js"></script>
+
+      <script>
+          $(function() {
+              eCacheUtil.storage.cache(CacheKey.isSelect, false);
+              eCacheUtil.storage.cache(CacheKey.happyGo, true);
+              eCacheUtil.storage.cache('discount_info_infos', '')
+
+
+              //TODO 从欢Go客户端加载当前页面
+              //1. 获得ticket
+              var ticket = GetQueryString('ticket');
+              var fm = GetQueryString('fm');
+              eCacheUtil.storage.cache(CacheKey.source, fm);
+
+              //2. 根据ticket获得手机号码
+              if( fm == '26' ){
+                  eCacheUtil.storage.cache( CacheKey.source, fm );
+                  //从欢Go客户端加载当前页面
+                  if( ticket && ticket != '' ){
+                      getMobileByTicket( ticket );
+                  }
+                  else{
+                      alert( '请先用欢Go账号登录再操作' );
+                  }
+              }
+
+
+              //a.1 根据ticket获得手机号码
+              function getMobileByTicket( ticketCode ){
+                  var param = {
+                      "ticket":ticket,
+                  };
+                  $.post(
+                      getRealPath()+"/recycle/saveHappyMobile.do",
+                      {
+                          params:JSON.stringify(param)
+                      },
+                      function(data){
+                          if ( data.success){
+                              var phoneNum = data.result.mobile ;
+                              eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phoneNum);
+                              eCacheUtil.storage.cache(CacheKey.loginPhone,phoneNum);
+                              isLoginCheck()
+                          }else{
+                              alert(data.resultMessage);
+                          }
+                      });
+                  return ;
+              }
+
+
+              function isLoginCheck() {
+                  var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+                  var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                  if(loginPhone || HappyGoMobile) {
+                      $("#isLogin").html('个人中心')
+                      let str = $(".join-active-btn").attr('href');
+                      if(str.indexOf('phone') < 0) {
+                          /** if(HappyGoMobile) {
+                            str = str + "&phone="+HappyGoMobile
+                            console.log(str)
+                            $(".join-active-btn").attr('href',str)
+                        }else if(loginPhone){
+                            str = str + "&phone="+loginPhone
+                            console.log(str)
+                            $(".join-active-btn").attr('href',str)
+                        }     **/
+                      }
+
+
+                  }else {
+
+                      $("#isLogin").html('立即登录')
+                  }
+                  $("#login").on('click',function () {
+                      if(loginPhone || HappyGoMobile ) {
+                          location.href = 'personalCenter.html'
+                      }else {
+                          $("#popoDialog").removeClass('hide');
+                      }
+
+                  })
+              }
+
+              $.post(
+                  getRealPath()+"/recycle/isLogin.do",
+                  {
+
+                  },
+                  function(data){
+                      if ( data.success){
+                          eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                          isLoginCheck();
+                      }else{
+                          isLoginCheck();
+                      }
+                  });
+
+
+          })
+
+
+      </script>
+      <!--站长统计-->
+      <div style="display: none;">
+          <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+      </div>
 </body>
 </html>
