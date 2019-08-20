@@ -25,7 +25,7 @@
         <div class="content">
             <div class="text">热门回收机型</div>
             <img src="img/main3.png" alt class="img6">
-            <a href="index1.html?fm=26"><img src="img/main4.png" alt class="img7"></a>
+            <a href="index1.html?fm=26&ticket=$ticket$"><img src="img/main4.png" alt class="img7"></a>
             <div class="ruletitle">活动规则：</div>
             <div class="ruletext">
                 <div class="rule">
@@ -125,6 +125,7 @@
               eCacheUtil.storage.cache(CacheKey.isSelect, false);
               eCacheUtil.storage.cache(CacheKey.happyGo, true);
               eCacheUtil.storage.cache('discount_info_infos', '')
+              // 先判断是否存在fm和ticket的缓存
 
 
               //TODO 从欢Go客户端加载当前页面
