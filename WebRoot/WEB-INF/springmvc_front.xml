@@ -147,6 +147,8 @@
 
                 <!--商机记录-->
                 <value>^/NBTelecomSJ/.*</value>
+                <!--爱奇艺卡密-->
+                <value>^/videoCard/.*</value>
             </list>
         </property>
     </bean>
