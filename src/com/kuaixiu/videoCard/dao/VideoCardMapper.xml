@@ -150,7 +150,7 @@
         <if test="validityTime != null and validityTime != ''" >
             and validity_time = #{validityTime}
         </if>
-        <if test="isUse != null and isUse != ''" >
+        <if test="isUse != null" >
             and is_use = #{isUse}
         </if>
         <if test="createTime != null and createTime != ''" >
