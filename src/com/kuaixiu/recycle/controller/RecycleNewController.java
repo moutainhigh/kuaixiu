@@ -698,8 +698,7 @@ public class RecycleNewController extends BaseController {
             recycleOrderService.saveUpdate(order);
             //下单成功发送短信
             SmsSendUtil.submitRecycleOrder(order.getMobile(), source,recycleSystemService);
-            //下单成功，根据回收价格分配对应等级卡密
-            String msg = getVideoCard(order);
+
 
             getResult(result, jsonResult, true, "0", "成功");
             //下单成功后更新下单间隔时间
@@ -720,7 +719,13 @@ public class RecycleNewController extends BaseController {
     @Autowired
     private VideoUserRelService videoUserRelService;
 
-
+    /*
+     * @Author gqa
+     * @Description 下单成功分配卡密，目前不适用
+     * @Date 16:41 2019/8/21
+     * @Param [order]
+     * @return java.lang.String
+     **/
     private String getVideoCard(RecycleOrder order){
         String msg="";
         if(order.getPrice()==null){
