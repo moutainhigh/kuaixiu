@@ -337,7 +337,7 @@
                                 eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
                                 isLoginCheck();
                                 $("#popoDialog").addClass('hide')
-                                alertTip('登录成功')
+                                location.href = 'personalCenter.html'
                             }else {
                                 alertTip(data.resultMessage);
                             }
