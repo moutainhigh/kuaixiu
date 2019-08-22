@@ -212,34 +212,39 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/swiper.min.js"></script>
+    <script src="js/common.js"></script>
     <script src="js/util.js"></script>
     <script>
         $(function(){
             eCacheUtil.storage.cache(CacheKey.isSelect,false);
             eCacheUtil.storage.cache(CacheKey.happyGo,true);
+            eCacheUtil.storage.cache('discount_info_infos','')
 
-			//TODO 从欢Go客户端加载当前页面
-			//1. 获得ticket
-			var ticket = GetQueryString( 'ticket' ) ;
-			var fm = GetQueryString( 'fm' ) ;
-			//2. 根据ticket获得手机号码
-			//a 记录抽奖号码
-			if( fm == '10' ){
-				eCacheUtil.storage.cache( CacheKey.source, fm );
-				
-				//从欢Go客户端加载当前页面
-				if( ticket && ticket != '' ){
-					getMobileByTicket( ticket );
-				}
-				else{
-					alert( '请先用欢Go账号登录再操作' );
-				}	
-			}
-			else{
-				//良品价检测
-				eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
-			}
-			
+
+            //TODO 从欢Go客户端加载当前页面
+            //1. 获得ticket
+            var ticket = GetQueryString( 'ticket' ) ;
+            var fm = GetQueryString( 'fm' ) ;
+            //2. 根据ticket获得手机号码
+            //a 记录抽奖号码
+            if( fm == '10' ){
+                eCacheUtil.storage.cache( CacheKey.source, fm );
+                //从欢Go客户端加载当前页面
+                if( ticket && ticket != '' ){
+                    getMobileByTicket( ticket );
+                }
+                else{
+                    alert( '请先用欢Go账号登录再操作' );
+                }
+            }
+            else{
+                //良品价检测
+                eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
+
+                isLoginCheck();
+
+            }
+
             var mySwiper = new Swiper('.swiper-container',{
                 wrapperClass : 'banner',
                 slideClass : 'slide-item',
@@ -263,8 +268,26 @@
                 location.href = 'product.html?bid='+$(this).attr('data-bid');
             });
 
+            //banner图片的单击事件
+            $('#banner-image').click( function(){
+                //TODO
+                location.href = 'manisPoster.html';
+            });
 
+            //流程图的单击事件
+            $('#recycle-btn').click( function(){
+                //TODO
+                location.href = 'process.html';
+            });
 
+            // 点击取消按钮隐藏活动
+            $('.js-close-active').on('click',function(){
+                $('.dialog-active').hide()
+            })
+            //关闭弹窗
+            $("#closePopoDialogBtn").on('click',function () {
+                $("#popoDialog").addClass('hide');
+            })
 
             // 获取验证码
             $("#getCodeBtn").on('click',function () {
@@ -287,7 +310,6 @@
                             }else {
                                 alertTip(data.resultMessage);
                             }
-                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
                         })//
                 }
             })
@@ -312,41 +334,40 @@
                         function(data){
                             if(data.success) {
                                 eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
-                                isLoginCheck();
-                                $("#popoDialog").addClass('hide')
-                                alertTip('登录成功')
+                                location.href = 'personalCenter.html'
                             }else {
                                 alertTip(data.resultMessage);
                             }
-                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
                         })//
                 }
             })
 
 
+            //a.1 根据ticket获得手机号码
+            function getMobileByTicket( ticketCode ){
+                var param = {
+                    "ticket":ticket,
+                };
+                $.post(
+                    getRealPath()+"/recycle/saveHappyMobile.do",
+                    {
+                        params:JSON.stringify(param)
+                    },
+                    function(data){
+                        if ( data.success){
+                            var phoneNum = data.result.mobile ;
+                            eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phoneNum);
+                            eCacheUtil.storage.cache(CacheKey.loginPhone,phoneNum);
+                            isLoginCheck()
+                        }else{
+                            alert(data.resultMessage);
+                        }
+                    });
+                return ;
+            }
             function isLoginCheck() {
                 var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
                 var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
-                if(loginPhone || HappyGoMobile) {
-                    $("#isLogin").html('个人中心')
-                    let str = $(".join-active-btn").attr('href');
-                    if(str.indexOf('phone') < 0) {
-                        /** if(HappyGoMobile) {
-                            str = str + "&phone="+HappyGoMobile
-                            console.log(str)
-                            $(".join-active-btn").attr('href',str)
-                        }else if(loginPhone){
-                            str = str + "&phone="+loginPhone
-                            console.log(str)
-                            $(".join-active-btn").attr('href',str)
-                        }     **/
-                    }
-
-
-                }else {
-
-                    $("#isLogin").html('立即登录')
-                }
                 $("#login").on('click',function () {
                     if(loginPhone || HappyGoMobile ) {
                         location.href = 'personalCenter.html'
@@ -357,40 +378,23 @@
                 })
             }
 
+            $.post(
+                getRealPath()+"/recycle/isLogin.do",
+                {
 
-            var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
-            var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
-            $("#login").on('click',function () {
-                if(loginPhone || HappyGoMobile ) {
-                    location.href = 'personalCenter.html'
-                }else {
-                    $("#popoDialog").removeClass('hide');
-                }
+                },
+                function(data){
+                    if ( data.success){
+                        eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                        location.href = 'personalCenter.html'
+                    }else{
+                        isLoginCheck();
+                    }
+                });
 
-            })
-
-
-			//a.1 根据ticket获得手机号码
-			function getMobileByTicket( ticketCode ){
-				var param = {
-					"ticket":ticket,
-				};
-				$.post(
-					getRealPath()+"/recycle/saveHappyMobile.do",
-					{
-						params:JSON.stringify(param)
-					},
-					function(data){
-						if ( data.success){
-							 var phoneNum = data.result.mobile ;
-							  eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phoneNum);
-						}else{
-							alert(data.resultMessage);
-						}
-				});
-				return ;
-			}
         })
+
+
     </script>
 <!--站长统计-->
 <div style="display: none;">
