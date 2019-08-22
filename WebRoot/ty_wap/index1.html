@@ -15,7 +15,7 @@
             <div class="header index1">
                 <a href="javascript:;"><img src="img/logo-go.png" alt=""><span>天翼回收</span></a>
                 <!--<a href="login.html"><img src="img/icon_order.png" alt="">个人中心</a>-->
-                <a href="javascript:;" id="login"><span id="isLogin">个人中心</span></a>
+                <a href="javascript:;" id="login"><img src="img/icon_order.png" alt=""><span id="isLogin">个人中心</span></a>
             </div>
             <div class="swiper-container">
                 <div class="banner">
@@ -227,8 +227,9 @@
             var fm = GetQueryString( 'fm' ) ;
             //2. 根据ticket获得手机号码
             //a 记录抽奖号码
-            if( fm == '10' ){
+            if( fm == '10' || fm == '26' ){
                 eCacheUtil.storage.cache( CacheKey.source, fm );
+
                 //从欢Go客户端加载当前页面
                 if( ticket && ticket != '' ){
                     getMobileByTicket( ticket );
@@ -334,10 +335,13 @@
                         function(data){
                             if(data.success) {
                                 eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
-                                location.href = 'personalCenter.html'
+                                isLoginCheck();
+                                $("#popoDialog").addClass('hide')
+                                alertTip('登录成功')
                             }else {
                                 alertTip(data.resultMessage);
                             }
+                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
                         })//
                 }
             })
@@ -368,6 +372,12 @@
             function isLoginCheck() {
                 var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
                 var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                if(loginPhone || HappyGoMobile) {
+                    $("#isLogin").html('个人中心')
+                    let str = $(".join-active-btn").attr('href');
+                }else {
+                    $("#isLogin").html('个人中心')
+                }
                 $("#login").on('click',function () {
                     if(loginPhone || HappyGoMobile ) {
                         location.href = 'personalCenter.html'
@@ -386,7 +396,7 @@
                 function(data){
                     if ( data.success){
                         eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
-                        location.href = 'personalCenter.html'
+                        isLoginCheck();
                     }else{
                         isLoginCheck();
                     }
