@@ -8,7 +8,7 @@
     <title>天翼回收</title>
 </head>
 <body>
-    <div class="card" id="card">
+    <div class="card" id="card" style="display:none;">
         <div class="message">
             <p>爱奇艺会员卡<span id="cardType"></span></p>
             <p>兑换码：  <span id="cardId"></span></p>
@@ -19,9 +19,9 @@
         </div>
 
     </div>
-    <div class="text">
-        您当前没有优惠券哦！
-    </div>
+    <!--<div class="text">-->
+        <!--您当前没有优惠券哦！-->
+    <!--</div>-->
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
     <script type="text/javascript">
@@ -29,6 +29,7 @@
         $.post(url+'/videoCard/personList.do',
             function(data){
                 if(data.success) {
+                    $("#card").show();
                     if (data.data.length) {
                         var list = data.data;
                         var cardStr = ""
@@ -83,8 +84,11 @@
                     }
 
                 }else{
+                    var cardString = '       <div class="text">\n' +
+                        '            卡包中不存在优惠券哦！\n' +
+                        '        </div>'
+                    document.body.innerHTML = cardString;
                     console.log('数据连接失败')
-                    $("#card").hide();
                 }
             }
         )
