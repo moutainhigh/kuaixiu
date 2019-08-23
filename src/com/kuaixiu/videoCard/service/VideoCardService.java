@@ -219,11 +219,19 @@ public class VideoCardService extends BaseService<VideoCard> {
                 report.getErrorList().add(error);
                 report.setPass(false);
             }
+            RecycleOrder order=orderService.getDao().queryByOrderNo(value);
+            if (order == null) {
+                ImportError error = new ImportError();
+                error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
+                error.setMessage("订单号不存在！");
+                report.getErrorList().add(error);
+                report.setPass(false);
+            }
             VideoUserRel userRel = videoUserRelService.getDao().queryByOrderNo(value);
             if (userRel != null) {
                 ImportError error = new ImportError();
                 error.setPosition("第" + (row.getRowNum() + 1) + "行," + (col + 1) + "列");
-                error.setMessage("订单号已存在！");
+                error.setMessage("该订单号已存在卡密！");
                 report.getErrorList().add(error);
                 report.setPass(false);
             } else {
