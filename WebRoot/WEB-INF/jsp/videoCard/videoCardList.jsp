@@ -59,8 +59,9 @@
             <thead>
             <tr>
                 <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)" type="checkbox" />序号</th>
-                <th class="fontWeight_normal table-title center">id</th>
+                <th class="fontWeight_normal table-title center">订单号</th>
                 <th class="fontWeight_normal table-title center">卡密</th>
+                <th class="fontWeight_normal table-title center">卡名称</th>
                 <th class="fontWeight_normal table-title center">类型</th>
                 <th class="fontWeight_normal table-title center">价格</th>
                 <th class="fontWeight_normal table-title center">有效期</th>
@@ -93,8 +94,9 @@
     //设置数据列
     dto.setColumns([
         {"data": "id","class":"tdwidth50 center"},
-        {"data": "id","class":""},
+        {"data": "orderNo","class":""},
         {"data": "cardId","class":""},
+        {"data": "cardName","class":""},
         {"data": "type","class":""},
         {"data": "price","class":""},
         {"data": "validityTime","class":""},
@@ -115,7 +117,7 @@
             }
         },
         {//号卡类型
-            targets: 3,
+            targets: 4,
             render: function (data, type, row, meta) {
                 if(row.type==1){
                     return '周卡';
@@ -133,7 +135,7 @@
             }
         },
         {//号卡类型
-            targets: 6,
+            targets: 7,
             render: function (data, type, row, meta) {
                 if(row.isUse==0){
                     return '未领取';

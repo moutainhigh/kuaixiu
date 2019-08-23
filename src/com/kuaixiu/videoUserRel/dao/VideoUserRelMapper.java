@@ -11,6 +11,9 @@ import com.common.base.dao.BaseDao;
  */
 public interface VideoUserRelMapper<T> extends BaseDao<T> {
 
+    T queryByCardId(String cardId);
+
+    T queryByOrderNo(String orderNo);
 }
 
 
