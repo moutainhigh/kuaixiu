@@ -7,8 +7,6 @@ import com.common.paginate.Page;
 import com.google.common.collect.Maps;
 import com.kuaixiu.videoCard.entity.VideoCard;
 import com.kuaixiu.videoCard.service.VideoCardService;
-import com.kuaixiu.videoUserRel.entity.VideoUserRel;
-import com.system.basic.user.entity.SessionUser;
 import com.system.util.ExcelUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -132,7 +130,6 @@ public class VideoCardController extends BaseController {
         renderJson(response, resultMap);
     }
 
-    private static int count=1;
 
     @RequestMapping("/videoCard/personList")
     @ResponseBody
@@ -146,17 +143,10 @@ public class VideoCardController extends BaseController {
 //            rel.setMobile(loginId);
 //            list=videoCardService.getVideoUser(rel);
 //        }
-        Map<String, Object> resultMap = Maps.newHashMap();
         System.out.println("videoCard/personList 请求");
-        count++;
-        System.out.println("当前count:"+count);
-        if(count%2==0){
-            resultMap.put("data", getData());
-        }else{
-            resultMap.put("data", new ArrayList<>());
-        }
+        Map<String, Object> resultMap = Maps.newHashMap();
         resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
-        System.out.println("返回："+resultMap);
+        resultMap.put("data", getData());
         renderJson(response, resultMap);
     }
 
