@@ -25,8 +25,8 @@
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
     <script type="text/javascript">
-        $.post(
-            linkUrl+'/videoCard/personList.do',
+        var url=getUrl();
+        $.post(url+'/videoCard/personList.do',
             function(data){
                 if(data.success) {
                     if (data.data.length) {
@@ -84,6 +84,7 @@
 
                 }else{
                     console.log('数据连接失败')
+                    $("#card").hide();
                 }
             }
         )
@@ -118,6 +119,20 @@
                 alertFram.style.display = "none";
             }), 2000);
         };
+
+
+
+        function getUrl(){
+            var pathName=location.pathname;
+            var allPath=location.href;
+            var pos=allPath.indexOf(pathName);
+            var linkUrl=allPath.substring(0,pos);
+            var u='zj.189.cn'; //欢GO
+            if(linkUrl.indexOf(u)>0){
+                linkUrl='http://m-super.com';
+            }
+            return linkUrl
+        }
 
 
     </script>
