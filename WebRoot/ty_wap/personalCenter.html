@@ -136,11 +136,10 @@
             $.post(linkUrl+'/recycle/loginOut.do',{params:JSON.stringify(params)},
                 function(data){
                     if(data.success) {
-                        alertTip('退出成功');
-                        location.href='indexHappy.html'
+                        // alertTip('退出成功');
                         eCacheUtil.storage.cache(CacheKey.loginPhone,'undefined')
-                        eCacheUtil.storage.getCache(CacheKey.HappyGoMobile,'undefined');
-
+                        eCacheUtil.storage.cache(CacheKey.HappyGoMobile,'undefined');
+                        location.href='index1.html'
                     }else {
                         alertTip(data.resultMessage);
                     }
