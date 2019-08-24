@@ -86,7 +86,9 @@ public class VideoCardController extends BaseController {
         List<VideoCard> list = videoCardService.queryListForPage(s);
         for(VideoCard videoCard:list){
             VideoUserRel userRel=videoUserRelService.getDao().queryByCardId(videoCard.getCardId());
-            videoCard.setOrderNo(userRel.getOrderNo());
+            if(userRel!=null){
+                videoCard.setOrderNo(userRel.getOrderNo());
+            }
         }
         page.setData(list);
         this.renderJson(response, page);
