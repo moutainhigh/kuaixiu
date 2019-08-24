@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.kuaixiu.videoCard.entity.VideoCard" >
         <result column="id" property="id"/>
         <result column="card_id" property="cardId"/>
+        <result column="card_name" property="cardName"/>
         <result column="type" property="type"/>
         <result column="price" property="price"/>
         <result column="validity_time" property="validityTime"/>
@@ -18,16 +19,16 @@
 
     <!-- video_card table all fields -->
     <sql id="Base_Column_List" >
-        id,card_id,type,price,validity_time,is_use,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        id,card_id,card_name,type,price,validity_time,is_use,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" useGeneratedKeys="true"
             keyProperty="id">
         insert into video_card
-        (card_id,type,price,validity_time,is_use,create_time,create_userid,update_time)
+        (card_id,card_name,type,price,validity_time,is_use,create_time,create_userid,update_time)
         values
-        (#{cardId},#{type},#{price},#{validityTime},#{isUse},#{createTime},#{createUserid},#{updateTime})
+        (#{cardId},#{cardName},#{type},#{price},#{validityTime},#{isUse},#{createTime},#{createUserid},#{updateTime})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -36,6 +37,7 @@
         set 
             id=#{id},
             card_id=#{cardId},
+            card_name=#{cardName},
             type=#{type},
             price=#{price},
             validity_time=#{validityTime},
@@ -57,6 +59,10 @@
         from video_card where id = #{id}
     </select>
 
+    <select id="queryByCardId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from video_card where card_id = #{cardId}
+    </select>
 
     <!-- 根据id查询  -->
     <select id="queryOne"  resultMap="BaseResultMap" parameterType="Object">

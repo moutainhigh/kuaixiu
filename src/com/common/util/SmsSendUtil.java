@@ -679,6 +679,18 @@ public class SmsSendUtil {
         return sendSmsThread(mobile, content.toString(),"2",recycleSystemService);
     }
 
+    /**
+     * 赠送爱奇艺短信
+     * @param mobile
+     * @param recycleSystemService
+     * @return
+     */
+    public static boolean VideoCardExecutorSendMobile(String mobile,RecycleSystemService recycleSystemService) {
+        StringBuffer content = new StringBuffer();
+        content.append("感谢您参与手机回收活动，赠送的爱奇艺兑换码已发至您的天翼回收-个人中心-我的其他券中，");
+        content.append("请戳http://m-super.com/ty_wap/index1.html前往查看");
+        return sendSmsThread(mobile, content.toString(),"1",recycleSystemService);
+    }
 
     private static DateFormat formater = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
@@ -755,7 +767,7 @@ public class SmsSendUtil {
     }
 
     /**
-     * 发送短信
+     * 发送短信  天翼回收
      *
      * @param mobile  手机号码
      * @param content 短信内容

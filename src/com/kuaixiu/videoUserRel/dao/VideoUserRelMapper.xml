@@ -49,6 +49,16 @@
         from video_user_rel where id = #{id}
     </select>
 
+    <select id="queryByCardId"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from video_user_rel where card_id = #{cardId}
+    </select>
+
+    <select id="queryByOrderNo"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from video_user_rel where order_no = #{orderNo}
+    </select>
+
     <!-- 查询列表无分页 -->
     <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
         select
