@@ -8,191 +8,30 @@
 	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
     <link rel="stylesheet" href="css/main.css?version=1.6">
     <title></title>
-    <style>
-        #wrap.resultWrap .main .mixinsBox {
-            height: auto;
-            width: 100%;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            margin-bottom: 5px;
-        }
-
-        .btn-disabled {
-            background-color: #969696;
-        }
-
-        .sale {
-            font-style: normal;
-        }
-
-        .price-tip i {
-            font-style: normal;
-        }
-		
-		#wrap>#main-box {
-          overflow: auto;
-        }
-    </style>
 </head>
 <body>
-    <div id='map-container'></div>
-
-    <div id="wrap" class="resultWrap orderWrap">
+    <div id="wrap" class="resultWrap">
         <div class="main">
             <div class="estimatePrice">
                 <p>您的宝贝预估可卖</p>
                 <p class="price"><img src="img/loadings.gif" alt=""></p>
-                <p class="price-tip">
-                    <i class="price-txt">含限时 <span></span>+10%<i class="icon"></i></i>
-                </p>
-              <!--  <p class="ping1"><a href="javascript:;" onclick="Reassess();">重新评估</a></p>   -->
-                <p class="ping2">
-                    <span>下周约降<i class="sale"></i>元</span>
-                </p>
+                <p class="ping1"><a href="javascript:;" onclick="Reassess();">重新评估</a></p>
+               <!-- <p class="ping2">
+                    <a href="javascript:;" id="submit"><img src="img/icon_qian.png" /><span>参加手机回收免费送“新年特惠碎屏保”</span></a>
+                </p> -->
             </div>
             <div class="mixinsBox">
+                <div class="iconBox">
+                    <p>- 优质服务，值得信赖 -</p>
+                    <div><p>上门取件</p></div>
+                    <div><p>顺丰包邮</p></div>
+                    <div><p>安全便捷</p></div>
+                </div>
                 <div class="exchangeBox">
-                    <a href="javascript:;" id="nowChange" class="btn-large">立即去换钱(+10%)</a>
-                </div>
-            </div>
-
-            <!-- ********** -->
-            <div class="baseInfo">
-                <div class="inputRow">
-                    <p>联系人</p>
-                    <input type="text" name="" id="connect" maxlength="12" placeholder="请输入联系人">
-                </div>
-                <div class="inputRow">
-                    <p>手机号</p>
-                    <input class="text" id="inputtel" type="tel" value="" maxlength="11" placeholder="请输入手机号" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
-                </div>
-            </div>
-            <div class="addressInfo">
-                <p class="moduleTitle">所在地址填写</p>
-                <div id="selectAddress" class="eachRow">
-                    <p class="default-addr">所在地区</p>
-                    <p><img src="img/icon_arrow.png" alt=""></p>
-                </div>
-                <div class="inputRow">
-                    <input class="text mustText" id="address" maxlength="64" type="text" value="" placeholder="街道、小区门牌等详细地址">
-                </div>
-            </div>
-            <div class="postInfo">
-                <p class="moduleTitle">快递方式</p>
-                <div class="postway">
-                    <label class="label" data-way="postText">
-                        <span class="genre">顺丰上门回收</span>
-                        <img src="img/free.png" alt="">
-                    </label>
-                    <div id="pickTime">
-                        <p>选择上门取件时间</p>
-                        <p>一小时以内<img src="img/icon_arrow.png" alt=""></p>
-                    </div>
-                </div>
-            </div>
-            <div class="recycleWay">
-                <p class="moduleTitle">收款方式</p>
-                <div class="eachRow">
-                    <label class="label" data-way="phoneText">
-                        <input checked="checked" name="way" type="radio" value="2" />
-                        <i class="radio_icon"></i>
-                        <span class="genre">话费充值</span>
-                        <img src="img/icon_hot.png" alt="">
-                    </label>
-                    <label class="label" data-way="alipayText">
-                        <input name="way" type="radio" value="1" />
-                        <i class="radio_icon"></i>
-                        <span class="genre">支付宝付款</span>
-                    </label>
-                </div>
-                <div class="inputRow" id="alipayBox">
-                    <input id="alipay2" class="text mustText phoneText" data-way="call" maxlength="11"  type="text" value="" placeholder="请输入手机充值号码" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
-
-                    <input id="alipay1" class="text mustText alipayText" data-way="alipay" style="display:none;" type="text" value="" placeholder="请输入支付宝账号">
-
-                </div>
-            </div>
-            <div class="ticket">
-                 <p class="moduleTitle">加价券</p>
-                 <div class="ticket-box">
-                    <input id="ticket-text" type="text" value="" placeholder="请输入加价券码">
-                 </div>
-            </div>
-            <div class="mailing_addr">
-                <label>
-                    <input name="agreement" class="agreement" type="checkbox" value="true" checked />
-                    我已阅读并同意<a href="./agreement.html">《电信M超人回收协议》</a>
-                </label> 
-            </div>
-        </div>
-
-        <!-- 取件时间layer -->
-        <div id="layer">
-            <div class="layerCont">
-                <div class="layerTitle">
-                    <p>选择上门取件时间</p>
-                    <a href="javascript:;" class="cancel" onclick="fn_close('layer')">×</a>
-                </div>
-                <div class="selTime clearfix">
-                    <div class="timeLeft fl">
-                        <ul>
-                        </ul>
-                    </div>
-                    <div class="timeRight fl">
-                    </div>
-                </div>
-            </div>
-            <div id="template" style="display: none;">
-                <ul>
-                    <li>9:00-10:00</li>
-                    <li>10:00-11:00</li>
-                    <li>11:00-12:00</li>
-                    <li>12:00-13:00</li>
-                    <li>13:00-14:00</li>
-                    <li>14:00-15:00</li>
-                    <li>15:00-16:00</li>
-                    <li>16:00-17:00</li>
-                </ul>
-            </div>
-        </div>
-        <!-- 选择地区layer -->
-        <div id="addrLayer">
-            <div class="layerCont">
-                <div class="layerTitle">
-                    <p>所选地区</p>
-                    <a href="javascript:;" class="cancel" onclick="fn_close('addrLayer')">×</a>
-                </div>
-                <div class="selectAddr">
-                    <div id="selected">
-                        <span id="s_Province"></span>
-                        <span id="s_City"></span>
-                        <span id="s_County"></span>
-                        <span class="show active">请选择</span>
-                    </div>
+                    <a href="javascript:;" id="nowChange" class="btn-large">马上换钱</a>
                 </div>
             </div>
         </div>
-
-        <!--错误提示-->
-        <div class="remind_delivery_bg">
-            <div class="remind_delivery_cont">
-                <p></p>
-            </div>
-        </div>
-        <!--错误提示end-->
-        <!--确认提示-->
-        <div class="popup_bg">
-            <div class="popup_content">
-                <div class="popup_title"></div>
-                <div class="popup_font"></div>
-                <div class="popup_but">
-                    <a class="btn-normal cancel" href="javascript:void(0);">取 消</a>
-                    <a class="btn-normal btn-normal-confirm confirm" href="javascript:void(0);">确 认</a>
-                </div>
-            </div>
-        </div>
-        <!--确认提示end-->
     </div>
 
     <!--
@@ -203,12 +42,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/jbase64.js"></script>
     <script src="js/common.js"></script>
-	<script src="js/util.js"></script>
-    <script src="js/address.js"></script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=0db9bfb678ada40b29eb757e132f63f1"></script>
-    <script src="js/location.js"></script>
-
-	<script>
+	<script>  
 		function getUrlParam(key){
 			var url = window.location.search;
 			var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
@@ -216,41 +50,26 @@
 			return result ? decodeURIComponent(result[2]) : null;
 		}
 		
-		function setCacheData(key,keyName){
-			if(getUrlParam(keyName)!==null &&  getUrlParam(keyName) !== undefined && getUrlParam(keyName)!==''){
-			  eCacheUtil.storage.cache(key,getUrlParam(keyName));
-			}
+
+		if (getUrlParam("SelectItems") && getUrlParam("productid")){
+	     	alert('空');
+			eCacheUtil.storage.cache(CacheKey.SelectItems,getUrlParam("SelectItems"));
+			eCacheUtil.storage.cache(CacheKey.ProjectId,getUrlParam("productid"));
+			eCacheUtil.storage.cache(CacheKey.isSelect,true);
 		}
-		
-		if (getUrlParam("productid")){
-		    setCacheData(CacheKey.SelectItems,"SelectItems");
-			setCacheData(CacheKey.ProjectId,"productid");
-			setCacheData(CacheKey.OpenId,"openId");
-			setCacheData(CacheKey.ModelName,"modelName");
-			setCacheData(CacheKey.ModelCode,"modelCode");
-			setCacheData(CacheKey.imgHref,"modelImageUrl");
-			setCacheData(CacheKey.LastPrice,"lastPrice");
-			setCacheData(CacheKey.source,"fm");
-			eCacheUtil.storage.cache(CacheKey.isSelect,false);
-		}
+	
+
     </script>
+	
 	
     <script>
         $(function(){
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-            var tip = GetQueryString('tip');
-            var fm = eCacheUtil.storage.getCache(CacheKey.source);
-
-            if(isEmpty(fm)){
-                eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+            if(isGo == 'true'){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
             }
-            if(fm == 2 || fm == 9 || fm == 10){
-				document.title = '天翼回收';
-			}else{
-				document.title = '翼回收';
-			}
-			
-			var HappyGoMobile=eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
 
             //判断是否为小程序来源
             var openId=eCacheUtil.storage.getCache(CacheKey.OpenId);
@@ -268,33 +87,14 @@
                 var param = {
                     "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
                     "items":itemsId,
-                    "openId":openId,
-					"loginMobile":HappyGoMobile
+                    "openId":openId
                 },base = new Base64();
                 $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){
                         var dataInfo = data.result.datainfo;
                         prePrice = dataInfo.price;
-						
-						if( prePrice * 0.05 >= 200){
-						   // $('.price-tip span').text(200);
-                            $('.price').html(prePrice + 200);
-						}else{
-						    //$('.price-tip span').text(prePrice*0.1);
-                            $('.price').html(prePrice +  Math.round(prePrice*0.05));
-						}
-
-                      /*  if(  prePrice * 0.1 >= 200 ){
-                            $('.price-tip span').text(200);
-                            $('.price').html(prePrice + 200);
-                        }else{
-                            $('.price-tip span').text(prePrice*0.1);
-                             $('.price').html(prePrice + prePrice*0.1);
-                        }  */
-                        $('.ping2 .sale').text( Math.round(prePrice*0.055) );
-                        eCacheUtil.storage.cache(CacheKey.PrePrice, prePrice);
+                        $('.price').html(prePrice);
                         quote = base.encode(dataInfo.quoteid);
-                        eCacheUtil.storage.cache(CacheKey.quoteId,quote);
                         loading_hide();
                     }else {
                         loading_hide();
@@ -303,88 +103,10 @@
                 });
             }
             
-            var checkSubmitFlg = false;
             $('#nowChange').click(function(){
-                if( $(this).hasClass('btn-disabled') ){
-                    return;
-                }
-                if (isEmpty($('#connect').val())){
-                    alertTip('请输入联系人');
-                    return false;
-                }else if (isEmpty($('#inputtel').val())){
-                    alertTip('请输入手机号');
-                    return false;
-                }else if (!$('#selectAddress').hasClass('active')){
-                    alertTip('请选择所在地区');
-                    return false;
-                }else if (isEmpty($('#address').val())){
-                    alertTip('请输入详细地址');
-                    return false;
-                }else if (isEmpty($('#alipay'+$('input:radio[name="way"]:checked').val()).val())){
-                    if ($('input:radio[name="way"]:checked').val() == 1){
-                        alertTip('请输入支付宝账号');
-                        return false;
-                    }else{
-                        alertTip('请输入手机充值号码');
-                        return false;
-                    }
-                }else if (checkSubmitFlg == true){
-                    return false;
-                }
-                
-                checkSubmitFlg = true;
-                var base = new Base64(),
-                    take_time = '';
-                    mailType = $('input:radio[name="post"]:checked').val();
-                    if (mailType == 2){
-                        take_time = '';
-                    }else{
-                        var str = $('#pickTime.active p').eq(1).html(),
-                            reg = /\(([^()]+)\)/g,
-                            res = str.match(reg);
-                        take_time = str.replace(res," ");
-                    }
-                var params = {
-                    quoteId:base.decode(eCacheUtil.storage.getCache(CacheKey.quoteId)),
-                    customerName:$('#connect').val(),
-                    mobile:$('#inputtel').val(),
-                    province:$('#s_Province').attr('data-id'),
-                    city:$('#s_City').attr('data-id'),
-                    area:$('#s_County').attr('data-id'),
-                    address:$('#address').val(),
-                    recycleType:$('input:radio[name="way"]:checked').val(),
-                    payMobile:$('#alipay'+$('input:radio[name="way"]:checked').val()).val(),
-                    imagePath:eCacheUtil.storage.getCache(CacheKey.imgHref),
-                    detail:eCacheUtil.storage.getCache(CacheKey.itemsName),
-                    mailType:1,
-                    takeTime:take_time,
-                    fm:eCacheUtil.storage.getCache(CacheKey.source),
-                    note:$('#note').val(),
-                    couponCode:$('#ticket-text').val(),
-                    
-                }
-                $.post(linkUrl+'/recycleNew/wechatCreateOrder.do',{params:JSON.stringify(params)},
-                      function(data){
-                        if (data.success){
-                            eCacheUtil.storage.cache(CacheKey.orderId,data.result.datainfo.orderid);
-                            if(mailType == 2){
-                                eCacheUtil.storage.cache(CacheKey.mailType,mailType);
-                            }else{
-                                eCacheUtil.storage.cache(CacheKey.pickTime,$('#pickTime.active p').eq(1).html());
-                            }
-                            var fm =eCacheUtil.storage.getCache(CacheKey.source);
-                            //if(fm == '7'){
-                             //  createIncreaseOrder(data.result.datainfo.orderid);
-                            //}else{
-                            //   location.href = 'success.html';
-                            //}
-                            
-                             location.href = 'success.html';
-                        }else{
-                            checkSubmitFlg = false;
-                            alertTip(data.resultMessage);
-                        }
-                    })//
+                eCacheUtil.storage.cache(CacheKey.quoteId,quote);
+                eCacheUtil.storage.cache(CacheKey.prePrice,prePrice);
+                location.href = 'order.html';
             })
         })
         function Reassess() {
@@ -392,6 +114,9 @@
             eCacheUtil.storage.removeCache(CacheKey.prePrice);
             location.href = 'test.html';
         }
+        $('.ping2').click(function(){
+        	location.href = 'https://m-super.com/screen/list.html?r=RJ1WZFV5HB5XEWAA3P57';
+        });
 		
 
 		function go_view(){
@@ -409,189 +134,7 @@
 		}
     </script>
 	
-    <script>
-        $(function(){
 
-            getAddr();
-
-            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-            var tip = GetQueryString('tip');
-            var fm = eCacheUtil.storage.getCache(CacheKey.source);
-
-            var mobileNum = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile );
-            $('#inputtel').val( mobileNum );
-
-            if(isEmpty(fm)){
-                eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
-            }
-            if(fm == 2 || fm == 9 || fm == 10){
-                document.title = '天翼回收';
-            }else{
-                document.title = '翼回收';
-            }
-            init();
-            var num = 0;
-            $('#pickTime').click(function () {
-                if (num == 0){
-                    num = 1;
-                    date();
-                    $('.timeLeft ul li,.timeRight ul li').eq(0).addClass('active');
-                }
-                $('#layer').show();
-                $('#layer .layerCont').animate({
-                    top:"50%"
-                },300);
-            });
-            $('.timeLeft').on('click','li',function () {
-                $(this).addClass('active').siblings().removeClass('active');
-                var html = $(this).html();
-                tabTime(html.substring(html.indexOf('月')+1,html.indexOf('日')));
-            });
-            $('.timeRight').on('click','li',function () {
-                var obj = $('.timeLeft li.active').html();
-                $(this).addClass('active').siblings().removeClass('active');
-                $('#pickTime p').eq(1).html(obj+' '+$(this).html());
-                $('#pickTime').addClass('active');
-                $('#layer').hide();
-                $('#layer .layerCont').animate({
-                    top:"100%"
-                });
-            });
-
-            $('.recycleWay .label').click(function(){
-                if ($(this).find('input').is(':checked')){
-                    $('.notice div').removeClass('active');
-                    var className = $(this).attr('data-way');
-                    $('.'+className).show().siblings().hide();
-                    $('.'+className+'1').addClass('active');
-                }
-            });
-            $('label[data-way="postText"]').click(function(){
-                if ($('input[name="post"]:checked').val() == 1){
-                    init();
-                }else{
-                    $('#pickTime p').eq(1).html('一小时以内<img src="img/icon_arrow.png" alt="">');
-                    $('#pickTime').removeClass('active');
-                }
-            });
-
-        })
-        
-        //创建抬价订单
-        function createIncreaseOrder(orderNo){
-          var params = {
-                orderNo:orderNo
-            }
-            $.post(linkUrl+'/recycleNew/createIncreaseOrder.do',{params:JSON.stringify(params)},function (data) {
-                if ( data.success){
-                    eCacheUtil.storage.cache(CacheKey.raiseOrderNo,data.result.increaseOrderNo);
-                    location.href = 'success.html';
-                }else{
-                    alert(data.resultMessage);
-                }
-            });
-        }
-        
-        function fn_close(ele){
-            $('#'+ele).hide().find('.layerCont').css({top:'100%'});
-        }
-
-        function init(){
-            date();
-            $('#pickTime p').eq(1).html($('.timeLeft li.active').html()+' '+$('.timeRight li.active').html());
-            $('#pickTime').addClass('active');
-        }
-
-        function date() {
-            var myDate = new Date(),
-                year = myDate.getFullYear(),//年
-                month = myDate.getMonth() + 1,//月
-                day = myDate.getDate(),//日
-                week = myDate.getDay(),//星期几
-                hour = myDate.getHours();//时
-
-            var s = '',
-                weekArr = ['今天','明天',weekText(week+2),weekText(week+3),weekText(week+4),weekText(week+5),weekText(week+6),weekText(week+7)],
-                index = 0;
-            if ((hour+1) >= 17){
-                day += 1;
-                index = 1;
-            }
-            tabTime(day);
-            for (var i = 0;i < 7;i++){
-                if (day > getlastday(year,month)){
-                    month += 1;
-                    day = 1;
-                }
-                s += '<li>'+month+'月'+day+'日('+weekArr[index]+')</li>';
-                day++;
-                index++;
-            }
-            $('.timeLeft ul').html(s);
-            $('.timeLeft ul').find('li').eq(0).addClass('active');
-        }
-
-        function tabTime(day) {
-            var date = new Date(),
-                hour = date.getHours();
-            if (day == date.getDate()){//从今天
-                var s = '<ul>';
-                for (var i = (hour+1);i < 17;i++){
-                    s += '<li>'+i+':00-'+(i+1)+':00</li>';
-                }
-                $(".timeRight").html(s+'</ul>');
-            }else {//非今天
-                var tmp = $("#template").clone();
-                tmp.removeAttr("id");
-                //追加到对应区块
-                $(".timeRight").html(tmp.html());
-            }
-            $(".timeRight").find('li').eq(0).addClass('active');
-        }
-
-        function weekText(week) {
-            if (week > 7){
-                week -= 7;
-            }
-            switch (week){
-                case 1:
-                    return '星期一';
-                break;
-                case 2:
-                    return "星期二";
-                    break;
-                case 3:
-                    return "星期三";
-                    break;
-                case 4:
-                    return "星期四";
-                    break;
-                case 5:
-                    return "星期五";
-                    break;
-                case 6:
-                    return "星期六";
-                    break;
-                case 7:
-                    return "星期日";
-                    break;
-            }
-        }
-    </script>
-
-    <script>
-        $(function(){
-            // 是否同意协议
-            $('.agreement').on('click',function(){
-                var val = $('input:checkbox[name="agreement"]:checked').val();
-                if( val ){
-                    $('#nowChange').removeClass('btn-disabled');
-                }else{
-                    $('#nowChange').addClass('btn-disabled');
-                }
-            })
-        })
-    </script>
 	
 <!--站长统计-->
 <div style="display: none;">

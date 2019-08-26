@@ -118,16 +118,7 @@ var CacheKey = {
 	HappyGoMobile:"happygo_mobile",
 	
 	//填写收货地址后跳转的页面
-	ToHappyGoPage:"to_happygo_page",
-	
-	    //可用优惠券
-    CouponsAvailable:"coupons_available",
-    //默认可用优惠券
-    CouponsAvailableDefault:"coupons_available_default",
-    //不可用优惠券
-    CouponNotAvailable:"coupon_not_available",
-	//订单页用户输入信息
-	OrderUserInput: "order_user_input",
+	ToHappyGoPage:"to_happygo_page"
 };
 /**
  * 域名的路径

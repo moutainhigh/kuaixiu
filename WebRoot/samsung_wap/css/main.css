@@ -176,7 +176,7 @@ textarea:-moz-placeholder {
   width: 100%;
   height: .44rem;
   border-radius: .22rem;
-  background-color: #5185ed;
+  background-color: #C5B083;
   text-align: center;
   font-size: .16rem;
   line-height: .44rem;
@@ -192,7 +192,7 @@ textarea:-moz-placeholder {
   width: .98rem;
   height: .32rem;
   border-radius: .15rem;
-  background-color: #5185ed;
+  background-color: #c5b083;
   font-size: .13rem;
   line-height: .32rem;
   text-align: center;
@@ -579,8 +579,8 @@ textarea:-moz-placeholder {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  background: -webkit-gradient(linear, left top, right top, from(#3f99f2), to(#5185ed));
-  background: linear-gradient(to right, #3f99f2, #5185ed);
+  background: -webkit-gradient(linear, left top, right top, from(#c5b083), to(#c5b083));
+  background: linear-gradient(to right, #c5b083, #c5b083);
   height: .94rem;
   padding: 0 0.15rem;
   margin: 10px 0 0;
@@ -588,7 +588,7 @@ textarea:-moz-placeholder {
 #wrap.indexWrap .main .recyclePro .title {
   width: .61rem;
   height: 100%;
-  border-right: 1px solid #6eb1f2;
+  border-right: 1px solid #c5b083;
   background: url('../img/icon_text.png') no-repeat left center;
   background-size: .45rem .48rem;
 }
@@ -1812,7 +1812,19 @@ textarea:-moz-placeholder {
       -ms-flex-direction: column;
           flex-direction: column;
 }
-
+#wrap.resultWrap .main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  overflow-y: visible;
+}
 #wrap.resultWrap .main .estimatePrice {
   -ms-flex-negative: 1;
       flex-shrink: 1;
@@ -1826,7 +1838,7 @@ textarea:-moz-placeholder {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  height: 2.33rem;
+  height: 56.822%;
   background: url("../img/resultBg.jpg") no-repeat;
   background-size: 100% 100%;
   text-align: center;
@@ -1836,28 +1848,8 @@ textarea:-moz-placeholder {
 }
 #wrap.resultWrap .main .estimatePrice p.price {
   color: #ffffff;
-  font-size: .48rem;
-  line-height: 0.48rem;
-}
-#wrap.resultWrap .main .estimatePrice p.price-tip{
-    font-size: 0.14rem;
-    color: #ffffff;
-    margin-bottom: .05rem;
-    background-size: 20%;
-}
-#wrap.resultWrap .main .estimatePrice p.price-tip .price-txt {
-  position: relative;
-  color: #ece06d;
-}
-#wrap.resultWrap .main .estimatePrice p.price-tip .icon{
-    display: block;
-    position: absolute;
-    left: -0.2rem;
-    top: .02rem;
-    width: 0.16rem;
-    height: 0.16rem;
-    background: url(../img/icon-price-2.png) no-repeat;
-    background-size: 100%;
+  font-size: .72rem;
+  line-height: 1.2;
 }
 #wrap.resultWrap .main .estimatePrice p.price:before {
   content: '¥';
@@ -1880,9 +1872,9 @@ textarea:-moz-placeholder {
 }
 #wrap.resultWrap .main .estimatePrice p.ping2 {
   margin: 0 auto;
-  margin-top: .1rem;
+  margin-top: .2rem;
 }
-#wrap.resultWrap .main .estimatePrice p.ping2 span {
+#wrap.resultWrap .main .estimatePrice p.ping2 a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1896,8 +1888,9 @@ textarea:-moz-placeholder {
   height: .235rem;
   background: url('../img/ping.png') no-repeat;
   background-size: cover;
-  font-size: .15rem;
+  font-size: .11rem;
   color: #fff;
+  text-decoration: underline;
 }
 #wrap.resultWrap .main .estimatePrice p.ping2 a img {
   width: .14rem;
@@ -1917,7 +1910,7 @@ textarea:-moz-placeholder {
       -ms-flex-pack: justify;
           justify-content: space-between;
   height: calc(100% - 56.822%);
-  background: #fff;
+  background-color: #ffffff;
 }
 #wrap.resultWrap .main .mixinsBox .iconBox {
   display: -webkit-box;
@@ -1971,6 +1964,7 @@ textarea:-moz-placeholder {
   font-size: .16rem;
 }
 #wrap.orderWrap .main {
+  padding-top: .55rem;
   background-color: #f2f4f5;
 }
 #wrap.orderWrap .main .inputRow {
@@ -2014,7 +2008,6 @@ textarea:-moz-placeholder {
   background-color: #f2f4f5;
   margin: 0 -0.15rem;
   padding-left: 0.15rem;
-  padding-bottom: .1rem;
 }
 #wrap.orderWrap .main .eachRow {
   display: -webkit-box;
@@ -2042,6 +2035,7 @@ textarea:-moz-placeholder {
   margin-bottom: .1rem;
 }
 #wrap.orderWrap .main .baseInfo {
+  padding-bottom: 20px;
   background-color: #ffffff;
   margin-bottom: .1rem;
 }
@@ -2061,6 +2055,7 @@ textarea:-moz-placeholder {
   cursor: pointer;
 }
 #wrap.orderWrap .main .postInfo .postway .label .genre {
+  margin-left: .05rem;
   font-size: .14rem;
   font-weight: 450;
   color: #4b4c4c;
@@ -2096,6 +2091,7 @@ textarea:-moz-placeholder {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  padding-left: .3rem;
 }
 #wrap.orderWrap .main .postInfo .postway #pickTime p:last-of-type {
   display: -webkit-box;
@@ -2201,11 +2197,8 @@ textarea:-moz-placeholder {
   color: #fc0037;
 }
 #wrap.orderWrap .main .mailing_addr {
+  margin-bottom: 0;
   padding-bottom: .08rem;
-  margin-bottom: 1rem;
-  background: transparent;
-  margin-top: 0.16rem;
-  text-align: center;
 }
 #wrap.orderWrap .main .mailing_addr .moduleTitle {
   margin-bottom: .05rem;

@@ -78,7 +78,6 @@
     <script src="js/common.js"></script>
     <script src="js/address.js"></script>
     <script src="js/jbase64.js"></script>
-	<script src="js/util.js"></script>
 
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=0db9bfb678ada40b29eb757e132f63f1"></script>
     <script src="js/location.js"></script>
@@ -97,22 +96,18 @@
 			G.ToHappyGoPage = eCacheUtil.storage.getCache( CacheKey.ToHappyGoPage );
 
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-			var tip = GetQueryString('tip');
-			var fm = eCacheUtil.storage.getCache(CacheKey.source);
-
-			if(isEmpty(fm)){
-				eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
-			}
-			if(fm == 2 || fm == 9 || fm == 10){
-				document.title = '天翼回收';
-			}else{
-				document.title = '翼回收';
-			}
+            var tip = GetQueryString('tip');
+            var fm = eCacheUtil.storage.getCache(CacheKey.source);
             console.log("fm:"+fm);
             if(isEmpty(fm)){
                 console.log("fm缓存中不存在重新取值："+GetQueryString('fm'));
                 eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
             }
+            if(isGo == 'true'||tip == 1){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }  
 
             var checkSubmitFlg = false;
             $('#submit').click(function(){

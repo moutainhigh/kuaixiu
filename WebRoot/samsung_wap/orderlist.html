@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="priceBox">
-                        <p><span class='priceText'>预估价 </span></p>
+                        <p>预估价 <span></span></p>
                     </div>
                 </section>
             </div>
@@ -68,8 +68,7 @@
     <script src="js/common.js"></script>
 	<script src="js/util.js"></script>
     <script>
-	
-    	var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+		var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
 		var tip = GetQueryString('tip');
 		var fm = eCacheUtil.storage.getCache(CacheKey.source);
 
@@ -78,14 +77,21 @@
 		}
 		if(fm == 2 || fm == 9 || fm == 10){
 			document.title = '天翼回收';
-		}else{
+		}else if(fm == 7){
 			document.title = '翼回收';
+		}else{
+			document.title = '超人回收';
 		}
+	
         var pIndex = 1,
             off_on = false;//分页开关;
         $(function(){
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
-
+            if(isGo == 'true'){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }
             searchOrderList(pIndex,"");
             // $('.navbar a').click(function(){
             //     var index=$(this).index();
@@ -132,7 +138,7 @@
                 }else {
                     loading_hide();
                     alertTip(data.resultMessage);
-					 location.href = 'login.html';
+					location.href = 'login.html';
                 }
             });
         }
@@ -153,12 +159,8 @@
                     item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
                 }
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
-				
-				if(n.processstatus == 204){
-				 $('.priceText',tmp).html("成交价"+"¥"+(n.orderprice).toFixed(2));
-				}else{
-				 $('.priceText',tmp).html("预估价"+"¥"+(n.orderprice).toFixed(2));
-				}
+        
+                $('.priceBox span',tmp).html("¥"+(n.orderprice).toFixed(2));
         
                 //追加到对应区块
                 $(".cont").append(tmp);

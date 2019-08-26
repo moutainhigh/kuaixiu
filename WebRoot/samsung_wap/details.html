@@ -25,7 +25,7 @@
             </div>
 
             <div class="pickInfor pickText">
-                <p class="fb">回收方式-<span class="color-blue" id="pickType">上门取件</span></p>
+                <p class="fb">超人回收方式-<span class="color-blue" id="pickType">上门取件</span></p>
                 <p class="pickTime">取件时间：<span></span></p>
                 <p>联系人：<span class="contact"></span></p>
                 <p>取件地址：<span class="address"></span></p>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="priceBox">
-                        <p ><span class='prePriceText'>预估价</span> <span class="prePrice fb">¥0.00</span><span class="tickets">(含加价￥300)</span></p>
+                        <p>预估价 <span class="prePrice fb">¥0.00</span><span class="tickets">(含加价￥300)</span></p>
                     </div>
                 </section>
             </div>
@@ -101,15 +101,14 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
-	<script src="js/util.js"></script>
     <script>
         $(function(){
-            var fm=eCacheUtil.storage.getCache(CacheKey.source);
-            if(fm == 2 || fm == 9 || fm == 10){
-				document.title = '天翼回收';
-			}else{
-				document.title = '翼回收';
-			}
+            var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            if(isGo == 'true'){
+                document.title = '天翼回收';
+            }else{
+                document.title = '超人回收';
+            }
             var param = {
                 orderid:GetQueryString("orderid")
             };
@@ -150,23 +149,21 @@
                         $('.address').html(dataInfo.address);
                         $('.pickText').show();
                     }
-					if(dataInfo.processstatus == 204){
-					  $('.prePriceText').html('成交价'); 
-					}
                     $('.image img').attr('src',dataInfo.modelpic);
                     $('.proInfor .text').html('<p class="fb">'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p><a class="pull_down"><img src="img/icon_arrow_down.png" /></a>');
                     $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
 					//判断是否有Coupon元素
-                    if(dataInfo.addCouponPrice){
-					    if(Number(dataInfo.addCouponPrice) * 2 >= 200 ){
-						   $('.tickets').show().html( '(含加价￥200)' );
-						}else{
-						   $('.tickets').show().html( '(含加价￥'+Number(dataInfo.addCouponPrice) * 2+')' );
-						}
-                    }else{
-                        $('.tickets').hide().html('')
-                    }
-					
+					if( dataInfo.Coupon ){
+					   if(dataInfo.Coupon.couponPrice.indexOf("%") > 0){
+					     $('.tickets').attr( 'style' , 'display:block' ).html( '(含加价￥'+
+						 parseFloat( dataInfo.orderprice.toFixed(2) )* parseFloat( dataInfo.Coupon.couponPrice )* 0.01 +')' );
+					   }else{
+					     $('.tickets').attr( 'style' , 'display:block' ).html( '(含加价￥'+dataInfo.Coupon.couponPrice+')' );	
+					   }
+					}
+					else{
+						$('.tickets').attr( 'style' , 'display:none' ).html( '' );
+					}
 					
                     if (dataInfo.recycle_type == 1){
                         $('#recycleType').html('支付宝收款');
@@ -198,7 +195,7 @@
                 orderNo:GetQueryString("orderid"),
                 mailOrderNo:$('#trackId').val()
             }
-            $.post(linkUrl+'/recycle/mailOrderNo.do',{params:JSON.stringify(param)},function(data){
+            $.post(linkUrl+'/recycleNew/mailOrderNo.do',{params:JSON.stringify(param)},function(data){
                 if (data.success){
                     var info = {
                         orderid:GetQueryString("orderid")
