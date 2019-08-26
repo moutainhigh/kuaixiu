@@ -51,7 +51,6 @@ public class SjSessionUserService {
      * @CreateDate: 2016-8-28 下午6:46:35
      */
     public void initSessionUser(SjUser user, HttpServletRequest request) {
-        System.out.println("初始化session");
         if (user == null) {
             throw new SystemException("登录用户为空，初始化失败");
         }

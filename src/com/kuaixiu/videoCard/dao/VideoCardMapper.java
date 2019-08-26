@@ -19,6 +19,8 @@ public interface VideoCardMapper<T> extends BaseDao<T> {
     VideoCard queryOne(T t);
 
     List<VideoCard> getVideoUser(VideoUserRel rel);
+
+    T queryByCardId(String cardId);
 }
 
 

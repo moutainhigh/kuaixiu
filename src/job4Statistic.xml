@@ -26,7 +26,7 @@
         <property name="triggers">
           <list>
              <!-- 定时统计 -->
-             <!--<ref local="dealAutoStatisticTrigger"/>-->
+             <ref local="dealAutoStatisticTrigger"/>
           </list>
         </property>
     </bean>

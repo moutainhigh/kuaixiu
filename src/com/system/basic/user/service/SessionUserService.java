@@ -103,9 +103,6 @@ public class SessionUserService {
         session.setAttribute("loginUserName", su.getUserName());
         session.setAttribute("loginUserType", su.getType());
         session.setAttribute("loginUserId", su.getUserId());
-        System.out.println(JSONObject.toJSONString(session.getAttribute("sysMenuList")));
-        System.out.println(JSONObject.toJSONString(session.getAttribute("loginUserType")));
-
     }
 
     /**

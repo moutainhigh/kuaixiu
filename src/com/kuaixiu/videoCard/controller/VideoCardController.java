@@ -7,6 +7,8 @@ import com.common.paginate.Page;
 import com.google.common.collect.Maps;
 import com.kuaixiu.videoCard.entity.VideoCard;
 import com.kuaixiu.videoCard.service.VideoCardService;
+import com.kuaixiu.videoUserRel.entity.VideoUserRel;
+import com.kuaixiu.videoUserRel.service.VideoUserRelService;
 import com.system.util.ExcelUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +37,8 @@ public class VideoCardController extends BaseController {
 
     @Autowired
     private VideoCardService videoCardService;
+    @Autowired
+    private VideoUserRelService videoUserRelService;
 
 
     /**
@@ -80,6 +84,12 @@ public class VideoCardController extends BaseController {
         }
         s.setPage(page);
         List<VideoCard> list = videoCardService.queryListForPage(s);
+        for(VideoCard videoCard:list){
+            VideoUserRel userRel=videoUserRelService.getDao().queryByCardId(videoCard.getCardId());
+            if(userRel!=null){
+                videoCard.setOrderNo(userRel.getOrderNo());
+            }
+        }
         page.setData(list);
         this.renderJson(response, page);
     }
