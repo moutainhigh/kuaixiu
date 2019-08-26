@@ -9,6 +9,7 @@ import com.kuaixiu.videoCard.entity.VideoCard;
 import com.kuaixiu.videoCard.service.VideoCardService;
 import com.kuaixiu.videoUserRel.entity.VideoUserRel;
 import com.kuaixiu.videoUserRel.service.VideoUserRelService;
+import com.system.basic.user.entity.SessionUser;
 import com.system.util.ExcelUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -145,18 +146,17 @@ public class VideoCardController extends BaseController {
     @ResponseBody
     public void personList(HttpServletRequest request,
                             HttpServletResponse response) throws IOException {
-//        SessionUser su = getCurrentUser(request);
-//        String loginId = su.getUser().getLoginId();
-//        List<VideoCard> list=new ArrayList<>();
-//        if(!StringUtils.isBlank(loginId)){
-//            VideoUserRel rel=new VideoUserRel();
-//            rel.setMobile(loginId);
-//            list=videoCardService.getVideoUser(rel);
-//        }
         System.out.println("videoCard/personList 请求");
+        String mobile = (String) request.getSession().getAttribute("mobile");
+        List<VideoCard> list=new ArrayList<>();
+        if(!StringUtils.isBlank(mobile)){
+            VideoUserRel rel=new VideoUserRel();
+            rel.setMobile(mobile);
+            list=videoCardService.getVideoUser(rel);
+        }
         Map<String, Object> resultMap = Maps.newHashMap();
         resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
-        resultMap.put("data", getData());
+        resultMap.put("data", list);
         renderJson(response, resultMap);
     }
 

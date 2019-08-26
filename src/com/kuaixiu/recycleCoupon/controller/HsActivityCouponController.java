@@ -20,6 +20,9 @@ import com.kuaixiu.recycleCoupon.service.HsUserActivityCouponService;
 import com.kuaixiu.recycleUser.entity.HsUser;
 import com.kuaixiu.recycleUser.service.HsUserService;
 import com.system.api.entity.ResultData;
+import com.system.basic.user.entity.SessionUser;
+import com.system.constant.SystemConstant;
+import org.activiti.engine.identity.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -117,6 +121,9 @@ public class HsActivityCouponController extends BaseController {
             String phoneBase64 = Base64Util.getBase64(phone);
             CookiesUtil.setCookie(response, Consts.COOKIE_HS_PHONE, phoneBase64, CookiesUtil.prepare(dname), 999999999);
             hsActivityCouponService.saveUser(phone);
+            // 儲存用戶手机号
+            HttpSession session = request.getSession();
+            session.setAttribute("mobile", phone);
             getSjResult(result, null, true, "0", null, "登录成功");
         } catch (Exception e) {
             e.printStackTrace();
