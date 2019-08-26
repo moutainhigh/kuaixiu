@@ -89,6 +89,7 @@ public class VideoCardController extends BaseController {
             VideoUserRel userRel=videoUserRelService.getDao().queryByCardId(videoCard.getCardId());
             if(userRel!=null){
                 videoCard.setOrderNo(userRel.getOrderNo());
+                videoCard.setMobile(userRel.getMobile());
             }
         }
         page.setData(list);

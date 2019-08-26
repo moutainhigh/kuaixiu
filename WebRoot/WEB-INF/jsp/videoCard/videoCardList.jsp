@@ -60,6 +60,7 @@
             <tr>
                 <th class="fontWeight_normal tdwidth50"><input id="check_all_btn" onclick="checkAll(this)" type="checkbox" />序号</th>
                 <th class="fontWeight_normal table-title center">订单号</th>
+                <th class="fontWeight_normal table-title center">手机号</th>
                 <th class="fontWeight_normal table-title center">卡密</th>
                 <th class="fontWeight_normal table-title center">卡名称</th>
                 <th class="fontWeight_normal table-title center">类型</th>
@@ -95,6 +96,7 @@
     dto.setColumns([
         {"data": "id","class":"tdwidth50 center"},
         {"data": "orderNo","class":""},
+        {"data": "mobile","class":""},
         {"data": "cardId","class":""},
         {"data": "cardName","class":""},
         {"data": "type","class":""},
@@ -117,7 +119,7 @@
             }
         },
         {//号卡类型
-            targets: 4,
+            targets: 5,
             render: function (data, type, row, meta) {
                 if(row.type==1){
                     return '周卡';
@@ -135,7 +137,7 @@
             }
         },
         {//号卡类型
-            targets: 7,
+            targets: 8,
             render: function (data, type, row, meta) {
                 if(row.isUse==0){
                     return '未领取';
