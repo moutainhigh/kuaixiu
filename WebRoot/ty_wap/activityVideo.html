@@ -28,7 +28,7 @@
             <div class="ruletitle">活动规则：</div>
             <div class="ruletext">
                 <div class="rule">
-                    <span>1.</span> <p>
+                    <span>1.</span> <p id="time">
                     活动时间：8月20日-9月30日
                 </p>
                 </div>
@@ -66,6 +66,26 @@
             </div>
         </div>
     </div>
+
+      <script src="js/jquery.js"></script>
+      <script src="js/swiper.min.js"></script>
+      <script src="js/common.js"></script>
+      <script src="js/util.js"></script>
+    <script>
+        $(function () {
+        var fm=eCacheUtil.storage.getCache(CacheKey.source);
+        if(!isEmpty(fm)){
+            // 27  28渠道修改时间
+            if(fm == '27' || fm == '28'){
+                $('#time').text('活动时间：8月31日-9月30日');
+            }
+        }
+
+        })
+
+
+
+    </script>
 </body>
 
 
