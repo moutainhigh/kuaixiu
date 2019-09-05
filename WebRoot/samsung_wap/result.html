@@ -65,6 +65,8 @@
     <script>
         $(function(){
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
+            var fm = eCacheUtil.storage.getCache(CacheKey.source);
+
             if(isGo == 'true'){
                 document.title = '天翼回收';
             }else{
@@ -87,7 +89,8 @@
                 var param = {
                     "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
                     "items":itemsId,
-                    "openId":openId
+                    "openId":openId,
+                    "fm": fm
                 },base = new Base64();
                 $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                     if (data.success){
