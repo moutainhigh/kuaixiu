@@ -53,7 +53,9 @@
             background-size: contain;
         }
 
-        .join-active-btn {
+
+
+        .join-active-btn.special {
             display: block;
             width: 100%;
             height: .32rem;
@@ -71,14 +73,17 @@
 
 	
         <!-- start of 首页弹窗 -->
-       <!-- <div class="dialog-active">
+        <div class="dialog-active" id="card" style="display: none">
             <div class="mask-hide"></div>
             <div class="img-active-wrap">
+
                 <i class="close-active-btn js-close-active"></i>
-                <img class="img-active" src="./img/51_image.png" alt="">
-                <a class="join-active-btn" href="./product.html">立即参加</a>
+                <a class="join-active-btn" href="../hs_hd/index.html#/?hd=ayll005&fm=11">
+                    <img class="img-active" src="./img/img_study.png" alt="">
+                </a>
+                <a class="join-active-btn special" href="../hs_hd/index.html#/?hd=ayll005&fm=11">立即参加</a>
             </div>
-        </div>  -->
+        </div>
         <!-- end of 首页弹窗 -->
 
         <div class="main">
@@ -295,6 +300,10 @@
             $('.js-close-active').on('click',function(){
                 $('.dialog-active').hide()
             })
+
+            if(fm == '1' ){
+                $("#card").show();
+            }
         })
     </script>
 <!--站长统计-->
