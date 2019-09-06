@@ -18,7 +18,7 @@
         </div>
         <div class="main">
             <div class="navbar">
-                <a href="javascript:;" class="active">全部</a>
+                <a href="javascript:;" class="active" id="all">全部</a>
                 <!--
                 <a href="javascript:;"> 待收货</a>
                 <a href="javascript:;">待结款</a>
@@ -139,11 +139,18 @@
                     }
                     off_on = true;
                     loading_hide();
-                }else {
+                }else{
+                    $('.baseline').remove();
+                    $(".main").append('<p class="baseline blue" style="text-align: center;">——您当前不存在订单记录！——</p>');
+                    $("#all").hide();
                     loading_hide();
-                    alertTip(data.resultMessage);
-					 location.href = 'indexHappy.html';
+                    return false;
                 }
+                // else {
+                //     loading_hide();
+                //     alertTip(data.resultMessage);
+					//  location.href = 'indexHappy.html';
+                // }
             });
         }
         function eachFull(info){
