@@ -323,11 +323,11 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
     }
 
     //根据订单价计算加价金额
-    public BigDecimal getAddCouponPrice(BigDecimal orderPrice) {
+    public BigDecimal getAddCouponPrice(BigDecimal orderPrice,String percent) {
 //        //计算计价5%之前的原价
 //        BigDecimal price = orderPrice.divide(new BigDecimal("105"), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
         //计算原价的10%额度
-        BigDecimal addCouponPrice = orderPrice.divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("10"));
+        BigDecimal addCouponPrice = orderPrice.divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(percent));
         return addCouponPrice.setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
