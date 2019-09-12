@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.sjBusiness.entity.SjOrder;
+import com.kuaixiu.sjBusiness.service.SjOrderService;
 import com.kuaixiu.sjUser.entity.CustomerDetail;
 import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
 import com.kuaixiu.sjUser.service.SjSessionUserService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.api.entity.ResultData;
+import com.system.basic.address.entity.Address;
+import com.system.basic.address.service.AddressService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 /**
  * CustomerDetail Controller
@@ -272,6 +277,58 @@ public class CustomerDetailController extends BaseController {
             JSONObject jsonObject = customerDetailService.getUserToJsonObject(sjUser, customerDetail);
 
             getSjResult(result, jsonObject, true, "0", null, "操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            getSjResult(result, null, false, "1", null, "操作失败");
+        }
+        return result;
+    }
+
+    @Autowired
+    private SjOrderService sjOrderService;
+
+    @Autowired
+    private AddressService addressService;
+    /**
+     *
+     * @param request
+     * @param response 获取企业信息
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/sj/wechat/getEnterpriseNews")
+    @ResponseBody
+    public ResultData getEnterpriseNews(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");
+            if (StringUtils.isBlank(phone)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            SjOrder sjOrder=new SjOrder();
+            sjOrder.setPhone(phone);
+            List<SjOrder> sjOrders = sjOrderService.getDao().queryListForPage(sjOrder);
+            if(!sjOrders.isEmpty()){
+                SjOrder order = sjOrders.get(0);
+                // 获取地址
+                Address province = addressService.queryByAreaId(order.getProvinceId());
+                Address city = addressService.queryByAreaId(order.getCityId());
+                Address area = addressService.queryByAreaId(order.getAreaId());
+                String address=province.getArea()+city.getArea()+area.getArea()+order.getAddressDetail();
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("companyName",order.getCompanyName());  // 单位名称
+                jsonObject.put("address",address);  // 详细地址
+                jsonObject.put("person",order.getPerson());  // 联系人名
+                jsonObject.put("personPhone",order.getPhone());  // 联系电话
+                jsonObject.put("list","");  // 资产列表
+                jsonObject.put("addressDetail",order.getAddressDetail());
+                getSjResult(result, jsonObject, true, "0", null, "操作成功");
+            }else{
+                getSjResult(result, null, false, "1", null, "企业信息不存在");
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             getSjResult(result, null, false, "1", null, "操作失败");

@@ -1,6 +1,7 @@
 package com.kuaixiu.sjBusiness.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.service.BaseService;
 import com.common.util.NOUtil;
@@ -77,10 +78,22 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         for (SjReworkOrder sjReworkOrder1 : sjReworkOrders) {
             JSONObject jsonObject = new JSONObject();
             List<String> projects = orderService.getProject(sjReworkOrder1.getProjectIds());
+//            JSONObject jsonObject=JSONObject.parseObject(JSON.toJSONString(sjReworkOrder1));
             jsonObject.put("reworkNo", sjReworkOrder1.getReworkOrderNo());
             jsonObject.put("companyName", sjReworkOrder1.getCompanyName());
             jsonObject.put("state", sjReworkOrder1.getState());
             jsonObject.put("createTime", sjReworkOrder1.getCreateTime());
+            if(sjReworkOrder1.getNote()==null){
+                jsonObject.put("note","");
+            }else{
+                jsonObject.put("note", sjReworkOrder1.getNote());
+            }
+            jsonObject.put("workerName", sjReworkOrder1.getWorkerName());
+            jsonObject.put("endTime", sjReworkOrder1.getEndTime());
+            jsonObject.put("createUserid", sjReworkOrder1.getCreateUserid());
+
+
+
             String stayPerson = "";
             if (sjReworkOrder1.getState() == 200) {
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(), 3);
@@ -142,9 +155,9 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         jsonObject.put("personPhone", o.getPhone());
         jsonObject.put("ap", o.getSingle());
         jsonObject.put("monitor", o.getGroupNet());
-        if (sjReworkOrder.getState() == 500) {
+//        if (sjReworkOrder.getState() == 500) {
             jsonObject.put("endTime", sjReworkOrder.getStrEndTime());
-        }
+//        }
         return jsonObject;
     }
 }

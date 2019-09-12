@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -168,7 +169,7 @@ public class SjReworkOrderController extends BaseController {
             String phone = params.getString("phone");
             String orderNo = params.getString("orderNo");
             String projectId = params.getString("projectId");//需求id  ","隔开
-            String note = params.getString("note");//报障备注
+            String note = params.getString("remark");//报障备注
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(orderNo) || StringUtils.isBlank(projectId)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
@@ -241,7 +242,35 @@ public class SjReworkOrderController extends BaseController {
             }
             SjReworkOrder sjReworkOrder = sjReworkOrderService.getDao().queryByReworkOrderNo(reworkNo);
             JSONObject jsonObject = sjReworkOrderService.getObjectDetail(sjReworkOrder);
+            jsonObject.put("currentTime",System.currentTimeMillis());
+            jsonObject.put("createTime",sjReworkOrder.getCreateTime().getTime());
+
             getSjResult(result, jsonObject, true, "0", null, "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    @RequestMapping(value = "/sj/reworkOrder/cancelOrder")
+    @ResponseBody
+    public ResultData cancelOrder(HttpServletRequest request,
+                                        HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String reworkNo = params.getString("reworkNo");
+            if (StringUtils.isBlank(reworkNo)) {
+                return getSjResult(result, null, false, "2", null, "参数为空");
+            }
+            SjReworkOrder sjReworkOrder = sjReworkOrderService.getDao().queryByReworkOrderNo(reworkNo);
+            if(sjReworkOrder!=null){
+                sjReworkOrder.setState(600);
+                sjReworkOrder.setEndTime(new Date());
+                sjReworkOrderService.getDao().update(sjReworkOrder);
+            }
+            getSjResult(result, new JSONObject(), true, "0", null, "操作成功");
         } catch (Exception e) {
             e.printStackTrace();
         }

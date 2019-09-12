@@ -31,10 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Order Controller
@@ -133,7 +130,9 @@ public class SjOrderController extends BaseController {
             String projectId = params.getString("projectId");//需求id  ","隔开
             Integer single = params.getInteger("ap");//AP
             Integer group = params.getInteger("monitor");//监控
-            String crmNo = params.getString("crmNo");//CRM编号
+            String crmNo = params.getString("crmNo");//
+            String remark = params.getString("remark");//备注
+
 
             if (StringUtils.isBlank(phone) || StringUtils.isBlank(companyName)
                     || StringUtils.isBlank(addressDetail) || StringUtils.isBlank(person)
@@ -193,6 +192,7 @@ public class SjOrderController extends BaseController {
             sjOrder.setCreateUserid(phone);
             sjOrder.setCreateName(user.getName());
             sjOrder.setStayPerson("admin");
+            sjOrder.setRemark(remark);
             if (type == 2) {
                 orderService.createOrder(projectId, sjOrder);
             } else {
@@ -343,6 +343,42 @@ public class SjOrderController extends BaseController {
             }
             JSONObject jsonObject = orderService.sjOrderToObejct(sjOrder);
             getSjResult(result, jsonObject, true, "0", null, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+
+    /**
+     *
+     * @param request
+     * @param response  商机单取消
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sj/wechat/cancelOrder")
+    @ResponseBody
+    public ResultData cancelOrder(HttpServletRequest request,
+                                     HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        try {
+            JSONObject params = getPrarms(request);
+            String phone = params.getString("phone");
+            String orderNo = params.getString("orderNo");
+            if (StringUtils.isBlank(phone) || StringUtils.isBlank(orderNo)) {
+                return getSjResult(result, null, false, "0", null, "参数为空");
+            }
+            SjOrder sjOrder = orderService.getDao().queryByOrderNoCreateUId(orderNo, phone);
+            if (sjOrder == null) {
+                return getSjResult(result, null, false, "0", null, "订单号错误");
+            }
+            // 订单存在 可以取消
+            sjOrder.setState(600);
+            sjOrder.setEndTime(new Date());
+            orderService.getDao().update(sjOrder);
+            getSjResult(result, new JSONObject(), true, "0", null, "操作成功");
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());

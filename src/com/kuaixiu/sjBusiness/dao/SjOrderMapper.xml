@@ -59,6 +59,8 @@
         <result column="assign_company_id" property="assignCompanyId"/>
         <result column="assign_worker_id" property="assignWorkerId"/>
         <result column="is_import" property="isImport"/>
+        <result column="is_del" property="isDel"/>
+        <result column="remark" property="remark"/>
     </resultMap>
 
     <!-- sj_order table all fields -->
@@ -72,7 +74,7 @@
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,create_name,
         feedback_person,feedback_note,feedback_time,meal_id,model_id,model_num,poe_id,poe_num,
         storage_id,storage_num,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,
-        storage_wifi_id,storage_wifi_num,assign_company_id,assign_worker_id,is_import
+        storage_wifi_id,storage_wifi_num,assign_company_id,assign_worker_id,is_import,is_del,remark
     </sql>
 
     <!-- 插入记录 -->
@@ -84,7 +86,7 @@
         completed_phone,completed_time,create_time,create_userid,create_name,feedback_person,
         feedback_note,feedback_time,assign_company_id,assign_worker_id,is_import
         ,meal_id,model_id,model_num,poe_id,poe_num,storage_id,storage_num
-        ,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,storage_wifi_id,storage_wifi_num)
+        ,meal_wifi_id,model_wifi_id,model_wifi_num,poe_wifi_id,poe_wifi_num,storage_wifi_id,storage_wifi_num,remark)
         values
         (#{id},#{orderNo},#{type},#{crmNo},#{state},#{companyName},#{provinceId},#{cityId},#{areaId},
         #{streetId},#{addressDetail},#{person},#{responsibleIdNumber},#{responsibleName},#{phone},#{projectId},#{groupNet},#{single},#{stayPerson},
@@ -93,7 +95,7 @@
         now(),#{createUserid},#{createName},#{feedbackPerson},#{feedbackNote},#{feedbackTime},#{assignCompanyId}
         ,#{assignWorkerId},#{isImport}
         ,#{mealId},#{modelId},#{modelNum},#{poeId},#{poeNum},#{storageId},#{storageNum},
-        #{mealWifiId},#{modelWifiId},#{modelWifiNum},#{poeWifiId},#{poeWifiNum},#{storageWifiId},#{storageWifiNum})
+        #{mealWifiId},#{modelWifiId},#{modelWifiNum},#{poeWifiId},#{poeWifiNum},#{storageWifiId},#{storageWifiNum},#{remark})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -152,6 +154,8 @@
             storage_wifi_num=#{storageWifiNum},
             assign_company_id=#{assignCompanyId},
             assign_worker_id=#{assignWorkerId},
+            is_del=#{isDel},
+            remark=#{remark},
             is_import=#{isImport}
         where id=#{id}
     </update>
@@ -165,25 +169,25 @@
     <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from sj_order where id = #{id}
+        from sj_order where id = #{id} and is_del=0
     </select>
 
     <select id="queryByOrderNo" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from sj_order where order_no=#{orderNo}
+        from sj_order where order_no=#{orderNo} and is_del=0
     </select>
 
     <select id="queryByOrderNoCreateUId" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from sj_order where order_no=#{orderNo} and create_userid=#{createUserid}
+        from sj_order where order_no=#{orderNo} and create_userid=#{createUserid} and is_del=0
     </select>
 
     <select id="queryByPhoneOrderNo" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from sj_order where order_no=#{orderNo} and phone=#{phone}
+        from sj_order where order_no=#{orderNo} and phone=#{phone} and is_del=0
     </select>
 
     <!-- 查询列表无分页 -->
@@ -191,7 +195,7 @@
         select
         <include refid="Base_Column_List"/>
         from sj_order
-        where 1=1
+        where 1=1 and is_del=0
         <if test="id != null and id != ''">
             and id = #{id}
         </if>
@@ -322,7 +326,7 @@
         select
         <include refid="Base_Column_List"/>
         from sj_order
-        where 1=1
+        where 1=1 and is_del=0
         <if test="id != null and id != ''">
             and id = #{id}
         </if>
@@ -450,7 +454,7 @@
         select
         <include refid="Base_Column_List"/>
         from sj_order
-        where 1=1
+        where 1=1 and is_del=0
         <if test="id != null and id != ''">
             and id = #{id}
         </if>
@@ -583,7 +587,7 @@
         CONCAT(o.feedback_person,'/',u5.`name`)feedback_person,o.feedback_note,date_format(o.`feedback_time`,'%Y-%m-%d %H:%i:%s')feedback_time,
         o.meal_id,m.meal_name,t.monitor_type_wifi_name model_name,o.model_num,p.poe_name,o.poe_num,s.save_net_name,o.storage_num,
         o.meal_wifi_id,m2.meal_name meal_wifi_name,t2.monitor_type_wifi_name model_wifi_name,o.model_wifi_num,p2.poe_name poe_wifi_name,
-        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num
+        o.poe_wifi_num,s2.save_net_name save_wifi_name,o.storage_wifi_num,o.remark
         from sj_order o
         LEFT JOIN sj_user u1 on u1.login_id=o.approval_person
         LEFT JOIN sj_user u2 on u2.login_id=o.assign_person
@@ -601,7 +605,7 @@
         LEFT JOIN sj_wifi_monitor_type t2 on t2.id=o.model_wifi_id
         LEFT JOIN sj_poe p2 on p2.id=o.poe_wifi_id
         LEFT JOIN sj_save_net s2 on s2.id=o.storage_wifi_id
-        where 1=1
+        where 1=1 and o.is_del=0
         <if test="id != null and id != ''">
             and o.id = #{id}
         </if>

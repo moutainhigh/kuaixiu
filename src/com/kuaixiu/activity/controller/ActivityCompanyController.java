@@ -56,7 +56,7 @@ public class ActivityCompanyController extends BaseController {
     @RequestMapping(value = "/activityCompany/list")
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
-
+        System.out.println(111);
         String returnView = "activity/activityCompany";
         return new ModelAndView(returnView);
     }
