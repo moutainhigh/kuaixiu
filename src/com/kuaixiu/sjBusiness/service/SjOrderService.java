@@ -196,7 +196,12 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
             SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getApprovalPerson(), null);
-            jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
+            System.out.println("用户信息："+JSONObject.toJSONString(sjUser));
+            if(sjUser!=null){
+                jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
+            }else{
+                jsonObject.put("approvalPerson", "");
+            }
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
         }

@@ -98,6 +98,8 @@ public class SjOrderController extends BaseController {
         return result;
     }
 
+    @Autowired
+    private SjOrderService sjOrderService;
 
     /**
      * 提交商机/派单
@@ -143,8 +145,17 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             SjUser user = userService.getDao().queryByLoginId(phone, null);
+            String createName="";
             if (user == null) {
-                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+//                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+                SjOrder sjOrder=new SjOrder();
+                sjOrder.setPhone(phone);
+                List<SjOrder> sjOrders = sjOrderService.getDao().queryListForPage(sjOrder);
+                if(!sjOrders.isEmpty()){
+                    createName=sjOrders.get(0).getCompanyName();
+                }
+            }else{
+                createName=user.getName();
             }
             if (type == 2) {
                 if (projectId.contains("1")) {
@@ -190,7 +201,7 @@ public class SjOrderController extends BaseController {
                 sjOrder.setGroupNet(group);
             }
             sjOrder.setCreateUserid(phone);
-            sjOrder.setCreateName(user.getName());
+            sjOrder.setCreateName(createName);
             sjOrder.setStayPerson("admin");
             sjOrder.setRemark(remark);
             if (type == 2) {

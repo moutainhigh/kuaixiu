@@ -101,6 +101,10 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
                 stayPerson = company.getPerson();
             } else if (sjReworkOrder1.getState() == 400) {
                 stayPerson = sjReworkOrder1.getWorkerName();
+            } else{
+                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(), 3);
+                ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
+                stayPerson = company.getPerson();
             }
             jsonObject.put("stayPerson", stayPerson);
             jsonObject.put("projects", projects);
