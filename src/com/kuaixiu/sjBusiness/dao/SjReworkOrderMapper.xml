@@ -167,7 +167,12 @@
             and order_no = #{orderNo}
         </if>
         <if test="state != null and state != ''" >
-            and state = #{state}
+             <if test="state == 300" >
+                 and state not in(500,600)
+             </if>
+            <if test="state != 300" >
+                and state = #{state}
+            </if>
         </if>
         <if test="projectIds != null and projectIds != ''" >
             and project_ids = #{projectIds}

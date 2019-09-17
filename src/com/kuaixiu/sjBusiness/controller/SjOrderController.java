@@ -7,6 +7,7 @@ import com.common.exception.SystemException;
 import com.common.importExcel.ImportReport;
 import com.common.paginate.Page;
 import com.common.util.NOUtil;
+import com.common.util.SmsSendUtil;
 import com.common.util.UrlUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.recycle.service.RecycleOrderService;
@@ -17,6 +18,8 @@ import com.kuaixiu.sjUser.entity.SjUser;
 import com.kuaixiu.sjUser.service.CustomerDetailService;
 import com.kuaixiu.sjUser.service.SjUserService;
 import com.system.api.entity.ResultData;
+import com.system.basic.address.entity.Address;
+import com.system.basic.address.service.AddressService;
 import com.system.constant.SystemConstant;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -98,6 +101,8 @@ public class SjOrderController extends BaseController {
         return result;
     }
 
+    @Autowired
+    private SjOrderService sjOrderService;
 
     /**
      * 提交商机/派单
@@ -143,8 +148,17 @@ public class SjOrderController extends BaseController {
                 return getSjResult(result, null, false, "2", null, "参数为空");
             }
             SjUser user = userService.getDao().queryByLoginId(phone, null);
+            String createName="";
             if (user == null) {
-                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+//                return getSjResult(result, null, false, "2", null, "账号错误，请重新登录");
+                SjOrder sjOrder=new SjOrder();
+                sjOrder.setPhone(phone);
+                List<SjOrder> sjOrders = sjOrderService.getDao().queryListForPage(sjOrder);
+                if(!sjOrders.isEmpty()){
+                    createName=sjOrders.get(0).getCompanyName();
+                }
+            }else{
+                createName=user.getName();
             }
             if (type == 2) {
                 if (projectId.contains("1")) {
@@ -190,8 +204,14 @@ public class SjOrderController extends BaseController {
                 sjOrder.setGroupNet(group);
             }
             sjOrder.setCreateUserid(phone);
-            sjOrder.setCreateName(user.getName());
-            sjOrder.setStayPerson("admin");
+            sjOrder.setCreateName(createName);
+            // 根据区域设定审核团队
+            if(!StringUtils.isBlank(areaId)){
+                setTeam(sjOrder);
+            }else{
+                sjOrder.setStayPerson("admin");
+            }
+
             sjOrder.setRemark(remark);
             if (type == 2) {
                 orderService.createOrder(projectId, sjOrder);
@@ -220,6 +240,51 @@ public class SjOrderController extends BaseController {
             log.error(e.getMessage());
         }
         return result;
+    }
+
+    @Autowired
+    private AddressService addressService;
+
+    @Autowired
+    private AreaManagementUnitService areaManagementUnitService;
+
+    @Autowired
+    private SjVirtualTeamService virtualTeamService;
+
+    @Autowired
+    private SjUserService sjUserService;
+
+    private  void setTeam(SjOrder sjOrder){
+        Address address = addressService.getDao().queryByAreaId(sjOrder.getAreaId());
+        if (address != null) {
+            List<AreaManagementUnit> areaManagementUnits = areaManagementUnitService.getDao().queryList(null);
+            if (!areaManagementUnits.isEmpty()) {
+                for (AreaManagementUnit unit : areaManagementUnits) {
+                    boolean  tip=false;
+                    if (address.getArea().contains(unit.getManagementUnit())) {
+                        SjVirtualTeam sjVirtualTeam = virtualTeamService.getDao().queryByUnitId(unit.getId());
+                        if (sjVirtualTeam != null) {
+                            SjUser user=new SjUser();
+                            user.setPhone(sjVirtualTeam.getPhone());
+                            List<SjUser> sjUsers = sjUserService.getDao().queryListForPage(user);
+                            if(!sjUsers.isEmpty()){
+                                SjUser user1 = sjUsers.get(0);
+                                sjOrder.setStayPerson(user1.getLoginId());
+                                tip=true;
+                                break;
+                            }
+
+
+                        }
+
+                    }
+                    if(!tip){
+                        sjOrder.setStayPerson("admin");
+                    }
+                }
+            }
+        }
+
     }
 
 

@@ -1,5 +1,5 @@
 .card{
-    background: url("../img/cardbg.png") no-repeat;
+    background: url("../img/card.png") no-repeat;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -10,7 +10,7 @@
 .message{
     display: inline-block;
     color: #fff;
-    font-size: 12px;
+    font-size: 14px;
     text-align: left;
     margin-top: 16px;
     margin-bottom: 100px;

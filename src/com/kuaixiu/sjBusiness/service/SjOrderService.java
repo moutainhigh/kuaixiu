@@ -14,10 +14,7 @@ import com.common.wechat.common.util.StringUtils;
 import com.kuaixiu.card.entity.BatchCard;
 import com.kuaixiu.card.entity.BatchImport;
 import com.kuaixiu.sjBusiness.dao.SjOrderMapper;
-import com.kuaixiu.sjBusiness.entity.OrderCompanyPicture;
-import com.kuaixiu.sjBusiness.entity.SjOrder;
-import com.kuaixiu.sjBusiness.entity.SjProject;
-import com.kuaixiu.sjBusiness.entity.SjVirtualTeam;
+import com.kuaixiu.sjBusiness.entity.*;
 import com.kuaixiu.sjSetMeal.entity.SjPoe;
 import com.kuaixiu.sjSetMeal.entity.SjSaveNet;
 import com.kuaixiu.sjSetMeal.entity.SjSetMeal;
@@ -52,6 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -196,7 +194,12 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("images", getImages(o.getOrderNo()));
         if (o.getState() >= 200) {
             SjUser sjUser = sjUserService.getDao().queryByLoginId(o.getApprovalPerson(), null);
-            jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
+            System.out.println("用户信息："+JSONObject.toJSONString(sjUser));
+            if(sjUser!=null){
+                jsonObject.put("approvalPerson", sjUser.getName() + "/" + sjUser.getLoginId());
+            }else{
+                jsonObject.put("approvalPerson", "");
+            }
             jsonObject.put("approvalTime", o.getApprovalTime());
             jsonObject.put("approvalNote", o.getApprovalNote());
         }
