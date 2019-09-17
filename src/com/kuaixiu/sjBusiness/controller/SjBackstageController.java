@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -304,6 +305,8 @@ public class SjBackstageController extends BaseController {
         return new ModelAndView(returnView);
     }
 
+    @Autowired
+    private AreaManagementUnitService areaManagementUnitService;
 
     /**
      * 订单审批
@@ -338,11 +341,18 @@ public class SjBackstageController extends BaseController {
             if (sjOrder.getType() == 1) {
                 //商机爆料审核通过发送短信给虚拟团队
                 SjUser sjUser = sjUserService.getDao().queryByLoginId(sjOrder.getCreateUserid(), null);
-                CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(sjUser.getId());
-                SjVirtualTeam virtualTeam = virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
-                SjUser sjUser1 = sjUserService.queryById(virtualTeam.getLoginId());
-                sjOrder.setStayPerson(sjUser1.getLoginId());
-                SmsSendUtil.sjApprovalSend(virtualTeam, sjOrder.getOrderNo());
+                if (sjUser == null) {
+                    // 用户自己下的单，根据区域来选定团队
+                    setTeam(sjOrder);
+
+                } else {
+                    CustomerDetail customerDetail = customerDetailService.getDao().queryByLoginId(sjUser.getId());
+                    SjVirtualTeam virtualTeam = virtualTeamService.getDao().queryByUnitId(customerDetail.getManagementUnitId());
+                    SjUser sjUser1 = sjUserService.queryById(virtualTeam.getLoginId());
+                    sjOrder.setStayPerson(sjUser1.getLoginId());
+                    SmsSendUtil.sjApprovalSend(virtualTeam, sjOrder.getOrderNo());
+                }
+
             } else {
                 sjOrder.setStayPerson(orderService.setStayPerson(2));
             }
@@ -358,6 +368,40 @@ public class SjBackstageController extends BaseController {
             log.error(e.getMessage());
         }
         return result;
+    }
+
+    /**
+     *  用户自己下的单，根据区域指定团队
+     * @param sjOrder
+     */
+    private  void setTeam(SjOrder sjOrder){
+        Address address = addressService.getDao().queryByAreaId(sjOrder.getAreaId());
+        if (address != null) {
+            List<AreaManagementUnit> areaManagementUnits = areaManagementUnitService.getDao().queryList(null);
+            if (!areaManagementUnits.isEmpty()) {
+                for (AreaManagementUnit unit : areaManagementUnits) {
+                    if (address.getArea().contains(unit.getManagementUnit())) {
+                        SjVirtualTeam sjVirtualTeam = virtualTeamService.getDao().queryByUnitId(unit.getId());
+                        if (sjVirtualTeam != null) {
+                            //
+                            SjUser user=new SjUser();
+                            user.setPhone(sjVirtualTeam.getPhone());
+                            List<SjUser> sjUsers = sjUserService.getDao().queryListForPage(user);
+                            if(!sjUsers.isEmpty()){
+                                SjUser user1 = sjUsers.get(0);
+                                sjOrder.setStayPerson(user1.getLoginId());
+                                SmsSendUtil.sjApprovalSend(sjVirtualTeam, sjOrder.getOrderNo());
+                                break;
+                            }
+
+
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
 
     /**

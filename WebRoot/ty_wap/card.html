@@ -6,9 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/card.css">
     <title>天翼回收</title>
+
 </head>
 <body>
-    <div class="card" id="card" style="display:none;">
+    <div class="card" id="card" style="display:none;" onclick="rule()">
         <div class="message">
             <p>爱奇艺会员卡<span id="cardType"></span></p>
             <p>兑换码：  <span id="cardId"></span></p>
@@ -22,6 +23,9 @@
     <!--<div class="text">-->
         <!--您当前没有优惠券哦！-->
     <!--</div>-->
+
+
+
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
     <script type="text/javascript">
@@ -63,7 +67,7 @@
                             // console.log(list[i].grayId)
                             // console.log(list[i])
                             cardStr +=
-                                '<div class="card ' + list[i].grayClass + '" id="card">\n' +
+                                '<div class="card ' + list[i].grayClass + '" onclick="rule()"  id="card">\n' +
                                 '        <div class="message">\n' +
                                 '            <p>爱奇艺会员卡<span id="cardType">' + type + '</span></p>\n' +
                                 '            <p>兑换码：  <span id="'+Ids+'"    onclick="copy(\''+ Ids +'\')"  class="classId">' + list[i].cardId + '</span></p>\n' +
@@ -93,7 +97,7 @@
             }
         )
        function copy(Ids){
-            // console.log(77777+Ids)
+           // console.log(77777+Ids)
            var text =document.getElementById(Ids).innerText;
            var input = document.createElement('input');
            input.setAttribute('id', 'copyInput');
@@ -137,6 +141,16 @@
             }
             return linkUrl
         }
+
+
+        function rule() {
+            // $('.dialog-active').show();
+            location.href='rule.html'
+        }
+
+
+
+
 
 
     </script>

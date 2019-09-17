@@ -93,19 +93,20 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
             jsonObject.put("createUserid", sjReworkOrder1.getCreateUserid());
 
 
-
-            String stayPerson = "";
-            if (sjReworkOrder1.getState() == 200) {
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(), 3);
+            // 订单列表 默认显示施工单位的联系人和姓名
+            String stayPerson ="";
+            String handlerPhone=""; // 处理人电话  获取公司默认联系人电话
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(), 3);
+            if(sjUser!=null){
                 ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
-                stayPerson = company.getPerson();
-            } else if (sjReworkOrder1.getState() == 400) {
-                stayPerson = sjReworkOrder1.getWorkerName();
-            } else{
-                SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder1.getCompanyId(), 3);
-                ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
-                stayPerson = company.getPerson();
+                if(company!=null){
+                    stayPerson = company.getPerson();
+                    handlerPhone=company.getPhone();
+                }
             }
+
+
+            jsonObject.put("handlerPhone", handlerPhone);
             jsonObject.put("stayPerson", stayPerson);
             jsonObject.put("projects", projects);
             jsonObjects.add(jsonObject);
@@ -122,27 +123,53 @@ public class SjReworkOrderService extends BaseService<SjReworkOrder> {
         jsonObject.put("createTime", sjReworkOrder.getStrCreateTime());
         jsonObject.put("state", sjReworkOrder.getState());
         jsonObject.put("orderNo", sjReworkOrder.getOrderNo());
-        if (StringUtils.isNotBlank(sjReworkOrder.getCompanyId())) {
-            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
-            if (sjUser != null && StringUtils.isNotBlank(sjUser.getPhone())) {
-                jsonObject.put("handlerPhone", sjUser.getPhone());//处理方式电话
-            } else {
-                if (StringUtils.isNotBlank(sjReworkOrder.getWorkerId())) {
-                    SjUser sjWorkerUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getWorkerId(), 8);
-                    if (sjWorkerUser != null && StringUtils.isNotBlank(sjWorkerUser.getPhone())) {
-                        jsonObject.put("handlerPhone", sjWorkerUser.getPhone());//处理方式电话
-                    }
-                }
-            }
-        }
+
         String stayPerson = "";
-        if (sjReworkOrder.getState() == 200) {
+        String handlerPhone="";
+
+//        if (StringUtils.isNotBlank(sjReworkOrder.getCompanyId())) {
+//            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
+//            if (sjUser != null && StringUtils.isNotBlank(sjUser.getPhone())) {
+//                jsonObject.put("handlerPhone", sjUser.getPhone());//处理方式电话
+//            } else {
+//                if (StringUtils.isNotBlank(sjReworkOrder.getWorkerId())) {
+//                    SjUser sjWorkerUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getWorkerId(), 8);
+//                    if (sjWorkerUser != null && StringUtils.isNotBlank(sjWorkerUser.getPhone())) {
+//                        jsonObject.put("handlerPhone", sjWorkerUser.getPhone());//处理方式电话
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        if (sjReworkOrder.getState() == 200) {
+//            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
+//            ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
+//            stayPerson = company.getPerson();
+//        } else if (sjReworkOrder.getState() == 400) {
+//            stayPerson = sjReworkOrder.getWorkerName();
+//        } else{
+//            stayPerson = sjReworkOrder.getWorkerName();
+//        }
+        if (StringUtils.isBlank(sjReworkOrder.getWorkerId())) {
             SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getCompanyId(), 3);
             ConstructionCompany company = companyService.getDao().queryByLoginId(sjUser.getId());
             stayPerson = company.getPerson();
-        } else if (sjReworkOrder.getState() == 400) {
+            handlerPhone=company.getPhone();
+        } else{
+            // 订单已分配到员工，则返回具体员工联系方式
             stayPerson = sjReworkOrder.getWorkerName();
+            SjUser sjUser = sjUserService.getDao().queryByLoginId(sjReworkOrder.getWorkerId(), 8);
+            if(sjUser!=null){
+                stayPerson = sjUser.getName();
+                handlerPhone=sjUser.getPhone();
+            }
         }
+
+
+
+
+        jsonObject.put("handlerPhone", handlerPhone);//处理方式电话
         jsonObject.put("stayPerson", stayPerson);
         jsonObject.put("note", sjReworkOrder.getNote());
         jsonObject.put("companyName", sjReworkOrder.getCompanyName());
