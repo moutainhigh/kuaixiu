@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <base href="/recycle/"> -->
+    <link rel="stylesheet" href="css/activity.css">
+    <script src="js/flexible.js"></script>
+    <title>天翼回收</title>
+</head>
+<body>
+      <!--<a href="index1.html?fm=27">测测4G手机还值多少钱</a>-->
+    <div class="content-box">
+        <div class="header-box">
+            <!--<img src="img/tianyi.png" alt class="img1">-->
+            <img src="img/week.png" alt class="img2" style="position:relative;top:10px">
+            <img src="img/head3.png" alt class="img3">
+        </div>
+        <div class="main-box">
+            <img src="img/youkuhui.png" alt class="img4">
+            <img src="img/youkuCard.png" alt class="img5">
+        </div>
+        <div class="content">
+            <div class="text">热门回收机型</div>
+            <img src="img/main3.png" alt class="img6">
+            <a href="product.html?fm=26"><img src="img/main4.png" alt class="img7"></a>
+            <div class="ruletitle">活动规则：</div>
+            <div class="ruletext">
+                <div class="rule">
+                    <span>1.</span> <p id="time">
+                    活动时间：8月20日-10月31日
+                </p>
+                </div>
+                <div class="rule">
+                    <span>2.</span> <p>
+                    在活动期间内下单，且在11月10日前完成回收的用户，即可获赠优酷会员。
+                </p>
+                </div>
+                <div class="rule">
+                    <span>3.</span> <p>
+                    根据交易成功金额的不同，赠送相应的优酷会员。
+                </p>
+                </div>
+                <div class="rule">
+                    <span>4.</span> <p>
+                    回收成功后，爱奇艺会员卡将在（15个工作日内）以兑换码的形式发送至电信营业厅APP-我-必备工具更多-手机回收（天翼回收）-个人中心-
+                    我的其他券中查看或者首页搜索“手机回收”-个人中心-我的其他券中查看，请于12月31日前前往优酷视频官网进行兑换
+                </p>
+                </div>
+                <div class="rule">
+                    <span>5.</span> <p>
+                    每个用户仅限参加一次，按照最高奖励为准，手机号码将作为统计一个用户的唯一标准。
+                </p>
+                </div>
+                <div class="rule">
+                    <span>6.</span> <p>
+                    本次活动不可与天翼回收其他活动同时参与。
+                </p>
+                </div>
+                <div class="rule">
+                    <span>7.</span> <p>
+                    其他未尽事宜，请咨询客服热线：
+                <br>4008-110-299/0571-87162535，在线时间 ：周一到周五，早上9点到晚上5点半，节假日休息。
+                </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <script src="js/jquery.js"></script>
+      <script src="js/swiper.min.js"></script>
+      <script src="js/common.js"></script>
+      <script src="js/util.js"></script>
+    <script>
+        $(function () {
+        var fm=eCacheUtil.storage.getCache(CacheKey.source);
+        if(!isEmpty(fm)){
+            // 27  28渠道修改时间
+            if(fm == '27' || fm == '28' || fm == '10'){
+                $('#time').text('活动时间：8月31日-9月30日');
+            }
+        }
+
+        })
+
+
+
+    </script>
+</body>
+
+
+
+</html>
