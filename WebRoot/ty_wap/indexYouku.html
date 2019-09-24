@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <base href="/recycle/"> -->
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+    <title>天翼回收</title>
+	<style>
+		.swiper-container.hide{
+			display:none;
+		}
+		.image-box{
+			position:relative;
+			padding:0;
+		}
+		.image-box img{
+			width:100%;
+		}
+
+        .dialog-active {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+        }
+
+        .mask-hide {
+            position: absolute;
+            background: rgba(0,0,0,.7);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .img-active-wrap {
+            font-size: 0;
+            position: relative;
+            width: 70%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .img-active {
+            position: relative;
+            width: 100%;
+            display: block;
+        }
+
+        .close-active-btn {
+            position: absolute;
+            top: -0.45rem;
+            right: -0.16rem;
+            display: block;
+            width: .35rem;
+            height: .35rem;
+            background: url(./img/icon_close.png) no-repeat center;
+            background-size: contain;
+        }
+
+        .join-active-btn.special {
+            display: block;
+            width: 100%;
+            height: .32rem;
+            line-height: .32rem;
+            font-size: .16rem;
+            text-align: center;
+            background: #fff;
+            color: red;
+            display: block;
+        }
+	</style>
+</head>
+<body>
+    <div id="wrap" class="indexWrap">
+
+      <!-- start of 首页弹窗 -->
+        <div class="dialog-active">
+            <div class="mask-hide"></div>
+            <div class="img-active-wrap">
+
+                    <i class="close-active-btn js-close-active"></i>
+                <a class="join-active-btn" href="activityVideo.html">
+                    <img class="img-active" src="./img/youkuT.png" alt="">
+                </a>
+                <a class="join-active-btn special" href="youku.html">立即参加</a>
+            </div>
+        </div>
+        <!-- end of 首页弹窗 -->
+
+        <div class="main">
+            <div class="header index1">
+                <a href="javascript:;"><img src="img/logo-go.png" alt=""><span>天翼回收</span></a>
+                <a href="javascript:;" id="login"><span id="isLogin">个人中心</span></a>
+            </div>
+            <div class="swiper-container">
+                <div class="banner">
+                    <div class="slide-item">
+                        <a href="youku.html"><img src="img/banner9.png" alt=""></a>
+                    </div>
+                    <div class="slide-item">
+                        <a href="product.html"><img src="img/banner3.png" alt=""></a>
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/banner1.png" alt="">
+                    </div>
+                    <div class="slide-item">
+                        <img src="img/banner2.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+	      <!-- <div id="banner-image" class="image-box">
+				<img src="img/ty_banner.jpg" />
+			</div>  -->
+
+            <div id="recycle-btn" class="recyclePro">
+                <div class="title">
+                </div>
+                <div class="cont">
+                    <div>
+                        <p>
+                            <i class="icon_progress"></i>
+                        </p>
+                        搜索机型
+                    </div>
+                    <p>&gt;</p>
+                    <div>
+                        <p><i class="icon_progress"></i></p>
+                        估价下单
+                    </div>
+                    <p>&gt;</p>
+                    <div>
+                        <p><i class="icon_progress"></i></p>
+                        顺丰上门
+                    </div>
+                    <p>&gt;</p>
+                    <div>
+                        <p><i class="icon_progress"></i></p>
+                        坐等收款
+                    </div>
+                </div>
+            </div>
+
+            <div class="hotBrand">
+                <div class="hotTitle">
+                    <h3>热门回收品牌</h3>
+                    <div>
+                        <p>现在回收，返现<span class="color-orange">更高</span></p>
+                        <a href="product.html">查看全部 &gt;</a>
+                    </div>
+                </div>
+                <div class="brandCont">
+                    <div class="item" data-bid="1">
+                        <img src="img/logo-apple.png" alt="">
+                        <p>苹果</p>
+                    </div>
+                    <div class="item" data-bid="6">
+                        <img src="img/logo-huawei.png" alt="">
+                        <p>华为</p>
+                    </div>
+                    <div class="item" data-bid="21">
+                        <img src="img/logo-gionee.png" alt="">
+                        <p>金立</p>
+                    </div>
+                    <div class="item" data-bid="15">
+                        <img src="img/logo-oppo.png" alt="">
+                        <p>OPPO</p>
+                    </div>
+                    <div class="item" data-bid="16">
+                        <img src="img/logo-vivo.png" alt="">
+                        <p>VIVO</p>
+                    </div>
+                    <div class="item" data-bid="4">
+                        <img src="img/logo-mi.png" alt="">
+                        <p>小米</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="hotModel">
+                <div class="hotTitle">
+                    <h3>热门回收机型</h3>
+                    <div>
+                        <p>设备回收，几步<span class="color-orange">轻松搞定</span></p>
+                        <a href="product.html">查看全部 &gt;</a>
+                    </div>
+                </div>
+                <div class="modelCont">
+                    <div class="item" data-mid="11564">
+                        <img src="https://static.m-super.cn/Mobile/25827.jpg" alt="">
+                        <p>iPhone X</p>
+                        <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
+                        <a href="javascript:;" class="btn-normal">立即卖</a>
+                    </div>
+                    <div class="item" data-mid="11529">
+                        <img src="https://static.m-super.cn/Mobile/25680.jpg" alt="">
+                        <p>iPhone 8 Plus</p>
+                        <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
+                        <a href="javascript:;" class="btn-normal">立即卖</a>
+                    </div>
+                    <div class="item" data-mid="11530">
+                        <img src="https://static.m-super.cn/Mobile/25681.jpg" alt="">
+                        <p>三星GALAXY note 8</p>
+                        <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
+                        <a href="javascript:;" class="btn-normal">立即卖</a>
+                    </div>
+                    <div class="item" data-mid="11528">
+                        <img src="https://static.m-super.cn/Mobile/25679.jpg" alt="">
+                        <p>iPhone 8</p>
+                        <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
+                        <a href="javascript:;" class="btn-normal">立即卖</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service">
+                <div class="hotTitle">
+                    <h3>我们的服务</h3>
+                </div>
+                <div class="serviceCont">
+                    <div class="item">
+                        <a>
+                            <img src="img/sf.png" alt="">
+                        </a>
+                        <p>顺丰包邮</p>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <img src="img/recycle.png" alt="">
+                        </a>
+                        <p>上门回收</p>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <img src="img/safe.png" alt="">
+                        </a>
+                        <p>隐私安全</p>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <img src="img/tag.png" alt="">
+                        </a>
+                        <p>价格公道</p>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <img src="img/quick.png" alt="">
+                        </a>
+                        <p>快速打款</p>
+                    </div>
+                    <div class="item">
+                        <a>
+                            <img src="img/team.png" alt="">
+                        </a>
+                        <p>专业团队</p>
+                    </div>
+                </div>
+            </div>
+
+           <!-- <div class="Copyright">
+                <p>Copyright 2017 杭州翼诺科技有限公司技术支持</p>
+                <p>浙ICP备 16041546号</p>
+            </div>  -->
+        </div>
+        <div class="footer">
+            <a href="product.html" class="btn-large">我要卖手机</a>
+        </div>
+
+        <!--start of 弹出对话框-->
+        <div id="popoDialog" class="popo-dialog hide">
+            <div id="phone-dialog-box" class="dialog-box">
+                <div class="dialog-title">登录</div>
+                <div class="dialog-body">
+                    <div class="input-item">
+                        <input id="phoneNum"  class="popodlg-input"   type="text" placeholder="请输入登录手机号码" />
+                    </div>
+                    <div class="input-item">
+                        <input id="codeNum"  class="short-input popodlg-input" type="text"  placeholder="请填写验证码" />
+                        <span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
+                        <!--<span id="secondLabel" class="input-label info-box">60秒</span>-->
+                    </div>
+                    <div class="input-item">
+                        <span id="doPrizeBtn" class="do-prize-btn">立刻登录</span>
+                    </div>
+                </div>
+                <span id="closePopoDialogBtn" class="close-btn">X</span>
+            </div>
+        </div>
+        <!--end of 弹出对话框-->
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/util.js"></script>
+    <script>
+        $(function(){
+            eCacheUtil.storage.cache(CacheKey.isSelect,false);
+            eCacheUtil.storage.cache(CacheKey.happyGo,true);
+            eCacheUtil.storage.cache('discount_info_infos','')
+
+
+			//TODO 从欢Go客户端加载当前页面
+			//1. 获得ticket
+			var ticket = GetQueryString( 'ticket' ) ;
+			var fm = GetQueryString( 'fm' ) ;
+			//2. 根据ticket获得手机号码
+			//a 记录抽奖号码
+			if( fm == '10'|| fm == '26' ){
+				eCacheUtil.storage.cache( CacheKey.source, fm );
+				//从欢Go客户端加载当前页面
+				if( ticket && ticket != '' ){
+					getMobileByTicket( ticket );
+				}
+				// else{
+				// 	alert( '请先用欢Go账号登录再操作' );
+				// }
+			}
+			else{
+				//良品价检测
+				eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
+
+                isLoginCheck();
+
+			}
+
+            var mySwiper = new Swiper('.swiper-container',{
+                wrapperClass : 'banner',
+                slideClass : 'slide-item',
+                slideActiveClass : 'active',
+                loop : true,
+                slidesPerView: 'auto',
+                autoplay: 3000
+            });
+            var fm = eCacheUtil.storage.getCache(CacheKey.source);
+            if (isEmpty(fm)){
+                eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+            }
+            $('.modelCont').on('click','.item',function () {
+                eCacheUtil.storage.cache(CacheKey.ProjectId,$(this).attr('data-mid'));
+                eCacheUtil.storage.cache(CacheKey.ModelName,$(this).find('p').eq(0).html());
+                eCacheUtil.storage.cache(CacheKey.imgHref,$(this).find('img').attr('src'));
+                eCacheUtil.storage.cache(CacheKey.isSelect,false);
+                location.href = 'test.html';
+            });
+            $('.brandCont .item').click(function(){
+                location.href = 'product.html?bid='+$(this).attr('data-bid');
+            });
+
+			//banner图片的单击事件
+			$('#banner-image').click( function(){
+				//TODO
+				location.href = 'manisPoster.html';
+			});
+
+			//流程图的单击事件
+			$('#recycle-btn').click( function(){
+				//TODO
+				 location.href = 'process.html';
+			});
+
+            // 点击取消按钮隐藏活动
+            $('.js-close-active').on('click',function(){
+                $('.dialog-active').hide()
+            })
+            //关闭弹窗
+            $("#closePopoDialogBtn").on('click',function () {
+                $("#popoDialog").addClass('hide');
+            })
+
+            // 获取验证码
+            $("#getCodeBtn").on('click',function () {
+
+                if(!$("#phoneNum").val()) {
+                    alertTip('请输入手机号码');
+                    return false;
+                }else if(!(/^1[123456789]\d{9}$/.test($("#phoneNum").val()))) {
+                    alertTip('手机号码不正确，请重新输入');
+                    return false;
+                }else {
+                    var params = {
+                        phone: $("#phoneNum").val()
+                    }
+                    $.post(linkUrl+'/recycle/sendSmsCode.do',{params:JSON.stringify(params)},
+                        function(data){
+                            Countdown($("#getCodeBtn").get(0),60)
+                            if(data.success) {
+
+                            }else {
+                                alertTip(data.resultMessage);
+                            }
+                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                        })//
+                }
+            })
+
+            // 登录
+            $("#doPrizeBtn").on('click',function () {
+                if(!$("#phoneNum").val()) {
+                    alertTip('请输入手机号码');
+                    return false;
+                }else if(!(/^1[123456789]\d{9}$/.test($("#phoneNum").val()))) {
+                    alertTip('手机号码不正确，请重新输入');
+                    return false;
+                }else if(!$("#codeNum").val() || !$("#codeNum").val().trim() ){
+                    alertTip('请输入验证码');
+                    return false;
+                }else {
+                    var params = {
+                        phone: $("#phoneNum").val(),
+                        checkCode: $("#codeNum").val()
+                    }
+                    $.post(linkUrl+'/recycle/checkLogin.do',{params:JSON.stringify(params)},
+                        function(data){
+                            if(data.success) {
+                                eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
+                                isLoginCheck();
+                                $("#popoDialog").addClass('hide')
+                                alertTip('登录成功')
+                            }else {
+                                alertTip(data.resultMessage);
+                            }
+                            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                        })//
+                }
+            })
+
+
+			//a.1 根据ticket获得手机号码
+			function getMobileByTicket( ticketCode ){
+				var param = {
+					"ticket":ticket,
+				};
+				$.post(
+					getRealPath()+"/recycle/saveHappyMobile.do",
+					{
+						params:JSON.stringify(param)
+					},
+					function(data){
+						if ( data.success){
+							 var phoneNum = data.result.mobile ;
+							  eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phoneNum);
+                              eCacheUtil.storage.cache(CacheKey.loginPhone,phoneNum);
+                              isLoginCheck()
+						}else{
+							alert(data.resultMessage);
+						}
+				});
+				return ;
+			}
+            function isLoginCheck() {
+                var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+                var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                if(loginPhone || HappyGoMobile) {
+                    $("#isLogin").html('个人中心')
+                    let str = $(".join-active-btn").attr('href');
+                    if(str.indexOf('phone') < 0) {
+                       /** if(HappyGoMobile) {
+                            str = str + "&phone="+HappyGoMobile
+                            console.log(str)
+                            $(".join-active-btn").attr('href',str)
+                        }else if(loginPhone){
+                            str = str + "&phone="+loginPhone
+                            console.log(str)
+                            $(".join-active-btn").attr('href',str)
+                        }     **/
+                    } 
+
+
+                }else {
+
+                    $("#isLogin").html('个人中心')
+                }
+                $("#login").on('click',function () {
+                    if(loginPhone || HappyGoMobile ) {
+                        location.href = 'personalCenter.html'
+                    }else {
+                        $("#popoDialog").removeClass('hide');
+                    }
+
+                })
+            }
+
+            $.post(
+                getRealPath()+"/recycle/isLogin.do",
+                {
+
+                },
+                function(data){
+                    if ( data.success){
+                        eCacheUtil.storage.cache(CacheKey.loginPhone,data.result.phone);
+                        isLoginCheck();
+                    }else{
+                        isLoginCheck();
+                    }
+                });
+
+        })
+
+
+    </script>
+<!--站长统计-->
+<div style="display: none;">
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261469862'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261469862%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>
