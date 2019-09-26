@@ -36,6 +36,16 @@
             <tr>
                 <td class="search_th "><label class="control-label">卡密ID：</label></td>
                 <td class="search_td"><input type="text" name="cardId" class="form-control"></td>
+
+
+                <td class="search_th "><label class="control-label">种类：</label></td>
+                <td class="search_td">
+                    <select name="cardType" onchange="brandChange(this.value);" class="form-control">
+                        <option value="">--请选择--</option>
+                        <option value="0">爱奇艺</option>
+                        <option value="1">优酷</option>
+                    </select>
+                </td>
             </tr>
 
         </table>
@@ -66,6 +76,7 @@
                 <th class="fontWeight_normal table-title center">类型</th>
                 <th class="fontWeight_normal table-title center">价格</th>
                 <th class="fontWeight_normal table-title center">有效期</th>
+                <th class="fontWeight_normal table-title center">种类</th>
                 <th class="fontWeight_normal table-title center">状态</th>
             </tr>
             </thead>
@@ -102,6 +113,7 @@
         {"data": "type","class":""},
         {"data": "price","class":""},
         {"data": "validityTime","class":""},
+        {"data": "cardType","class":""},
         {"data": "isUse","class":""}
     ]);
     //设置定义列的初始属性
@@ -138,6 +150,17 @@
         },
         {//号卡类型
             targets: 8,
+            render: function (data, type, row, meta) {
+                if(row.cardType==0){
+                    return '爱奇艺';
+                }
+                else{
+                    return '优酷';
+                }
+            }
+        },
+        {//号卡类型
+            targets: 9,
             render: function (data, type, row, meta) {
                 if(row.isUse==0){
                     return '未领取';

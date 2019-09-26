@@ -133,6 +133,7 @@ public class VideoCardService extends BaseService<VideoCard> {
             v.setType(s.getType());
             v.setPrice(s.getPrice());
             v.setValidityTime(s.getValidityTime());
+            v.setCardType(0);  // 爱奇艺
             mapper.add(v);
             VideoUserRel videoUserRel = new VideoUserRel();
             videoUserRel.setOrderNo(s.getOrderNo());
@@ -329,5 +330,90 @@ public class VideoCardService extends BaseService<VideoCard> {
             e.printStackTrace();
             log.error("文件导出--IOException", e);
         }
+    }
+
+
+    /**
+     * 导入优酷卡密
+     * @param file
+     * @param report
+     * @param su
+     */
+    @Transactional
+    public void importYoukuExcel(MultipartFile file, ImportReport report, SessionUser su) {
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        Workbook workbook = null;
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+            // 根据后缀实例化，xls实例化HSSFWorkbook,xlsx实例化XSSFWorkbook
+            if (extension.equalsIgnoreCase("xls")) {
+                workbook = new HSSFWorkbook(inputStream);
+            } else {
+                workbook = new XSSFWorkbook(inputStream);
+            }
+            //检查模板是否正确
+            if (checkExcelModel(workbook, report)) {
+                //检查表格数据
+                List<VideoCard> list = checkData(workbook, report, su);
+                if (report.isPass() && list.size() > 0) {
+                    //保存数据
+                    List<String> mobibles = saveYoukuData(list, su);
+                    VideoCardExecutor myExecutor = new VideoCardExecutor();
+                    myExecutor.fun(mobibles, recycleSystemService);
+                }
+            } else {
+                report.setContinueNext(false);
+                report.setPass(false);
+            }
+        } catch (SystemException e) {
+            e.printStackTrace();
+            report.setPass(false);
+            report.setContinueNext(false);
+            report.setError("导入错误：" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            report.setPass(false);
+            report.setContinueNext(false);
+            report.setError("系统异常请联系管理员");
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+
+                }
+            }
+        }
+
+    }
+
+
+
+    @Transactional
+    public List<String> saveYoukuData(List<VideoCard> list, SessionUser su) {
+        List<String> mobiles = new ArrayList<>();
+        for (VideoCard s : list) {
+            VideoCard v = new VideoCard();
+            v.setIsUse(1);
+            v.setCreateTime(new Date());
+            v.setCreateUserid(su.getUserId());
+            v.setCardId(s.getCardId());
+            v.setCardName(s.getCardName());
+            v.setType(s.getType());
+            v.setPrice(s.getPrice());
+            v.setValidityTime(s.getValidityTime());
+            v.setCardType(1);  // 优酷
+            mapper.add(v);
+            VideoUserRel videoUserRel = new VideoUserRel();
+            videoUserRel.setOrderNo(s.getOrderNo());
+            RecycleOrder recycleOrder = orderService.getDao().queryByOrderNo(s.getOrderNo());
+            videoUserRel.setMobile(recycleOrder.getMobile());
+            videoUserRel.setCardId(s.getCardId());
+            videoUserRel.setCreateTime(new Date());
+            videoUserRelService.add(videoUserRel);
+            mobiles.add(recycleOrder.getMobile());
+        }
+        return mobiles;
     }
 }

@@ -66,6 +66,17 @@ public class VideoCardController extends BaseController {
         return new ModelAndView("videoCard/importIndex");
     }
 
+    /**
+     * 优酷
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/videoCard/importYouku")
+    public ModelAndView importYouku(HttpServletRequest request,HttpServletResponse response){
+        return new ModelAndView("videoCard/importYouku");
+    }
+
 
 
     @RequestMapping(value = "/videoCard/queryListForPage")
@@ -75,6 +86,7 @@ public class VideoCardController extends BaseController {
         String cardId=request.getParameter("cardId");
         String type=request.getParameter("type");
         String use=request.getParameter("isUse");
+        String cardType=request.getParameter("cardType");
         VideoCard s=new VideoCard();
         s.setCardId(cardId);
         if(StringUtils.isNotBlank(type)){
@@ -82,6 +94,9 @@ public class VideoCardController extends BaseController {
         }
         if(StringUtils.isNotBlank(use)){
             s.setIsUse(Integer.parseInt(use));
+        }
+        if(StringUtils.isNotBlank(cardType)){
+            s.setCardType(Integer.parseInt(cardType));
         }
         s.setPage(page);
         List<VideoCard> list = videoCardService.queryListForPage(s);
@@ -141,6 +156,16 @@ public class VideoCardController extends BaseController {
         resultMap.put(RESULTMAP_KEY_DATA, report);
         renderJson(response, resultMap);
     }
+
+
+
+
+
+
+
+
+
+
 
 
     @RequestMapping("/videoCard/personList")
@@ -299,4 +324,43 @@ public class VideoCardController extends BaseController {
         return list;
     }
 
+
+
+    @RequestMapping(value = "/videoCard/startImportYouku")
+    public void startImportYouku(
+            @RequestParam("fileInput") MultipartFile myfile,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        // 返回结果，默认失败
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);
+        ImportReport report = new ImportReport();
+        StringBuffer errorMsg = new StringBuffer();
+        try{
+            if(myfile != null && StringUtils.isNotBlank(myfile.getOriginalFilename())){
+                String fileName=myfile.getOriginalFilename();
+                //扩展名
+                String extension= FilenameUtils.getExtension(fileName);
+                if (!extension.equalsIgnoreCase("xls")){
+                    errorMsg.append("导入文件格式错误！只能导入excel  xls文件！");
+                }
+                else{
+                    videoCardService.importYoukuExcel(myfile,report,getCurrentUser(request));
+                    resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
+                    resultMap.put(RESULTMAP_KEY_MSG, "导入成功");
+                }
+            }
+            else{
+                errorMsg.append("导入文件为空");
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            errorMsg.append("导入失败");
+            resultMap.put(RESULTMAP_KEY_MSG, "导入失败");
+        }
+        request.setAttribute("report", report);
+        resultMap.put(RESULTMAP_KEY_DATA, report);
+        renderJson(response, resultMap);
+    }
 }
