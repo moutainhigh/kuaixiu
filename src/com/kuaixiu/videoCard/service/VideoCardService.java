@@ -360,7 +360,7 @@ public class VideoCardService extends BaseService<VideoCard> {
                     //保存数据
                     List<String> mobibles = saveYoukuData(list, su);
                     VideoCardExecutor myExecutor = new VideoCardExecutor();
-                    myExecutor.fun(mobibles, recycleSystemService);
+                    myExecutor.youkuSendMsg(mobibles, recycleSystemService);
                 }
             } else {
                 report.setContinueNext(false);
