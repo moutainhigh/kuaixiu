@@ -54,7 +54,9 @@ function fn_select_address(level,pid,current,profix){
     $.post(url, {params:JSON.stringify(params)}, function(data){
         if (data.success){
             var json = data.result.data;
+
             $(".selectAddr").append(packageAddress((level - 0 +1),json,current,profix));
+
             $('[data-level = '+level+']').removeClass('selectList');
         }else {
             alertTip(data.resultMessage);
@@ -76,6 +78,7 @@ function packageAddress(level,json,current,profix){
     {
         select_html +='<li data-value="'+json[a]['areaId']+'">'+json[a]['area']+'</li>';
     }
+    select_html +='<li data-value="'+'' +'">'+' '+'</li>';  // 防止最后一个不显示
     select_html += '</ul>';
     return select_html;
 }
