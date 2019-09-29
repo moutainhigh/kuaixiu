@@ -20,6 +20,18 @@
         </div>
 
     </div>
+
+    <div class="youku" id="youku" style="display:none;" onclick="rule()">
+        <div class="message">
+            <p>优酷会员卡<span id="youkuCardType"></span></p>
+            <p>兑换码：  <span id="youkuCardId"></span></p>
+            <p>有效期至<span id="youkuEndTime"></span></p>
+        </div>
+        <div class="money">
+            ￥<span id="youkuMoney"></span>
+        </div>
+
+    </div>
     <!--<div class="text">-->
         <!--您当前没有优惠券哦！-->
     <!--</div>-->
@@ -33,13 +45,13 @@
         $.post(url+'/videoCard/personList.do',
             function(data){
                 if(data.success) {
-                    $("#card").show();
                     if (data.data.length) {
                         var list = data.data;
                         var cardStr = ""
                         // console.log(list)
                         for (var i = 0; i < list.length; i++) {
                             var type = list[i].type
+                            var cardType=list[i].cardType;  // 0爱奇艺  1优酷
                             list[i].grayClass = ''
                             if (type === 1) {
                                 type = '周卡';
@@ -66,17 +78,37 @@
                             // console.log(Ids)
                             // console.log(list[i].grayId)
                             // console.log(list[i])
-                            cardStr +=
-                                '<div class="card ' + list[i].grayClass + '" onclick="rule()"  id="card">\n' +
-                                '        <div class="message">\n' +
-                                '            <p>爱奇艺会员卡<span id="cardType">' + type + '</span></p>\n' +
-                                '            <p>兑换码：  <span id="'+Ids+'"    onclick="copy(\''+ Ids +'\')"  class="classId">' + list[i].cardId + '</span></p>\n' +
-                                '            <p>有效期至<span id="endTime">' + dateStr + '</span></p>\n' +
-                                '        </div>\n' +
-                                '        <div class="money">\n' +
-                                '            ￥<span id="money">' + list[i].price + '</span>\n' +
-                                '        </div>\n' +
-                                '    </div>'
+
+                            if(cardType == 0){
+                                $("#card").show();
+                                console.log("爱奇艺");
+                                cardStr +=
+                                    '<div class="card ' + list[i].grayClass + '" onclick="rule()"  id="card">\n' +
+                                    '        <div class="message">\n' +
+                                    '            <p>爱奇艺会员卡<span id="cardType">' + type + '</span></p>\n' +
+                                    '            <p>兑换码：  <span id="'+Ids+'"    onclick="copy(\''+ Ids +'\')"  class="classId">' + list[i].cardId + '</span></p>\n' +
+                                    '            <p>有效期至<span id="endTime">' + dateStr + '</span></p>\n' +
+                                    '        </div>\n' +
+                                    '        <div class="money">\n' +
+                                    '            ￥<span id="money">' + list[i].price + '</span>\n' +
+                                    '        </div>\n' +
+                                    '    </div>'
+                            }else{
+                                $("#youku").show();
+                                console.log("优酷");
+                                cardStr +=
+                                    '<div class="youku ' + list[i].grayClass + '" onclick="rule()"  id="youku">\n' +
+                                    '        <div class="message">\n' +
+                                    '            <p>优酷会员卡<span id="youkuCardType">' + type + '</span></p>\n' +
+                                    '            <p>兑换码：  <span id="'+Ids+'"    onclick="copy(\''+ Ids +'\')"  class="classId">' + list[i].cardId + '</span></p>\n' +
+                                    '            <p>有效期至<span id="youkuEndTime">' + dateStr + '</span></p>\n' +
+                                    '        </div>\n' +
+                                    '        <div class="money">\n' +
+                                    '            ￥<span id="youkuMoney">' + list[i].price + '</span>\n' +
+                                    '        </div>\n' +
+                                    '    </div>'
+                            }
+
                         }
                         document.body.innerHTML = cardStr
                     }else{
