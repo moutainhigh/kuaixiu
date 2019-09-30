@@ -37,4 +37,23 @@ public class VideoCardExecutor {
             }
         });
     }
+
+
+    public void youkuSendMsg(List<String> mobibles, RecycleSystemService recycleSystemService) throws Exception {
+
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    for(String mobile : mobibles){
+                        SmsSendUtil.YouKuCardExecutorSendMobile(mobile,recycleSystemService);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("发送短信，系统异常！！");
+                }
+            }
+        });
+    }
 }

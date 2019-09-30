@@ -692,6 +692,20 @@ public class SmsSendUtil {
         return sendSmsThread(mobile, content.toString(),"2",recycleSystemService);
     }
 
+
+    /**
+     * 赠送优酷短信
+     * @param mobile
+     * @param recycleSystemService
+     * @return
+     */
+    public static boolean YouKuCardExecutorSendMobile(String mobile,RecycleSystemService recycleSystemService) {
+        StringBuffer content = new StringBuffer();
+        content.append("感谢您参与手机回收活动，赠送的优酷兑换码已发至您的天翼回收-个人中心-我的其他券中，");
+        content.append("请戳dwz.cn/iOQlLZb2前往查看");
+        return sendSmsThread(mobile, content.toString(),"2",recycleSystemService);
+    }
+
     private static DateFormat formater = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     private static String URL = SystemUtil.getSysCfgProperty("smsUtil.url");

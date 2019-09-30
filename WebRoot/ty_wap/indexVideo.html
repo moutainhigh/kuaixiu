@@ -102,6 +102,9 @@
             <div class="swiper-container">
                 <div class="banner">
                     <div class="slide-item">
+                        <img src="img/nationalDay.png" alt="">
+                    </div>
+                    <div class="slide-item">
                         <a href="activityVideo.html"><img src="img/banner8.png" alt=""></a>
                     </div>
                     <div class="slide-item">
@@ -423,9 +426,10 @@
                                 eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
                                 isLoginCheck();
                                 $("#popoDialog").addClass('hide')
-                                alertTip('登录成功')
+                                // alertTip('登录成功')
+                                location.href = 'personalCenter.html'
                             }else {
-                                alertTip(data.resultMessage);
+                                alert(data.resultMessage);
                             }
                             // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
                         })//
@@ -461,7 +465,7 @@
                 if(loginPhone || HappyGoMobile) {
                     $("#isLogin").html('个人中心')
                     let str = $(".join-active-btn").attr('href');
-                    if(str.indexOf('phone') < 0) {
+                    // if(str.indexOf('phone') < 0) {
                        /** if(HappyGoMobile) {
                             str = str + "&phone="+HappyGoMobile
                             console.log(str)
@@ -471,7 +475,7 @@
                             console.log(str)
                             $(".join-active-btn").attr('href',str)
                         }     **/
-                    } 
+                    // }
 
 
                 }else {

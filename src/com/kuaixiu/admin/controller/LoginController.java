@@ -154,6 +154,7 @@ public class LoginController extends BaseController {
             String passwd = request.getParameter("passwd");
             //是否选中自动登录
             String isChecked = request.getParameter("autoLogin");
+            System.out.println("loginId:"+loginId+"  "+passwd);
             SysUser user = userService.checkLogin(loginId, passwd);
             if (user == null) {
                 resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_FALSE);

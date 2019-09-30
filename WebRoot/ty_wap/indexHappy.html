@@ -82,17 +82,17 @@
 
       <!-- start of 首页弹窗 -->
         <!-- start of 首页弹窗 -->
-        <div class="dialog-active">
-            <div class="mask-hide"></div>
-            <div class="img-active-wrap">
+        <!--<div class="dialog-active">-->
+            <!--<div class="mask-hide"></div>-->
+            <!--<div class="img-active-wrap">-->
 
-                <i class="close-active-btn js-close-active"></i>
-                <a class="join-active-btn" href="../hs_hd/index.html#/?hd=ayll006&fm=11">
-                    <img class="img-active" src="./img/zq2.png" alt="">
-                </a>
-                <a class="join-active-btn special" href="../hs_hd/index.html#/?hd=ayll006&fm=11">立即参加</a>
-            </div>
-        </div>
+                <!--<i class="close-active-btn js-close-active"></i>-->
+                <!--<a class="join-active-btn" href="../hs_hd/index.html#/?hd=ayll006&fm=11">-->
+                    <!--<img class="img-active" src="./img/zq2.png" alt="">-->
+                <!--</a>-->
+                <!--<a class="join-active-btn special" href="../hs_hd/index.html#/?hd=ayll006&fm=11">立即参加</a>-->
+            <!--</div>-->
+        <!--</div>-->
         <!-- end of 首页弹窗 -->
         <!-- end of 首页弹窗 -->
 
@@ -104,7 +104,7 @@
             <div class="swiper-container">
                 <div class="banner">
                     <div class="slide-item">
-                        <a href="../hs_hd/index.html#/?hd=ayll006&fm=11"><img src="img/zq1.png" alt=""></a>
+                        <img src="img/nationalDay.png" alt="">
                     </div>
                     <div class="slide-item">
                         <a href="product.html"><img src="img/banner3.png" alt=""></a>
@@ -426,9 +426,10 @@
                                 eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
                                 isLoginCheck();
                                 $("#popoDialog").addClass('hide')
-                                alertTip('登录成功')
+                                location.href = 'personalCenter.html'
+
                             }else {
-                                alertTip(data.resultMessage);
+                                alert(data.resultMessage);
                             }
                             // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
                         })//
@@ -464,7 +465,7 @@
                 if(loginPhone || HappyGoMobile) {
                     $("#isLogin").html('个人中心')
                     let str = $(".join-active-btn").attr('href');
-                    if(str.indexOf('phone') < 0) {
+                    // if(str.indexOf('phone') < 0) {
                        /** if(HappyGoMobile) {
                             str = str + "&phone="+HappyGoMobile
                             console.log(str)
@@ -474,7 +475,7 @@
                             console.log(str)
                             $(".join-active-btn").attr('href',str)
                         }     **/
-                    } 
+                    // }
 
 
                 }else {

@@ -15,20 +15,22 @@
         <result column="create_time" property="createTime"/>
         <result column="create_userid" property="createUserid"/>
         <result column="update_time" property="updateTime"/>
+        <result column="card_type" property="cardType"/>
+
     </resultMap>
 
     <!-- video_card table all fields -->
     <sql id="Base_Column_List" >
-        id,card_id,card_name,type,price,validity_time,is_use,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time
+        id,card_id,card_name,type,price,validity_time,is_use,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,card_type
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" useGeneratedKeys="true"
             keyProperty="id">
         insert into video_card
-        (card_id,card_name,type,price,validity_time,is_use,create_time,create_userid,update_time)
+        (card_id,card_name,type,price,validity_time,is_use,create_time,create_userid,update_time,card_type)
         values
-        (#{cardId},#{cardName},#{type},#{price},#{validityTime},#{isUse},#{createTime},#{createUserid},#{updateTime})
+        (#{cardId},#{cardName},#{type},#{price},#{validityTime},#{isUse},#{createTime},#{createUserid},#{updateTime},#{cardType})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -133,6 +135,9 @@
         <if test="updateTime != null and updateTime != ''" >
             and update_time = #{updateTime}
         </if>
+        <if test="cardType != null " >
+            and card_type = #{cardType}
+        </if>
     </select>
 
     <!-- 查询列表 带分页 -->
@@ -167,6 +172,9 @@
         </if>
         <if test="updateTime != null and updateTime != ''" >
             and update_time = #{updateTime}
+        </if>
+        <if test="cardType != null " >
+            and card_type = #{cardType}
         </if>
     </select>
 

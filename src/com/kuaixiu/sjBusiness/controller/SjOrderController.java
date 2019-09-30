@@ -104,6 +104,30 @@ public class SjOrderController extends BaseController {
     @Autowired
     private SjOrderService sjOrderService;
 
+
+    /**
+     * @Author gqa
+     * @Description //防止重复提交订单订单
+     * @Date 15:56 2019/9/30
+     * @Param []  waitTime  间隔时间 单位毫秒
+     * @return void
+     **/
+    private boolean  preventCreateOrder(long waitTime,HttpServletRequest request){
+
+        Long time = System.currentTimeMillis();
+        Object requestTimes = request.getSession().getAttribute("newTimes");
+        if (requestTimes == null) {
+            request.getSession().setAttribute("newTimes", time);
+        } else {
+            long realTime = (long) (requestTimes);
+            if ((time - realTime) < waitTime) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     /**
      * 提交商机/派单
      *
@@ -118,6 +142,13 @@ public class SjOrderController extends BaseController {
                                HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         try {
+            //设置下单间隔为10秒
+            boolean tip = preventCreateOrder(10000, request);
+            if(tip){
+                return getSjResult(result, null, false, "2", null, "您下单过于频繁，请稍后重试!");
+            }
+
+
             JSONObject params = getPrarms(request);
             Integer type = params.getInteger("type");//
             String phone = params.getString("phone");//登录手机号
@@ -235,6 +266,8 @@ public class SjOrderController extends BaseController {
             }
 
             getSjResult(result, null, true, "0", null, "提交成功");
+            //下单成功后更新下单间隔时间
+            request.getSession().setAttribute("newTimes", System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
