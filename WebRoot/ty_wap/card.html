@@ -81,7 +81,6 @@
 
                             if(cardType == 0){
                                 $("#card").show();
-                                console.log("爱奇艺");
                                 cardStr +=
                                     '<div class="card ' + list[i].grayClass + '" onclick="rule()"  id="card">\n' +
                                     '        <div class="message">\n' +
@@ -95,9 +94,8 @@
                                     '    </div>'
                             }else{
                                 $("#youku").show();
-                                console.log("优酷");
                                 cardStr +=
-                                    '<div class="youku ' + list[i].grayClass + '" onclick="rule()"  id="youku">\n' +
+                                    '<div class="youku ' + list[i].grayClass + '" onclick="youkuRule()"  id="youku">\n' +
                                     '        <div class="message">\n' +
                                     '            <p>优酷会员卡<span id="youkuCardType">' + type + '</span></p>\n' +
                                     '            <p>兑换码：  <span id="'+Ids+'"    onclick="copy(\''+ Ids +'\')"  class="classId">' + list[i].cardId + '</span></p>\n' +
@@ -181,7 +179,10 @@
         }
 
 
-
+        function youkuRule() {
+            // $('.dialog-active').show();
+            location.href='youkuRule.html'
+        }
 
 
 
