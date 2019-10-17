@@ -87,7 +87,6 @@ public class RecycleTestController extends BaseController {
     public ModelAndView list(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
         SessionUser su=getCurrentUser(request);
-        JSONObject jsonResult = new JSONObject();
         String url = baseNewUrl + "getbrandlist";
         String categoryid = request.getParameter("categoryid");
         JSONObject requestNews = new JSONObject();
@@ -98,7 +97,7 @@ public class RecycleTestController extends BaseController {
         //发起请求
         String getResult = AES.post(url, requestNews);
         //对得到结果进行解密
-        jsonResult = getResult(AES.Decrypt(getResult));
+        JSONObject jsonResult = getResult(AES.Decrypt(getResult));
         JSONArray jsonArray = jsonResult.getJSONArray("datainfo");
         List<RecycleSystem> systems=recycleSystemService.queryList(null);
         request.setAttribute("userId", su.getUserId());
@@ -162,14 +161,33 @@ public class RecycleTestController extends BaseController {
     public void queryListForPage(HttpServletRequest request,
                                  HttpServletResponse response) throws Exception {
         //获取查询条件
-        String queryStartTime = request.getParameter("query_startTime");
-        String queryEndTime = request.getParameter("query_endTime");
+        String queryStartTime;
+        queryStartTime = request.getParameter("query_startTime");
+        String queryEndTime;
+        queryEndTime = request.getParameter("query_endTime");
+        if(StringUtils.isEmpty(queryStartTime) && StringUtils.isEmpty(queryEndTime)){
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd") ;
+            //得到日历
+            Calendar calendar = Calendar.getInstance();
+            //把当前时间赋给日历
+            calendar.setTime(date);
+            //设置为前三天
+            calendar.add(Calendar.DAY_OF_MONTH, -3);
+            //得到前一天的时间
+            Date dBefore = calendar.getTime();
+            queryStartTime = dateFormat.format(dBefore);
+            queryEndTime = dateFormat.format(date);
+        }
         String mobile = request.getParameter("mobile");
         String brandId = request.getParameter("brandId");
         String productId = request.getParameter("productId");
-        String channel = request.getParameter("channel");//渠道
-        String isOrder = request.getParameter("isOrder");//是否成单
-        String isVisit = request.getParameter("isVisit");//是否回访
+        //渠道
+        String channel = request.getParameter("channel");
+        //是否成单
+        String isOrder = request.getParameter("isOrder");
+        //是否回访
+        String isVisit = request.getParameter("isVisit");
 
         Page page = getPageByRequest(request);
         RecycleCheckItems checkItem = new RecycleCheckItems();
