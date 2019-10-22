@@ -35,24 +35,30 @@ public class MyExecutor {
                     String selectModelName = (String) session.getAttribute("selectModelName");
                     //新增
                     RecycleCheckItems t = new RecycleCheckItems();
-                    RecycleCheckItems r = new RecycleCheckItems();
+                    RecycleCheckItems r = null;
                     if (StringUtils.isNotBlank(loginMobile)) {
+                        r=new RecycleCheckItems();
                         r.setLoginMobile(loginMobile);
                         t.setLoginMobile(loginMobile);
                     }
                     if (StringUtils.isNotBlank(openId)) {
+                        r=new RecycleCheckItems();
                         r.setWechatId(openId);
                         t.setWechatId(openId);
                     }
+
                     //查询上次检测记录
-                    List<RecycleCheckItems> list = recycleCheckItemsService.queryList(r);
-                    if (!list.isEmpty()) {
-                        RecycleCheckItems checkItems = list.get(0);
-                        t.setLastPrice(checkItems.getPrice());
+                    if(r!=null){
+                        List<RecycleCheckItems> list = recycleCheckItemsService.queryListForPage(r);
+                        if (!list.isEmpty()) {
+                            RecycleCheckItems checkItems = list.get(0);
+                            t.setLastPrice(checkItems.getPrice());
+                        }
+                        if (StringUtils.isNotBlank(source)&&!"null".equals(source)) {
+                            t.setSource(Integer.valueOf(source));
+                        }
                     }
-                    if (StringUtils.isNotBlank(source)&&!"null".equals(source)) {
-                        t.setSource(Integer.valueOf(source));
-                    }
+
 
                     t.setItems(items);
                     t.setPrice(new BigDecimal(price));
