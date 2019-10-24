@@ -159,9 +159,9 @@
 			var fm = GetQueryString( 'fm' ) ;
 			//2. 根据ticket获得手机号码
 			//a 记录抽奖号码
-			if( fm == '10' ){
-				eCacheUtil.storage.cache( CacheKey.source, fm );
-				
+            eCacheUtil.storage.cache( CacheKey.source, fm );
+            if( fm == '10' ){
+
 				//从欢Go客户端加载当前页面
 				if( ticket && ticket != '' ){
 					getMobileByTicket( ticket );

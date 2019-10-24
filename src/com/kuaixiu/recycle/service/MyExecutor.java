@@ -54,12 +54,21 @@ public class MyExecutor {
                             RecycleCheckItems checkItems = list.get(0);
                             t.setLastPrice(checkItems.getPrice());
                         }
-                        if (StringUtils.isNotBlank(source)&&!"null".equals(source)) {
-                            t.setSource(Integer.valueOf(source));
-                        }
+
                     }
 
 
+                    if(source==null||source.equals("null")||StringUtils.isBlank(source)){
+                       // 渠道为空的设置为默认值  微信公众号
+                        t.setSource(1);
+                    }else{
+                        try {
+                            t.setSource(Integer.valueOf(source));
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            t.setSource(1);
+                        }
+                    }
                     t.setItems(items);
                     t.setPrice(new BigDecimal(price));
                     t.setProductId(productId);
