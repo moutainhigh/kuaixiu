@@ -107,6 +107,12 @@ public class SjOrderService extends BaseService<SjOrder> {
             jsonObject.put("createTime", o.getCreateTime());
             jsonObject.put("stayPerson", o.getStayPerson());
             jsonObject.put("projects", getProject(o.getProjectId()));
+            SjUser user = sjUserService.getDao().queryByLoginId(o.getStayPerson(), null);
+            if(user!=null){
+                jsonObject.put("stayPersonName", user.getName());
+            }else{
+                jsonObject.put("stayPersonName", "");
+            }
             jsonObjects.add(jsonObject);
         }
         JSONObject jsonObject = new JSONObject();
@@ -152,6 +158,16 @@ public class SjOrderService extends BaseService<SjOrder> {
         jsonObject.put("createTime", o.getCreateTime());
         jsonObject.put("stayPerson", o.getStayPerson());
         jsonObject.put("projects", getProjectIds(o.getProjectId()));
+        // 获取订单处理人信息
+        SjUser user = sjUserService.getDao().queryByLoginId(o.getStayPerson(), null);
+        if(user!=null){
+            jsonObject.put("stayPersonName", user.getName());
+            jsonObject.put("stayPersonPhone", user.getPhone());
+        }else{
+            jsonObject.put("stayPersonName", "");
+            jsonObject.put("stayPersonPhone", "");
+        }
+
         String province = addressService.queryByAreaId(o.getProvinceId()).getArea();
         String city = addressService.queryByAreaId(o.getCityId()).getArea();
         String area = addressService.queryByAreaId(o.getAreaId()).getArea();
