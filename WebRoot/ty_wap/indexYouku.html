@@ -101,21 +101,21 @@
             </div>
             <div class="swiper-container">
                 <div class="banner">
-                    <div class="slide-item">
+                    <!--<div class="slide-item">
                         <img src="img/nationalDay.png" alt="">
-                    </div>
+                    </div>-->
                     <div class="slide-item">
                         <a href="youku.html"><img src="img/banner9.png" alt=""></a>
                     </div>
                     <div class="slide-item">
                         <a href="product.html"><img src="img/banner3.png" alt=""></a>
                     </div>
-                    <div class="slide-item">
+                    <!--<div class="slide-item">
                         <img src="img/banner1.png" alt="">
                     </div>
                     <div class="slide-item">
                         <img src="img/banner2.png" alt="">
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -198,25 +198,25 @@
                 </div>
                 <div class="modelCont">
                     <div class="item" data-mid="11564">
-                        <img src="https://static.m-super.cn/Mobile/25827.jpg" alt="">
+                        <img src="https://img.m-super.com/Mobile/25827.jpg" alt="">
                         <p>iPhone X</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
                     <div class="item" data-mid="11529">
-                        <img src="https://static.m-super.cn/Mobile/25680.jpg" alt="">
+                        <img src="https://img.m-super.com/Mobile/25680.jpg" alt="">
                         <p>iPhone 8 Plus</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
                     <div class="item" data-mid="11530">
-                        <img src="https://static.m-super.cn/Mobile/25681.jpg" alt="">
+                        <img src="https://img.m-super.com/Mobile/25681.jpg" alt="">
                         <p>三星GALAXY note 8</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
                     </div>
                     <div class="item" data-mid="11528">
-                        <img src="https://static.m-super.cn/Mobile/25679.jpg" alt="">
+                        <img src="https://img.m-super.com/Mobile/25679.jpg" alt="">
                         <p>iPhone 8</p>
                         <!-- <p>最高回收价 <span class="color-red">¥1245</span></p> -->
                         <a href="javascript:;" class="btn-normal">立即卖</a>
@@ -298,6 +298,11 @@
             </div>
         </div>
         <!--end of 弹出对话框-->
+        <div class="remind_delivery_bg">
+            <div class="remind_delivery_cont">
+                <p></p>
+            </div>
+        </div>
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/swiper.min.js"></script>
@@ -393,7 +398,7 @@
                     }
                     $.post(linkUrl+'/recycle/sendSmsCode.do',{params:JSON.stringify(params)},
                         function(data){
-                            Countdown($("#getCodeBtn").get(0),60)
+                            //Countdown($("#getCodeBtn").get(0),60)
                             if(data.success) {
 
                             }else {

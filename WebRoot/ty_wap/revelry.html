@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta charset="UTF-8" />
+    <title>首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="full-screen" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no">
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="css2/style.css" />
+    <link rel="stylesheet" href="css/main.css?version=1.6">
+</head>
+
+<body>
+<div class="remind_delivery_bg">
+    <div class="remind_delivery_cont">
+        <p></p>
+    </div>
+</div>
+    <div class="revelery_content">
+        <div class="banner">
+            <img src="img2/banner.jpg" />
+            <ul class="banner_btn">
+                <li onclick="linkFun('orderlist.html')">我的回收订单</li>
+                <li onclick="linkFun('https://wapzj.189.cn/mall/wddd/#/market/myOrderLogin?channel=wap')">我的新购订单</li>
+                <li onclick="showPop()">活动规则</li>
+            </ul>
+        </div>
+        <div class="canvas_bg">
+            <div class="canvas" id="boxCanvas">
+                <div class="jiangpin">
+                     <div class="font" id="prize"></div>
+                     <div class="but" id="onceagain">再刮一次</div>
+                </div>
+                <canvas id="canvas"></canvas>
+                <!-- <img src="./img2/shave_img.jpg" alt="" id="mask"> -->
+                <div id="canvas_txt">
+                    <span class="font">您还有<b id="nuber">?</b>次刮奖机会</span>
+                    <span class="but" onclick="butfun()">立即刮奖</span>
+                </div>
+                <div class="nullnmber" id="nullNmber">
+                    哎呀,没有次数了~<br>快去做任务吧~
+                </div>
+            </div>
+        </div>
+        <div class="msg">
+            <img src="./img2/msg_icon.png" alt="">
+                <marquee id="marquee" direction="up" scrollamount="2"  width="320" height="20" >
+                    <p>暂无数据</p>
+                </marquee>
+    </div>
+    <div class="look_award">
+        <a href="javascript:;" onclick="linkFun('personalCenter.html','addChance')">查看奖品</a>
+    </div>
+    <ul class="get_chance">
+        <li onclick="linkFun('product.html','addChance')">
+            <div class="chance_tips">立即估价</div>
+            <div class="chance">刮奖机会<sup>+1</sup></div>
+        </li>
+        <li onclick="linkFun('product.html','addChance')">
+            <div class="chance_tips">立即回收</div>
+            <div class="chance">刮奖机会<sup>+1</sup></div>
+        </li>
+        <li onclick="copyFun()">
+            <div class="chance_tips">立即分享</div>
+            <div class="chance">刮奖机会<sup>+1</sup></div>
+        </li>
+    </ul>
+        <div class="goods">
+                    <div class="title">奖品<span>(最高补贴500元)</span></div>
+                    <ul class="goods_list">
+                        <li>
+                            <div>
+                                <div class="price"><span>￥</span>400</div>
+                                <div class="tips">购买<br />iPhone 11 Pro<br />直降优惠券</div>
+                            </div>
+                            <div class="align" onclick="linkFun('http://wapzj.189.cn/mall/ywz2982681201/')">
+                                <img src="./img2/iphone11.png" alt=""><br>
+                                <span class="tips">查看></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="price"><span>￥</span>500</div>
+                                <div class="tips">购买<br />华为 P30<br />直降优惠券</div>
+                            </div>
+                            <div class="align" onclick="linkFun('http://wapzj.189.cn/mall/ywz2982681642/?channel=yjhx')">
+                                <img src="./img2/hwmete30.png" alt=""><br>
+                                <span class="tips">查看></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="price"><span>￥</span>400</div>
+                                <div class="tips">购买<br />三星 A90 5G<br />直降优惠券</div>
+                            </div>
+                            <div class="align" onclick="linkFun('http://wapzj.189.cn/mall/ywz2982681987/?channel=yjhx')">
+                                <img src="./img2/hwmaimang8.png" alt=""><br>
+                                <span class="tips">查看></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="price"><span>￥</span>20</div>
+                                <div class="tips">回收订单<br />满500元可加价</div>
+                            </div>
+                            <div class="align">
+                                <img src="./img2/huishou.png" alt="">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="price"><span>￥</span>20</div>
+                                <div class="tips">鱼卡<br />首月体验金</div>
+                            </div>
+                            <div class="align">
+                                <img src="./img2/yuka20.png" alt="">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="price"><span>￥</span>60</div>
+                                <div class="tips">回收订单<br />满1000元可加价</div>
+                            </div>
+                            <div class="align">
+                                <img src="./img2/huishou.png" alt="">
+                            </div>
+                        </li>
+                    </ul>
+            </div>
+            <div class="goods">
+                <div class="title">热门回收机型<span></span></div>
+                <ul class="hot_phone">
+                    <li onclick="phoneType('11564','iPhone X')">
+                            <img src="./img2/hotiphonex.png" alt="">
+                            <div class="phone_title">iPhone X </div>
+                            <div class="info"><span class="icon">￥</span><span class="money">3500/</span><span class="tips">最高</span></div>
+                            <div class="btn">立即回收</div>
+                    </li>
+                    <li onclick="phoneType('19301','iPhone 7 Plus')">
+                        <img src="./img2/hotiphone7plus.png" alt="">
+                        <div class="phone_title">iPhone 7 Plus</div>
+                        <div class="info"><span class="icon">￥</span><span class="money">1750/</span><span class="tips">最高</span></div>
+                            <div class="btn">立即回收</div>
+                    </li>
+                    <li onclick="phoneType('11529','iPhone 8 Plus')">
+                        <img src="./img2/hotiphone8plus.png" alt="">
+                        <div class="phone_title">iPhone 8 Plus </div>
+                        <div class="info"><span class="icon">￥</span><span class="money">3050/</span><span
+                                class="tips">最高</span></div>
+                        <div class="btn">立即回收</div>
+                    </li>
+                    <li onclick="phoneType('19300','iPhone 7')">
+                        <img src="./img2/hotiphone7.png" alt="">
+                        <div class="phone_title">iPhone 7 </div>
+                        <div class="info"><span class="icon">￥</span><span class="money">1230/</span><span
+                                class="tips">最高</span></div>
+                        <div class="btn">立即回收</div>
+                    </li>
+                    <li onclick="phoneType('19249','iPhone XS MAX')">
+                        <img src="./img2/hotiphonexsmax.26.png" alt="">
+                        <div class="phone_title">iPhone XS MAX </div>
+                        <div class="info"><span class="icon">￥</span><span class="money">4950/</span><span
+                                class="tips">最高</span></div>
+                        <div class="btn">立即回收</div>
+                    </li>
+                    <li onclick="phoneType('19298','Phone 6S')">
+                        <img src="./img2/hotiphone6s.png" alt="">
+                        <div class="phone_title">iPhone 6S </div>
+                        <div class="info"><span class="icon">￥</span><span class="money">680/</span><span
+                                class="tips">最高</span></div>
+                        <div class="btn">立即回收</div>
+                    </li>
+                </ul>
+                <div class="join_btn" onclick="linkFun('product.html')">
+                    立即参与
+                </div>
+            </div>
+            <div class="goods">
+                <div class="title">新机推荐<span></span></div>
+                <ul class="new_phone">
+                    <li>
+                        <img src="./img2/pushsanxing90.png" alt="">
+                        <div class="title">三星 Galaxy A90 5G</div>
+                        <div class="money">￥3999</div>
+                    </li>
+                    <li>
+                        <img src="./img2/pushhwmete30.png" alt="">
+                        <div class="title">华为 meta 30(5G)</div>
+                        <div class="money">￥6899</div>
+                    </li>
+                    <li>
+                        <img src="./img2/pushxiaomipro.png" alt="">
+                        <div class="title">小米9 Pro 5G</div>
+                        <div class="money">￥4299</div>
+                    </li>
+                </ul>
+                <div class="join_btn" onclick="linkFun('https://wapzj.189.cn/mall/zdzq/?channel=yjhx')">
+                    了解更多
+                </div>
+            </div>
+
+            </div>
+            <div id="pop"><span class="closeBut" onclick="closefun()">×</span>
+                <div class="pop_header">
+                    活动规则
+                </div>
+                <div class="pop_main">
+                    <div class="flexc">
+                        <div class="popNum">1.</div>
+                        <div>活动时间：截至12月31日。</div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">2.</div>
+                        <div>
+                            刮奖次数：每个用户首次参加活动可刮奖一次；旧手机回收每提交一个订单且订单金额在100元以上，还可再增加一次刮奖机会；
+                            通过活动页面点击分享可再获赠一次刮奖机会，活动期间最多可获得一次刮奖机会；每成功估价一次可刮奖一次，每天最多可获得一次刮奖机会。
+                        </div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">3.</div>
+                        <div>
+                         奖品内容： iPhone 11 Pro直降400元优惠券，仅限购买iPhone 11 Pro（256GB）可用；华为P30直降500元优惠券，仅限购买华为P30（8+128GB）可用；
+                            三星A90 5G版 直降400元优惠券，仅限购买三星A90 5G版可用；20元鱼卡首月体验金，领取鱼卡激活即可使用；
+                            20元回收加价券，回收订单满500元可用；60元回收加价券，回收订单满1000元可用。各种奖项的有效期截至2020年1月15日。
+                        </div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">4.</div>
+                        <div>
+                            本次活动中回收加价券最终加价金额以实际回收价格为准，且回收加价券不可与天翼回收其他活动叠加。回收加价券和新机优惠券每单仅限一张，不可叠加使用。
+                        </div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">5.</div>
+                        <div>
+                            本次活动奖品查看方式：活动页面点击“查看奖品”-“个人中心”内查看；新机优惠券和鱼卡首月体验金在“我的其他奖品”查看；回收加价券在“我的加价券”查看。
+                        </div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">6.</div>
+                        <div>
+                            本次活动新机优惠券以优惠码的形式发放，使用时复制优惠码进入对应的新机下单页面，在兑换框内黏贴使用即可。新机销售，收货地址仅限浙江省内。新机数量有限，售完即止。
+                        </div>
+                    </div>
+                    <div class="flexc"  >
+                        <div class="popNum">7.</div>
+                        <div>
+                           鱼卡20元体验金领取流程：查看奖品-我的其他奖品-20元体验金-立即领取-选择号码提交订单-实名认证-待物流发货-收到号卡激活-体验金自动到账。
+                        </div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">8.</div>
+                        <div>
+                            其他未尽事宜，回收相关问题请咨询客服热线：4008-110-299/0571- 87162535（周一到周五，早上9点到晚上5点半，周末及节假日休息）；购买新机的相关内容请咨询在线客服。
+                        </div>
+                    </div>
+                    <div class="flexc">
+                        <div class="popNum">9.</div>
+                        <div>
+                           如果发现有参加者在活动中使用任何不正当的手段参加活动，活动主办方有权在不事先通知的前提下取消其参加活动的资格。如遇不可抗力因素，活动主办方拥有取消本次活动的权利。
+                        </div>
+                    </div>
+            </div>
+            </div>
+    <!--start of 弹出对话框  hide-->
+    <div id="popoDialog" class="popo-dialog hide">
+        <div id="phone-dialog-box" class="dialog-box">
+            <div class="dialog-title">登录</div>
+            <div class="dialog-body">
+                <div class="input-item">
+                    <input id="phoneNum" maxlength="11" class="popodlg-input"   type="text" placeholder="请输入登录手机号码" />
+                </div>
+                <div class="input-item">
+                    <input id="codeNum"  class="short-input popodlg-input" type="text"  placeholder="请填写验证码" />
+                    <span id="getCodeBtn" class="input-label active-btn">获取验证码</span>
+                    <!--<span id="secondLabel" class="input-label info-box">60秒</span>-->
+                </div>
+                <div class="input-item">
+                    <span id="doPrizeBtn" class="do-prize-btn">立刻登录</span>
+                </div>
+            </div>
+            <span id="closePopoDialogBtn" class="close-btn">X</span>
+        </div>
+    </div>
+    <!--end of 弹出对话框-->
+
+    <script src="js/jquery.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/util.js"></script>
+<script>
+    var cont = document.getElementById("canvas_txt");
+    var mask = document.getElementById("mask")
+    var pop = document.getElementById("pop")
+
+
+    var jiangpin1='iPhone11 Pro(256G) 400元直降优惠券';
+    var jiangpin2='华为 P30,500元直降优惠券';
+    var jiangpin3='三星 A90 5G,400元直降优惠券,加送礼品';
+    var jiangpin4='20元鱼卡';
+    var jiangpin5='20元回收加价券,回收订单满500元使用';
+    var jiangpin6='60元回收加价券,回收订单满1000元使用';
+    var obj = {};
+    (function () {
+        var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+        var fm = GetQueryString( 'fm' ) ;
+        console.log("活动标识： "+fm)
+        eCacheUtil.storage.cache( CacheKey.source, fm );  // 储存活动标识
+
+
+        rollingFun();
+        if (loginPhone){
+            numberFun()
+        }
+        var url = window.location.search;
+
+        if(url.indexOf("?") != -1){
+            var str = url.substring(1);
+            var arr = str.split("&");
+            for(var i=0; i<arr.length; i++){
+                obj[arr[i].split("=")[0]] = decodeURIComponent(arr[i].split("=")[1]);
+            }
+        }
+    })()
+    var canTouch=''
+    function butfun() {
+        var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+        if(!loginPhone){
+            isloginFun();
+        }else{
+            cont.style.display = 'none';
+            canTouch='can'
+            // $('#mask').fadeOut(1000);
+            // choujiangFun();
+        }
+    }
+    function showPop() {
+        pop.style.display = "block"
+    }
+    function closefun() {
+        pop.style.display = "none"
+    }
+
+    //根据机型跳转到回收页面
+    function phoneType(id,name){
+        eCacheUtil.storage.cache(CacheKey.ProjectId,id);
+        eCacheUtil.storage.cache(CacheKey.ModelName,name);
+        location.href='test.html';
+    }
+    ///复制链接去分享
+    function copyFun(){
+        var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+        //console.log(loginPhone);
+        if(!loginPhone){
+            $("#popoDialog").removeClass('hide');
+            //numberFun();//获取抽奖次数
+        }else{
+            var oInput = document.createElement('input')
+            oInput.value = linkUrl+'/ty_wap/revelry.html'
+            document.body.appendChild(oInput)
+            oInput.select()
+            document.execCommand("Copy")
+            oInput.style.display = 'none'
+            document.body.removeChild(oInput)
+            alert('复制成功,快去分享吧!');
+            //addnmberFun();
+            addnmberByShareFun();
+        }
+    }
+    //添加抽奖次数接口
+    function addnmberFun(){
+        var data={
+            userMobile:eCacheUtil.storage.getCache(CacheKey.loginPhone)
+        }
+        $.post(linkUrl+'/prizeChance/addCount.do',{params:JSON.stringify(data)},
+            function(data){
+                //Countdown($("#getCodeBtn").get(0),60)
+                if(data.success) {
+                    numberFun();
+                }else {
+                    alertTip(data.resultMessage);
+                }
+                // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+            })//
+    }
+    function addnmberByShareFun(){
+        var data={
+            userMobile:eCacheUtil.storage.getCache(CacheKey.loginPhone),
+            type:1
+        }
+        $.post(linkUrl+'/prizeChance/addCountByType.do',{params:JSON.stringify(data)},
+            function(data){
+                if(data.success==true) {
+                    numberFun();
+                }else {
+                    alert(data.resultMessage);
+                }
+                // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+            })//
+    }
+ /*  $(function () {
+       isloginFun();////判断是否登录
+   })*/
+    function isloginFun(){
+        var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+        //console.log(loginPhone);
+        if(!loginPhone){
+            $("#popoDialog").removeClass('hide');
+            //numberFun();//获取抽奖次数
+        }else{
+            //console.log('222')
+            $("#popoDialog").addClass('hide');
+            cont.style.display = 'black';
+            $('#mask').fadeIn(0);
+            rollingFun();//滚动名单
+            numberFun();//获取抽奖次数
+        }
+        //console.log(eCacheUtil.storage.getCache(CacheKey.loginPhone))
+    }
+    function choujiangFun(){
+        //isloginFun();
+        var fm=obj.fm;
+        console.log(obj)
+        var data={
+            userMobile:eCacheUtil.storage.getCache(CacheKey.loginPhone),
+            fm:fm || ''
+        }
+        $.post(linkUrl+'/tmallActivities/getPrize.do',{params:JSON.stringify(data)},
+            function(data){
+                //Countdown($("#getCodeBtn").get(0),60)
+                if(data.success) {
+                    //console.log(data.result.grede)
+                    if(data.result.grede==1){
+                        $('#prize').text('恭喜获得'+jiangpin1)
+                    }else if(data.result.grede==2){
+                        $('#prize').text('恭喜获得'+jiangpin2)
+                    }else if(data.result.grede==3){
+                        $('#prize').text('恭喜获得'+jiangpin3)
+                    }else if(data.result.grede==4){
+                        $('#prize').text('恭喜获得'+jiangpin4)
+                    }else if(data.result.grede==5){
+                        $('#prize').text('恭喜获得'+jiangpin5)
+                    }else if(data.result.grede==6){
+                        $('#prize').text('恭喜获得'+jiangpin6)
+                    }
+                }else {
+                    alertTip(data.resultMessage);
+                }
+                // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+            })//
+    }
+    //判断次数
+    function numberFun(){
+        var data={
+            userMobile:eCacheUtil.storage.getCache(CacheKey.loginPhone)
+        }
+        $.post(linkUrl+'/prizeChance/getCount.do',{params:JSON.stringify(data)},
+            function(data){
+                //Countdown($("#getCodeBtn").get(0),60)
+                if(data.success) {
+                   $('#nuber').text(data.result.count);
+                   if(data.result.count==0){
+                       $('#nullNmber,#mask').fadeIn(0);
+                       $('#canvas_txt').hide();
+                   }
+                }else {
+                    alertTip(data.resultMessage);
+                }
+                // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+            })//
+    }
+
+    //滚动条名单
+    function rollingFun(){
+        $.post(linkUrl+'/tmallActivities/getScrollBarPrize.do',{},
+        function(data){
+            //Countdown($("#getCodeBtn").get(0),60)
+            if(data.success) {
+                //console.log(data.result.list);
+                var text='';
+                data.result.list.forEach(function(item,index){
+                    if(item.grade==1){
+                        text+='<p>用户'+item.userMobile+'抽中了'+jiangpin1+'</p>';
+                    }else if(item.grade==2){
+                        text+='<p>用户'+item.userMobile+'抽中了'+jiangpin2+'</p>';
+                    }else if(item.grade==3){
+                        text+='<p>用户'+item.userMobile+'抽中了'+jiangpin3+'</p>';
+                    }else if(item.grade==4){
+                        text+='<p>用户'+item.userMobile+'抽中了'+jiangpin4+'</p>';
+                    }else if(item.grade==5){
+                        text+='<p>用户'+item.userMobile+'抽中了'+jiangpin5+'</p>';
+                    }else if(item.grade==6){
+                        text+='<p>用户'+item.userMobile+'抽中了'+jiangpin6+'</p>';
+                    }
+                })
+                $('#marquee').html(text);
+            }else {
+                alertTip(data.resultMessage);
+            }
+            // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+        })//
+    }
+    /*eCacheUtil.storage.cache(CacheKey.isSelect,false);
+    eCacheUtil.storage.cache(CacheKey.happyGo,true);
+    eCacheUtil.storage.cache('discount_info_infos','')*/
+    var huishouBut="";
+    function linkFun(url,tip){
+
+        if (tip){
+            huishouBut=url;
+            var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+            if(!loginPhone){
+                $("#popoDialog").removeClass('hide');
+            }else{
+                location.href=url
+            }
+        } else{
+            location.href=url
+        }
+    }
+    //再刮一次
+    $('#onceagain').on('click',function(){
+        // canvas.style.display = 'block';
+        // $('#canvas').load(location.href+'#canvas')
+        window.location.reload()
+        // cont.style.display = 'block';
+        // numberFun();
+    })
+
+    // 点击取消按钮隐藏活动
+    $('.js-close-active').on('click',function(){
+        $('.dialog-active').hide()
+    })
+    //关闭弹窗
+    $("#closePopoDialogBtn").on('click',function () {
+        huishouBut="";
+        $("#popoDialog").addClass('hide');
+    })
+
+    // 获取验证码
+    $("#getCodeBtn").on('click',function () {
+        if(!$("#phoneNum").val()) {
+            alertTip('请输入手机号码');
+            return false;
+        }else if(!(/^1[123456789]\d{9}$/.test($("#phoneNum").val()))) {
+            alertTip('手机号码不正确，请重新输入');
+            return false;
+        }else {
+            var params = {
+                phone: $("#phoneNum").val()
+            }
+            $.post(linkUrl+'/recycle/sendSmsCode.do',{params:JSON.stringify(params)},
+            function(data){
+                //Countdown($("#getCodeBtn").get(0),60)
+                if(data.success) {
+
+                }else {
+                    alertTip(data.resultMessage);
+                }
+                // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+            })//
+        }
+    })
+
+    // 登录
+    $("#doPrizeBtn").on('click',function () {
+        if(!$("#phoneNum").val()) {
+            alertTip('请输入手机号码');
+            return false;
+        }else if(!(/^1[123456789]\d{9}$/.test($("#phoneNum").val()))) {
+            alertTip('手机号码不正确，请重新输入');
+            return false;
+        }else if(!$("#codeNum").val() || !$("#codeNum").val().trim() ){
+            alertTip('请输入验证码');
+            return false;
+        }else {
+            var params = {
+                phone: $("#phoneNum").val(),
+                checkCode: $("#codeNum").val()
+            }
+            $.post(linkUrl+'/recycle/checkLogin.do',{params:JSON.stringify(params)},
+                function(data){
+                    if(data.success) {
+                        eCacheUtil.storage.cache(CacheKey.loginPhone,$("#phoneNum").val())
+                        //isLoginCheck();
+                        $("#popoDialog").addClass('hide')
+                        if(huishouBut!==''){
+                            location.href=huishouBut;
+                        }else{
+                            numberFun();//获取抽奖次数
+                            rollingFun();//滚动名单
+                        }
+                        //location.href = 'personalCenter.html'
+                    }else {
+                        alert(data.resultMessage);
+                    }
+                    // {"success":false,"resultMessage":"系统异常请稍后再试","msg":null,"resultCode":"5","result":null}
+                })//
+        }
+    })
+
+</script>
+
+
+        <script type="text/javascript">
+        var boxcanvas = document.getElementById("boxCanvas");
+        //console.log(boxcanvas.offsetWidth,boxcanvas.clientHeight)
+        
+        var canvas = document.getElementById("canvas");
+        var cxt = canvas.getContext("2d");
+        canvas.width = boxcanvas.offsetWidth;
+        canvas.height = boxcanvas.clientHeight;
+        cxt.fillStyle = "grey";
+        cxt.rect(0, 0, boxcanvas.offsetWidth, boxcanvas.clientHeight);//创建矩形画布
+        cxt.fill();//填充颜色
+        var img = new Image();
+            img.src = "img2/shave_img.jpg";
+            img.onload = function(){
+                cxt.globalCompositeOperation = "source-over";//合成重叠属性
+                var pattern = cxt.createPattern(img, "repeat");
+                cxt.fillStyle = pattern;
+                cxt.fillRect(0, 0, boxcanvas.offsetWidth, boxcanvas.clientHeight);
+                cxt.globalCompositeOperation = "destination-out";//合成重叠属性
+            }
+        cxt.globalCompositeOperation = "destination-out";//合成重叠属性
+        var startX, startY;
+        //设置清空部分
+        var choujiangStatus=''
+
+        function touchMove(event) {
+            if(!canTouch){
+                return
+            }
+            if (!choujiangStatus){
+                choujiangFun()
+            }
+            choujiangStatus='a'
+            event.preventDefault();
+            var completed = 0;
+            var data = cxt.getImageData(0, 0, 200, 100).data;
+            var total = data.length / 4;
+            var touch = event.touches[0];
+            var x = touch.pageX-getElementLeft(canvas);
+            var y = touch.pageY-getElementTop(canvas);
+            cxt.beginPath();
+            console.log(touch.pageX+"_"+touch.pageY	)
+            console.log(getElementLeft(canvas)+"_"+getElementTop(canvas)	)
+            console.log(x+"_"+y	)
+            
+            cxt.arc(x, y, 20, 0, Math.PI * 2, false);
+            cxt.fill();
+            for (let i = 3; i < data.length; i += 4) {
+                if (data[i] === 0) {
+                    completed += 1;
+                }
+            }
+            if (completed > total / 1.5) {//根据自己要刮开的面积大小改变数值
+                canvas.style.display = 'none';
+                console.log("已完成刮奖");
+                cxt.clearRect(0, 0, boxcanvas.offsetWidth, boxcanvas.clientHeight);//完成刮奖后清除剩余没有刮开的地方
+            }
+        }
+        canvas.addEventListener("touchmove", touchMove, false);//注册事件
+        var cont = document.getElementById("canvas_txt");
+        function getElementTop(element) {
+            console.log(cont)
+            cont.style.display='none';
+            var actTop = element.offsetTop;
+            var current = element.offsetParent;
+            while(current !== null){
+                actTop += current.offsetTop;
+                current = current.offsetParent;
+            }
+            return actTop;
+        }
+        function getElementLeft(element){
+        　　　　var actualLeft = element.offsetLeft;
+        　　　　var current = element.offsetParent;
+        
+        　　　　while (current !== null){
+        　　　　　　actualLeft += current.offsetLeft;
+        　　　　　　current = current.offsetParent;
+        　　　　}
+        　　　　return actualLeft;
+        }
+        // 查看刮刮卡的次数 
+        (function getChanceTime(){
+            
+        })()
+        </script> 
+</body>
+
+</html>

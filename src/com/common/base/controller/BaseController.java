@@ -558,10 +558,10 @@ public class BaseController {
         //保存验证码到数据库
         Code code = codeService.queryById(key);
         if (code == null) {
-            code = new Code();
-            code.setCode(randomCode);
-            code.setMobile(key);
-            codeService.add(code);
+            Code code1 = new Code();
+            code1.setCode(randomCode);
+            code1.setMobile(key);
+            codeService.add(code1);
         } else {
             code.setCode(randomCode);
             code.setUpdateTime(new Date());

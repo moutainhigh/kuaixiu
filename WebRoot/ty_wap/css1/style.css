@@ -1,0 +1,125 @@
+@charset "utf-8";
+/* mingzhen1234@qq.com  */
+*{ margin:0; padding:0; color:#656565; font-size:62.5%; font-family:SimHei;-webkit-text-size-adjust:100%; -webkit-tap-highlight-color:rgba(0,0,0,0);}
+ul li{ list-style:none;}
+img{ border:none; }
+a{ color:inherit; text-decoration:none;}
+
+body{ margin:0 auto;}
+
+.youhui{
+    padding: 10px;
+}
+.youhui .list li{
+    width: 100%;
+    position: relative;
+}
+.youhui .list li .main{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    width: 93%;
+    left: 5.33333vw;
+    top: 10%;
+}
+.youhui .list li img{
+    width: 100%;
+    z-index: -1;
+    top: 0;
+}
+.youhui .list li .left{
+    width: 65vw;
+    padding-right: 10vw;
+    box-sizing: border-box;
+    margin-top: 5vw;
+}
+.youhui .list li .left .price{
+    font-size: 6.93333vw;
+    color: #fff;
+}
+.youhui .list li .left .info{
+    font-size: 4.53333vw;
+    color:#fff;
+}
+.youhui .list li .left .tips{
+    color:rgba(255,255,255,0.6);
+    font-size: 3.2vw;
+}
+.youhui .list li .left .tips span{
+    color:rgba(255,255,255,0.6);
+    font-size: 3.2vw;
+}
+.youhui .list li .right{
+    width: 35vw;
+    text-align: center;
+}
+.youhui .list li .right .btn{
+    margin-top: 5vw;
+    font-size: 5.86666vw;
+    color: #5185ED;
+}
+.youhui .list li .right .time{
+    margin-top: 1vw;
+    font-size: 3vw;
+    color: #A3C1FF;
+}
+.maskClose{
+    position: absolute;
+    top: 0px;
+    right:0px;
+    border-radius: 50px;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    color: #333333;
+    font-size: 26px;
+    text-align: center;
+    line-height: 35px;
+    background: #FFF;
+}
+.text{
+    font-size: 24px;
+    position: fixed;
+    top: 30%;
+    left: 18%;
+    color: #4f4f4f;
+}
+#mask{
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8 );
+}
+#mask .window{
+    width: 74.66666vw;
+    height: 43.46666vw;
+    border-radius: 3.2vw;
+    text-align: center;
+    background: #fff;
+    color: #fff;
+    z-index: 1000;
+    top: 50%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#mask .window .code{
+    font-size: 4.53333vw;
+    padding-top: 13.33333vw;
+    margin-bottom: 8vw;
+}
+#mask .window .success{
+    font-size: 16px;
+    width:66.66666vw;
+    height:11.73333vw ;
+    text-align: center;
+    line-height:11.73333vw  ;
+    margin: 0 auto;
+    border-radius: 1.06666vw;
+    color: #fff;
+    background: #5185ED;
+}

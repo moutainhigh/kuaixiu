@@ -306,7 +306,7 @@ textarea:-moz-placeholder {
   position: absolute;
   top: calc(50% - .35rem);
   left: 0;
-  z-index: 51;
+  z-index: 9999999;
 }
 .remind_delivery_bg .remind_delivery_cont {
   width: 2.08rem;
@@ -314,12 +314,14 @@ textarea:-moz-placeholder {
   background: rgba(0, 0, 0, 0.6);
   border-radius: .05rem;
   padding: .075rem .05rem;
+  z-index: 9999999;
 }
 .remind_delivery_bg .remind_delivery_cont p {
   text-align: center;
   line-height: .2rem;
   color: #fff;
   font-size: .12rem;
+  z-index: 9999999;
 }
 .popup_bg {
   display: none;
@@ -406,7 +408,8 @@ textarea:-moz-placeholder {
   height: .55rem;
   padding: 0 0.15rem;
   border-bottom: 1px solid #f0f2f5;
-  background-color: #ffffff;
+  background: #FFFFFF;
+
 }
 #wrap .pageTitle a {
   -ms-flex-negative: 0;
@@ -892,6 +895,7 @@ textarea:-moz-placeholder {
   line-height: .61rem;
   color: #636466;
   text-align: center;
+  font-weight: bold;
 }
 #wrap.productWrap .main .mainLeft ul li.active {
   background-color: #ffffff;
@@ -910,13 +914,34 @@ textarea:-moz-placeholder {
   overflow-y: scroll;
 }
 #wrap.productWrap .main .mainRight .item {
-  width: calc(50% - .08rem);
-  margin-bottom: .28rem;
+  /*width: calc(50% - .08rem);*/
+  width:100%;
+  display: flex;
+  /*margin-bottom: .28rem;*/
+  padding:0.14rem 0;
   margin-right: .08rem;
-  font-size: .11rem;
-  text-align: center;
+  font-size: .14rem;
+  text-align: left;
   color: #7d7e80;
+    border-bottom: solid 1px #cccccc;
 }
+#wrap.productWrap .main .mainRight .item .num{
+    padding: 2px 0px;
+    flex: 0 0 30px;
+    text-align: center;
+    overflow: hidden;
+    width:30px;
+    background: #bdbdbd;
+    color: #FFFFFF;
+    border-radius: 3px;
+    margin-right: 5px;
+  height: 25px;
+  line-height: 25px;
+}
+#wrap.productWrap .main .mainRight .item:nth-of-type(2) .num { background:#5086ed;  }
+#wrap.productWrap .main .mainRight .item:nth-of-type(3) .num{ background:#3f99f2; }
+#wrap.productWrap .main .mainRight .item:nth-of-type(4) .num{ background:#82b5e8; }
+#wrap.productWrap .main .mainRight .item p{ flex: 1; line-height: 25px;  }
 #wrap.productWrap .main .mainRight .item img {
   display: block;
   height: .59rem;
@@ -929,6 +954,7 @@ textarea:-moz-placeholder {
   -ms-flex-preferred-size: 2.55rem;
       flex-basis: 2.55rem;
   padding-bottom: .2rem;
+  margin-top:0.28rem;
 }
 #wrap.productWrap .main .mainRight .loadMore a {
   height: .4rem;
@@ -3517,6 +3543,7 @@ textarea:-moz-placeholder {
   justify-content:center;
   align-content:center;
   align-items:center;
+  z-index:99999;
 }
 .popo-dialog.hide{
   display:none;

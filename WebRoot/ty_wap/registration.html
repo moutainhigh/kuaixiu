@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>现金红包兑换登记表</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <mate name="viewport"
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <link rel="stylesheet" href="lib/weui/lib/weui.min.css">
+    <link rel="stylesheet" href="lib/weui/css/jquery-weui.css">
+    <link rel="stylesheet" href="css/reg.css">
+    <script src="lib/lib-flexible.js"></script>
+
+<body ontouchstart>
+    <div class="main-div">
+     <div class="weui-cells">
+            <div class="swiper-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                      <!-- Slides -->
+                      <div class="swiper-slide">
+                       <div class="swiper-slide-item">
+                           <div class="weui-cells swiper-cells-padding">
+                           <span class="swiper-cells-item"> <span  class="swiper-cells-item-number">1</span>基本信息</span>
+                           <span class="swiper-cells-item"> <span class="swiper-cells-item-number">2</span>旧机信息</span>
+                           <span class="swiper-cells-item"> <span class="swiper-cells-item-number">3</span>门店购新信息</span>
+                           <span class="swiper-cells-item"> <span class="swiper-cells-item-number">4</span>审核材料</span>
+                               <span class="swiper-cells-item swiperRight"  onclick="showPop()">活动规则</span>
+                        </div>
+                       </div>
+
+                      </div>
+                     
+                    </div>
+                    <!-- If we need pagination -->
+                    <!-- <div class="swiper-pagination"></div> -->
+                  </div>
+     </div>
+
+        <div class="weui-cells weui-cells_form">
+            <div class="main-div-item">
+                <p>用户信息</p>
+                 <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label telphone">手机号</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-inputs telNumber" type="tel" placeholder="请输入手机号"> <i class="weui-icon-search searchBut" id="telNumberClick"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="main-div-item">
+                <p>旧机信息</p>
+                <div class="weui-cells-text">
+                    <div class="jiuPhone">
+
+
+                    </div>
+                    <div class="weui-cell">
+                        <p>请选择其中一个成交价格高的订单,进入下一步</p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="main-div-item">
+                <p>门店购新信息</p>
+                <div class="weui-cells-number">
+                    <div class="weui-cell">
+                        <p class="weui-number-p">新机串码或条码(天翼看家礼包)</p>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <input class="weui-inputs chuanmaNumb" type="text" placeholder="请输入串码">
+                        </div>
+                    </div>
+                    <div class="weui-cells-text">
+                        <div class="weui-cell-p">
+                            <p>1.如您在门店购买天翼看家礼包,请输入摄像头串号(CTEI号).串号查看方法:摄像头机身上.</p>
+                            <p>2.如您在门店购买新机,请输入手机串号(IMEI号).手机串码的查看方法:在手机拨号界面,请输入*#06#.</p>
+                            <p>3.提交审核后,审核通过,我们将在15个工作日累,将红包发放至您旧机回收款的支付宝账号内.如果审核未通过,客服将电话与您沟通,请保持电话畅通</p>
+                            <p>4.每个用户活动期间仅参加一次.在红包未提取前,选交易金额大的订单发放</p>
+                            <p>5.其他未尽事宜,红包兑换相关问题请咨询天翼回收客服:4008-110-299/0571-87162535(周一到周五,早上9点到晚上5点半,周末及节假日休息).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="foorter">  <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary submitBut">提交</a></div>
+    </div>
+    <!--错误提示-->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+    <!--错误提示end-->
+    <div id="pop"><span class="closeBut" onclick="closefun()">×</span>
+        <div class="pop_header">
+            活动规则
+        </div>
+        <div class="pop_main">
+            <div class="flexc">
+                <div class="popNum">(1)</div>
+                <div>活动时间： 购新/旧机回收下单时间:2019年12月12日-2020年1月12日，回收完成时间：2019年12月12日-2020年1月20日。</div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(2)</div>
+                <div>
+                    回收均价受市场环境影响会有变动，原则回收越早价格越高，建议您尽快回收。
+                </div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(3)</div>
+                <div>
+                    活动要求，购买新机且回收旧手机即可领取现金红包。旧机回收与您购买新机没有先后顺序，请予活
+                    动期内在规定的门店内完成回收与购新（购买新机或天翼看家礼包）并确认交易成功即可。
+                </div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(4)</div>
+                <div>
+                    <p>现金红包的金额：回收订单交易金额200-500元（含），现金红包30元；</p>
+                    <p>回收订单交易金额501-2000元（含），现金红包50元；</p>
+                    <p>回收订单交易金额2001-5000元（含），现金红包100元；</p>
+                    <p>回收订单交易金额5000元以上，现金红包150元。</p>
+                    <p>如活动期间有多笔回收订单，每个用户仅限兑现一个红包，在红包发放前，系统自动选取成交金额高的订单作为发放标准。红包发放后无法更改。</p>
+                </div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(5)</div>
+                <div>
+                    关于现金红包领取方法：要求在活动期间内下单，且新机和旧机订单均交易成功，则在推文内点击“兑换红包”，上传相应凭证，提交审核；我们将在15个工作日内将红包转账至旧机回收款的支付宝收款账户 内。需要的凭证有：旧机回收使用的登录账号（电话号码）、门店购买新机对应的串码（手机IMEI号或摄像头CTEI号）；如有现金红包问题请及时联系天翼回收客服，补贴原则：新机订单对应一回收订单。
+                </div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(6)</div>
+                <div>
+                    购新机或回收旧机中任一订单产生退款，现金红包将无效，如有已发放的补贴将在退款中给予扣除。
+                </div>
+            </div>
+            <div class="flexc"  >
+                <div class="popNum">(7)</div>
+                <div>
+                    红包补贴仅限该活动页面参加回收用户领取，每人仅限领取一次。该活动与其他天翼回收的活动不能同时叠加。
+                </div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(8)</div>
+                <div>
+                    其他未尽事宜，回收及红包兑换相关问题请咨询客服热线：4008-110-299/0571- 87162535（周一到周五，早上9点到晚上5点半，周末及节假日休息）。如新机问题，请咨询附近营业厅。
+                </div>
+            </div>
+            <div class="flexc">
+                <div class="popNum">(9)</div>
+                <div>
+                    如果发现有参加者在活动中使用任何不正当的手段参加活动，活动主办方有权在不事先通知的前提下取消其参加活动的资格。如遇不可抗力因素，活动主办方拥有取消本次活动的权利。
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script src="lib/weui/lib/jquery-2.1.4.js"></script>
+<script src="lib/weui/lib/fastclick.js"></script>
+<script src="lib/weui/js/swiper.min.js"></script>
+<script src="js/reg.js"></script>
+ <script>
+      $(".swiper-container").swiper({
+        loop: true,
+        // autoplay: 3000
+      });
+    </script>
+</head>

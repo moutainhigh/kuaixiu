@@ -140,7 +140,7 @@
 					 <label class="label" data-way="alipayText">
                         <input name="way"  checked="checked" type="radio" value="1" />
                         <i class="radio_icon"></i>
-                        <span class="genre">支付宝付款</span>
+                        <span class="genre" id="payWay"> 支付宝付款</span>
                     </label>
                     <label class="label" data-way="phoneText">
                         <input  name="way" type="radio" value="2" />
@@ -305,6 +305,12 @@
 		<a href="javascript:;" class="btn-large">打开小程序</a>
 	 </div>
 	 -->
+    <div class="remind_delivery_bg">
+        <div class="remind_delivery_cont">
+            <p></p>
+        </div>
+    </div>
+
     <script src="js/jquery.js"></script>
     <script src="js/jbase64.js"></script>
     <script src="js/common.js"></script>
@@ -348,6 +354,11 @@
 
             if(isEmpty(fm)){
                 eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+            }
+            if(fm == 33){
+                $('#payWay').html('翼支付付款')
+                $('#alipay1').attr('placeholder',"请输入翼支付账号");
+                // $('').attr('placeholder','请输入翼支付账号')
             }
             if(fm == 2 || fm == 9 || fm == 10){
 				document.title = '天翼回收';
@@ -491,10 +502,11 @@
 
 
             getAddr();
-
             var isGo = eCacheUtil.storage.getCache(CacheKey.happyGo);
             var tip = GetQueryString('tip');
             var fm = eCacheUtil.storage.getCache(CacheKey.source);
+            
+            
 
             var mobileNum = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile );
             $("#phoneTip").show();
@@ -722,9 +734,10 @@
                         "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
                         "items":itemsId,
                         "openId":openId,
-                        "loginMobile":HappyGoMobile,
+                        "loginMobile":!HappyGoMobile?eCacheUtil.storage.getCache(CacheKey.loginPhone):HappyGoMobile,
                         "fm": fm
                     },base = new Base64();
+                    //console.log(eCacheUtil.storage.getCache(CacheKey.loginPhone),param)
                     $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
                         if (data.success){
                             var dataInfo = data.result.datainfo;
@@ -1014,7 +1027,7 @@
                     }
                     $.post(linkUrl+'/recycle/sendSmsCode.do',{params:JSON.stringify(params)},
                         function(data){
-                            Countdown($("#getCodeBtn").get(0),60)
+                            //Countdown($("#getCodeBtn").get(0),60)
                             if(data.success) {
 
                             }else {

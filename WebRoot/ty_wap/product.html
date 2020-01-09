@@ -61,7 +61,7 @@
 </head>
 <body>
     <div id="wrap" class="productWrap">
-        <div class="pageTitle">
+        <div class="pageTitle" style="background: linear-gradient(to right, #3f99f2, #5185ed);">
             <a href="javascript:window.history.back();"><img src="img/icon_arrow.png" alt=""></a>
             <div>
                 <input type="search" name="" id="search" placeholder="输入手机型号">
@@ -120,6 +120,7 @@
 
     <script>
         var fm=eCacheUtil.storage.getCache(CacheKey.source);
+        console.log(fm);
         if(isEmpty(fm)){
             eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
         }
@@ -338,7 +339,12 @@
                     }
                 }else {
                     loading_hide();
-                    alertTip(data.resultMessage);
+                    if(data.resultMessage){
+                        alertTip(data.resultMessage);
+                    }else{
+                        alertTip(data.msg);
+                    }
+
                 }
             })
         }
@@ -367,11 +373,12 @@
 
         function eachFull(info) {
             $.each(info, function (i, n) {
+                var len=$('.mainRight div.item').length+1;
                 var tmp = $("#template").clone();
                 tmp.removeAttr("id");
-
                 tmp.show();
-                $(".item",tmp).attr('data-mid',n.productid).html('<img src="'+n.modellogo+'"><p>'+n.modelname+'</p>');
+                //$(".item",tmp).attr('data-mid',n.productid).html('<img src="'+n.modellogo+'"><p>'+n.modelname+'</p>');
+                $(".item",tmp).attr('data-mid',n.productid).html('<span class="num">'+len+'</span><p>'+n.modelname+'</p>');
                 //追加到对应区块
                 $(".loadMore").before(tmp.html());
             });
