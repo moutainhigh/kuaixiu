@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -633,6 +634,12 @@ public class RecycleController extends BaseController {
                         recycleOrder.setNegotiationPrice(new BigDecimal(orderPrice));
                     }
                 }
+                //状态是9,将价格写到最终支付总金额(finalPrice)
+                if (Integer.valueOf(orderState) == 9) {
+                    if (StringUtils.isNotBlank(orderPrice)) {
+                        recycleOrder.setFinalPrice(new BigDecimal(orderPrice));
+                    }
+                }
                 recycleOrderService.updateByOrderStatus(recycleOrder);
                 result.setResultCode("0");
                 result.setSuccess(true);
@@ -1075,7 +1082,6 @@ public class RecycleController extends BaseController {
                         info.put("alert", "0");
                         info.put("mail_order_no", r.getSfOrderNo());
                     }
-
                     if (StringUtils.isNotBlank(r.getCouponId())) {
                         RecycleCoupon recycleCoupon = recycleCouponService.queryById(r.getCouponId());
                         if (recycleCoupon != null) {
@@ -1242,8 +1248,10 @@ public class RecycleController extends BaseController {
                     throw new SystemException("发起议价时价格不能为空");
                 }
                 if (o.getRecycleType() == 1) {
-                    //普通回收  按最新返回价格转账
-                    o.setPrice(new BigDecimal(price));
+                    //普通回收  按最新返回价格转账,议价后的价格,存放位置由预估总支付金额(price)移至最终支付总金额(finalPrice)
+                    //o.setPrice(new BigDecimal(price));
+                    o.setFinalPrice(new BigDecimal(price));
+
                     alipayService.transfer(o, "2", "3");
                 } else {
                     //信用回收  用(订单预支付价格-议价价格)  判断是代扣还是付尾款
@@ -1264,8 +1272,6 @@ public class RecycleController extends BaseController {
 
                     }
                 }
-
-
             }
             result.setResult(jsonResult);
             result.setResultCode("0");
@@ -1407,11 +1413,29 @@ public class RecycleController extends BaseController {
 //            throw new SystemException("对不起，您没有操作权限!");
 //        }
         // 获取查询条件
+        String queryStartTime;
+        queryStartTime = request.getParameter("query_startTime");
+        String queryEndTime;
+        queryEndTime = request.getParameter("query_endTime");
+        if(StringUtils.isEmpty(queryStartTime) && StringUtils.isEmpty(queryEndTime)){
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") ;
+            //得到日历
+            Calendar calendar = Calendar.getInstance();
+            //把当前时间赋给日历
+            calendar.setTime(date);
+            //设置为前三天
+            calendar.add(Calendar.DAY_OF_MONTH, -2);
+            //得到前一天的时间
+            Date dBefore = calendar.getTime();
+            queryStartTime = dateFormat.format(dBefore);
+            queryEndTime = dateFormat.format(date);
+        }
         String orderNo = request.getParameter("query_orderNo");
         String status = request.getParameter("query_orderStates");
         String mobile = request.getParameter("query_customerMobile");
-        String queryStartTime = request.getParameter("query_startTime");
-        String queryEndTime = request.getParameter("query_endTime");
+        /*String queryStartTime = request.getParameter("query_startTime");
+        String queryEndTime = request.getParameter("query_endTime");*/
         String fromSystem = request.getParameter("fromSystem");
         String isCoupon = request.getParameter("isCoupon");
         RecycleOrder r = new RecycleOrder();
@@ -1432,6 +1456,7 @@ public class RecycleController extends BaseController {
         List<RecycleSystem> flist = recycleSystemService.queryList(null);
         for (RecycleOrder o : list) {
 //            String price=recycleOrderService.div095(o.getPrice().toString());//加个乘以0.95
+            //回收价格改为成交价格,代码不做修改,前端页面取finalPrice字段
             o.setPrice(new BigDecimal(o.getPrice().toString()));
             if (StringUtils.isNotBlank(o.getCouponId())) {
                 RecycleCoupon recycleCoupon = recycleCouponService.queryById(o.getCouponId());
@@ -1455,7 +1480,7 @@ public class RecycleController extends BaseController {
                 }
             }
             for (RecycleSystem system : flist) {
-                if (o.getSourceType() == system.getId()) {
+                if (o.getSourceType().equals(system.getId())) {
                     o.setFm(system.getName());  //系统来源
                     break;
                 }

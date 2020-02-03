@@ -6,6 +6,8 @@ import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.util.*;
 import com.common.wechat.common.util.StringUtils;
+import com.kuaixiu.prizechance.service.PrizeChanceService;
+import com.google.gson.JsonArray;
 import com.kuaixiu.recycle.entity.*;
 import com.kuaixiu.recycle.recycleCard.CardEnum;
 import com.kuaixiu.recycle.service.*;
@@ -31,6 +33,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.*;
@@ -68,6 +71,8 @@ public class RecycleNewController extends BaseController {
     private HsActivityCouponService activityCouponService;
     @Autowired
     private HsActivityCouponRoleService activityCouponRoleService;
+    @Autowired
+    private PrizeChanceService prizeChanceService;
 
     /**
      * 基础访问接口地址
@@ -293,7 +298,7 @@ public class RecycleNewController extends BaseController {
     public void getPrice(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
-        String url = baseNewUrl + "getprice";
+
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
@@ -303,6 +308,8 @@ public class RecycleNewController extends BaseController {
             String openId = params.getString("openId");
             String loginMobile = params.getString("loginMobile");
             String source = params.getString("fm");//来源
+
+            String url = baseNewUrl + "getprice"+"?channelid="+source;
             //转换items格式“1,2|2,6|4,15|5,19|6,21|35,114|11,43......”-->“2,6,15,19,21,114,43......”
             StringBuilder sb = new StringBuilder();
             String[] itemses = items.split("\\|");
@@ -349,6 +356,13 @@ public class RecycleNewController extends BaseController {
                         price, source, recycleCheckItemsService);
 //                price = recycleOrderService.div095(price);//加个乘以0.95
                 j.put("price", Integer.valueOf(price));
+            }//新增估价数据之后查询该号码当天估价了几次,一天只增加一次抽奖机会
+            int count = recycleCheckItemsService.queryCountByToday(loginMobile);
+            if(count < 1){
+                int i = prizeChanceService.updateCountByMobile(loginMobile);
+                if(i<1){
+                    log.info("估价后增加抽奖次数时异常");
+                }
             }
 
             getResult(result, jsonResult, true, "0", "");
@@ -527,7 +541,7 @@ public class RecycleNewController extends BaseController {
     public void wechatCreateOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
         JSONObject jsonResult = new JSONObject();
-        String url = baseNewUrl + "createorder";
+
         RecycleOrder order = new RecycleOrder();
         try {
             //获取请求数据
@@ -550,6 +564,8 @@ public class RecycleNewController extends BaseController {
             String mailType = params.getString("mailType"); //  1超人系统推送  2用户自行邮寄
             String note = params.getString("note");
             String couponCode = params.getString("couponCode");//加价券编码
+            String url = baseNewUrl + "createorder"+"?channelid="+source;
+
             if (StringUtil.isBlank(quoteid) || StringUtil.isBlank(name) || StringUtil.isBlank(mobile) ||
                     StringUtil.isBlank(province) || StringUtil.isBlank(city) || StringUtil.isBlank(area) ||
                     StringUtil.isBlank(address) || StringUtil.isBlank(recycleType) || StringUtil.isBlank(payMobile)) {
@@ -561,6 +577,9 @@ public class RecycleNewController extends BaseController {
                     throw new SystemException("请输入正确的手机号码");
                 }
             }
+
+//            int i = 1/0;
+//            int u = 0/1;
             //判断数据 是否符合规范
             if (name.length() > 12 || address.length() > 64) {
                 throw new SystemException("部分信息长度过长");
@@ -635,7 +654,8 @@ public class RecycleNewController extends BaseController {
             if (StringUtils.isNotBlank(openId)) {
                 order.setWechatOpenId(openId);
             }
-            List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.queryList(null);
+
+//            List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.queryList(null);
             if (StringUtils.isNotBlank(recycleCoupon.getId())) {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
@@ -668,6 +688,7 @@ public class RecycleNewController extends BaseController {
             code.put("areaname", areaname);                                     //省市区
             code.put("address", address);                                      //详细地址
             if (StringUtils.isNotBlank(couponCode)) {
+                List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.queryList(null);
                 //发送给回收平台加价券
                 recycleOrderService.sendActivityRecycleCoupon(code, recycleCoupon, activityCouponRoles);
             }
@@ -703,6 +724,10 @@ public class RecycleNewController extends BaseController {
             getResult(result, jsonResult, true, "0", "成功");
             //下单成功后更新下单间隔时间
             request.getSession().setAttribute("newTimes", time);
+            //下单成功,且下单金额大于100,添加一次抽奖机会
+            if(order.getPrice().compareTo(new BigDecimal("100"))==1){
+                prizeChanceService.updateCountByMobile(phone);
+            }
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);
         } catch (Exception e) {
@@ -793,7 +818,7 @@ public class RecycleNewController extends BaseController {
     /**
      * 获取订单列表
      */
-    @RequestMapping(value = "recycleNew/getOrderList")
+   @RequestMapping(value = "recycleNew/getOrderList")
     @ResponseBody
     public ResultData getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
@@ -847,6 +872,10 @@ public class RecycleNewController extends BaseController {
             String getResult = AES.post(url, requestNews);
             //对得到结果进行解密
             jsonResult = getResult(AES.Decrypt(getResult));
+
+
+
+
             //结合订单号查询更多信息
             JSONArray array = jsonResult.getJSONArray("datainfo");
             if (array.size() > 0) {
@@ -916,6 +945,185 @@ public class RecycleNewController extends BaseController {
         return result;
 //        renderJson(response, result);
     }
+
+     /**
+     * 获取订单列表
+     */
+/*
+    @RequestMapping(value = "recycleNew/getOrderList")
+    @ResponseBody
+    public ResultData getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ResultData result = new ResultData();
+        JSONObject jsonResult = new JSONObject();
+        String url = baseNewUrl + "getorderlist";
+        try {
+            //获取请求数据
+            JSONObject params = getPrarms(request);
+            String contactphone = params.getString("contactphone");
+            String phone = params.getString("contactphone");
+            String pageindex = params.getString("pageindex");
+            String pagesize = params.getString("pagesize");
+            String starttime = params.getString("starttime");
+            String endtime = params.getString("endtime");
+            String processstatus = params.getString("processstatus");
+
+            if (StringUtils.isBlank(contactphone)) {
+                Cookie cookie = CookiesUtil.getCookieByName(request, Consts.COOKIE_HS_PHONE);
+                if (cookie == null || StringUtils.isBlank(cookie.getValue())) {
+                    return getResult(result, null, false, "2", "请输入手机号");
+                }
+                String cookiePhone = cookie.getValue();
+                String phoneBase64 = URLDecoder.decode(cookiePhone, "UTF-8");
+                contactphone = Base64Util.getFromBase64(phoneBase64);
+            } else {
+                String[] dname = request.getServerName().split("\\.");
+                CookiesUtil.setCookie(response, Consts.COOKIE_HS_PHONE, Base64Util.getBase64(contactphone), CookiesUtil.prepare(dname), 999999999);
+            }
+
+            JSONObject requestNews = new JSONObject();
+            //调用接口需要加密的数据
+            JSONObject code = new JSONObject();
+            code.put("contactphone", contactphone);
+            if (StringUtils.isNotBlank(pageindex)) {
+                code.put("pageindex", Integer.parseInt(pageindex));
+            }
+            if (StringUtils.isNotBlank(pagesize)) {
+                code.put("pagesize", Integer.parseInt(pagesize));
+            }
+            if (StringUtils.isNotBlank(starttime)) {
+                code.put("starttime", starttime);
+            }
+            if (StringUtils.isNotBlank(endtime)) {
+                code.put("endtime", endtime);
+            }
+            if (StringUtils.isNotBlank(processstatus)) {
+                code.put("processstatus", processstatus);
+            }
+            String realCode = AES.Encrypt(code.toString());  //加密
+            requestNews.put(cipherdata, realCode);
+            //发起请求
+            String getResult = AES.post(url, requestNews);
+            //对得到结果进行解密
+//            JSONObject jsonResult1 = new JSONObject();
+            JSONArray list = getResult(AES.Decrypt(getResult)).getJSONArray("datainfo");
+
+            RecycleOrder recycleOrder = new RecycleOrder();
+            recycleOrder.setPhone(phone);
+            recycleOrder.setMobile(contactphone);
+            List<RecycleOrder> datainfos = new ArrayList<>();
+            if(StringUtils.isNotBlank(phone)){//判断登录手机号为空就查询联系人手机号
+                datainfos = recycleOrderService.queryByPhoneNo(recycleOrder);//根据登录手机号获取所有信息
+            }else{
+                datainfos = recycleOrderService.queryByMobileNo(recycleOrder);//根据联系人手机号获取所有信息
+            }
+            List<ResultTest> datainfo = new ArrayList<>();
+            for (RecycleOrder datainfo1:datainfos) {
+                ResultTest resultTest = new ResultTest();
+                if (list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        JSONObject quote1 = (JSONObject) list.get(i);
+                        String order = quote1.getString("orderid");
+                        String modelpic = quote1.getString("modelpic");
+                        String imei = quote1.getString("imei");
+                        if(order.equals(datainfo1.getOrderNo())){
+                            resultTest.setModelpic(modelpic);
+                            resultTest.setImei(imei);
+                        }
+                    }
+                }
+                resultTest.setOrderStatus(datainfo1.getOrderStatus());
+                resultTest.setCreatetime(datainfo1.getInTime());
+                resultTest.setOrderid(datainfo1.getOrderNo());
+                resultTest.setModelname(datainfo1.getProductName());
+                resultTest.setBrandname(datainfo1.getBrandName());
+                if(datainfo1.getOrderStatus()==9){//订单完成前后价格不一
+                    resultTest.setOrderprice(datainfo1.getNegotiationPrice());
+                }else{
+                    resultTest.setOrderprice(datainfo1.getPrice());
+                }
+                resultTest.setDetail(datainfo1.getDetail());
+                datainfo.add(resultTest);
+            }
+            Integer totalcount = recycleOrderService.getDao().queryCountByPhone(phone);
+
+            jsonResult.put("result","RESPONSESUCCESS");
+            jsonResult.put("msg","成功");
+            jsonResult.put("totalcount",totalcount);
+            jsonResult.put("datainfo",datainfo);
+            jsonResult.put("sessionid","");
+
+
+            //结合订单号查询更多信息
+            JSONArray array = jsonResult.getJSONArray("datainfo");
+            if (array.size() > 0) {
+                for (int i = 0; i < array.size(); i++) {
+                    JSONObject quote = (JSONObject) array.get(i);
+                    String orderId = quote.getString("orderid");
+                    if ("202".equals(quote.getString("processstatus"))) {
+                        quote.put("processstatus_name", "检测完成，请保持电话畅通");
+                    }
+                    if (StringUtil.isNotBlank(orderId)) {
+                        RecycleOrder order = recycleOrderService.queryByOrderNo(orderId);
+                        if (order != null) {
+                            quote.put("raiseOrderNo", order.getIncreaseOrderNo());
+                            quote.put("prepare_price", order.getPreparePrice());
+                            if (StringUtil.isBlank(quote.getString("modelpic"))) {
+                                //如果访问机型的图片为空 则使用默认图片
+                                quote.put("modelpic", order.getImagePath());
+                            }
+                            if (!"204".equals(quote.getString("processstatus"))) {
+                                if (StringUtils.isNotBlank(order.getCouponId())) {
+                                    RecycleCoupon recycleCoupon = recycleCouponService.queryById(order.getCouponId());
+                                    if (recycleCoupon != null) {
+                                        JSONObject json = activityCouponService.recycleCouponDetail2Json(recycleCoupon);
+                                        quote.put("coupon", json);
+                                        String orderPrice = quote.getString("orderprice");
+//                                        orderPrice = recycleOrderService.div095(orderPrice);//加个乘以0.95
+                                        if (recycleCoupon.getPricingType() == 1) {
+                                            if (recycleCoupon.getStrCouponPrice().compareTo(new BigDecimal("5")) != 0) {
+                                                if (recycleCoupon.getAddPriceUpper() != null && recycleCoupon.getStrCouponPrice().intValue() > recycleCoupon.getAddPriceUpper().intValue()) {
+                                                    quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper());
+                                                    quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
+                                                } else {
+                                                    quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice());
+                                                    quote.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(orderPrice).divide(new BigDecimal("100")).multiply(recycleCoupon.getStrCouponPrice())));
+                                                }
+                                            } else {
+                                                String percent = recycleCoupon.getStrCouponPrice().toString();  // 加价比例
+                                                Integer addCouponPrice = (recycleOrderService.getAddCouponPrice(new BigDecimal(orderPrice),percent)).intValue();
+                                                if (recycleCoupon.getAddPriceUpper() != null && addCouponPrice > recycleCoupon.getAddPriceUpper().intValue()) {
+                                                    quote.put("addCouponPrice", recycleCoupon.getAddPriceUpper().toString());
+                                                    quote.put("orderprice", new BigDecimal(orderPrice).add(recycleCoupon.getAddPriceUpper()));
+                                                } else {
+                                                    quote.put("addCouponPrice", addCouponPrice.toString());
+                                                    quote.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(addCouponPrice.toString())));
+                                                }
+                                            }
+                                        } else {
+                                            quote.put("addCouponPrice", recycleCoupon.getStrCouponPrice().toString());
+                                            quote.put("orderprice", new BigDecimal(orderPrice).add(new BigDecimal(recycleCoupon.getStrCouponPrice().toString())));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            result.setResult(jsonResult);
+            result.setResultCode("0");
+            result.setSuccess(true);
+        } catch (SystemException e) {
+            sessionUserService.getSystemException(e, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionUserService.getException(result);
+        }
+        return result;
+//        renderJson(response, result);
+    }
+*/
+
 
 
     /**

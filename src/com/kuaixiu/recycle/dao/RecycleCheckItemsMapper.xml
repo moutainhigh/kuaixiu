@@ -269,4 +269,10 @@
         order by c.in_time desc
     </select>
 
+    <!-- 根据用户登录手机号,查询当天估计次数 -->
+    <select id="queryCountByToday" resultType="java.lang.Integer" parameterType="Object">
+        select count(1) from kx_recycle_checkitems
+         where login_mobile =#{loginMobile} and  in_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+    </select>
+
 </mapper>

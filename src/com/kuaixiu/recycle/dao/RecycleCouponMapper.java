@@ -2,7 +2,7 @@ package com.kuaixiu.recycle.dao;
 
 import com.common.base.dao.BaseDao;
 import com.kuaixiu.recycle.entity.RecycleCoupon;
-
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface RecycleCouponMapper<T> extends BaseDao<T> {
 
-    int updateUpdateRecycleOrder();
+//    int updateUpdateRecycleOrder();
 
     /**
      * 根据优惠券查询
@@ -94,5 +94,13 @@ public interface RecycleCouponMapper<T> extends BaseDao<T> {
     int couponCodeUpdate(T t);
 
     List<T> queryCouponListForPage(T t);
+
+    /**
+     * 用户抽中后,将优惠券和用户作匹配
+     * @param receiveMobile
+     * @param id
+     * @return
+     */
+    int updateReceiveMobile(@Param("receiveMobile") String receiveMobile, @Param("id") String id);
 
 }

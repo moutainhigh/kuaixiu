@@ -39,8 +39,13 @@ public interface RecycleOrderMapper<T> extends BaseDao<T>  {
 	 * 芝麻订单状态值不为0(未反馈) 和2(结束)
 	 */
 	List<T> queryByMobile(T t);
-
-
+	List<T> queryByMobileNo(T t);
+	/**
+	 * 根据 登录手机号查询该用户是否有正在进行信用回收的订单
+	 *
+	 */
+	List<T> queryByPhone(T t);
+	List<T> queryByPhoneNo(T t);
 	/**
 	 * 根据抬价订单号查询
 	 * @param t
@@ -51,4 +56,5 @@ public interface RecycleOrderMapper<T> extends BaseDao<T>  {
 	List<T> queryImportList(T t);
 
 	int queryCountByMobile(String mobile);
+	int queryCountByPhone(String phone);
 }

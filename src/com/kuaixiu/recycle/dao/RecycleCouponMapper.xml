@@ -41,7 +41,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="add" parameterType="Object">
+    <insert id="add" parameterType="java.lang.Object">
         insert into hs_coupon
         (id,batch_id,coupon_code,coupon_name,is_receive,receive_mobile,pricing_Type,rule_description,upper_limit,add_price_upper,subtraction_price,coupon_price,begin_time,end_time,note,use_time,create_time,create_userid,update_time,update_userid)
         values
@@ -49,7 +49,7 @@
     </insert>
 
     <!-- 根据id，修改记录-->
-    <update id="update" parameterType="Object">
+    <update id="update" parameterType="java.lang.Object">
         update hs_coupon
         set
             coupon_code=#{couponCode},
@@ -74,8 +74,11 @@
         where id=#{id}
     </update>
 
+    <update id="updateReceiveMobile" parameterType="java.lang.String">
+       update hs_coupon set receive_mobile=#{receiveMobile} where id=#{id}
+    </update>
     <!-- 根据加价码修改记录-->
-    <update id="couponCodeUpdate" parameterType="Object">
+    <update id="couponCodeUpdate" parameterType="java.lang.Object">
         update hs_coupon
         set
             coupon_name=#{couponName},
@@ -94,12 +97,12 @@
     </update>
 
     <!-- 删除记录 -->
-    <delete id="delete" parameterType="Object">
+    <delete id="delete" parameterType="java.lang.Object">
         delete from hs_coupon where id = #{id}
     </delete>
 
     <!-- 根据id，修改记录-->
-    <update id="deleteByBatchId" parameterType="Object">
+    <update id="deleteByBatchId" parameterType="java.lang.Object">
         update hs_coupon
         set 
             is_del=1,
@@ -109,7 +112,7 @@
     </update>
 
     <!-- 根据id，修改记录-->
-    <update id="deleteById" parameterType="Object">
+    <update id="deleteById" parameterType="java.lang.Object">
         update hs_coupon
         set
         is_del=#{isDel},
@@ -119,14 +122,14 @@
     </update>
 
     <!-- 根据批次号 批量修改失效数据-->
-    <update id="updateStatusByBatchId" parameterType="String">
+    <update id="updateStatusByBatchId" parameterType="java.lang.String">
         update hs_coupon
         set
             status=2
         where batch_id=#{batchId}
     </update>
 
-    <update id="updateStatusByCouponCode" parameterType="String">
+    <update id="updateStatusByCouponCode" parameterType="java.lang.String">
         update hs_coupon
         set
         status=2
@@ -134,7 +137,7 @@
     </update>
 
     <!-- 根据批次号 批量修改信息-->
-    <update id="updateByBatchId" parameterType="Object">
+    <update id="updateByBatchId" parameterType="java.lang.Object">
         update hs_coupon
         set
             coupon_name=#{couponName},
@@ -154,26 +157,26 @@
     </update>
 
     <!-- 查询批次  -->
-    <select id="queryBybatch" resultType="String" parameterType="Object">
+    <select id="queryBybatch" resultType="java.lang.String" parameterType="java.lang.Object">
         SELECT batch_id FROM hs_coupon WHERE is_del=0 GROUP BY batch_id
     </select>
 
     <!-- 根据id查询  -->
-    <select id="queryById" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Object">
         select
         <include refid="Base_Column_List"/>
         from hs_coupon t where t.id = #{id}
     </select>
 
     <!-- 根据Code查询  -->
-    <select id="queryByCode" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryByCode" resultMap="BaseResultMap" parameterType="java.lang.Object">
         select
         <include refid="Base_Column_List"/>
         from hs_coupon t where t.coupon_code = #{code}
     </select>
 
     <!-- 查询个数  -->
-    <select id="queryCount" resultType="Integer" parameterType="Object">
+    <select id="queryCount" resultType="java.lang.Integer" parameterType="java.lang.Object">
         select count(1)
         from hs_coupon t
         where 1=1
@@ -213,7 +216,7 @@
     </select>
 
     <!-- 查询列表无分页 -->
-    <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryList" resultMap="BaseResultMap" parameterType="java.lang.Object">
         select
         <include refid="Base_Column_List"/>
         from hs_coupon t
@@ -257,7 +260,7 @@
     </select>
 
     <!-- 查询列表 带分页 -->
-    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryListForPage" resultMap="BaseResultMap" parameterType="java.lang.Object">
         select
         <include refid="Base_Column_List"/>
         from hs_coupon t
@@ -298,7 +301,7 @@
         order by t.create_time desc,t.coupon_code
     </select>
 
-    <select id="queryCouponListForPage" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryCouponListForPage" resultMap="BaseResultMap" parameterType="java.lang.Object">
         select
         <include refid="Base_Column_List"/>
         from hs_coupon t
@@ -316,7 +319,7 @@
     </select>
 
     <!-- 根据加价券编码修改记录-->
-    <update id="updateForUse" parameterType="Object">
+    <update id="updateForUse" parameterType="java.lang.Object">
     	update hs_coupon
         set 
             is_use=1,
@@ -327,7 +330,7 @@
     </update>
 
     <!-- 根据加价券编id修改记录,改为未使用-->
-    <update id="updateForNoUse" parameterType="String">
+    <update id="updateForNoUse" parameterType="java.lang.String">
         update hs_coupon
         set
             is_use=0,
@@ -337,7 +340,7 @@
     </update>
 
     <!-- 根据编码修改记录-->
-    <update id="updateForReceive" parameterType="Object">
+    <update id="updateForReceive" parameterType="java.lang.Object">
     	update hs_coupon
         set 
             is_receive=1,
@@ -348,7 +351,7 @@
     </update>
 
     <!-- 查询列表无分页 -->
-    <select id="queryUnReceive" resultMap="BaseResultMap" parameterType="Object">
+    <select id="queryUnReceive" resultMap="BaseResultMap" parameterType="java.lang.Object">
         select
         <include refid="Base_Column_List"/>
         from hs_coupon t

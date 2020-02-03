@@ -2,8 +2,10 @@ package com.common.util;
 
 import java.security.MessageDigest;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.kuaixiu.nbTelecomSJ.entity.NBArea;
@@ -648,10 +650,35 @@ public class SmsSendUtil {
 
     public static boolean submitRecycleOrder(String mobile, String source,RecycleSystemService recycleSystemService) {
         StringBuffer content = new StringBuffer();
-        content.append("订单提交成功，价格有效期10天，等待顺丰快递上门取件，" +
-                "收货地址 浙江省杭州市下城区武林广场电信营业厅三楼售后维修中心0571-87162535  ，" +
-                "寄出前请解除机器所有账号和密码（flyme，iCloud）等并取出手机卡和内存卡。");
-        return sendSmsThread(mobile, content.toString(), source,recycleSystemService);
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        try {
+            /*
+                dateStart 开始时间
+                dateOver  结束时间
+             */
+            Date dateStart = simpleDateFormat.parse("2020-01-31 00:00:00");
+            Date dateOver = simpleDateFormat.parse("2020-02-10 23:59:59");
+
+            if(date.before(dateStart) || date.after(dateOver)){
+                content.append("订单提交成功，价格有效期10天，等待顺丰快递上门取件，" +
+                        "收货地址 浙江省杭州市下城区武林广场电信营业厅三楼售后维修中心0571-87162535  ，" +
+                        "寄出前请解除机器所有账号和密码（flyme，iCloud）等并取出手机卡和内存卡。");
+            }else{
+                content.append("订单提交成功，价保到2月15日。等待顺丰上门取件，" +
+                        "收货地址 浙江省杭州市下城区武林广场电信营业厅三楼0571-87162535。 2月10日恢复上班，根据收件顺序依次处理，给您带来不便，敬请谅解。" +
+                        "响应国家号召，足不出户一键下单，回收旧手机，共同努力战胜疫情。");
+            }
+//            int i = 1/0;
+//            int u = 0/1;
+            return sendSmsThread(mobile, content.toString(), source,recycleSystemService);
+
+        } catch (ParseException e) {
+//            e.printStackTrace();
+            return false;
+        }
+
     }
 
 

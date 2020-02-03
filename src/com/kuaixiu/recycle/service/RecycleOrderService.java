@@ -60,6 +60,8 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         return mapper;
     }
 
+
+
     /**
      * 根据回收流水号获取订单信息
      *
@@ -641,4 +643,30 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             return " ";
         }
     }
+    /* *
+       *
+       *  根据登录手机号获取所有信息
+       * (没有登录手机号就访问联系人手机号)
+       */
+//    public List<RecycleOrder> queryByPhone(String contactphone,String phone){
+//        RecycleOrder recycleOrder = new RecycleOrder();
+//        if(StringUtils.isBlank(phone)){
+//            recycleOrder.setMobile(contactphone);
+//            recycleOrder.setIsDel(0);
+//            return getDao().queryByMobileNo(recycleOrder);
+//        }else{
+//            recycleOrder.setPhone(phone);
+//            recycleOrder.setIsDel(0);
+//            return getDao().queryByPhoneNo(recycleOrder);
+//        }
+
+
+//    }
+    public List<RecycleOrder> queryByPhoneNo(RecycleOrder recycleOrder){
+        return getDao().queryByPhoneNo(recycleOrder);
+    }
+    public List<RecycleOrder> queryByMobileNo(RecycleOrder recycleOrder){
+        return getDao().queryByMobileNo(recycleOrder);
+    }
+
 }

@@ -22,4 +22,10 @@ public interface RecycleCheckItemsMapper<T> extends BaseDao<T>{
 	List<Map> queryTestListForPage(T t);
 
 	T queryByTestId(@Param("id") String id);
+	/**
+	 * 根据用户登录手机号,查询当天估计次数
+	 * @param loginMobile
+	 * @return
+	 */
+	int queryCountByToday(@Param("loginMobile") String loginMobile);
 }

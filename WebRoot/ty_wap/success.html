@@ -12,7 +12,15 @@
     <style>
     	.txt-red {
     		color: red;
-    	}
+        }
+         .tip{
+            padding-left: 0 !important;
+            padding-top:0.15rem !important;
+        } 
+        .tip .spring div{
+            text-align: left;
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -29,8 +37,14 @@
                <!-- <p>顺丰将在<span id="pickTime" class="color-blue">11月11日11:11</span>上门收取快递</p>
                 <p>工作人员将会提前1小时与您联系，请保持手机畅通！</p>  -->
 
-				<P>顺丰上门人员信息稍后短信至您的手机</p>
-				<p>如验货无误，收到机器后2个工作日放款</p>
+				<span id="phoneId">顺丰上门人员信息稍后短信至您的手机</span><br/>
+				<span>如验货无误，收到机器后2个工作日放款</span>
+<!--                1.20 - 1.31-->
+                <div class="spring">
+                    <div class="springInfo">春节期间，全体放假，从2月1日起逐步恢复正常，
+					按入库先后次序依次处理，请耐心等待。</div>
+                </div>
+
             </div>
             <div class="hope">
                 <p>- 达成以下两点，可提高结算速度 -</p>
@@ -170,7 +184,12 @@
 					$( '#tipinfo-box' ).addClass( 'hide' );
 				});
 
-			}*/
+            }*/
+            let phoneidWidth=$('#phoneId')[0].offsetWidth
+            let phoneidoffsetLeft=$('#phoneId')[0].offsetLeft
+            $('.spring').width(phoneidWidth).css({"marginLeft":phoneidoffsetLeft});
+
+            console.log($('.tip'))
         })
 
 

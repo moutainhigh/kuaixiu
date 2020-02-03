@@ -106,7 +106,8 @@
                 <th class="fontWeight_normal tdwidth50">联系人/<br/>手机号</th>
                 <th class="fontWeight_normal tdwidth50">支付类型</th>
                 <th class="fontWeight_normal tdwidth50">机型名字</th>
-                <th class="fontWeight_normal tdwidth50">回收价格</th>
+                <th class="fontWeight_normal tdwidth50">预估价格</th>
+                <th class="fontWeight_normal tdwidth50">成交价格</th>
                 <th class="fontWeight_normal tdwidth50">订单来源</th>
                 <th class="fontWeight_normal tdwidth30">使用加价券</th>
                 <th class="fontWeight_normal tdwidth60">下单时间</th>
@@ -159,6 +160,7 @@
         {"data": "exchangeType", "class": ""},
         {"data": "productName", "class": ""},
         {"data": "price", "class": ""},
+        {"data": "negotiationPrice", "class": ""},
         {"data": "fm", "class": ""},
         {"data": "couponId", "class": ""},
         {"data": "inTime", "class": ""},
@@ -241,10 +243,20 @@
             }
         },
         {
-            targets: -5,
+            targets: -6,
             render: function (data, type, row, meta) {
                 var price = row.price + '元';
                 return price;
+            }
+        },
+        {
+            targets: -5,
+            render: function (data, type, row, meta) {
+                var negotiationPrice = row.negotiationPrice + '元';
+                if(row.negotiationPrice == null){
+                    return "";
+                }
+                return negotiationPrice;
             }
         },
         {

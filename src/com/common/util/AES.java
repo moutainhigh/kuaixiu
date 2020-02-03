@@ -111,9 +111,19 @@ public class AES {
 	 public static String post(String url, JSONObject param) throws Exception {
 		    //log.info("发起请求");
 		    String code=param.getString(SystemConstant.RECYCLE_REQUEST);  //需要编码的参数
-		    StringBuffer params = new StringBuffer();  //需要发送的数据
-            params.append(SystemConstant.RECYCLE_ID).append("=").append(SystemConstant.RECYCLE_ID_VALUE)
-            .append("&").append(SystemConstant.RECYCLE_REQUEST).append("=").append(URLEncoder.encode(code,"utf-8"));
+		 StringBuffer params = null;
+		 if(url.contains("channelid")){
+			 String s =url.split("=")[1];
+			 String channelid = "channelid="+s;
+			 params = new StringBuffer(channelid);
+			 //需要发送的数据
+			 params.append("&").append(SystemConstant.RECYCLE_REQUEST).append("=").append(URLEncoder.encode(code,"utf-8"));
+		 }else {
+			 params = new StringBuffer();
+			 //需要发送的数据
+			 params.append(SystemConstant.RECYCLE_ID).append("=").append(SystemConstant.RECYCLE_ID_VALUE).append("&").append(SystemConstant.RECYCLE_REQUEST).append("=").append(URLEncoder.encode(code,"utf-8"));
+		 }
+
 	     //   log.info("加密后发送的请求参数："+params.toString());
 		    PrintWriter out = null;
 	        BufferedReader in = null;
