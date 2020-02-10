@@ -181,9 +181,10 @@
                 $('.status',tmp).html(n.processstatus_name);
                 $('.image img',tmp).attr('src',n.modelpic);
                 var item = '';
-                for (var j = 0;j < n.checkinfo.length;j++){
-                    item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
-                }
+                // for (var j = 0;j < n.checkinfo.length;j++){
+                //     item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
+                // }
+                item = n.detail;
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
         
                 $('.priceBox span',tmp).html("¥"+(n.orderprice).toFixed(2));

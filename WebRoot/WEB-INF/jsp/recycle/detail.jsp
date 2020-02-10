@@ -61,7 +61,10 @@
                         <h4>姓名：${cust.name }</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>手机号：${order.mobile }</h4>
+                        <h4>下单人：${order.phone }</h4>
+                    </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>寄件人：${order.mobile }</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
 

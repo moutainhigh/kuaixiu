@@ -39,7 +39,7 @@
 
 
         $(function(){
-            debugger;
+            // debugger;
             if(window.history && window.history.pushState) {
                 $(window).on('popstate', function() {
                     var hashLocation = location.hash;
@@ -48,7 +48,7 @@
                     if(hashName !== '') {
                         var hash = window.location.hash;
                         if(hash === '') {
-                            alert("你点击了返回键");
+                            // alert("你点击了返回键");
                         }
                     }
                 });

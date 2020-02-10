@@ -22,7 +22,9 @@ import com.kuaixiu.videoUserRel.service.VideoUserRelService;
 import com.system.api.entity.ResultData;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
+import com.system.util.PageBean;
 import jodd.util.StringUtil;
+import net.sf.json.JSONString;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,6 +95,10 @@ public class RecycleNewController extends BaseController {
         String url = baseNewUrl + "getbrandlist";
         try {
             String categoryid = request.getParameter("categoryid");
+//            categoryid="2";
+            if(categoryid==null){
+                     categoryid = "0";
+            }
             JSONObject requestNews = new JSONObject();
             JSONObject code = new JSONObject();
             code.put("categoryid", categoryid);
@@ -130,6 +136,10 @@ public class RecycleNewController extends BaseController {
             String pageIndex = params.getString("pageindex");
             String pageSize = params.getString("pagesize");
             String categoryid = params.getString("categoryid");
+//            categoryid="2";
+            if(categoryid==null){
+                     categoryid = "0";  
+            }
             String brandId = params.getString("brandid");
             String keyword = params.getString("keyword");
             //将选中的品牌存入 session
@@ -564,6 +574,7 @@ public class RecycleNewController extends BaseController {
             String mailType = params.getString("mailType"); //  1超人系统推送  2用户自行邮寄
             String note = params.getString("note");
             String couponCode = params.getString("couponCode");//加价券编码
+
             String url = baseNewUrl + "createorder"+"?channelid="+source;
 
             if (StringUtil.isBlank(quoteid) || StringUtil.isBlank(name) || StringUtil.isBlank(mobile) ||
@@ -578,8 +589,7 @@ public class RecycleNewController extends BaseController {
                 }
             }
 
-//            int i = 1/0;
-//            int u = 0/1;
+
             //判断数据 是否符合规范
             if (name.length() > 12 || address.length() > 64) {
                 throw new SystemException("部分信息长度过长");
@@ -596,7 +606,7 @@ public class RecycleNewController extends BaseController {
                 }
             }
 
-            //设置下单间隔时间,最少3秒
+            //设置下单间隔时间,最少5秒
             Long time = System.currentTimeMillis();
             Object requestTimes = request.getSession().getAttribute("newTimes");
             if (requestTimes == null) {
@@ -608,6 +618,8 @@ public class RecycleNewController extends BaseController {
                 }
             }
 
+//                        int i=1/0;
+//                        int i1=0/1;
             //转化时间格式
             if (StringUtil.isNotBlank(takeTime)) {
                 takeTime = recycleOrderService.getDate(takeTime);
@@ -620,7 +632,11 @@ public class RecycleNewController extends BaseController {
             String customerId = UUID.randomUUID().toString().replace("-", "");
             order.setId(id);
             order.setOrderNo("");
-            order.setPhone(phone);
+            if(StringUtil.isNotBlank(phone)){
+                order.setPhone(phone);
+            }else{
+                order.setPhone(mobile);
+            }
             order.setOrderType(1);             //正式订单
             order.setRecycleType(1);           //普通回收
             order.setExchangeType(Integer.parseInt(recycleType));
@@ -818,7 +834,7 @@ public class RecycleNewController extends BaseController {
     /**
      * 获取订单列表
      */
-   @RequestMapping(value = "recycleNew/getOrderList")
+  /* @RequestMapping(value = "recycleNew/getOrderList")
     @ResponseBody
     public ResultData getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
@@ -945,11 +961,11 @@ public class RecycleNewController extends BaseController {
         return result;
 //        renderJson(response, result);
     }
-
+*/
      /**
      * 获取订单列表
      */
-/*
+
     @RequestMapping(value = "recycleNew/getOrderList")
     @ResponseBody
     public ResultData getOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -980,57 +996,190 @@ public class RecycleNewController extends BaseController {
                 CookiesUtil.setCookie(response, Consts.COOKIE_HS_PHONE, Base64Util.getBase64(contactphone), CookiesUtil.prepare(dname), 999999999);
             }
 
-            JSONObject requestNews = new JSONObject();
-            //调用接口需要加密的数据
-            JSONObject code = new JSONObject();
-            code.put("contactphone", contactphone);
-            if (StringUtils.isNotBlank(pageindex)) {
-                code.put("pageindex", Integer.parseInt(pageindex));
-            }
-            if (StringUtils.isNotBlank(pagesize)) {
-                code.put("pagesize", Integer.parseInt(pagesize));
-            }
-            if (StringUtils.isNotBlank(starttime)) {
-                code.put("starttime", starttime);
-            }
-            if (StringUtils.isNotBlank(endtime)) {
-                code.put("endtime", endtime);
-            }
-            if (StringUtils.isNotBlank(processstatus)) {
-                code.put("processstatus", processstatus);
-            }
-            String realCode = AES.Encrypt(code.toString());  //加密
-            requestNews.put(cipherdata, realCode);
-            //发起请求
-            String getResult = AES.post(url, requestNews);
-            //对得到结果进行解密
-//            JSONObject jsonResult1 = new JSONObject();
-            JSONArray list = getResult(AES.Decrypt(getResult)).getJSONArray("datainfo");
-
             RecycleOrder recycleOrder = new RecycleOrder();
             recycleOrder.setPhone(phone);
             recycleOrder.setMobile(contactphone);
             List<RecycleOrder> datainfos = new ArrayList<>();
+            //分页
+            PageBean<RecycleOrder> pageBean = new PageBean<>();
+            //类型转换 当前页数
+            Integer currenPage = Integer.valueOf(pageindex);
+            //数据库第几行开始查询
+            int startPage=(currenPage-1)*pageBean.getPageCount();
+            //查询多少行数据 分页类里默认3行
+            int selectCount=pageBean.getPageCount();
+            recycleOrder.setStartPage(startPage);
+            recycleOrder.setSelectCount(selectCount);
             if(StringUtils.isNotBlank(phone)){//判断登录手机号为空就查询联系人手机号
-                datainfos = recycleOrderService.queryByPhoneNo(recycleOrder);//根据登录手机号获取所有信息
+                datainfos = recycleOrderService.queryByPhoneNo(recycleOrder);
             }else{
                 datainfos = recycleOrderService.queryByMobileNo(recycleOrder);//根据联系人手机号获取所有信息
             }
+
             List<ResultTest> datainfo = new ArrayList<>();
             for (RecycleOrder datainfo1:datainfos) {
                 ResultTest resultTest = new ResultTest();
-                if (list.size() > 0) {
-                    for (int i = 0; i < list.size(); i++) {
-                        JSONObject quote1 = (JSONObject) list.get(i);
-                        String order = quote1.getString("orderid");
-                        String modelpic = quote1.getString("modelpic");
-                        String imei = quote1.getString("imei");
-                        if(order.equals(datainfo1.getOrderNo())){
-                            resultTest.setModelpic(modelpic);
-                            resultTest.setImei(imei);
+
+
+                String brandname = datainfo1.getBrandName();
+                if(brandname!=null && brandname.contains("/")){
+                        brandname=brandname.split("/")[1];
+                 }
+
+
+                String modelname = datainfo1.getProductName();;
+
+
+                String str = "";
+                        if(brandname!=null){
+                        JSONObject jsonResult1 = new JSONObject();
+                        String url1 = baseNewUrl + "getbrandlist";
+                        String pic = null;
+                        String brandId = null;
+                        try {
+                            String categoryid = request.getParameter("categoryid");
+                            JSONObject requestNews1 = new JSONObject();
+                            JSONObject code1 = new JSONObject();
+                            code1.put("categoryid", categoryid);
+                            String realCode1 = AES.Encrypt(code1.toString());  //加密
+                            requestNews1.put(cipherdata, realCode1);
+                            //发起请求
+                            String getResult1 = AES.post(url1, requestNews1);
+                            //对得到结果进行解密
+                            jsonResult1 = getResult(AES.Decrypt(getResult1));
+                            JSONArray array1 = jsonResult1.getJSONArray("datainfo");
+
+                            for (int i1 = 0; i1 < array1.size(); i1++) {
+                                JSONObject quote2 = (JSONObject) array1.get(i1);
+                                String brandname1=quote2.getString("brandname");
+                                if(brandname1.equals(brandname)){
+                                    brandId = quote2.getString("brandid");
+                                    break;
+                                }
+                            }
+
+                            JSONObject jsonResult2 = new JSONObject();
+                            String url2 = baseNewUrl + "getmodellist";
+                            String seachId = "";
+
+                                //获取请求数据
+
+                                String pageIndex1 = "1";
+                                String pageSize1 = "1000";
+                                String categoryid1 = "0";
+
+                                JSONObject requestNews2 = new JSONObject();
+                                //调用接口需要加密的数据
+                                JSONObject code2 = new JSONObject();
+                                code2.put("pageindex", pageIndex1);
+                                code2.put("pagesize", pageSize1);
+                                code2.put("categoryid", categoryid1);
+                                code2.put("brandid", brandId);
+                                code2.put("keyword", null);
+                                String realCode2 = AES.Encrypt(code2.toString());  //加密
+                                requestNews2.put(cipherdata, realCode2);
+                                //发起请求
+                                String getResult2 = AES.post(url2, requestNews2);
+                                //对得到结果进行解密
+                                jsonResult2 = getResult(AES.Decrypt(getResult2));
+                                //将结果中的产品id转为string类型  json解析 long类型精度会丢失
+                                //防止返回机型信息为空
+                                if (StringUtil.isNotBlank(jsonResult2.getString("datainfo")) && !(jsonResult2.getJSONArray("datainfo")).isEmpty()) {
+                                    JSONArray jq = jsonResult2.getJSONArray("datainfo");
+                                    JSONObject jqs = (JSONObject) jq.get(0);
+                                    JSONArray j = jqs.getJSONArray("sublist");
+                                    for (int i2 = 0; i2 < j.size(); i2++) {
+                                        JSONObject js = j.getJSONObject(i2);
+                                        js.put("productid", js.getString("productid"));
+
+                                        String imgaePath = js.getString("modellogo");
+                                        if((js.getString("modelname").replace(" ","")).equals(modelname.replace(" ",""))){
+
+
+                                                resultTest.setModelpic(imgaePath);
+
+//                                                JSONObject jsonResult3 = new JSONObject();
+//                                                String url3 = baseNewUrl + "getchecklist";
+//                                                try {
+//                                                    //获取请求数据
+//
+//                                                    String productId = js.getString("productid");
+//                                                    String modelName = js.getString("modelName");
+//                                                    if (StringUtil.isBlank(productId)) {
+//                                                        throw new SystemException("参数不完整");
+//                                                    }
+//                                                    JSONObject requestNews3 = new JSONObject();
+//                                                    //调用接口需要加密的数据
+//                                                   JSONObject code3 = new JSONObject();
+//                                                    code3.put("productid", productId);
+//                                                    String realCode3 = AES.Encrypt(code3.toString());  //加密
+//                                                    requestNews3.put(cipherdata, realCode3);
+//                                                    //发起请求
+//                                                    String getResult3 = AES.post(url3, requestNews3);
+//                                                    //对得到结果进行解密
+//                                                    jsonResult3 = getResult(AES.Decrypt(getResult3));
+//                                                    JSONObject object = jsonResult3.getJSONObject("datainfo");
+//                                                    JSONArray array3 = object.getJSONArray("questions");
+//                                                    StringBuffer stringBuffer = new StringBuffer();
+//                                                    for(int b=0;b<array3.size();b++){
+//                                                        JSONObject jsonObject=(JSONObject)array3.get(b);
+//                                                        String question = jsonObject.getString("name");
+//                                                        if(b==array3.size()-1){
+//                                                            stringBuffer = stringBuffer.append(question);
+//                                                        }else{
+//                                                            stringBuffer = stringBuffer.append(question).append("、");
+//                                                        }
+//
+//                                                    }
+//                                                    str = new String(stringBuffer);
+//                                                } catch (SystemException e) {
+//                                                    sessionUserService.getSystemException(e, result);
+//                                                } catch (Exception e) {
+//                                                    e.printStackTrace();
+//                                                    sessionUserService.getException(result);
+//                                                }
+                                            break;
+                                        }
+
+
+                                    }
+
+                                } else {
+                                    recycleOrderService.saveException(seachId, "该机型未找到");
+                                    getResult(result, null, false, "3", "该机型未找到");
+                                    log.info("该机型未找到");
+                                }
+
+
+
+
+
+                        } catch (SystemException e) {
+                            sessionUserService.getSystemException(e, result);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            sessionUserService.getException(result);
                         }
+
+
+
+//                        String imei = quote1.getString("imei");
+
                     }
-                }
+//                }
+//                  }
+//                resultTest.setModelpic(datainfo1.getImagePath());
+//                StringBuffer stringBuffer = new StringBuffer();
+//                        if(StringUtil.isNotBlank(str)){
+//                            String[] s =datainfo1.getDetail().split("、");
+//                            String[] s1=str.split("、");
+//                            for (int a=0;a<s.length;a++) {
+//                                stringBuffer=stringBuffer.append(s1[a]).append(s[a]).append("、");
+//                            }
+//                        }
+
+
+                resultTest.setDetail(datainfo1.getDetail());
                 resultTest.setOrderStatus(datainfo1.getOrderStatus());
                 resultTest.setCreatetime(datainfo1.getInTime());
                 resultTest.setOrderid(datainfo1.getOrderNo());
@@ -1041,7 +1190,8 @@ public class RecycleNewController extends BaseController {
                 }else{
                     resultTest.setOrderprice(datainfo1.getPrice());
                 }
-                resultTest.setDetail(datainfo1.getDetail());
+//                String detail = new String(stringBuffer);
+//                resultTest.setDetail(detail);
                 datainfo.add(resultTest);
             }
             Integer totalcount = recycleOrderService.getDao().queryCountByPhone(phone);
@@ -1122,7 +1272,7 @@ public class RecycleNewController extends BaseController {
         return result;
 //        renderJson(response, result);
     }
-*/
+
 
 
 

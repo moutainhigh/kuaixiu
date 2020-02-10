@@ -198,6 +198,25 @@ public class RecycleOrder extends BaseEntity{
 	 */
 	private String phone;
 
+	private Integer startPage;
+	private Integer selectCount;
+
+	public Integer getStartPage() {
+		return startPage;
+	}
+
+	public void setStartPage(Integer startPage) {
+		this.startPage = startPage;
+	}
+
+	public Integer getSelectCount() {
+		return selectCount;
+	}
+
+	public void setSelectCount(Integer selectCount) {
+		this.selectCount = selectCount;
+	}
+
 	public String getPhone() {
 		return phone;
 	}

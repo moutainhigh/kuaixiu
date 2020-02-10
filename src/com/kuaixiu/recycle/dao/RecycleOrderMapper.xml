@@ -151,7 +151,7 @@
     <select id="queryByMobileNo" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from kx_recycle_order t where t.mobile=#{mobile} and t.is_del=0 ;
+        from kx_recycle_order t where t.mobile=#{mobile} and t.is_del=0 order by t.order_no desc limit #{startPage},#{selectCount};
     </select>
     <select id="queryCountByMobile" resultType="Integer" parameterType="Object">
         select
@@ -169,7 +169,7 @@
     <select id="queryByPhoneNo" resultMap="BaseResultMap" parameterType="Object">
         select
         <include refid="Base_Column_List"/>
-        from kx_recycle_order t where t.phone=#{phone} and t.is_del=0;
+        from kx_recycle_order t where t.phone=#{phone} and t.is_del=0 order by t.order_no desc limit #{startPage},#{selectCount};
     </select>
 
     <select id="queryCountByPhone" resultType="Integer" parameterType="Object">

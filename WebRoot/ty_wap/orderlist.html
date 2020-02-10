@@ -122,6 +122,8 @@
             }
             var params = {
                 contactphone: phoneNumber,
+                // contactphone: HappyGoMobile,
+                // phone: loginPhone,
                 pageindex:pIndex,
                 pagesize:"5",
                 processstatus:orderStatus
@@ -139,17 +141,24 @@
                     }
                     off_on = true;
                     loading_hide();
+
                 }else{
+                    if(data.resultMessage=="请输入手机号"){
+                        loading_hide();
+                        alertTip(data.resultMessage);
+                        location.href = '../cr_wap/login.html';
+                    }
                     $('.baseline').remove();
                     $(".main").append('<p class="baseline blue" style="text-align: center;">——您当前不存在订单记录！——</p>');
                     $("#all").hide();
                     loading_hide();
+
                     return false;
                 }
-                // else {
+                // if {
                 //     loading_hide();
                 //     alertTip(data.resultMessage);
-					//  location.href = 'indexHappy.html';
+				// 	 location.href = 'login.html';
                 // }
             });
         }
@@ -158,6 +167,7 @@
                 var tmp = $("#template").clone();
                 tmp.removeAttr("id");
                 var orderId = n.orderid;
+                console.log(n.processstatus_name);
                 $(".order_title,.proRelated",tmp).on('click', function () {
                     location.href = 'details.html?orderid='+orderId;
                 });
@@ -166,9 +176,10 @@
                 $('.status',tmp).html(n.processstatus_name);
                 $('.image img',tmp).attr('src',n.modelpic);
                 var item = '';
-                for (var j = 0;j < n.checkinfo.length;j++){
-                    item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
-                }
+                // for (var j = 0;j < n.checkinfo.length;j++){
+                //     item += n.checkinfo[j].checkname+n.checkinfo[j].levelname+'、';
+                // }
+                    item = n.detail;
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
 
 				if(n.processstatus == 204){
