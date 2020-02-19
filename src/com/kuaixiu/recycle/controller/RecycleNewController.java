@@ -556,6 +556,11 @@ public class RecycleNewController extends BaseController {
         try {
             //获取请求数据
             JSONObject params = getPrarms(request);
+
+            String lovemoney = params.getString("lovemoney");//爱心捐款
+            if(lovemoney==null){
+                lovemoney="0";
+            }
             String phone = params.getString("phone");//用户登录手机号
             String quoteid = params.getString("quoteId");
             String openId = params.getString("openId");

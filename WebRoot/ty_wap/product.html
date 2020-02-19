@@ -57,53 +57,6 @@
              font-size: 0.18rem;
              font-weight: 600;
         }
-        #wrap.productWrap .main{
-            padding-top: 0;
-        }
-        #wrap .pageTitle{
-            border: 0;
-        }
-        #wrap.productWrap .main .mainLeft {
-            width: .9rem;
-            height:calc( 100% - 0.95rem );
-        }
-        #wrap.productWrap .main .mainRight{
-            padding: 0 0 .95rem .13rem;
-        }
-        .swiper-wrapper-top{
-            width: 100vw;
-            border-bottom: 1px solid #ccc;
-            margin-top: 0.54rem;
-            color:#636466;
-            height: 0.4rem;
-            line-height: 0.4rem;
-        }
-        .swiper-wrapper-top>li{
-            height: 0.4rem;
-            font-weight: 600;
-            text-align: center;
-            position: relative;
-            padding: 0 0.2rem;
-            line-height: 0.4rem;
-            box-sizing: border-box;
-            width: 32%;
-            display: inline-block;
-        }
-        .swiper-wrapper-top>.active{
-            color: #000;
-        }
-        .swiper-wrapper-top>.active::before{
-            width: 0.3rem;
-            height: 2px;
-            background: #5185ed;;
-            content: '';
-            border-radius: 2px;
-            position: absolute;
-            bottom: 0.09rem;
-            left:50%;
-            transform: translate(-50%);
-        }
-        
     </style>
 </head>
 <body>
@@ -114,11 +67,6 @@
                 <input type="search" name="" id="search" placeholder="输入手机型号">
             </div>
         </div>
-            <ul class="swiper-wrapper-top">
-                <li class="active swiper-top" >手机</li>
-                <li class="swiper-top">平板</li>
-                <li class="swiper-top">笔记本</li>
-            </ul>
         <div class="main clearfix">
             <div class="mainLeft fl">
                 <ul class="swiper-wrapper">
@@ -171,7 +119,6 @@
     <script src="js/common.js"></script>
 
     <script>
-        // var linkUrl='http://m-super.com'
         var fm=eCacheUtil.storage.getCache(CacheKey.source);
         console.log(fm);
         if(isEmpty(fm)){
@@ -231,7 +178,7 @@
             // 跳转到指定品牌, 如果没有这两个参数则不做任何操作
             for( var i = 0; i < $dom_li.length; i++ ){
                 if( brandId == $dom_li.eq(i).data('bid') ){
-                    var height = $dom_li.eq(i).height()*i
+                    var height = $dom_li.eq(i).height()*i;
                     $('.mainLeft .swiper-wrapper').css('transform','translate3d(0px, -'+height+'px, 0px)')
                     $dom_li.eq(i).addClass('active').siblings().removeClass('active');
                 }
@@ -261,33 +208,9 @@
 			setCacheData(CacheKey.OpenId,"openId");
 			setCacheData(CacheKey.ModelName,"modelName");
 			setCacheData(CacheKey.imgHref,"modelImageUrl");
+            // setCacheData(CacheKey.imgHref,"modelLogo");
 			eCacheUtil.storage.cache(CacheKey.isSelect,false);
 		}
-
-        var categoryid='0' //0为手机 1为平板 2位笔记本
-        $(function(){
-            
-            
-            $('.swiper-wrapper-top').on('click','li',function(e){
-                var bid=sessionStorage.getItem('brand_id')
-                console.log(bid)
-                var categoryName=e.target.innerHTML
-                $('#wrap.productWrap .main .mainRight .item').remove()
-                switch (categoryName) {
-                    case '手机':
-                      categoryid=0
-                    break;
-                    case '平板':
-                      categoryid=1 
-                    break;
-                    case '笔记本':
-                      categoryid=2 
-                    break;
-                }
-                $(this).addClass("active").siblings().removeClass("active");
-                searchModel(bid);
-            })
-        });
 
         var page = 1, //分页码
             off_on = false,//分页开关
@@ -395,8 +318,7 @@
             var param = {
                 pageindex:page,
                 pagesize:'12',
-                brandid:bid,
-                categoryid:categoryid
+                brandid:bid
             };
             //将品牌id储存
             eCacheUtil.storage.cache(CacheKey.BrandId,bid);
