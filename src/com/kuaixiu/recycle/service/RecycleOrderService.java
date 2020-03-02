@@ -256,7 +256,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
     }
 
     //发送给回收平台加价券
-    public void sendActivityRecycleCoupon(JSONObject code, RecycleCoupon recycleCoupon, List<HsActivityCouponRole> addValues) {
+    public void sendActivityRecycleCoupon(JSONObject code, RecycleCoupon recycleCoupon, List<HsActivityCouponRole> addValues,JSONObject json1) {
         JSONArray jsonArray = new JSONArray();
         for (HsActivityCouponRole addValue : addValues) {
             JSONObject json = new JSONObject();
@@ -274,6 +274,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             json.put("desc", addValue.getRuleDescription());
             jsonArray.add(json);
         }
+        jsonArray.add(json1);
         code.put("coupon_rule", jsonArray.toJSONString());
     }
 

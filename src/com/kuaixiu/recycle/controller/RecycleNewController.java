@@ -39,7 +39,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.*;
-
+import java.math.BigDecimal;
 /**
  * @author: anson
  * @CreateDate: 2017年11月7日 上午9:29:31
@@ -557,10 +557,13 @@ public class RecycleNewController extends BaseController {
             //获取请求数据
             JSONObject params = getPrarms(request);
 
-            String lovemoney = params.getString("lovemoney");//爱心捐款
+            String lovemoney = params.getString("loveMoney");//爱心捐款
             if(lovemoney==null){
                 lovemoney="0";
             }
+            String donationsName = params.getString("donationsName");//捐款人
+            String donationsPhone = params.getString("donationsPhone");//捐款手机号
+            String donationsEmail = params.getString("donationsEmail");//捐款邮箱
             String phone = params.getString("phone");//用户登录手机号
             String quoteid = params.getString("quoteId");
             String openId = params.getString("openId");
@@ -623,8 +626,6 @@ public class RecycleNewController extends BaseController {
                 }
             }
 
-//                        int i=1/0;
-//                        int i1=0/1;
             //转化时间格式
             if (StringUtil.isNotBlank(takeTime)) {
                 takeTime = recycleOrderService.getDate(takeTime);
@@ -656,6 +657,12 @@ public class RecycleNewController extends BaseController {
             order.setOrderStatus(1);           //订单已生成
             order.setNote(note);
             order.setCheckId(quoteid);
+            order.setDonationsName(donationsName);
+            order.setDonationsPhone(donationsPhone);
+            order.setDonationsEmail(donationsEmail);
+
+            order.setLovemoney(new BigDecimal(lovemoney));//爱心捐款
+
             if (StringUtils.isNotBlank(mailType)) {
                 order.setMailType(Integer.parseInt(mailType));
             } else {
@@ -681,7 +688,7 @@ public class RecycleNewController extends BaseController {
                 order.setCouponId(recycleCoupon.getId());
                 recycleCouponService.updateForUse(recycleCoupon);
             }
-            recycleOrderService.add(order);     //添加预付订单记录
+            int add1 = recycleOrderService.add(order);//添加预付订单记录
 
             //保存用户信息
             RecycleCustomer cust = new RecycleCustomer();
@@ -706,12 +713,25 @@ public class RecycleNewController extends BaseController {
             code.put("payment_account", payMobile);                            //结款账户
             code.put("contactname", name);                                     //联系人
             code.put("contactphone", mobile);                                  //联系电话
-            code.put("areaname", areaname);                                     //省市区
-            code.put("address", address);                                      //详细地址
+            code.put("areaname", areaname);                                     //省市区null
+            code.put("address", address);                                      //详细地址order
+
+            JSONArray jsonArray = new JSONArray();
+            JSONObject json = new JSONObject();
+            json.put("couponId", null);
+            json.put("actType",2);
+            json.put("addFee", Integer.parseInt("-"+lovemoney));
+            json.put("percent", 0);
+            json.put("up", "999999");
+            json.put("low", "0");
+            json.put("desc", "爱心捐款");
+            jsonArray.add(json);
+            code.put("coupon_rule", jsonArray.toJSONString());
+
             if (StringUtils.isNotBlank(couponCode)) {
                 List<HsActivityCouponRole> activityCouponRoles = activityCouponRoleService.queryList(null);
                 //发送给回收平台加价券
-                recycleOrderService.sendActivityRecycleCoupon(code, recycleCoupon, activityCouponRoles);
+                recycleOrderService.sendActivityRecycleCoupon(code, recycleCoupon, activityCouponRoles,json);//追加爱心捐款 拼接进加价卷
             }
             String realCode = AES.Encrypt(code.toString());  //加密
             requestNews.put(cipherdata, realCode);
@@ -1186,6 +1206,7 @@ public class RecycleNewController extends BaseController {
 
                 resultTest.setDetail(datainfo1.getDetail());
                 resultTest.setOrderStatus(datainfo1.getOrderStatus());
+                resultTest.setLovemoney(datainfo1.getLovemoney());
                 resultTest.setCreatetime(datainfo1.getInTime());
                 resultTest.setOrderid(datainfo1.getOrderNo());
                 resultTest.setModelname(datainfo1.getProductName());
@@ -1206,6 +1227,7 @@ public class RecycleNewController extends BaseController {
             jsonResult.put("totalcount",totalcount);
             jsonResult.put("datainfo",datainfo);
             jsonResult.put("sessionid","");
+
 
 
             //结合订单号查询更多信息

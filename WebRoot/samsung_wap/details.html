@@ -151,7 +151,14 @@
                     }
                     $('.image img').attr('src',dataInfo.modelpic);
                     $('.proInfor .text').html('<p class="fb">'+dataInfo.modelname+'</p><p>'+dataInfo.detail+'</p><a class="pull_down"><img src="img/icon_arrow_down.png" /></a>');
-                    $('.prePrice').html('¥ '+dataInfo.orderprice.toFixed(2));
+                    if(dataInfo.lovemoney != 0 && dataInfo.lovemoney !='' && dataInfo.lovemoney != undefined && dataInfo.lovemoney!= null){
+                      $('.text').append('<span>爱心捐赠'+dataInfo.lovemoney+'元</span>')
+                      $('.priceBox .prePrice').html("¥"+(dataInfo.orderprice).toFixed(2));
+                      let valuation=parseInt(dataInfo.orderprice)-parseInt(dataInfo.lovemoney)
+                      $('.priceBox p').prepend('评估价 <span>¥'+(valuation).toFixed(2)+'</span>&nbsp;&nbsp;订单');
+                    }else{
+                      $('.priceBox .prePrice').html("¥"+(dataInfo.orderprice).toFixed(2));
+                    }
 					//判断是否有Coupon元素
 					if( dataInfo.Coupon ){
 					   if(dataInfo.Coupon.couponPrice.indexOf("%") > 0){

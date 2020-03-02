@@ -1169,9 +1169,14 @@ textarea:-moz-placeholder {
 #wrap .proRelated .proInfor .text p:first-child {
   font-size: .14rem;
 }
-#wrap .proRelated .proInfor .text p:last-child {
+#wrap .proRelated .proInfor .text p:nth-child(2) {
   font-size: .12rem;
   color: #969799;
+}
+#wrap .proRelated .proInfor .text span {
+  font-size: .12rem;
+  color:#f00;
+  background-color:#fadbd5;
 }
 #wrap .proRelated .priceBox {
   padding: 0.1rem 0.08rem;
@@ -2007,7 +2012,7 @@ textarea:-moz-placeholder {
   line-height: .31rem;
   background-color: #f2f4f5;
   margin: 0 -0.15rem;
-  padding-left: 0.15rem;
+  padding: 0 0.15rem;
 }
 #wrap.orderWrap .main .eachRow {
   display: -webkit-box;

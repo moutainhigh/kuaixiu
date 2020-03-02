@@ -96,7 +96,7 @@ public class HsGroupShortUrlRecordController extends BaseController {
         return new ModelAndView(returnView);
     }
 
-    @RequestMapping(value = "groupShort/groupSendSms")
+    @RequestMapping(value = "`groupShort/groupSendSms")
     @ResponseBody
     public ResultData groupSendSms(HttpServletRequest request, HttpServletResponse response)throws Exception{
         ResultData result = new ResultData();

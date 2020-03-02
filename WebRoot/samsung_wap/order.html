@@ -7,6 +7,52 @@
     <script src="js/flexible.js"></script>
     <link rel="stylesheet" href="css/main.css?version=1.6">
     <title></title>
+    <style>
+    #wrap.orderWrap .main .donation .inputRow p {
+      width: .8rem;
+      font-size: .14rem;
+      color: #4b4c4c;
+    }
+    #wrap.orderWrap .main .donation .lovebox {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding:.05rem;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      width: 1rem;
+      border:1px solid #4b4c4c;
+    }
+    #wrap.orderWrap .main .donation .lovebox input{
+      width:100%;
+      border-bottom: 1px solid #fff;
+      font-size: .13rem;
+      color: #4b4c4c;
+    }
+    #wrap.orderWrap .main .donation .lovebox input:focus {
+      border-bottom-color: #fff;
+    }
+    #wrap.orderWrap .main .donation .loveboxright{
+      -webkit-box-flex: 1;
+          -ms-flex: 1 1 auto;
+              flex: 1 1 auto;
+      font-size: .1rem;
+      line-height: .18rem;
+      color: #909499;
+      padding:.15rem 0rem;
+    }
+    #wrap.orderWrap .main .donation input.lovemoneycheckbox{
+      width:.15rem;
+      height: .15rem;
+    }
+    #wrap.orderWrap .main .donation img.lovemoneyquery{
+      width:.15rem;
+      height: .15rem;
+      float:right;
+      display:block;
+    }
+    </style>
 </head>
 <body>
     <div id='map-container'></div>
@@ -100,6 +146,28 @@
                     <p>*为了方便我们能及时联系到您并且正常给您打款，请填写正确的信息</p>
                 </div>
                 
+            </div>
+            <div class="donation">
+                <p class="moduleTitle">捐款（非必填项）&nbsp;&nbsp;&nbsp;&nbsp;所有善款统一用于中国青基会公益项目 <a href="javascript:;"><img src="img/lovemoneyquery.png" alt="" class="lovemoneyquery"></a></p>
+                <div class="inputRow">
+                  <p></p>
+                  <div class="lovebox"><input type="text" name="loveMoney" id="loveMoney"  maxlength="5" placeholder="自定义金额" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">&nbsp;&nbsp;元</div>
+                  <span class="loveboxright">&nbsp;&nbsp;一份爱心&nbsp;&nbsp;一份温暖</span>
+                </div>
+                <input type="checkbox" name="lovemoneycheckbox" class="lovemoneycheckbox" >&nbsp;捐款人同取件人
+                <div class="inputRow">
+                  <p>捐款人姓名</p>
+                  <input type="text" id="donationsName" maxlength="12" placeholder="">
+                </div>
+                <div class="inputRow">
+                  <p>捐款人手机</p>
+                  <input type="text" id="donationsPhone"  maxlength="11" placeholder="" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                </div>
+                <div class="inputRow">
+                  <p>E-mail</p>
+                  <input type="text" id="donationsEmail" maxlength="" placeholder="用以发送捐款证书和捐赠电子发票">
+                </div>
+                <p class="loveboxright">以上所收集的个人资料将保密处理，仅作为与您通讯或填写收据之用</p>
             </div>
             <div class="ticket">
                  <p class="moduleTitle">加价券</p>
@@ -261,7 +329,17 @@
             });
 
             var checkSubmitFlg = false;
+            $('input[name="lovemoneycheckbox"]').click(function(){
+              if($('input[name="lovemoneycheckbox"]').is(":checked")){
+                $("#donationsName").attr("value",$('#connect').val());
+                $("#donationsPhone").attr("value",$('#inputtel').val());
+              }else{
+                $("#donationsName").attr("value",'');
+                $("#donationsPhone").attr("value",'');
+              }
+            })
             $('#submit').click(function(){
+              
                 if (isEmpty($('#connect').val())){
                     alertTip('请输入联系人');
                     return false;
@@ -284,6 +362,32 @@
                     }
                 }else if (checkSubmitFlg == true){
                     return false;
+                }
+                if(isEmpty($('#loveMoney').val())){
+                  love_Money=0
+                  donations_Name=''
+                  donations_Phone=''
+                  donations_Email=''
+                }else{
+                  love_Money=$('#loveMoney').val()
+                  if($('input[name="lovemoneycheckbox"]').is(":checked")){
+                    donations_Name=$('#connect').val()
+                    donations_Phone=$('#inputtel').val()
+                  }else{
+                    if(isEmpty($('#donationsName').val()) || isEmpty($('#donationsPhone').val())){
+                      alertTip('请选中捐款人同取件人或输入捐款人信息');
+                      return false;
+                    }else{
+                      donations_Name=$('#donationsName').val()
+                      donations_Phone=$('#donationsPhone').val()
+                    }
+                  }
+                  if(isEmpty($('#donationsEmail').val())){
+                      alertTip('请输入E-mail');
+                      return false;
+                    }else{
+                      donations_Email=$('#donationsEmail').val()
+                    }
                 }
                 
                 checkSubmitFlg = true;
@@ -314,7 +418,11 @@
                     takeTime:take_time,
                     fm:eCacheUtil.storage.getCache(CacheKey.source),
                     note:$('#note').val(),
-					couponCode:$('#ticket-text').val(),
+                    couponCode:$('#ticket-text').val(),
+                    loveMoney:love_Money,
+                    donationsName:donations_Name,
+                    donationsPhone:donations_Phone,
+                    donationsEmail:donations_Email
 					
                 }
 				$.post(linkUrl+'/recycleNew/wechatCreateOrder.do',{params:JSON.stringify(params)},

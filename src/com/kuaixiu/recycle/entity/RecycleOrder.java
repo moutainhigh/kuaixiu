@@ -197,9 +197,54 @@ public class RecycleOrder extends BaseEntity{
 	 * 用户登录手机号
 	 */
 	private String phone;
+	/**
+	 * 爱心捐款
+	 */
+	private BigDecimal lovemoney;
+
+	/**
+	 * 捐款人  手机号  邮箱
+	 */
+	private String donationsName;
+	private String donationsPhone;
+	private String donationsEmail;
+
 
 	private Integer startPage;
 	private Integer selectCount;
+
+
+	public String getDonationsName() {
+		return donationsName;
+	}
+
+	public void setDonationsName(String donationsName) {
+		this.donationsName = donationsName;
+	}
+
+	public String getDonationsPhone() {
+		return donationsPhone;
+	}
+
+	public void setDonationsPhone(String donationsPhone) {
+		this.donationsPhone = donationsPhone;
+	}
+
+	public String getDonationsEmail() {
+		return donationsEmail;
+	}
+
+	public void setDonationsEmail(String donationsEmail) {
+		this.donationsEmail = donationsEmail;
+	}
+
+	public BigDecimal getLovemoney() {
+		return lovemoney;
+	}
+
+	public void setLovemoney(BigDecimal lovemoney) {
+		this.lovemoney = lovemoney;
+	}
 
 	public Integer getStartPage() {
 		return startPage;
