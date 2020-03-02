@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.prizechance.dao.PrizeChanceMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.prizechance.entity.PrizeChance" >
+        <result column="id" property="id"/>
+        <result column="user_mobile" property="userMobile"/>
+        <result column="count" property="count"/>
+        <result column="type" property="type"/>
+        <result column="creator" property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updator" property="updator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_del" property="isDel"/>
+    </resultMap>
+    
+    <!-- prize_chance table all fields -->
+    <sql id="Base_Column_List" >
+        id,user_mobile,count,creator,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,updator,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,is_del
+    </sql>
+
+
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update prize_chance 
+        set 
+            id=#{id},
+            user_mobile=#{userMobile},
+            count=#{count},
+            creator=#{creator},
+            create_time=#{createTime},
+            updator=#{updator},
+            update_time=#{updateTime},
+            is_del=#{isDel}
+        where id=#{id}
+    </update>
+
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from prize_chance where id = #{id}
+    </delete>
+
+
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from prize_chance where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from prize_chance
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="userMobile != null and userMobile != ''" >
+            and user_mobile = #{userMobile}
+        </if>
+        <if test="count != null and count != ''" >
+            and count = #{count}
+        </if>
+        <if test="creator != null and creator != ''" >
+            and creator = #{creator}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updator != null and updator != ''" >
+            and updator = #{updator}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from prize_chance
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="userMobile != null and userMobile != ''" >
+            and user_mobile = #{userMobile}
+        </if>
+        <if test="count != null and count != ''" >
+            and count = #{count}
+        </if>
+        <if test="creator != null and creator != ''" >
+            and creator = #{creator}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updator != null and updator != ''" >
+            and updator = #{updator}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+    </select>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into prize_chance
+        (id,user_mobile,count,creator,create_time,updator,update_time,is_del)
+        values
+        (#{id},#{userMobile},#{count},#{creator},now(),#{updator},now(),#{isDel})
+    </insert>
+    <!-- 插入记录 -->
+    <insert id="addBytype" parameterType="Object" >
+        insert into prize_chance
+        (id,user_mobile,count,creator,type,create_time,updator,update_time,is_del)
+        values
+        (#{id},#{userMobile},#{count},#{type},#{creator},now(),#{updator},now(),#{isDel})
+    </insert>
+
+    <insert id="updateBytype" parameterType="Object" >
+      update prize_chance  set  count= count +1,type=#{type} where user_mobile=#{userMobile}
+    </insert>
+
+    <!-- 根据Mobile，修改剩余抽奖次数-->
+    <update id="updateCountByMobile" parameterType="Object" >
+        update prize_chance  set  count= count +1 where user_mobile=#{userMobile}
+    </update>
+    <update id="updateCountByReduce" parameterType="Object" >
+        update prize_chance  set  count= count -1 where user_mobile=#{userMobile}
+    </update>
+
+    <update id="updateCountByMobileType" parameterType="Object" >
+        update prize_chance  set  count= count +1,type=#{type} where user_mobile=#{userMobile}
+    </update>
+    <!-- 插入记录 -->
+    <insert id="insertCountByMobile" parameterType="Object" >
+        insert into prize_chance
+        (id,user_mobile,count,creator,create_time,updator,update_time,is_del)
+        values
+        (#{id},#{userMobile},#{count},0,now(),0,now(),#{isDel})
+    </insert>
+
+    <!-- 根据Mobile查询抽奖次数  -->
+    <select id="queryByMobile"  resultType="java.lang.Integer" parameterType="Object">
+        select count
+        from prize_chance where user_mobile = #{userMobile} limit 1
+    </select>
+
+    <!-- 根据Mobile查询抽奖次数  -->
+    <select id="queryIDByMobile"  resultType="com.kuaixiu.prizechance.entity.PrizeChance" parameterType="Object">
+        select id,count,type
+        from prize_chance where user_mobile = #{userMobile}
+    </select>
+
+    <select id="queryByMobileAndType"  resultType="java.lang.Integer" parameterType="Object">
+        select count
+        from prize_chance where user_mobile = #{userMobile} and type=#{type}
+    </select>
+
+
+</mapper>   

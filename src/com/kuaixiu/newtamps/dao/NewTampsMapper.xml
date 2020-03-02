@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.newtamps.dao.NewTampsMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.newtamps.entity.NewTamps" >
+        <result column="id" property="id"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="batch_id" property="batchId"/>
+        <result column="grade" property="grade"/>
+        <result column="coupon_name" property="couponName"/>
+        <result column="user_mobile" property="userMobile"/>
+        <result column="creator" property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updator" property="updator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_del" property="isDel"/>
+    </resultMap>
+    
+    <!-- new_tamps table all fields -->
+    <sql id="Base_Column_List" >
+        id,coupon_id,batch_id,grade,coupon_name,user_mobile,creator,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,updator,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,is_del
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into new_tamps
+        (id,coupon_id,batch_id,grade,coupon_name,user_mobile,creator,create_time,updator,update_time,is_del)
+        values
+        (#{id},#{couponId},#{batchId},#{grade},#{couponName},#{userMobile},#{creator},now(),#{updator},now(),#{isDel})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update new_tamps 
+        set 
+            id=#{id},
+            coupon_id=#{couponId},
+            batch_id=#{batchId},
+            grade=#{grade},
+            coupon_name=#{couponName},
+            user_mobile=#{userMobile},
+            creator=#{creator},
+            create_time=#{createTime},
+            updator=#{updator},
+            update_time=#{updateTime},
+            is_del=#{isDel}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from new_tamps where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from new_tamps where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from new_tamps
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="couponId != null and couponId != ''" >
+            and coupon_id = #{couponId}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and batch_id = #{batchId}
+        </if>
+        <if test="grade != null and grade != ''" >
+            and grade = #{grade}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and coupon_name = #{couponName}
+        </if>
+        <if test="userMobile != null and userMobile != ''" >
+            and user_mobile = #{userMobile}
+        </if>
+        <if test="creator != null and creator != ''" >
+            and creator = #{creator}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updator != null and updator != ''" >
+            and updator = #{updator}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from new_tamps
+        where 1=1
+        <if test="id != null and id != ''" >
+            and id = #{id}
+        </if>
+        <if test="couponId != null and couponId != ''" >
+            and coupon_id = #{couponId}
+        </if>
+        <if test="batchId != null and batchId != ''" >
+            and batch_id = #{batchId}
+        </if>
+        <if test="grade != null and grade != ''" >
+            and grade = #{grade}
+        </if>
+        <if test="couponName != null and couponName != ''" >
+            and coupon_name = #{couponName}
+        </if>
+        <if test="userMobile != null and userMobile != ''" >
+            and user_mobile = #{userMobile}
+        </if>
+        <if test="creator != null and creator != ''" >
+            and creator = #{creator}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updator != null and updator != ''" >
+            and updator = #{updator}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+    </select>
+
+    <select id="queryListByUserMobile" resultMap="BaseResultMap"  parameterType="Object">
+        select coupon_id,batch_id,grade  from new_tamps where user_mobile=#{userMobile} and is_del=0
+    </select>
+
+</mapper>   

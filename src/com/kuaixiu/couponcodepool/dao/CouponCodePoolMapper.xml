@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaixiu.couponcodepool.dao.CouponCodePoolMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.kuaixiu.couponcodepool.entity.CouponCodePool" >
+        <result column="id" property="id"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="prize_id" property="prizeId"/>
+        <result column="user_mobile" property="userMobile"/>
+        <result column="fm" property="fm"/>
+        <result column="fm_name" property="fmName"/>
+        <result column="batch" property="batch"/>
+        <result column="grade" property="grade"/>
+        <result column="creator" property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updator" property="updator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_del" property="isDel"/>
+    </resultMap>
+    
+    <!-- coupon_code_pool table all fields -->
+    <sql id="Base_Column_List" >
+        id,coupon_id,prize_id,user_mobile,batch,grade,fm_name,fm,creator,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,updator,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,is_del
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="Object" >
+        insert into coupon_code_pool
+        (id,coupon_id,prize_id,user_mobile,batch,grade,creator,create_time,updator,update_time,is_del)
+        values
+        (#{id},#{couponId},#{prizeId},#{userMobile},#{batch},#{grade},#{creator},#{createTime},#{updator},#{updateTime},#{isDel})
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="Object" >
+        update coupon_code_pool 
+        set 
+            coupon_id=#{couponId},
+            prize_id=#{prizeId},
+            user_mobile=#{userMobile},
+            batch=#{batch},
+            grade=#{grade},
+            creator=#{creator},
+            create_time=#{createTime},
+            updator=#{updator},
+            update_time=#{updateTime},
+            is_del=#{isDel}
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="Object">
+        delete from coupon_code_pool where id = #{id}
+    </delete>
+    
+    <!-- 根据id查询  -->
+    <select id="queryById"  resultMap="BaseResultMap" parameterType="Object">
+        select <include refid="Base_Column_List" />
+        from coupon_code_pool where id = #{id}
+    </select>
+
+    <!-- 查询列表无分页 -->
+    <select id="queryList" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from coupon_code_pool
+        where 1=1
+        <if test="couponId != null and couponId != ''" >
+            and coupon_id = #{couponId}
+        </if>
+        <if test="prizeId != null and prizeId != ''" >
+            and prize_id = #{prizeId}
+        </if>
+        <if test="userMobile != null and userMobile != ''" >
+            and user_mobile = #{userMobile}
+        </if>
+        <if test="batch != null and batch != ''" >
+            and batch = #{batch}
+        </if>
+        <if test="grade != null and grade != ''" >
+            and grade = #{grade}
+        </if>
+        <if test="creator != null and creator != ''" >
+            and creator = #{creator}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updator != null and updator != ''" >
+            and updator = #{updator}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+    </select>
+    
+    <!-- 查询列表 带分页 -->
+    <select id="queryListForPage" resultMap="BaseResultMap"  parameterType="Object">
+        select
+        <include refid="Base_Column_List"/>
+        from coupon_code_pool
+        where 1=1
+        <if test="couponId != null and couponId != ''" >
+            and coupon_id = #{couponId}
+        </if>
+        <if test="prizeId != null and prizeId != ''" >
+            and prize_id = #{prizeId}
+        </if>
+        <if test="userMobile != null and userMobile != ''" >
+            and user_mobile = #{userMobile}
+        </if>
+        <if test="batch != null and batch != ''" >
+            and batch = #{batch}
+        </if>
+        <if test="grade != null and grade != ''" >
+            and grade = #{grade}
+        </if>
+        <if test="creator != null and creator != ''" >
+            and creator = #{creator}
+        </if>
+        <if test="createTime != null and createTime != ''" >
+            and create_time = #{createTime}
+        </if>
+        <if test="updator != null and updator != ''" >
+            and updator = #{updator}
+        </if>
+        <if test="updateTime != null and updateTime != ''" >
+            and update_time = #{updateTime}
+        </if>
+        <if test="isDel != null and isDel != ''" >
+            and is_del = #{isDel}
+        </if>
+    </select>
+
+    <!--随机获取奖品-->
+    <select id="queryByRandom"  resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"/>
+        from coupon_code_pool  where is_del=0  ORDER BY RAND() limit 1
+
+    </select>
+
+    <!--中奖更新状态-->
+    <update id="updateDel" parameterType="Object" >
+        update coupon_code_pool
+        set is_del=1 , update_time=now(),user_mobile=#{userMobile},fm_name=#{fmName}
+        where id=#{id}
+    </update>
+
+    <!-- 查询中奖用户  -->
+    <select id="queryPrizeByUserMobile"  resultMap="BaseResultMap" parameterType="Object">
+        select user_mobile,grade from coupon_code_pool where is_del=1 order by update_time desc limit 50
+    </select>
+
+
+
+
+
+</mapper>   
