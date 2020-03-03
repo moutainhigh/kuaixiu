@@ -52,6 +52,11 @@
       float:right;
       display:block;
     }
+    #wrap.orderWrap .main .footer .eachRow{
+      border-bottom: 0;
+      height: 0.35rem;
+      line-height: .35rem;
+    }
     </style>
 </head>
 <body>
@@ -188,7 +193,17 @@
                 </div>
             </div>
             <div class="footer">
-                <a href="javascript:;" id="submit" class="btn-large">提交订单</a>
+              <p class="moduleTitle">合计金额</p>
+              <div class="eachRow">
+                <p>估计金额：</p><p id="estimatedamount">0元</p>
+              </div>
+              <div class="eachRow">
+                <p>捐款金额：</p><p id="donationmoney">0元</p>
+              </div>
+              <div class="eachRow">
+                <p>合计回收金额：</p><p id="Recyclingamount">0元</p>
+              </div>
+              <a href="javascript:;" id="submit" class="btn-large">提交订单</a>
             </div>
         </div>
         <!-- 取件时间layer -->
@@ -338,37 +353,58 @@
                 $("#donationsPhone").attr("value",'');
               }
             })
+            var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice);
+            console.log(prePrice)
+            $('#estimatedamount ').html(prePrice+'元')
+            $('#Recyclingamount').html(prePrice+'元')
+            $('#loveMoney').bind('input propertychange', function() {
+              if(parseInt($(this).val()) > parseInt(prePrice)){
+                alertTip('捐款金额大于估计金额');
+              }
+              $('#donationmoney').html($(this).val()+'元');
+              if(isEmpty($(this).val())){
+                $('#Recyclingamount').html(prePrice+'元')
+                $('#donationmoney').html('0元');
+              }else{
+                var Recyclingamount=parseInt(prePrice)-parseInt($(this).val())
+                $('#Recyclingamount').html(Recyclingamount+'元')
+              }
+            })
             $('#submit').click(function(){
               
-                if (isEmpty($('#connect').val())){
-                    alertTip('请输入联系人');
-                    return false;
-                }else if (isEmpty($('#inputtel').val())){
-                    alertTip('请输入手机号');
-                    return false;
-                }else if (!$('#selectAddress').hasClass('active')){
-                    alertTip('请选择所在地区');
-                    return false;
-                }else if (isEmpty($('#address').val())){
-                    alertTip('请输入详细地址');
-                    return false;
-                }else if (isEmpty($('#alipay'+$('input:radio[name="way"]:checked').val()).val())){
-                    if ($('input:radio[name="way"]:checked').val() == 1){
-                        alertTip('请输入支付宝账号');
-                        return false;
-                    }else{
-                        alertTip('请输入手机充值号码');
-                        return false;
-                    }
-                }else if (checkSubmitFlg == true){
-                    return false;
-                }
+                  if (isEmpty($('#connect').val())){
+                      alertTip('请输入联系人');
+                      return false;
+                  }else if (isEmpty($('#inputtel').val())){
+                      alertTip('请输入手机号');
+                      return false;
+                  }else if (!$('#selectAddress').hasClass('active')){
+                      alertTip('请选择所在地区');
+                      return false;
+                  }else if (isEmpty($('#address').val())){
+                      alertTip('请输入详细地址');
+                      return false;
+                  }else if (isEmpty($('#alipay'+$('input:radio[name="way"]:checked').val()).val())){
+                      if ($('input:radio[name="way"]:checked').val() == 1){
+                          alertTip('请输入支付宝账号');
+                          return false;
+                      }else{
+                          alertTip('请输入手机充值号码');
+                          return false;
+                      }
+                  }else if (checkSubmitFlg == true){
+                      return false;
+                  }
                 if(isEmpty($('#loveMoney').val())){
                   love_Money=0
                   donations_Name=''
                   donations_Phone=''
                   donations_Email=''
                 }else{
+                  if(parseInt($('#loveMoney').val()) > parseInt(prePrice)){
+                    alertTip('捐款金额大于估计金额');
+                    return false;
+                  }
                   love_Money=$('#loveMoney').val()
                   if($('input[name="lovemoneycheckbox"]').is(":checked")){
                     donations_Name=$('#connect').val()
@@ -423,7 +459,6 @@
                     donationsName:donations_Name,
                     donationsPhone:donations_Phone,
                     donationsEmail:donations_Email
-					
                 }
 				$.post(linkUrl+'/recycleNew/wechatCreateOrder.do',{params:JSON.stringify(params)},
 				      function(data){

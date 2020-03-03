@@ -214,6 +214,8 @@ public class RecycleOrder extends BaseEntity{
 	private Integer selectCount;
 
 
+
+
 	public String getDonationsName() {
 		return donationsName;
 	}
@@ -591,4 +593,6 @@ public class RecycleOrder extends BaseEntity{
 	public void setIncreaseOrderNo(String increaseOrderNo) {
 		this.increaseOrderNo = increaseOrderNo;
 	}
+
+
 }

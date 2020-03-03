@@ -660,7 +660,6 @@ public class RecycleNewController extends BaseController {
             order.setDonationsName(donationsName);
             order.setDonationsPhone(donationsPhone);
             order.setDonationsEmail(donationsEmail);
-
             order.setLovemoney(new BigDecimal(lovemoney));//爱心捐款
 
             if (StringUtils.isNotBlank(mailType)) {
@@ -668,6 +667,8 @@ public class RecycleNewController extends BaseController {
             } else {
                 order.setMailType(1);        //快递类型   1超人系统推送
             }
+
+
             //通过quoteid获取机型信息
             JSONObject postNews = recycleOrderService.postNews(quoteid);
             BigDecimal price = new BigDecimal(postNews.getString("price"));
@@ -1347,6 +1348,7 @@ public class RecycleNewController extends BaseController {
                     info.put("recycle_type", r.getExchangeType());
                     info.put("mail_type", r.getMailType().toString());
                     info.put("note", r.getNote());
+                    info.put("lovemoney", r.getLovemoney());
                     if (StringUtil.isBlank(info.getString("modelpic"))) {
                         //如果图片为空 则使用默认图片
                         String realUrl = request.getRequestURL().toString();

@@ -1646,4 +1646,36 @@ public class RecycleWechatController extends BaseController {
         System.out.println(getXMLTicket("3213213"));
 
     }
+
+
+    /**
+     * 修改爱心捐款价格
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/recycle/updateLoveMoney")
+    @ResponseBody
+    public ResultData updateLoveMoney(HttpServletRequest request, HttpServletResponse response) {
+        ResultData result = new ResultData();
+        try {
+            String orderNo = request.getParameter("orderNo");
+            String lovemoney = request.getParameter("lovemoney");
+            if (StringUtils.isBlank(lovemoney)) {
+                throw new SystemException("捐款金额不能为空");
+            }
+            System.out.println("金额："+lovemoney);
+            RecycleOrder recycleOrder = recycleOrderService.queryByOrderNo(orderNo);
+            recycleOrder.setLovemoney(new BigDecimal(lovemoney));
+            recycleOrderService.saveUpdate(recycleOrder);
+            result.setResultCode("0");
+            result.setSuccess(true);
+        } catch (SystemException e) {
+            sessionUserService.getSystemException(e, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionUserService.getException(result);
+        }
+        return result;
+    }
 }

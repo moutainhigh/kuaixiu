@@ -48,8 +48,9 @@
             <td class="td-space"></td>
             <td class="td-info">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <h4>订单号：${order.orderNo }</h4>
+                    <div class="col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px; margin-bottom: 10px;">
+                        <h4 style="display: inline">订单号：</h4>
+                        <h4 id="orderNo" contenteditable="true" style="display: inline">${order.orderNo}</h4>
                     </div><!-- /.col -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>创建时间：<fmt:formatDate value="${order.inTime }" pattern="yyyy-MM-dd HH:mm:ss"/></h4>
@@ -66,6 +67,11 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>寄件人：${order.mobile }</h4>
                     </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px; margin-bottom: 10px;">
+                        <h4 style="display: inline;color:green">爱心捐款：</h4>
+                        <h4 id="lovemoney" contenteditable="true" style="display: inline">${order.lovemoney}</h4>
+                        <h4 style="display: inline">元</h4>
+                    </div><!-- /.col -->
                 </div><!-- /.row -->
 
 
@@ -77,7 +83,7 @@
                                 <c:when test="${order.recycleType == 1}">普通回收</c:when>
                             </c:choose>
                         </h4>
-                    </div><!-- /.col -->
+                    </div>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <h4>支付类型：
                             <c:choose>
@@ -205,11 +211,42 @@
     </table>
 </div>
 <!-- /am-g -->
-
+<div class="am-g">
+    <div class="panel panel-success index-panel-msg" style="text-align:center">
+        <button onclick="updateOrder();" class="am-btn am-btn-default search_btn" type="button"> 确认修改 </button>
+        <p style="color:red">!订单绿色信息处数字双击修改数值后可提交修改</p>
+    </div><!-- /panel -->
+</div>
 
 <script type="text/javascript">
+
+
+
+
+
     function toList() {
         func_reload_page("${ctx}/newOrder/list.do");
     }
+
+
+    // 修改订单实际价格
+    function updateOrder(){
+        var lovemoney = $('#lovemoney').html();
+        var orderNo = $('#orderNo').html();
+        console.log(lovemoney+"  "+orderNo);
+        var url_ = AppConfig.ctx + "/recycle/updateLoveMoney.do";
+        $.post(url_,{lovemoney:lovemoney,orderNo:orderNo},function(data){
+            if (data.success){
+                alert("修改成功!");
+            }else{
+                alert(data.resultMessage);
+            }
+        });
+
+    }
+
+
+
+
 
 </script>
