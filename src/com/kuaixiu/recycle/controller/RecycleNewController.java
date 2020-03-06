@@ -725,7 +725,7 @@ public class RecycleNewController extends BaseController {
             json.put("percent", 0);
             json.put("up", "999999");
             json.put("low", "0");
-            json.put("desc", "爱心捐款");
+            json.put("desc", "爱心捐款(捐款金额："+lovemoney+"元");
             jsonArray.add(json);
             code.put("coupon_rule", jsonArray.toJSONString());
 

@@ -38,43 +38,56 @@
             </tr>
 
             <tr>
-                <td class="search_th"><label class="control-label">订 单 状 态 ：</label></td>
+            <td class="search_th"><label class="control-label">订 单 状 态 ：</label></td>
+            <td class="search_td">
+                <select name="query_orderStates" class="form-control">
+                    <option value="">--订单状态--</option>
+                    <option value="0">取消订单</option>
+                    <option value="1">创建订单</option>
+                    <option value="2">待客户发件</option>
+                    <option value="3">已发货待收件</option>
+                    <option value="4">门店收件</option>
+                    <option value="5">提交质检报告</option>
+                    <option value="6">需议价订单</option>
+                    <option value="7">议价结束</option>
+                    <option value="8">待支付订单</option>
+                    <option value="9">支付完成（结束）</option>
+                    <option value="10">预支付转账成功</option>
+                    <option value="11">预支付转账失败</option>
+                    <option value="12">支付尾款失败</option>
+                    <option value="13">扣款失败</option>
+
+                </select>
+            </td>
+
+            <td class="search_th"><label class="control-label">客户手机号：</label></td>
+            <td class="search_td"><input type="text" name="query_customerMobile" class="form-control"></td>
+
+            <td class="search_th"><label class="control-label">使用加价券：</label></td>
+            <td class="search_td">
+                <select name="isCoupon" class="form-control">
+                    <option value="">--请选择--</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+        </tr>
+
+            <tr>
+                <td class="search_th"><label class="control-label">爱 心 捐 款：</label></td>
                 <td class="search_td">
-                    <select name="query_orderStates" class="form-control">
-                        <option value="">--订单状态--</option>
-                        <option value="0">取消订单</option>
-                        <option value="1">创建订单</option>
-                        <option value="2">待客户发件</option>
-                        <option value="3">已发货待收件</option>
-                        <option value="4">门店收件</option>
-                        <option value="5">提交质检报告</option>
-                        <option value="6">需议价订单</option>
-                        <option value="7">议价结束</option>
-                        <option value="8">待支付订单</option>
-                        <option value="9">支付完成（结束）</option>
-                        <option value="10">预支付转账成功</option>
-                        <option value="11">预支付转账失败</option>
-                        <option value="12">支付尾款失败</option>
-                        <option value="13">扣款失败</option>
-
-                    </select>
-                </td>
-
-                <td class="search_th"><label class="control-label">客户手机号：</label></td>
-                <td class="search_td"><input type="text" name="query_customerMobile" class="form-control"></td>
-
-                <td class="search_th"><label class="control-label">使用加价券：</label></td>
-                <td class="search_td">
-                    <select name="isCoupon" class="form-control">
+                    <select name="isLoveMoney" class="form-control">
                         <option value="">--请选择--</option>
                         <option value="0">否</option>
                         <option value="1">是</option>
                     </select>
                 </td>
             </tr>
-
-
         </table>
+
+
+
+
         <div class="form-group">
             <div class="am-u-sm-12 am-u-md-6">
                 <div class="am-btn-toolbar">

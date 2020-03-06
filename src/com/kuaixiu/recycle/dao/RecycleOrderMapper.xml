@@ -342,6 +342,12 @@
         <if test="isCoupon != null and isCoupon != '' and isCoupon==1">
             and t.coupon_id is not NULL
         </if>
+        <if test="lovemoney != null and lovemoney==0">
+            and t.lovemoney is  NULL
+        </if>
+        <if test="lovemoney != null and lovemoney==1">
+            and t.lovemoney is not NULL
+        </if>
         order by in_time desc
     </select>
 

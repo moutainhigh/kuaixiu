@@ -435,6 +435,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         String queryEndTime = MapUtils.getString(params, "query_endTime");
         String fromSystem = MapUtils.getString(params, "fromSystem");
         String isCoupon = MapUtils.getString(params, "isCoupon");
+        String isLoveMoney = MapUtils.getString(params, "isLoveMoney");
 
         RecycleCheckItems checkItem = new RecycleCheckItems();
         String idStr = MapUtils.getString(params, "ids");
@@ -449,6 +450,12 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
         }
         if (StringUtil.isNotBlank(status)) {
             r.setOrderStatus(Integer.parseInt(status));
+        }
+
+        if(StringUtils.isBlank(isLoveMoney)){
+            r.setLovemoney(null);
+        }else{
+            r.setLovemoney(new BigDecimal(isLoveMoney));
         }
         r.setMobile(mobile);
         r.setQueryStartTime(queryStartTime);
@@ -490,7 +497,7 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
 
         //excel标题
         String[] header = new String[]{"订单号", "订单状态", "联系人", "联系人手机号", "支付类型", "机型名字", "回收价格",
-                "订单来源", "使用加价券", "下单时间"};
+                "订单来源", "使用加价券", "下单时间","捐款金额"};
 
 // 导出到多个sheet中--------------------------------------------------------------------------------开始
         // 创建一个EXCEL
@@ -607,6 +614,12 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
             row.createCell(count).setCellValue("");
         } else {
             row.createCell(count).setCellValue(DateUtil.getDateyyyyMMddHHmmss((Date) map.get("inTime")));
+        }
+        count = count + 1;
+        if (map.get("lovemoney") == null) {
+            row.createCell(count).setCellValue("");
+        } else {
+            row.createCell(count).setCellValue(map.get("lovemoney").toString());
         }
         return row;
     }
