@@ -25,7 +25,7 @@ public class GroupMobileExecutor {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
+//                    Thread.sleep(1000);
 
                     for (HsGroupMobile groupMobile : groupMobiles) {
                         RecycleCoupon recycleCoupon = hsGroupMobileRecordService.receiveCoupon(hsGroupCouponRole, groupMobile.getMobile(), su);
@@ -38,7 +38,7 @@ public class GroupMobileExecutor {
                         groupMobileRecord.setCreateUserid(su.getUserId());
                         groupMobileRecord.setSmsId(hsGroupMobileSms.getId());
                         hsGroupMobileRecordService.add(groupMobileRecord);
-
+                        Thread.sleep(200);  //一分钟300条
                         SmsSendUtil.groupMobileSendCoupon(hsGroupMobileSms.getSmsTemplate(), groupMobile.getMobile(),recycleSystemService);
                     }
                     hsGroupMobileService.getDao().deleteNull();

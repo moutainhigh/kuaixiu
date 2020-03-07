@@ -200,6 +200,22 @@
                     </div>
 
                 </div><!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>捐款人邮箱：${order.donationsEmail}</h4>
+                    </div><!-- /.col -->
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>捐款人姓名：${order.donationsName}</h4>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <h4>捐款人电话：${order.donationsPhone}</h4>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+
             </td>
         </tr>
 
@@ -214,7 +230,7 @@
 <div class="am-g">
     <div class="panel panel-success index-panel-msg" style="text-align:center">
         <button onclick="updateOrder();" class="am-btn am-btn-default search_btn" type="button"> 确认修改 </button>
-        <p style="color:red">!订单绿色信息处数字双击修改数值后可提交修改</p>
+        <p style="color:red">绿色处数字可修改</p>
     </div><!-- /panel -->
 </div>
 

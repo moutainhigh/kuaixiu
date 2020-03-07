@@ -42,20 +42,90 @@
       color: #909499;
       padding:.15rem 0rem;
     }
-    #wrap.orderWrap .main .donation input.lovemoneycheckbox{
-      width:.15rem;
-      height: .15rem;
-    }
-    #wrap.orderWrap .main .donation img.lovemoneyquery{
-      width:.15rem;
-      height: .15rem;
-      float:right;
-      display:block;
-    }
     #wrap.orderWrap .main .footer .eachRow{
       border-bottom: 0;
       height: 0.35rem;
       line-height: .35rem;
+    }
+
+    span.circularbead {
+      position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+    }
+    span.circularbead .Checkbox {
+      position: absolute;
+      visibility: hidden;
+    }
+    span.circularbead .Checkbox+label {
+      position:absolute;
+      width: .14rem;
+      height: .14rem;
+      border: 1px solid #A6A6A6;
+      border-radius: 50%;
+      background-color:#DEDEDE;
+    } 
+    span.circularbead .Checkbox:checked+label:after {
+      content: "";
+      position: absolute;
+      left: .01rem;
+      top:.02rem;
+      width: .06rem;
+      height: .02rem;
+      border: .02rem solid #424242;
+      border-top-color: transparent;
+      border-right-color: transparent; 
+      transform: rotate(-45deg);
+      -ms-transform: rotate(-60deg);
+      -moz-transform: rotate(-60deg);
+      -webkit-transform: rotate(-60deg);
+    }
+    span.circularbead span{
+      margin-left:.2rem;
+    }
+    #wrap.orderWrap .main .donationdetailsmask{
+      position: fixed;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      background-color: rgba(0,0,0,0.5);
+      margin-bottom: 0;
+      display:none;
+    }
+    #wrap.orderWrap .main .donationdetailsbox{
+      position: relative;
+      width:80%;
+      height: 78%;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      background-color:#fff;
+      padding:.08rem .14rem .24rem;
+      border-radius: .04rem;
+      z-index:999;
+    }
+    #wrap.orderWrap .main .donationdetailsbox .donationdetailsheader{
+      height: .24rem;
+      margin-bottom:.06rem;
+    }
+    #wrap.orderWrap .main .donationdetailsbox .donationdetailsheader span{
+      height: .24rem;
+      font-size: .2rem;
+    }
+    #wrap.orderWrap .main .donationdetailsbox .donationdetailscontent{
+      height: calc(100% - .3rem);
+      overflow: auto;
+    }
+    #wrap.orderWrap .main .donationdetailsbox .donationdetailscontent p{
+      text-indent:2em;
+      text-align: justify;
+      line-height: .2rem;
     }
     </style>
 </head>
@@ -153,13 +223,18 @@
                 
             </div>
             <div class="donation">
-                <p class="moduleTitle">捐款（非必填项）&nbsp;&nbsp;&nbsp;&nbsp;所有善款统一用于中国青基会公益项目 <a href="javascript:;"><img src="img/lovemoneyquery.png" alt="" class="lovemoneyquery"></a></p>
+                <p class="moduleTitle">捐款（非必填项）&nbsp;&nbsp;&nbsp;&nbsp;所有善款统一用于中国青基会公益项目 
+                  <!-- <a href="javascript:;"><img src="img/lovemoneyquery.png" alt="" class="lovemoneyquery"></a> -->
+                </p>
                 <div class="inputRow">
                   <p></p>
                   <div class="lovebox"><input type="text" name="loveMoney" id="loveMoney"  maxlength="5" placeholder="自定义金额" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">&nbsp;&nbsp;元</div>
                   <span class="loveboxright">&nbsp;&nbsp;一份爱心&nbsp;&nbsp;一份温暖</span>
                 </div>
-                <input type="checkbox" name="lovemoneycheckbox" class="lovemoneycheckbox" >&nbsp;捐款人同取件人
+                <span class="circularbead">
+                  <input type="checkbox" class="Checkbox" id="check1" name="lovemoneycheckbox" >
+                  <label for="check1"></label><span>捐款人同取件人</span>
+                </span>
                 <div class="inputRow">
                   <p>捐款人姓名</p>
                   <input type="text" id="donationsName" maxlength="12" placeholder="">
@@ -172,6 +247,10 @@
                   <p>E-mail</p>
                   <input type="text" id="donationsEmail" maxlength="" placeholder="用以发送捐款证书和捐赠电子发票">
                 </div>
+                <span class="circularbead">
+                  <input type="checkbox"class="Checkbox" id="check2" name="donationdetails" >
+                  <label for="check2"></label><span>查看《<a href="javascript:;" id="donationdetails">捐款详情</a>》</span>
+                </span>
                 <p class="loveboxright">以上所收集的个人资料将保密处理，仅作为与您通讯或填写收据之用</p>
             </div>
             <div class="ticket">
@@ -204,8 +283,22 @@
                 <p>合计回收金额：</p><p id="Recyclingamount">0元</p>
               </div>
               <a href="javascript:;" id="submit" class="btn-large">提交订单</a>
+            </div> 
+            <!-- 捐款详情 -->
+            <div class="donationdetailsmask">
+              <div class="donationdetailsbox">
+                <div class="donationdetailsheader"><span class="fr" id="donationdetailsback">x</span></div>
+                <div class="donationdetailscontent">
+                  <p>捐款用途：通过“心系天下.新爱依旧-心系天下用户抗疫公益行动”筹集的款项全部进入心系天下在中国青少年发展基金会设立的“心系天下公益基金”，用于开展“抗击疫情·希望同行”--希望工程关爱因疫致困青少年特别行动和“抗击疫情·希望同行”--希望工程关爱抗议一线医务人员子女特别行动，资助标准为5000元/人。</p>
+                  <p>捐款事项：</p>
+                  <p>1.选择捐款的用户，提交回收订单后，用户自愿填写的捐款金额，将于回收订单交易完成2周内由天翼回收统一汇总并以用户名义向中国青少年发展基金会汇出。</p>
+                  <p>2.中国青少年发展基金会收到捐款后15日内为捐款用户开具公益事业捐赠统一票据（电子），心系天下在收到中国青少年发展基金会开具的票据后，将会以电子邮件方式，为用户发送捐赠证书（电子）和中国青少年发展基金会公益事业捐赠统一票据（电子）。</p>
+                </div>
+              </div>
             </div>
+            <!-- 捐款详情end -->
         </div>
+       
         <!-- 取件时间layer -->
         <div id="layer">
             <div class="layerCont">
@@ -272,6 +365,7 @@
             </div>
         </div>
         <!--确认提示end-->
+        
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/common.js"></script>
@@ -353,8 +447,13 @@
                 $("#donationsPhone").attr("value",'');
               }
             })
+            $('#donationdetails').click(function(){
+              $('.donationdetailsmask').show()
+            })
+            $('#donationdetailsback').click(function(){
+              $('.donationdetailsmask').hide()
+            })
             var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice);
-            console.log(prePrice)
             $('#estimatedamount ').html(prePrice+'元')
             $('#Recyclingamount').html(prePrice+'元')
             $('#loveMoney').bind('input propertychange', function() {
@@ -372,29 +471,29 @@
             })
             $('#submit').click(function(){
               
-                  if (isEmpty($('#connect').val())){
-                      alertTip('请输入联系人');
-                      return false;
-                  }else if (isEmpty($('#inputtel').val())){
-                      alertTip('请输入手机号');
-                      return false;
-                  }else if (!$('#selectAddress').hasClass('active')){
-                      alertTip('请选择所在地区');
-                      return false;
-                  }else if (isEmpty($('#address').val())){
-                      alertTip('请输入详细地址');
-                      return false;
-                  }else if (isEmpty($('#alipay'+$('input:radio[name="way"]:checked').val()).val())){
-                      if ($('input:radio[name="way"]:checked').val() == 1){
-                          alertTip('请输入支付宝账号');
-                          return false;
-                      }else{
-                          alertTip('请输入手机充值号码');
-                          return false;
-                      }
-                  }else if (checkSubmitFlg == true){
-                      return false;
-                  }
+                if (isEmpty($('#connect').val())){
+                    alertTip('请输入联系人');
+                    return false;
+                }else if (isEmpty($('#inputtel').val())){
+                    alertTip('请输入手机号');
+                    return false;
+                }else if (!$('#selectAddress').hasClass('active')){
+                    alertTip('请选择所在地区');
+                    return false;
+                }else if (isEmpty($('#address').val())){
+                    alertTip('请输入详细地址');
+                    return false;
+                }else if (isEmpty($('#alipay'+$('input:radio[name="way"]:checked').val()).val())){
+                    if ($('input:radio[name="way"]:checked').val() == 1){
+                        alertTip('请输入支付宝账号');
+                        return false;
+                    }else{
+                        alertTip('请输入手机充值号码');
+                        return false;
+                    }
+                }else if (checkSubmitFlg == true){
+                    return false;
+                }
                 if(isEmpty($('#loveMoney').val())){
                   love_Money=0
                   donations_Name=''
@@ -424,6 +523,10 @@
                     }else{
                       donations_Email=$('#donationsEmail').val()
                     }
+                  if(!$('input[name="donationdetails"]').is(":checked")){
+                    alertTip('请勾选捐款详情');
+                      return false;
+                  }
                 }
                 
                 checkSubmitFlg = true;
