@@ -57,6 +57,54 @@
              font-size: 0.18rem;
              font-weight: 600;
         }
+        #wrap.productWrap .main{
+            padding-top: 0;
+        }
+        #wrap .pageTitle{
+            border: 0;
+        }
+        #wrap.productWrap .main .mainLeft {
+            background-color: #f5f6f6;
+            width: .9rem;
+            height:calc( 100% - 0.95rem );
+        }
+        #wrap.productWrap .main .mainRight{
+            padding: 0 0 .95rem .13rem;
+        }
+        .swiper-wrapper-top{
+            width: 100vw;
+            border-bottom: 1px solid #ccc;
+            margin-top: 0.54rem;
+            color:#636466;
+            height: 0.4rem;
+            line-height: 0.4rem;
+        }
+        .swiper-wrapper-top>li{
+            height: 0.4rem;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding: 0 0.2rem;
+            line-height: 0.4rem;
+            box-sizing: border-box;
+            width: 25%;
+            display: inline-block;
+        }
+        .swiper-wrapper-top>.active{
+            color: #000;
+        }
+        .swiper-wrapper-top>.active::before{
+            width: 0.3rem;
+            height: 2px;
+            background: #5185ed;;
+            content: '';
+            border-radius: 2px;
+            position: absolute;
+            bottom: 0.09rem;
+            left:50%;
+            transform: translate(-50%);
+        }
+        
     </style>
 </head>
 <body>
@@ -64,9 +112,14 @@
         <div class="pageTitle" style="background: linear-gradient(to right, #3f99f2, #5185ed);">
             <a href="javascript:window.history.back();"><img src="img/icon_arrow.png" alt=""></a>
             <div>
-                <input type="search" name="" id="search" placeholder="输入手机型号">
+                <input type="search" name="" id="search" placeholder="搜索您要卖的品牌、机型">
             </div>
         </div>
+            <ul class="swiper-wrapper-top">
+                <li class="active swiper-top" >卖手机</li>
+                <li class="swiper-top">卖平板</li>
+                <li class="swiper-top">卖笔记本</li>
+            </ul>
         <div class="main clearfix">
             <div class="mainLeft fl">
                 <ul class="swiper-wrapper">
@@ -178,7 +231,7 @@
             // 跳转到指定品牌, 如果没有这两个参数则不做任何操作
             for( var i = 0; i < $dom_li.length; i++ ){
                 if( brandId == $dom_li.eq(i).data('bid') ){
-                    var height = $dom_li.eq(i).height()*i;
+                    var height = $dom_li.eq(i).height()*i
                     $('.mainLeft .swiper-wrapper').css('transform','translate3d(0px, -'+height+'px, 0px)')
                     $dom_li.eq(i).addClass('active').siblings().removeClass('active');
                 }
@@ -208,9 +261,31 @@
 			setCacheData(CacheKey.OpenId,"openId");
 			setCacheData(CacheKey.ModelName,"modelName");
 			setCacheData(CacheKey.imgHref,"modelImageUrl");
-            // setCacheData(CacheKey.imgHref,"modelLogo");
 			eCacheUtil.storage.cache(CacheKey.isSelect,false);
 		}
+
+        var categoryid='0' //0为手机 1为平板 2位笔记本
+        $(function(){
+            $('.swiper-wrapper-top').on('click','li',function(e){
+                var bid=sessionStorage.getItem('brand_id')
+                var categoryName=e.target.innerHTML
+                $('#wrap.productWrap .main .mainRight .item').remove()
+                $('.swiper-slide').remove();
+                switch (categoryName) {
+                    case '卖手机':
+                      categoryid=0
+                    break;
+                    case '卖平板':
+                      categoryid=1 
+                    break;
+                    case '卖笔记本':
+                      categoryid=2 
+                    break;
+                }
+                $(this).addClass("active").siblings().removeClass("active");
+                searchBrand(1);
+            })
+        });
 
         var page = 1, //分页码
             off_on = false,//分页开关
@@ -283,7 +358,9 @@
 
         //加载品牌
         function searchBrand(bid) {
-            $.post(linkUrl+"/recycleNew/getBrandList.do",function(data){
+            $.post(linkUrl+"/recycleNew/getBrandList.do?categoryid="+categoryid,function(data){
+                
+                console.log('测试')
                 if (data.success){
                     var s = '',dataInfo = data.result.datainfo;
                     for (var i = 0;i < dataInfo.length;i++){
@@ -301,8 +378,14 @@
                         freeMode : true,
                         slidesPerView : 'auto',
                         slideToClickedSlide:true,
-                        direction: 'vertical'
+                        direction: 'vertical',
+                        observer:true,
+                        onSlideChangeEnd: function(swiper){
+                            // console.log('更新了')
+                            // swiper.update();
+                        }
                     });
+
                     $('.swiper-wrapper').css({
                         'transform' : 'translate3d(0,-'+$('.swiper-slide.active').height()*$('.swiper-slide.active').index()+'px,0)'
                     });
@@ -318,7 +401,8 @@
             var param = {
                 pageindex:page,
                 pagesize:'12',
-                brandid:bid
+                brandid:bid,
+                categoryid:categoryid
             };
             //将品牌id储存
             eCacheUtil.storage.cache(CacheKey.BrandId,bid);

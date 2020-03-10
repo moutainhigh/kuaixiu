@@ -149,9 +149,12 @@ public class RecycleOrderService extends BaseService<RecycleOrder> {
     //存储搜索异常
     public void saveException(String seachId,String log){
         SearchModel searchModel = searchModelService.queryById(seachId);
-        searchModel.setIsTrue("1");
-        searchModel.setMessage(log);
-        searchModelService.getDao().update(searchModel);
+        if(searchModel!=null){
+            searchModel.setIsTrue("1");
+            searchModel.setMessage(log);
+            searchModelService.getDao().update(searchModel);
+        }
+
     }
 
     //判断该订单来源确定是否使用加价券

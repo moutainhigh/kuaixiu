@@ -20,6 +20,9 @@ import com.kuaixiu.videoCard.service.VideoCardService;
 import com.kuaixiu.videoUserRel.entity.VideoUserRel;
 import com.kuaixiu.videoUserRel.service.VideoUserRelService;
 import com.system.api.entity.ResultData;
+import com.system.basic.dict.dao.DictMapper;
+import com.system.basic.dict.entity.Dict;
+import com.system.basic.dict.service.DictService;
 import com.system.basic.user.service.SessionUserService;
 import com.system.constant.SystemConstant;
 import com.system.util.PageBean;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -85,6 +89,9 @@ public class RecycleNewController extends BaseController {
      */
     private static final String cipherdata = SystemConstant.RECYCLE_REQUEST;
 
+    @Autowired
+    private DictService dictService;
+
     /**
      * 获取品牌列表
      */
@@ -99,16 +106,30 @@ public class RecycleNewController extends BaseController {
             if(categoryid==null){
                      categoryid = "0";
             }
-            JSONObject requestNews = new JSONObject();
-            JSONObject code = new JSONObject();
-            code.put("categoryid", categoryid);
-            String realCode = AES.Encrypt(code.toString());  //加密
-            requestNews.put(cipherdata, realCode);
-            //发起请求
-            String getResult = AES.post(url, requestNews);
-            //对得到结果进行解密
-            jsonResult = getResult(AES.Decrypt(getResult));
-            result.setResult(jsonResult);
+            // 如果是笔记本则调用数据库数据
+            if(categoryid.equals("2")){
+                JSONObject j=new JSONObject();
+                JSONArray array=new JSONArray();
+                Dict dict=new Dict();
+                dict.setKey("macbook");
+                List<Dict> dicts = dictService.queryList(dict);
+                if(!dicts.isEmpty()){
+                    array=JSONArray.parseArray(dicts.get(0).getValue());
+                }
+                j.put("datainfo",array);
+                result.setResult(j);
+            }else{
+                JSONObject requestNews = new JSONObject();
+                JSONObject code = new JSONObject();
+                code.put("categoryid", categoryid);
+                String realCode = AES.Encrypt(code.toString());  //加密
+                requestNews.put(cipherdata, realCode);
+                //发起请求
+                String getResult = AES.post(url, requestNews);
+                //对得到结果进行解密
+                jsonResult = getResult(AES.Decrypt(getResult));
+                result.setResult(jsonResult);
+            }
             result.setResultCode("0");
             result.setSuccess(true);
         } catch (SystemException e) {

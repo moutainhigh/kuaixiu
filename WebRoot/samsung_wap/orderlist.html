@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="priceBox">
-                        <p>预估价 <span class="futureprices" ></span></p>
+                        <p>价格 <span class="futureprices" ></span></p>
                     </div>
                 </section>
             </div>
@@ -162,11 +162,11 @@
                 $('.text',tmp).html('<p>'+n.modelname+'</p><p>'+item.substr(0,item.length-1)+'</p>');
                 if(n.lovemoney != 0 && n.lovemoney !='' && n.lovemoney != undefined && n.lovemoney!= null){
                   $('.text',tmp).append('<span>爱心捐赠'+n.lovemoney+'元</span>')
-                  $('.priceBox span.futureprices',tmp).html("¥"+(n.orderprice).toFixed(2));
-                  let valuation=parseInt(n.orderprice)-parseInt(n.lovemoney)
-                  $('.priceBox p',tmp).prepend('评估价 <span>¥'+(valuation).toFixed(2)+'</span>&nbsp;&nbsp;订单');
+                    let valuation=parseInt(n.orderprice)-parseInt(n.lovemoney)
+                    $('.priceBox span.futureprices',tmp).html("¥"+(valuation).toFixed(2));
+                  $('.priceBox p',tmp).prepend('评估价 <span>¥'+(n.orderprice).toFixed(2)+'</span>&nbsp;&nbsp;订单');
                 }else{
-                  $('.priceBox span.futureprices',tmp).html("¥"+(n.orderprice).toFixed(2));
+                    $('.priceBox span.futureprices',tmp).html("¥"+(n.orderprice).toFixed(2));
                 }
                   
                 //追加到对应区块
