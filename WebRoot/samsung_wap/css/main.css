@@ -3594,7 +3594,7 @@ textarea:-moz-placeholder {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  width:30%;
+  width:32%;
 }
 #wrap.eventwarap .main .contentbox .eventpagecont .item .img{
   width:100%;
@@ -3605,7 +3605,7 @@ textarea:-moz-placeholder {
   width:100%;
 }
 #wrap.eventwarap .main .contentbox .eventpagecont .item p{
-  font-size: .09rem;
+  font-size: .10rem;
   line-height: .18rem;
   font-weight: bold;
 }

@@ -1095,7 +1095,6 @@ public class RecycleNewController extends BaseController {
                             //对得到结果进行解密
                             jsonResult1 = getResult(AES.Decrypt(getResult1));
                             JSONArray array1 = jsonResult1.getJSONArray("datainfo");
-
                             for (int i1 = 0; i1 < array1.size(); i1++) {
                                 JSONObject quote2 = (JSONObject) array1.get(i1);
                                 String brandname1=quote2.getString("brandname");
@@ -1129,6 +1128,7 @@ public class RecycleNewController extends BaseController {
                                 String getResult2 = AES.post(url2, requestNews2);
                                 //对得到结果进行解密
                                 jsonResult2 = getResult(AES.Decrypt(getResult2));
+
                                 //将结果中的产品id转为string类型  json解析 long类型精度会丢失
                                 //防止返回机型信息为空
                                 if (StringUtil.isNotBlank(jsonResult2.getString("datainfo")) && !(jsonResult2.getJSONArray("datainfo")).isEmpty()) {

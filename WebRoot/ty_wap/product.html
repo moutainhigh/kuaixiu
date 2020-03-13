@@ -311,6 +311,7 @@
                     $(this).addClass('active').siblings().removeClass('active');
                     bid = $(this).attr('data-bid');
                     $('.mainRight div.item').remove();
+                    page=1;
                     searchModel(bid);
                 }
             });
@@ -333,7 +334,7 @@
 
 				location.href = 'test.html';
             });
-
+            //加载更多
             $('.loadMore').click(function(){
                 if (off_on){
                     $('.loadMore a').html('加载中');
@@ -360,7 +361,7 @@
         function searchBrand(bid) {
             $.post(linkUrl+"/recycleNew/getBrandList.do?categoryid="+categoryid,function(data){
                 
-                console.log('测试')
+                console.log('测试',data.result.datainfo)
                 if (data.success){
                     var s = '',dataInfo = data.result.datainfo;
                     for (var i = 0;i < dataInfo.length;i++){
@@ -373,6 +374,7 @@
                         searchModel(bid);
                     }
                     getMobileCode();
+                    //左侧导航
                     $('.swiper-slide[data-bid="'+bid+'"]').addClass('active');
                     var mySwiper = new Swiper('.mainLeft',{
                         freeMode : true,
@@ -399,33 +401,38 @@
         //加载机型
         function searchModel(bid) {
             var param = {
-                pageindex:page,
+                pageindex:page,//问题所在
                 pagesize:'12',
                 brandid:bid,
                 categoryid:categoryid
             };
             //将品牌id储存
             eCacheUtil.storage.cache(CacheKey.BrandId,bid);
+            console.log('加载机型参数',param)
             $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
                 if (data.success){
+                  console.log('机型',data)
                     var dataInfo = data.result.datainfo;
                     totalcount = data.result.totalcount;
                     if (dataInfo.length > 0){
                         var sublist = dataInfo[0].sublist;
                         eachFull(sublist);
                         loading_hide();
-                        if ($('.mainRight .item').length == totalcount){
-                            off_on = false;
-                            $('.loadMore a').html('- 我是有底线的 -');
-                        }else{
+                        console.log($('.mainRight .item').length < totalcount)
+                        if ($('.mainRight .item').length < totalcount){
                             off_on = true;
                             $('.loadMore a').html('加载更多');
+                        }else{
+                            off_on = false;
+                            $('.loadMore a').html('- 我是有底线的 -');
                         }
                     }
                 }else {
                     loading_hide();
+                    console.log('加载机型失败',data)
                     if(data.resultMessage){
                         alertTip(data.resultMessage);
+
                     }else{
                         alertTip(data.msg);
                     }

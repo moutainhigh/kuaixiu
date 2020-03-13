@@ -628,18 +628,27 @@ public class RecycleController extends BaseController {
                 }
                 recycleOrder.setOrderNo(orderNo);
                 recycleOrder.setOrderStatus(Integer.valueOf(orderState));
+
+                // 如果订单存在爱心捐款，最终价格为orderPrice+lovemoney
+                RecycleOrder order = recycleOrderService.queryByOrderNo(orderNo);
+                BigDecimal big=new BigDecimal(0);
+                if(order!=null&&order.getLovemoney()!=null){
+                     big=order.getLovemoney();
+                }
+
                 //状态是7时，传orderPrice议价后订单价格，其他状态不需要传；单位元
                 if (Integer.valueOf(orderState) == 7) {
                     if (StringUtils.isNotBlank(orderPrice)) {
-                        recycleOrder.setNegotiationPrice(new BigDecimal(orderPrice));
+                        recycleOrder.setNegotiationPrice(new BigDecimal(orderPrice).add(big));
                     }
                 }
                 //状态是9,将价格写到最终支付总金额(finalPrice)
                 if (Integer.valueOf(orderState) == 9) {
                     if (StringUtils.isNotBlank(orderPrice)) {
-                        recycleOrder.setFinalPrice(new BigDecimal(orderPrice));
+                        recycleOrder.setFinalPrice(new BigDecimal(orderPrice).add(big));
                     }
                 }
+
                 recycleOrderService.updateByOrderStatus(recycleOrder);
                 result.setResultCode("0");
                 result.setSuccess(true);
