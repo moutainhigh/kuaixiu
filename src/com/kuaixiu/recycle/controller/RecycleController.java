@@ -607,6 +607,7 @@ public class RecycleController extends BaseController {
             String orderPrice = request.getParameter("orderPrice");
             String MD5sign = "orderNo=" + orderNo + "&orderState=" + orderState +
                     "&orderPrice=" + orderPrice + autograph;
+            log.info("回收价格修改："+MD5sign);
             MD5sign = MD5Util.md5Encode(MD5sign);
             if (StringUtils.isBlank(orderNo) || StringUtils.isBlank(orderState) || StringUtils.isBlank(sign)) {
                 throw new SystemException(ApiResultConstant.resultCode_str_1001, ApiResultConstant.resultCode_1001);
@@ -633,19 +634,21 @@ public class RecycleController extends BaseController {
                 RecycleOrder order = recycleOrderService.queryByOrderNo(orderNo);
                 BigDecimal big=new BigDecimal(0);
                 if(order!=null&&order.getLovemoney()!=null){
+                     log.info("爱心价格："+order.getLovemoney());
                      big=order.getLovemoney();
                 }
 
                 //状态是7时，传orderPrice议价后订单价格，其他状态不需要传；单位元
                 if (Integer.valueOf(orderState) == 7) {
                     if (StringUtils.isNotBlank(orderPrice)) {
-                        recycleOrder.setNegotiationPrice(new BigDecimal(orderPrice).add(big));
+                        log.info("议价修改为："+orderPrice);
+                        recycleOrder.setNegotiationPrice(new BigDecimal(orderPrice));
                     }
                 }
                 //状态是9,将价格写到最终支付总金额(finalPrice)
                 if (Integer.valueOf(orderState) == 9) {
                     if (StringUtils.isNotBlank(orderPrice)) {
-                        recycleOrder.setFinalPrice(new BigDecimal(orderPrice).add(big));
+                        recycleOrder.setFinalPrice(new BigDecimal(orderPrice));
                     }
                 }
 
@@ -661,6 +664,8 @@ public class RecycleController extends BaseController {
         }
         renderJson(response, result);
     }
+
+
 
 
     /**

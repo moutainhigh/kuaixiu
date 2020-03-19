@@ -67,6 +67,7 @@
             background-color: #f5f6f6;
             width: .9rem;
             height:calc( 100% - 0.95rem );
+			overflow-y: auto;
         }
         #wrap.productWrap .main .mainRight{
             padding: 0 0 .95rem .13rem;
@@ -173,7 +174,6 @@
 
     <script>
         var fm=eCacheUtil.storage.getCache(CacheKey.source);
-        console.log(fm);
         if(isEmpty(fm)){
             eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
         }
@@ -232,7 +232,7 @@
             for( var i = 0; i < $dom_li.length; i++ ){
                 if( brandId == $dom_li.eq(i).data('bid') ){
                     var height = $dom_li.eq(i).height()*i
-                    $('.mainLeft .swiper-wrapper').css('transform','translate3d(0px, -'+height+'px, 0px)')
+                    $('.mainLeft .swiper-wrapper').css('transform','translate(0px, -'+height+'px)')
                     $dom_li.eq(i).addClass('active').siblings().removeClass('active');
                 }
             }
@@ -296,9 +296,9 @@
             if(isEmpty(fm)){
                 eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
             }
-        	if(tip==1){
-        		 eCacheUtil.storage.cache(CacheKey.happyGo,true);
-        	}
+            if(tip==1){
+              eCacheUtil.storage.cache(CacheKey.happyGo,true);
+            }
             var bid = GetQueryString('bid');
             if(isEmpty(bid)){
                 bid = 1;
@@ -315,7 +315,7 @@
                     searchModel(bid);
                 }
             });
-
+           
             $('.mainRight').delegate('.item','click',function(){
                 var mid = $(this).attr('data-mid'),
                     mname = $(this).find('p').html(),
@@ -359,9 +359,9 @@
 
         //加载品牌
         function searchBrand(bid) {
+
             $.post(linkUrl+"/recycleNew/getBrandList.do?categoryid="+categoryid,function(data){
                 
-                console.log('测试',data.result.datainfo)
                 if (data.success){
                     var s = '',dataInfo = data.result.datainfo;
                     for (var i = 0;i < dataInfo.length;i++){
@@ -376,21 +376,19 @@
                     getMobileCode();
                     //左侧导航
                     $('.swiper-slide[data-bid="'+bid+'"]').addClass('active');
-                    var mySwiper = new Swiper('.mainLeft',{
-                        freeMode : true,
-                        slidesPerView : 'auto',
-                        slideToClickedSlide:true,
-                        direction: 'vertical',
-                        observer:true,
-                        onSlideChangeEnd: function(swiper){
-                            // console.log('更新了')
-                            // swiper.update();
-                        }
-                    });
-
-                    $('.swiper-wrapper').css({
-                        'transform' : 'translate3d(0,-'+$('.swiper-slide.active').height()*$('.swiper-slide.active').index()+'px,0)'
-                    });
+                    //  var mySwiper = new Swiper('.mainLeft',{
+                    //     freeMode : true,
+                    //     slidesPerView : 'auto',
+                    //     slideToClickedSlide:true,
+                    //     direction: 'vertical',
+                    //     observer:true,
+                    //     onSlideChangeEnd: function(swiper){
+                    //         // swiper.update();
+                    //     }
+                    // }); 
+                    //  $('.swiper-wrapper').css({
+                    //     'transform' : 'translate(0,-'+$('.swiper-slide.active').height()*$('.swiper-slide.active').index()+'px)'
+                    // }); 
                 }else {
                     loading_hide();
                     alertTip(data.resultMessage);
@@ -408,17 +406,14 @@
             };
             //将品牌id储存
             eCacheUtil.storage.cache(CacheKey.BrandId,bid);
-            console.log('加载机型参数',param)
             $.post(linkUrl+"/recycleNew/getModelList.do",{params:JSON.stringify(param)},function(data){
                 if (data.success){
-                  console.log('机型',data)
                     var dataInfo = data.result.datainfo;
                     totalcount = data.result.totalcount;
                     if (dataInfo.length > 0){
                         var sublist = dataInfo[0].sublist;
                         eachFull(sublist);
                         loading_hide();
-                        console.log($('.mainRight .item').length < totalcount)
                         if ($('.mainRight .item').length < totalcount){
                             off_on = true;
                             $('.loadMore a').html('加载更多');
@@ -429,7 +424,6 @@
                     }
                 }else {
                     loading_hide();
-                    console.log('加载机型失败',data)
                     if(data.resultMessage){
                         alertTip(data.resultMessage);
 

@@ -1351,6 +1351,7 @@ public class RecycleNewController extends BaseController {
             //对得到结果进行解密
             jsonResult = getResult(AES.Decrypt(getResult));
             JSONObject info = jsonResult.getJSONObject("datainfo");
+            System.out.println("具体返回价格："+info);
             if (info != null) {
                 RecycleOrder r = recycleOrderService.queryByOrderNo(orderid);
                 if (r != null) {
@@ -1422,7 +1423,19 @@ public class RecycleNewController extends BaseController {
                         }
                     }
                 }
+
+                try {
+                    // orderPrice 如果存在捐款---增加上捐款的价格--因为回收那边传递的值是实际打款的钱，不包含捐款的钱
+                    if(r.getNegotiationPrice()!=null&&r.getLovemoney()!=null){
+                        BigDecimal orderPrice = (BigDecimal) info.get("orderprice");
+                        info.put("orderprice",orderPrice.add(r.getLovemoney()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
+
             getResult(result, jsonResult, true, "0", "成功");
         } catch (SystemException e) {
             sessionUserService.getSystemException(e, result);

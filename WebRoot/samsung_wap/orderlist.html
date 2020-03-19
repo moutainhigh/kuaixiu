@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="priceBox">
-                        <p>价格 <span class="futureprices" ></span></p>
+                        <p>金额 <span class="futureprices" ></span></p>
                     </div>
                 </section>
             </div>
@@ -164,7 +164,7 @@
                   $('.text',tmp).append('<span>爱心捐赠'+n.lovemoney+'元</span>')
                     let valuation=parseInt(n.orderprice)-parseInt(n.lovemoney)
                     $('.priceBox span.futureprices',tmp).html("¥"+(valuation).toFixed(2));
-                  $('.priceBox p',tmp).prepend('评估价 <span>¥'+(n.orderprice).toFixed(2)+'</span>&nbsp;&nbsp;订单');
+                  $('.priceBox p',tmp).prepend('质检金额 <span>¥'+(n.orderprice).toFixed(2)+'</span>&nbsp;&nbsp;订单');
                 }else{
                     $('.priceBox span.futureprices',tmp).html("¥"+(n.orderprice).toFixed(2));
                 }
