@@ -892,16 +892,21 @@ class SmsSendThread implements Runnable {
 
     @Override
     public void run() {
-        if(recycleSystemService!=null){
-            List<String> sources=recycleSystemService.getDao().queryIdBySmsType(2);
+//        if(recycleSystemService!=null){
+//            List<String> sources=recycleSystemService.getDao().queryIdBySmsType(2);
 //        List<String> sources= Arrays.asList("2","4","9","10","15");
-            if (sources.contains(source) && StringUtils.isNotBlank(source)) {
+            RecycleSystem recycleSystem = recycleSystemService.getDao().queryById(source);
+            //如果数据库中短信模板不为空，则用数据库。否则用代码中的模板
+            if(StringUtils.isNotBlank(recycleSystem.getMessage())){
+                 content=recycleSystem.getMessage();
+            }
+            if (StringUtils.isNotBlank(source)&&recycleSystem.getSmsType()==2) {
                 SmsSendUtil.sendSms2(mobile, content);
             } else {
                 SmsSendUtil.sendSms(mobile, content);
             }
-        }else{
-            SmsSendUtil.sendSms(mobile, content);
-        }
+//        }else{
+//            SmsSendUtil.sendSms(mobile, recycleSystem.getMessage());
+//        }
     }
 }

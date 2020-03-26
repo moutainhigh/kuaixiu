@@ -46,14 +46,14 @@
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal table-title"><input id="check_all_btn" onclick="checkAll(this)"
+                <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
                                                                  type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal table-title center">系统标识</th>
-                <th class="fontWeight_normal table-title center">系统名称</th>
-                <th class="fontWeight_normal table-title center">短信通道</th>
-                <th class="fontWeight_normal table-title  center">添加时间</th>
-                <th class="fontWeight_normal table-title">操作</th>
+                <th class="fontWeight_normal tdwidth60 center">系统标识</th>
+                <th class="fontWeight_normal tdwidth90 center">系统名称</th>
+                <th class="fontWeight_normal tdwidth90 center">短信通道</th>
+                <th class="fontWeight_normal tdwidth160 center">短信内容</th>
+                <th class="fontWeight_normal tdwidth150">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -93,7 +93,7 @@
         {"data": "id", "class": " center"},
         {"data": "name", "class": ""},
         {"data": "smsType", "class": ""},
-        {"data": "createTime", "class": "am-hide-sm-only"},
+        {"data": "message", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性

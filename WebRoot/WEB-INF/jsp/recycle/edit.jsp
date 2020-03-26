@@ -15,6 +15,8 @@
             <input type="text" id="upName" name="upName" value="${fromSystem.name }" class="form-control" placeholder="请输入来源系统名称">
           </div>
         </div>
+
+
         <div class="form-group">
           <label for="smsTypes" class="col-sm-3 control-label"><span style="color:red">*</span> 短信通道</label>
           <div class="col-sm-9">
@@ -26,6 +28,14 @@
             </label>
           </div>
         </div>
+
+        <div class="form-group">
+          <label for="message" class="col-sm-3 control-label"><span style="color:red">*</span> 短信内容</label>
+          <div class="col-sm-8">
+            <input type="text" id="message" name="message" value="${fromSystem.message }" class="form-control" placeholder="请输入短信内容">
+          </div>
+        </div>
+
         <button type="submit" class="hide" id="upSubmitBtn"></button>
       </form>
     </div>

@@ -14,19 +14,21 @@
         <result column="create_userid" property="createUserid"/>
         <result column="update_time" property="updateTime"/>
         <result column="update_userid" property="updateUserid"/>
+        <result column="message" property="message"/>
     </resultMap>
     
     <!-- hs_from_system table all fields -->
     <sql id="Base_Column_List" >
-        id,name,sort,is_del,sms_type,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid
+        id,name,sort,is_del,sms_type,date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,
+        date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,message
     </sql>
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="Object" >
         insert into hs_from_system
-        (name,sort,is_del,sms_type,create_time,create_userid)
+        (name,sort,is_del,sms_type,create_time,create_userid,message)
         values
-        (#{name},#{sort},#{isDel},#{smsType},now(),#{createUserid})
+        (#{name},#{sort},#{isDel},#{smsType},now(),#{createUserid},#{message})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -38,7 +40,8 @@
             is_del=#{isDel},
             sms_type=#{smsType},
             update_time=now(),
-            update_userid=#{updateUserid}
+            update_userid=#{updateUserid},
+            message=#{message}
         where id=#{id}
     </update>
 

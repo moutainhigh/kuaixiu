@@ -1,5 +1,6 @@
 package com.kuaixiu.recycle.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.exception.SystemException;
 import com.common.paginate.Page;
@@ -164,6 +165,9 @@ public class RecycleSystemController extends BaseController {
         //获取项目名称
         String name = request.getParameter("upName");
         String smsType = request.getParameter("smsType");
+        String message = request.getParameter("message");
+        System.out.println("短信内容："+message);
+
         //序号
         String sortStr= request.getParameter("upSort");
         if(StringUtils.isBlank(sortStr)){
@@ -177,6 +181,8 @@ public class RecycleSystemController extends BaseController {
         t.setSmsType(Integer.valueOf(smsType));
         t.setSort(Integer.parseInt(sortStr));
         t.setUpdateUserid(su.getUserId());
+        t.setMessage(message);
+        System.out.println("修改内容："+ JSONObject.toJSONString(t));
         recycleSystemService.saveUpdate(t);
         
         resultMap.put(RESULTMAP_KEY_SUCCESS, RESULTMAP_SUCCESS_TRUE);
