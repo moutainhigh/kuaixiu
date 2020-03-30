@@ -8,8 +8,42 @@
     <link rel="stylesheet" href="css/main.css?version=1.6">
     <title></title>
     <style>
-    #wrap.orderWrap .main .donationbgcolor,#wrap.orderWrap .main .donation .inputRow input,#wrap.orderWrap .main .donation .lovebox input{
+    #wrap.orderWrap .main .donationbgcolor{
       background-color:rgb(255,253,238);
+    }
+    #wrap.orderWrap .main .donation .inputRow>input,#wrap.orderWrap .main .donation .lovebox>input{
+      background-color:#fff;
+    }
+    #wrap.orderWrap .main .donation .inputRow>input{
+      -webkit-box-flex: 1;
+          -ms-flex: 1 1 auto;
+              flex: 1 1 auto;
+      height: 60%;
+      border: 1px solid #f2f4f5;
+      font-size: .13rem;
+      color: #4b4c4c;
+      padding:0 .1rem;
+    }
+    
+    #wrap.orderWrap .main .donation .optionalamount{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+      padding:.1rem 0;
+    }
+    #wrap.orderWrap .main .donation .optionalamount .optionalamountbox{
+      width:25%;
+      height:.3rem;
+      background-color:#fff;
+      border:1px solid #000;
+      line-height: .3rem;
+      text-align: center;
     }
     #wrap.orderWrap .main .donation .inputRow p {
       width: .8rem;
@@ -26,6 +60,7 @@
               align-items: center;
       width: 1rem;
       border:1px solid #4b4c4c;
+      background-color:#fff;
     }
     #wrap.orderWrap .main .donation .lovebox input{
       width:100%;
@@ -142,6 +177,21 @@
             <h3>填写取件地址</h3>
         </div>
         <div class="main">
+            <div class="estimatePrice">
+              <!--<p>您的宝贝预估可卖</p>-->
+              <p class="pricePre"><img src="img/loadings.gif" alt=""></p>
+              <p class="ping2">
+                  <span></span>预计一周后降价<i class="sale"></i>元
+
+                  <button id="restart">重新估价</button>
+              </p>
+              <!-- <p class="price-tip" id="showLogin" style="display: none">
+                  点击登录，立即加价
+              </p>
+              <p class="price-tip"  id="addInfo"  style="display: none">
+                  <span></span><label id="disTip">加价 (30分钟内下单有效)</label>
+              </p> -->
+            </div>
             <div class="baseInfo">
                 <div class="inputRow">
                     <p>联系人</p>
@@ -230,9 +280,13 @@
                 <p class="moduleTitle">捐款（非必填项）&nbsp;&nbsp;&nbsp;&nbsp;所有善款统一用于中国青基会公益项目 
                   <!-- <a href="javascript:;"><img src="img/lovemoneyquery.png" alt="" class="lovemoneyquery"></a> -->
                 </p>
+                <div class="optionalamount">
+                  <div class="optionalamountbox" data-id="5">5元</div>
+                  <div class="optionalamountbox" data-id="10">10元</div>
+                  <div class="optionalamountbox" data-id="20">20元</div>
+                </div>
                 <div class="inputRow">
-                  <p></p>
-                  <div class="lovebox"><input type="text" name="loveMoney" id="loveMoney"  maxlength="5" placeholder="自定义金额" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">&nbsp;&nbsp;元</div>
+                  <div class="lovebox"><input type="text" name="loveMoney" id="loveMoney"  maxlength="6" placeholder="自定义金额" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">&nbsp;&nbsp;元</div>
                   <span class="loveboxright">&nbsp;&nbsp;一份爱心&nbsp;&nbsp;一份温暖</span>
                 </div>
                 <span class="circularbead">
@@ -241,7 +295,7 @@
                 </span>
                 <div class="inputRow">
                   <p>捐款人姓名</p>
-                  <input type="text" id="donationsName" maxlength="12" placeholder="">
+                  <input type="text" id="donationsName" maxlength="8" placeholder="">
                 </div>
                 <div class="inputRow">
                   <p>捐款人手机</p>
@@ -249,7 +303,7 @@
                 </div>
                 <div class="inputRow">
                   <p>E-mail</p>
-                  <input type="text" id="donationsEmail" maxlength="" placeholder="用以发送捐款证书和捐赠电子发票">
+                  <input type="email" id="donationsEmail" maxlength="" placeholder="用以发送捐款证书和捐赠电子发票">
                 </div>
                 <span class="circularbead">
                   <input type="checkbox"class="Checkbox" id="check2" name="donationdetails" >
@@ -397,6 +451,68 @@
                 document.title = '超人回收';
             }
             init();
+
+             //判断是否为小程序来源
+             var openId=eCacheUtil.storage.getCache(CacheKey.OpenId);
+            if(isEmpty(openId)){
+                openId = '';
+            }
+
+            var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice),
+                quote = '';
+            if (!isEmpty(prePrice)){
+              console.log("价格不为空",prePrice)
+                $('.pricePre').html(prePrice);
+                $('.ping2 .sale').text(Math.round(prePrice*0.055));
+                $('#estimatedamount').html(prePrice+'元')
+                $('#Recyclingamount').html(prePrice+'元')
+                quote = eCacheUtil.storage.getCache(CacheKey.quoteId);
+            }else{
+                var itemsId = eCacheUtil.storage.getCache(CacheKey.SelectItems);
+                var param = {
+                    "productid":eCacheUtil.storage.getCache(CacheKey.ProjectId),
+                    "items":itemsId,
+                    "openId":openId,
+                    "fm": fm
+                },base = new Base64();
+                $.post(linkUrl+'/recycleNew/getPrice.do',{params:JSON.stringify(param)},function (data) {
+                    if (data.success){
+                        var dataInfo = data.result.datainfo;
+                        prePrice = dataInfo.price;
+                        $('.pricePre').html(prePrice);
+                        console.log("价格重新获取",prePrice)
+                        $('#estimatedamount').html(prePrice+'元')
+                        $('#Recyclingamount').html(prePrice+'元')
+                        
+                        $('.ping2 .sale').text(Math.round(prePrice*0.055));
+                        eCacheUtil.storage.cache(CacheKey.prePrice,prePrice);
+                        quote = base.encode(dataInfo.quoteid);
+                        eCacheUtil.storage.cache(CacheKey.quoteId,quote);
+                        loading_hide();
+                    }else {
+                        loading_hide();
+                        alertTip(data.resultMessage);
+                    }
+                });
+            }
+            //自选金额
+            $('.optionalamountbox').click(function(){
+              var id =$(this).attr("data-id")
+              var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice);
+              $('#loveMoney').val(id)
+              if(parseInt($("#loveMoney").val()) > parseInt(prePrice)){
+                    alertTip('捐款金额大于估计金额');
+                  }
+              $('#donationmoney').html($("#loveMoney").val()+'元');
+              var Recyclingamount=parseInt(prePrice)-parseInt($("#loveMoney").val())
+              $('#Recyclingamount').html(Recyclingamount+'元')
+            })
+
+            $('#restart').click(function(){
+              eCacheUtil.storage.cache(CacheKey.isSelect,false);
+              eCacheUtil.storage.removeCache(CacheKey.prePrice);
+              location.href = 'test.html';
+            })
             var num = 0;
             $('#pickTime').click(function () {
                 if (num == 0){
@@ -458,9 +574,7 @@
             $('#donationdetailsback').click(function(){
               $('.donationdetailsmask').hide()
             })
-            var prePrice = eCacheUtil.storage.getCache(CacheKey.prePrice);
-            $('#estimatedamount ').html(prePrice+'元')
-            $('#Recyclingamount').html(prePrice+'元')
+            
             $('#loveMoney').bind('input propertychange', function() {
               if(parseInt($(this).val()) > parseInt(prePrice)){
                 alertTip('捐款金额大于估计金额');
@@ -693,6 +807,8 @@
                     break;
             }
         }
+        
+       
     </script>
 <!--站长统计-->
 <div style="display: none;">

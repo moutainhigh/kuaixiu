@@ -213,7 +213,7 @@ $('#submit').click(function () {
         eCacheUtil.storage.cache(CacheKey.isSelect,true);
 		
 
-		location.href = 'result.html';
+		location.href = 'order.html';
 
         
     }
