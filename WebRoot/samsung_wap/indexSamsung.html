@@ -252,6 +252,9 @@
 				}	
 			}
 			else{
+                //没有渠道标识则去除弹窗
+                console.log("没有渠道标识");
+                $('.dialog-active').hide();
 				//良品价检测
 				eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
 			}
