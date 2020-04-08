@@ -72,17 +72,18 @@
 <div id="wrap" class="indexWrap">
 
 
-    <!-- start of 首页弹窗 2019.10.28修改  -->
+    <!-- start of 首页弹窗 -->
     <div class="dialog-active">
-         <div class="mask-hide"></div>
-         <div class="img-active-wrap">
-             <i class="close-active-btn js-close-active"></i>
-             <a class="join-active-btn index-popup" href="../hs_hd/index.html#/?hd=ayll003&fm=1">
-                 <img class="img-active" src="./img/popup_window.png" alt="">
-             </a>
-             <a class="join-active-btn special  index-popup" href="../hs_hd/index.html#/?hd=ayll003&fm=1">立即参加</a>
-         </div>
-     </div>
+        <div class="mask-hide"></div>
+        <div class="img-active-wrap">
+
+            <i class="close-active-btn js-close-active"></i>
+            <a class="join-active-btn" href="activityVideo.html">
+                <img class="img-active" src="./img/73_image.png" alt="">
+            </a>
+            <a class="join-active-btn special" href="activityVideo.html">立即参加</a>
+        </div>
+    </div>
     <!-- end of 首页弹窗 -->
 
     <div class="main">
@@ -320,6 +321,20 @@
             if(fm == '1' ){
                 $("#card").show();
             }
+
+            if(fm != '38'){
+                $('.dialog-active').hide()
+            }
+        })
+
+
+        // 点击取消按钮隐藏活动
+        $('.js-close-active').on('click',function(){
+            $('.dialog-active').hide()
+        })
+        //关闭弹窗
+        $("#closePopoDialogBtn").on('click',function () {
+            $("#popoDialog").addClass('hide');
         })
     </script>
     <!--站长统计-->

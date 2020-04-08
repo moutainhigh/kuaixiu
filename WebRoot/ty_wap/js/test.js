@@ -6,6 +6,8 @@ $(function(){
     }
     if(fm == 2 || fm == 9 || fm == 10){
         document.title = '天翼回收';
+    }else if(fm == 1 || fm == 38 ){
+        document.title = '超人回收';
     }else{
         document.title = '翼回收';
     }
