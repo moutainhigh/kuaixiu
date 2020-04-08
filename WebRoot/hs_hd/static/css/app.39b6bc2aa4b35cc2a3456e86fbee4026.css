@@ -47,7 +47,7 @@ input {
     margin: 16px auto;
     text-align: center;
     line-height: 54px;
-    color: #fff;
+    color: #C5E37D;
     font-size: 14px
 }
 
@@ -76,7 +76,7 @@ input {
     display: inline-block;
     padding: 0 12px;
     margin: 0 auto;
-    color: #FAE019;
+    color: #C5E37D;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;

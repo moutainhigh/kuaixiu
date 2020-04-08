@@ -92,6 +92,7 @@ webpackJsonp([1], {
                 }, mobileInput: function () {
                 }, onReady: function () {
                     this.identifyCode = "", this.makeCode(this.identifyCodes, 4)
+                    console.log("初始化界面");
                 }, getdialog: function () {
                     if ("立即使用" == this.title && (window.location.href = "https://m-super.com/ty_wap/product.html?bid=1&fm=" + this.fm + "&phone=" + localStorage.getItem("login_phone")), this.isget) return !1;
                     this.islogin ? this.getreceiveActivityCoupon() : (this.code = "", this.iphoneValue = "", this.popupVisible = !this.popupVisible)
@@ -181,6 +182,47 @@ webpackJsonp([1], {
                 }
             },
             created: function () {
+                console.log("初始化界面1");
+                var phoneNumber='15356152346';
+                var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
+                var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+                if(loginPhone || HappyGoMobile) {
+                    if (loginPhone) {
+                        phoneNumber = loginPhone
+                    } else if (HappyGoMobile) {
+                        phoneNumber = HappyGoMobile
+                    }
+                }
+                if(phoneNumber!=''){
+                    //通过单点登录的存在号码
+                    console.log("存在号码");
+                    this.hd = this.$route.query.hd;
+                    this.fm = this.$route.query.fm;
+                    var t = this,
+                        e = {params: {phone: phoneNumber, fm: this.fm, activityLabel: this.hd}};
+                    this.$http({
+                        url: this.baseurl + "/recycle/receiveActivityCoupon.do",
+                        method: "post",
+                        params: e
+                    }).then(function (e) {
+                        console.log("领取："+e.data.resultCode);
+                        console.log("领取："+e.data.resultMessage);
+                        e.data.success ? 0 == e.data.resultCode ? (t.$toast({
+                            message: "领取成功！",
+                            position: "middle",
+                            duration: 2e3
+                        }), t.popupVisible = !1, t.islogin = !0) : 3 == e.data.resultCode  : 3 == e.data.resultCode && (t.$toast({
+                            message: e.data.resultMessage,
+                            position: "middle",
+                            duration: 2e3
+                        }), t.title = "立即使用", t.isget = !0, t.popupVisible = !1)
+                    })
+
+                }else{
+                    console.log("不存在号码");
+                }
+
+
                 this.baseurl = window.location.protocol + "//m-super.com", this.hd = this.$route.query.hd, this.fm = this.$route.query.fm;
                 var t = this.$route.query.phone;
                 t && localStorage.setItem("login_phone", t), this.getisLogin()

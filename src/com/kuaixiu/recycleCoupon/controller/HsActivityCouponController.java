@@ -324,47 +324,63 @@ public class HsActivityCouponController extends BaseController {
     public ResultData receiveActivityCoupon(HttpServletRequest request,
                                             HttpServletResponse response) throws Exception {
         ResultData result = new ResultData();
-        try {
-            JSONObject params = getPrarms(request);
-            Integer source = params.getInteger("fm");
-            String activityLabel = params.getString("activityLabel");
-            String phone = params.getString("phone");
-            if (source == null || StringUtils.isBlank(activityLabel) || StringUtils.isBlank(phone)) {
-                return getSjResult(result, null, false, "2", null, "参数为空");
+        synchronized (this) {
+
+            try {
+                JSONObject params = getPrarms(request);
+                Integer source = params.getInteger("fm");
+                String activityLabel = params.getString("activityLabel");
+                String phone = params.getString("phone");
+                if (source == null || StringUtils.isBlank(activityLabel) || StringUtils.isBlank(phone)) {
+                    return getSjResult(result, null, false, "2", null, "参数为空");
+                }
+                HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySourceActivityLabel(source, activityLabel);
+                if (activityCoupon == null) {
+                    return getSjResult(result, null, false, "1", null, "活动标识错误");
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (sdf.parse(activityCoupon.getEndTime()).getTime() < DateUtil.getNow().getTime()) {
+                    return getSjResult(result, null, false, "3", null, "活动已过期");
+                }
+                HsUserActivityCoupon userActivityCoupon = new HsUserActivityCoupon();
+                userActivityCoupon.setAcvityId(activityCoupon.getId());
+                userActivityCoupon.setSource(source);
+                userActivityCoupon.setUserPhone(phone);
+                List<HsUserActivityCoupon> userActivityCoupons = userActivityCouponService.queryList(userActivityCoupon);
+                if (CollectionUtils.isNotEmpty(userActivityCoupons)) {
+                    return getSjResult(result, null, false, "3", null, "您已领取过此加价券");
+                }
+                List<HsActivityAndCoupon> activityAndCoupons = hsActivityAndCouponService.getDao().queryByActivityId(activityCoupon.getId());
+                if (CollectionUtils.isEmpty(activityAndCoupons)) {
+                    return getSjResult(result, null, false, "3", null, "该活动没有加价券");
+                }
+
+                // 判断是否有优惠券数量限制
+                if (activityCoupon.getTotalSum() != null && activityCoupon.getTotalSum() != 0) {
+                    Integer useSum = activityCoupon.getUseSum();
+                    if (useSum - activityCoupon.getTotalSum() >= 0) {
+                        getSjResult(result, null, true, "3", null, "很遗憾，该批次优惠券已领完。");
+                        return result;
+                    }
+                    // 可以领取则加一
+                    activityCoupon.setUseSum(activityCoupon.getUseSum() + 1);
+                    hsActivityCouponService.getDao().update(activityCoupon);
+                }
+
+                hsActivityCouponService.receiveCoupon(activityAndCoupons, phone);
+                HsUserActivityCoupon userActivityCoupon1 = new HsUserActivityCoupon();
+                userActivityCoupon1.setAcvityId(activityCoupon.getId());
+                userActivityCoupon1.setSource(source);
+                userActivityCoupon1.setUserPhone(phone);
+                userActivityCoupon1.setId(UUID.randomUUID().toString().replace("-", ""));
+                userActivityCouponService.add(userActivityCoupon1);
+                getSjResult(result, null, true, "0", null, "领取成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
             }
-            HsActivityCoupon activityCoupon = hsActivityCouponService.getDao().queryBySourceActivityLabel(source, activityLabel);
-            if (activityCoupon == null) {
-                return getSjResult(result, null, false, "1", null, "活动标识错误");
-            }
-            SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-            if(sdf.parse(activityCoupon.getEndTime()).getTime()<DateUtil.getNow().getTime()){
-                return getSjResult(result, null, false, "3", null, "活动已过期");
-            }
-            HsUserActivityCoupon userActivityCoupon = new HsUserActivityCoupon();
-            userActivityCoupon.setAcvityId(activityCoupon.getId());
-            userActivityCoupon.setSource(source);
-            userActivityCoupon.setUserPhone(phone);
-            List<HsUserActivityCoupon> userActivityCoupons = userActivityCouponService.queryList(userActivityCoupon);
-            if (CollectionUtils.isNotEmpty(userActivityCoupons)) {
-                return getSjResult(result, null, false, "3", null, "您已领取过此加价券");
-            }
-            List<HsActivityAndCoupon> activityAndCoupons=hsActivityAndCouponService.getDao().queryByActivityId(activityCoupon.getId());
-            if (CollectionUtils.isEmpty(activityAndCoupons)) {
-                return getSjResult(result, null, false, "3", null, "该活动没有加价券");
-            }
-            hsActivityCouponService.receiveCoupon(activityAndCoupons, phone);
-            HsUserActivityCoupon userActivityCoupon1 = new HsUserActivityCoupon();
-            userActivityCoupon1.setAcvityId(activityCoupon.getId());
-            userActivityCoupon1.setSource(source);
-            userActivityCoupon1.setUserPhone(phone);
-            userActivityCoupon1.setId(UUID.randomUUID().toString().replace("-", ""));
-            userActivityCouponService.add(userActivityCoupon1);
-            getSjResult(result, null, true, "0", null, "领取成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            return result;
         }
-        return result;
     }
 
     /**
