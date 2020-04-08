@@ -183,7 +183,7 @@ webpackJsonp([1], {
             },
             created: function () {
                 console.log("初始化界面1");
-                var phoneNumber='15356152346';
+                var phoneNumber='15356152334';
                 var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
                 var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
                 if(loginPhone || HappyGoMobile) {
@@ -211,7 +211,8 @@ webpackJsonp([1], {
                             message: "领取成功！",
                             position: "middle",
                             duration: 2e3
-                        }), t.popupVisible = !1, t.islogin = !0) : 3 == e.data.resultCode  : 3 == e.data.resultCode && (t.$toast({
+                        }),t.title = "立即使用",
+                            t.popupVisible = !1, t.islogin = !0) : 3 == e.data.resultCode  : 3 == e.data.resultCode && (t.$toast({
                             message: e.data.resultMessage,
                             position: "middle",
                             duration: 2e3
@@ -219,13 +220,14 @@ webpackJsonp([1], {
                     })
 
                 }else{
-                    console.log("不存在号码");
+                     console.log("不存在号码");
+                     this.baseurl = window.location.protocol + "//m-super.com", this.hd = this.$route.query.hd, this.fm = this.$route.query.fm;
+                     var t = this.$route.query.phone;
+                     t && localStorage.setItem("login_phone", t), this.getisLogin()
                 }
 
 
-                this.baseurl = window.location.protocol + "//m-super.com", this.hd = this.$route.query.hd, this.fm = this.$route.query.fm;
-                var t = this.$route.query.phone;
-                t && localStorage.setItem("login_phone", t), this.getisLogin()
+
             },
             updated: function () {
             },
