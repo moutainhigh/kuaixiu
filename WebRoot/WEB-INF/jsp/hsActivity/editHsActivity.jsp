@@ -94,6 +94,15 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>总数量</label>
+                    <div class="col-sm-9">
+                        <input type="number"  id="totalSum" value="${hsActivityCoupon.totalSum }" style="width:400px;" name="totalSum"
+                               class="form-control"
+                               placeholder="可领取的总数量">
+                    </div>
+                </div>
+
                 <button type="submit" class="hide" id="addSubmitBtn"></button>
             </form>
         </div>

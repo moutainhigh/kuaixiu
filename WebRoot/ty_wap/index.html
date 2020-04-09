@@ -93,17 +93,10 @@
         </div>
         <div class="swiper-container">
             <div class="banner">
-                <!-- <div class="slide-item">
-                     <img src="img/nationalDay.png" alt="">
-                 </div>-->
-                <!-- 1.20-2.05 -->
-<!--                <div class="slide-item">-->
-<!--                    <a href="product.html"><img src="img/bannerSpring.png" alt=""></a>-->
-<!--                </div>-->
 
-                <!--<div class="slide-item">-->
-                  <!--<a class="index-popup" href="../hs_hd/index.html#/?hd=ayll003&fm=1"><img src="img/new_activities_banner.png" alt=""></a>-->
-                <!--</div>-->
+                <div class="slide-item">
+                    <a href="activityVideo.html"><img src="img/banner8.png" alt=""></a>
+                </div>
                 <div class="slide-item">
                     <a href="https://wapzj189.ews.m.jaeapp.com/dqwap/internetCard_v3_alyk/index-zfb.html"><img src="img/banner_yuka.png" alt=""></a>
                 </div>
@@ -116,12 +109,7 @@
                     <a href="product.html"><img src="img/banner5.png" alt=""></a>
                 </div>
 
-                <!--<div class="slide-item">
-                    <img src="img/banner1.png" alt="">
-                </div>
-                <div class="slide-item">
-                    <img src="img/banner2.png" alt="">
-                </div>-->
+
             </div>
         </div>
 
@@ -298,10 +286,13 @@
                 slidesPerView: 'auto',
                 autoplay: 3000
             });
-            var fm = eCacheUtil.storage.getCache(CacheKey.source);
+            var fm = GetQueryString( 'fm' ) ;
             if (isEmpty(fm)){
                 fm = eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
+            }else{
+                eCacheUtil.storage.cache(CacheKey.source,GetQueryString('fm'));
             }
+
             $('.modelCont').on('click','.item',function () {
                 eCacheUtil.storage.cache(CacheKey.ProjectId,$(this).attr('data-mid'));
                 eCacheUtil.storage.cache(CacheKey.ModelName,$(this).find('p').eq(0).html());

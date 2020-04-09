@@ -182,8 +182,7 @@ webpackJsonp([1], {
                 }
             },
             created: function () {
-                console.log("初始化界面1");
-                var phoneNumber='15356152334';
+                var phoneNumber='';
                 var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
                 var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
                 if(loginPhone || HappyGoMobile) {
@@ -195,7 +194,7 @@ webpackJsonp([1], {
                 }
                 if(phoneNumber!=''){
                     //通过单点登录的存在号码
-                    console.log("存在号码");
+                    console.log("存在号码"+phoneNumber);
                     this.hd = this.$route.query.hd;
                     this.fm = this.$route.query.fm;
                     var t = this,

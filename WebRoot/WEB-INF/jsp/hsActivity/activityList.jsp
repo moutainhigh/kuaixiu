@@ -49,6 +49,8 @@
                 <th class="fontWeight_normal tdwidth60 center">创建时间</th>
                 <th class="fontWeight_normal tdwidth60 center">绑定加价券名字</th>
                 <th class="fontWeight_normal tdwidth60 center">活动结束时间</th>
+                <th class="fontWeight_normal tdwidth60 center">总数量</th>
+                <th class="fontWeight_normal tdwidth60 center">已领取数量</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
             </thead>
@@ -108,6 +110,8 @@
         {"data": "strCreateTime", "class": ""},
         {"data": "hsCouponName", "class": ""},
         {"data": "endTime", "class": ""},
+        {"data": "totalSum", "class": ""},
+        {"data": "useSum", "class": ""},
         {"defaultContent": "操作", "class": ""}
     ]);
     //设置定义列的初始属性

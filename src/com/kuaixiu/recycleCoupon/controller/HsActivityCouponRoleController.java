@@ -451,6 +451,7 @@ public class HsActivityCouponRoleController extends BaseController {
             String[] activityRoles = request.getParameterValues("activityRoles");//活动规则描述
             String[] couponRoles = request.getParameterValues("couponRoles");//加价券规则id
             String endTime = request.getParameter("actvityEndTime");//活动结束时间
+            String totalSum = request.getParameter("totalSum");//活动结束时间
             if (StringUtils.isBlank(activityId) || sources == null || StringUtils.isBlank(centercolorValue) || activityRoles == null ||
                     couponRoles == null || StringUtils.isBlank(endTime)) {
                 return getSjResult(result, null, false, "2", null, "参数为空");
@@ -487,6 +488,13 @@ public class HsActivityCouponRoleController extends BaseController {
             activityCoupon.setSource(sb1.toString());
             activityCoupon.setCentercolorValue(centercolorValue);
             activityCoupon.setEndTime(endTime);
+            if(totalSum!=null){
+                try {
+                    activityCoupon.setTotalSum(Integer.parseInt(totalSum));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < activityRoles.length; i++) {
                 sb.append(activityRoles[i]);
