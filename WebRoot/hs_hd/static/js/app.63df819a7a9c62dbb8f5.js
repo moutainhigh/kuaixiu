@@ -182,16 +182,39 @@ webpackJsonp([1], {
                 }
             },
             created: function () {
+                var phone = this.$route.query.phone ;
+                console.log("单点获取数据:"+phone);
                 var phoneNumber='';
-                var loginPhone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
-                var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
-                if(loginPhone || HappyGoMobile) {
-                    if (loginPhone) {
-                        phoneNumber = loginPhone
-                    } else if (HappyGoMobile) {
-                        phoneNumber = HappyGoMobile
+
+                if(phone==undefined) {
+                    var ticket = this.$route.query.ticket ;
+                    if( ticket && ticket != '' ){
+                        var param = {
+                            "ticket":ticket,
+                        };
+                        $.post(
+                            getRealPath()+"/recycle/saveHappyMobile.do",
+                            {
+                                params:JSON.stringify(param)
+                            },
+                            function(data){
+                                if ( data.success){
+                                    var phoneNum = data.result.mobile ;
+                                    phoneNumber=phoneNum;
+                                    eCacheUtil.storage.cache(CacheKey.HappyGoMobile,phoneNum);
+                                    eCacheUtil.storage.cache(CacheKey.loginPhone,phoneNum);
+                                }else{
+                                    alert(data.resultMessage);
+                                }
+                            });
+                        return ;
                     }
+                }else{
+                    phoneNumber=phone;
                 }
+
+
+
                 if(phoneNumber!=''){
                     //通过单点登录的存在号码
                     console.log("存在号码"+phoneNumber);
@@ -204,8 +227,6 @@ webpackJsonp([1], {
                         method: "post",
                         params: e
                     }).then(function (e) {
-                        console.log("领取："+e.data.resultCode);
-                        console.log("领取："+e.data.resultMessage);
                         e.data.success ? 0 == e.data.resultCode ? (t.$toast({
                             message: "领取成功！",
                             position: "middle",
