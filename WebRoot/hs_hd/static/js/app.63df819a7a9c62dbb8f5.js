@@ -121,7 +121,12 @@ webpackJsonp([1], {
                         duration: 2e3
                     }); else this.$toast({message: "请输入手机号码", position: "middle", duration: 2e3})
                 }, goPCenter: function () {
-                    window.location.href = "https://m-super.com/ty_wap/discountList.html?fm=" + this.fm + "&phone=" + localStorage.getItem("login_phone")
+                    if(localStorage.getItem("login_phone")!=undefined){
+                        // 前往个人中心
+                        window.location.href = "https://m-super.com/ty_wap/personalCenter.html?fm=" + this.fm + "&phone=" + localStorage.getItem("login_phone")
+                    }else{
+                        window.location.href = "https://m-super.com/ty_wap/discountList.html?fm=" + this.fm + "&phone=" + localStorage.getItem("login_phone")
+                    }
                 }, getreceiveActivityCoupon: function () {
                     var t = this,
                         e = {params: {phone: localStorage.getItem("login_phone"), fm: this.fm, activityLabel: this.hd}};
@@ -217,7 +222,6 @@ webpackJsonp([1], {
 
                 if(phoneNumber!=''){
                     //通过单点登录的存在号码
-                    console.log("存在号码"+phoneNumber);
                     this.hd = this.$route.query.hd;
                     this.fm = this.$route.query.fm;
                     var t = this,
@@ -238,9 +242,8 @@ webpackJsonp([1], {
                             duration: 2e3
                         }), t.title = "立即使用", t.isget = !0, t.popupVisible = !1)
                     })
-
+                    localStorage.setItem("login_phone", phoneNumber);
                 }else{
-                     console.log("不存在号码");
                      this.baseurl = window.location.protocol + "//m-super.com", this.hd = this.$route.query.hd, this.fm = this.$route.query.fm;
                      var t = this.$route.query.phone;
                      t && localStorage.setItem("login_phone", t), this.getisLogin()
@@ -256,6 +259,11 @@ webpackJsonp([1], {
             }
         }, r = {
             render: function () {
+                var titleShow='查看红包';
+                if(localStorage.getItem("login_phone")!=undefined){
+                    titleShow='查看个人中心';
+                }
+
                 var t = this, e = t.$createElement, i = t._self._c || e;
                 return i("div", {staticClass: "content"}, [i("div", {staticClass: "heard"}, [i("div", {staticClass: "bg"}, [i("img", {
                     staticStyle: {width: "100%"},
@@ -278,7 +286,9 @@ webpackJsonp([1], {
                         "font-size": "14px",
                         color: "#fff"
                     }, on: {click: t.goPCenter}
-                }, ["立即使用" == t.title ? i("span", [t._v("\n            查看红包>\n          ")]) : t._e()])]), t._v(" "), i("div", {staticClass: "rule"}, [t._m(1), t._v(" "), t._l(t.activityRole, function (e, o) {
+                },
+
+                    ["立即使用" == t.title ? i("span", [t._v(titleShow)]) : t._e()])]), t._v(" "), i("div", {staticClass: "rule"}, [t._m(1), t._v(" "), t._l(t.activityRole, function (e, o) {
                     return i("div", {
                         key: e.id,
                         staticStyle: {color: "#fff", "font-size": "14px", margin: "20px 0"}

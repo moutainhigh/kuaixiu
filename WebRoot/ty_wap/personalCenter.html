@@ -156,12 +156,17 @@
        function getPersonalInfo() {
            var phone = eCacheUtil.storage.getCache(CacheKey.loginPhone);
            var HappyGoMobile = eCacheUtil.storage.getCache(CacheKey.HappyGoMobile);
+           var getMobile=GetQueryString("phone");
            var params = {};
            if(phone) {
                params.phone = phone
            }else if(HappyGoMobile) {
                params.phone = HappyGoMobile
-           }else {
+           }else if(getMobile){
+               params.phone = getMobile
+               eCacheUtil.storage.cache(CacheKey.HappyGoMobile,getMobile);
+           }
+           else {
                $.post(
                    getRealPath()+"/recycle/isLogin.do",
                    {},
