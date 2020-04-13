@@ -3,6 +3,7 @@ package com.kuaixiu.recycleUser.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.common.base.controller.BaseController;
 import com.common.util.SmsSendUtil;
+import com.common.util.SmsSendUtil2;
 import com.common.util.ValidatorUtil;
 import com.common.wechat.common.util.StringUtils;
 import com.system.api.CodeService;
@@ -38,6 +39,8 @@ public class HsUserController extends BaseController {
         try {
             JSONObject params = getPrarms(request);
             String mobile = params.getString("phone");
+            String fm=params.getString("fm");  //如果fm存在则发送超人验证码，否则发送天翼回收
+            System.out.println("渠道："+fm);
             if (StringUtils.isBlank(mobile)) {
                 return getSjResult(result, null, false, "2", null, "手机号不能为空");
             }
@@ -69,7 +72,13 @@ public class HsUserController extends BaseController {
                 }
             }else {
                 String randomCode = getRandomCode(request, mobile);
-                SmsSendUtil.sendCheckCode(mobile, randomCode);
+                if(StringUtils.isBlank(fm)){
+                    System.out.println("天翼");
+                    SmsSendUtil.sendCheckCode(mobile, randomCode);  //天翼
+                }else{
+                    System.out.println("超人");
+                    SmsSendUtil2.sendCheckCode(mobile, randomCode); //超人
+                }
                 getSjResult(result, null, true, "0", null, "操作成功");
             }
         } catch (Exception e) {

@@ -71,7 +71,7 @@ public class SmsSendUtil {
             content = "验证码：${code}，有效期30分钟，请及时验证。（如非本人操作，请忽略）";
         }
         content = content.replace("${code}", randomCode);
-        //System.out.println(content);
+        System.out.println("天翼："+content);
         return sendSms2(mobile, content);
     }
 

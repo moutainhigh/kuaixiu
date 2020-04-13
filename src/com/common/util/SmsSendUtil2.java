@@ -49,7 +49,7 @@ public class SmsSendUtil2 {
             content = "【M-超人】验证码：${code}，有效期30分钟，请及时验证。（如非本人操作，请忽略）";
         }
         content = content.replace("${code}", randomCode);
-        //System.out.println(content);
+        System.out.println("超人："+content);
         return sendSms(mobile, content);
     }
     

@@ -160,11 +160,20 @@ webpackJsonp([1], {
                     localStorage.getItem("login_phone") ? (this.islogin = !0, this.title = "立即领取") : (this.islogin = !1, this.title = "立即领取")
                 }, textCode: function () {
                     var t = {params: {phone: this.iphoneValue}};
+                    var fm=this.fm;
+                    console.log('短信渠道：'+fm);
+                    if(fm!=undefined&&fm=='38'){
+                        t= {params: {phone: this.iphoneValue, fm:'38'}};
+                    }
                     this.$http({
                         url: this.baseurl + "/recycle/sendSmsCode.do",
                         method: "post",
                         params: t
                     }).then(function (t) {
+                        if("0" != t.data.resultCode){
+                            alert(t.data.resultMessage)
+                        }
+
                     })
                 }, getcouponIndex: function () {
                     var t = this, e = {params: {fm: this.fm, label: this.hd}};
