@@ -764,7 +764,7 @@ public class SmsSendUtil {
     }
 
     /**
-     * 发送短信
+     * 发送短信 超人回收
      *
      * @param mobile  手机号码
      * @param content 短信内容

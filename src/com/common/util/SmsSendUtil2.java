@@ -37,7 +37,7 @@ public class SmsSendUtil2 {
     }
     
     /**
-     * 调用接口发送验证码
+     * 调用接口发送验证码 超人
      * @param mobile
      * @param randomCode
      * @CreateDate: 2016-9-13 下午8:15:21
@@ -46,11 +46,11 @@ public class SmsSendUtil2 {
         //获取验证码短信模板
         String content = (String)SystemUtil.getProperty("sms_checkCode");
         if(StringUtils.isBlank(content)){
-            content = "【M-超人】验证码：${code}，有效期30分钟，请及时验证。（如非本人操作，请忽略）";
+          content = "验证码：${code}，有效期30分钟，请及时验证。（如非本人操作，请忽略）";
         }
         content = content.replace("${code}", randomCode);
         System.out.println("超人："+content);
-        return sendSms(mobile, content);
+        return SmsSendUtil.sendSms(mobile, content);
     }
     
     /**
@@ -170,7 +170,7 @@ public class SmsSendUtil2 {
      * @CreateDate: 2016-9-26 下午8:10:21
      */
     public static Boolean sendSms(String mobile, String content){
-        
+
         long currenttime = System.currentTimeMillis();
         //获取当前时间戳
         String timeStamp = formater.format(currenttime);
