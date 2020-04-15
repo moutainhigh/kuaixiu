@@ -67,16 +67,20 @@ public class HsUserController extends BaseController {
                     getSjResult(result, null, false, "2", null, "验证码时效为30分钟,请勿重复获取");
                 }else{
                     String randomCode = getRandomCode(request, mobile);
-                    SmsSendUtil.sendCheckCode(mobile, randomCode);
+                    if(StringUtils.isBlank(fm)){
+                        System.out.println("天翼短信");
+                        SmsSendUtil.sendCheckCode(mobile, randomCode);  //天翼
+                    }else{
+                        System.out.println("超人短信");
+                        SmsSendUtil2.sendCheckCode(mobile, randomCode); //超人
+                    }
                     getSjResult(result, null, true, "0", null, "操作成功");
                 }
             }else {
                 String randomCode = getRandomCode(request, mobile);
                 if(StringUtils.isBlank(fm)){
-                    System.out.println("天翼");
                     SmsSendUtil.sendCheckCode(mobile, randomCode);  //天翼
                 }else{
-                    System.out.println("超人");
                     SmsSendUtil2.sendCheckCode(mobile, randomCode); //超人
                 }
                 getSjResult(result, null, true, "0", null, "操作成功");
