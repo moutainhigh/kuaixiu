@@ -82,8 +82,12 @@
                         <option value="1">是</option>
                     </select>
                 </td>
+
+                <td class="search_th"><label class="control-label">手机型号：</label></td>
+                <td class="search_td"><input type="text" name="query_mobie_type" class="form-control"></td>
             </tr>
         </table>
+
 
 
 

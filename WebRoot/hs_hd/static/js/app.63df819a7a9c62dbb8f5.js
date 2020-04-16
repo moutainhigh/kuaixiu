@@ -188,6 +188,20 @@ webpackJsonp([1], {
                         params: e
                     }).then(function (e) {
                         "0" == e.data.resultCode && (document.getElementsByClassName("content")[0].style.backgroundColor = "#" + e.data.result.centerImage.centercolorValue, document.getElementsByClassName("main")[0].style.backgroundColor = "#" + e.data.result.centerImage.centercolorValue, document.getElementsByClassName("heard")[0].style.backgroundColor = "#" + e.data.result.centerImage.centercolorValue, t.headImage = e.data.result.headImage.headUrl, t.centerImage = e.data.result.centerImage.centerUrl, t.activityRole = e.data.result.activityRole)
+                        if(e.data.result.title!=undefined){
+                            $('title').text(e.data.result.title);
+                        }
+                        if(e.data.result.buttonColor!=undefined){
+                            $(".primary").css('background-color',e.data.result.buttonColor);
+                        }
+                        if(e.data.result.buttonCodeColor!=undefined){
+                            $(".disprimary, .primary").css('color',e.data.result.buttonCodeColor);
+                        }
+                        if(e.data.result.titleColor!=undefined){
+                            $(".but div").css('color',e.data.result.titleColor);
+                        }
+
+
                     })
                 }, makeCode: function (t, e) {
                     for (var i = 0; i < e; i++) this.identifyCode += this.identifyCodes[this.randomNum(0, this.identifyCodes.length)]

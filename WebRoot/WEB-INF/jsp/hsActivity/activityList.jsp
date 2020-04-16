@@ -33,24 +33,28 @@
         <table id="dt" class="table table-striped table-bordered table-radius table-hover">
             <thead>
             <tr>
-                <th class="fontWeight_normal tdwidth30"><input id="check_all_btn" onclick="checkAll(this)"
+                <th class="fontWeight_normal tdwidth40"><input id="check_all_btn" onclick="checkAll(this)"
                                                                type="checkbox"/>序号
                 </th>
-                <th class="fontWeight_normal tdwidth60 center">活动标识</th>
-                <th class="fontWeight_normal tdwidth60 center">来源</th>
+                <th class="fontWeight_normal tdwidth50 center">活动标识</th>
+                <th class="fontWeight_normal tdwidth40 center">来源</th>
                 <%--<th class="fontWeight_normal tdwidth60 center">头图片高度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">头图片宽度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">边框图片高度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">边框图片宽度</th>--%>
-                <th class="fontWeight_normal tdwidth60 center">加价券图片色值</th>
                 <%--<th class="fontWeight_normal tdwidth60 center">加价券图片高度</th>--%>
                 <%--<th class="fontWeight_normal tdwidth60 center">加价券图片宽度</th>--%>
+                <th class="fontWeight_normal tdwidth60 center">加价券图片色值</th>
                 <th class="fontWeight_normal tdwidth60 center">活动规则</th>
                 <th class="fontWeight_normal tdwidth60 center">创建时间</th>
                 <th class="fontWeight_normal tdwidth60 center">绑定加价券名字</th>
                 <th class="fontWeight_normal tdwidth60 center">活动结束时间</th>
-                <th class="fontWeight_normal tdwidth60 center">总数量</th>
-                <th class="fontWeight_normal tdwidth60 center">已领取数量</th>
+                <th class="fontWeight_normal tdwidth60 center">页面名称</th>
+                <th class="fontWeight_normal tdwidth60 center">页面标题字体颜色</th>
+                <th class="fontWeight_normal tdwidth60 center">按钮背景颜色</th>
+                <th class="fontWeight_normal tdwidth60 center">按钮文字颜色</th>
+                <th class="fontWeight_normal tdwidth50 center">总数量</th>
+                <th class="fontWeight_normal tdwidth50 center">已领取数量</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>
             </tr>
             </thead>
@@ -110,6 +114,10 @@
         {"data": "strCreateTime", "class": ""},
         {"data": "hsCouponName", "class": ""},
         {"data": "endTime", "class": ""},
+        {"data": "title", "class": ""},
+        {"data": "titleColor", "class": ""},
+        {"data": "buttonColor", "class": ""},
+        {"data": "buttonCodeColor", "class": ""},
         {"data": "totalSum", "class": ""},
         {"data": "useSum", "class": ""},
         {"defaultContent": "操作", "class": ""}
