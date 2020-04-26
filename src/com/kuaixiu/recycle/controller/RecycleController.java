@@ -1453,6 +1453,8 @@ public class RecycleController extends BaseController {
         String fromSystem = request.getParameter("fromSystem");
         String isCoupon = request.getParameter("isCoupon");
         String isLoveMoney = request.getParameter("isLoveMoney");  // 是否爱心捐款  0否  1是
+        String type = request.getParameter("query_mobie_type");    // 手机型号
+
 
         RecycleOrder r = new RecycleOrder();
         r.setOrderNo(orderNo);
@@ -1466,6 +1468,7 @@ public class RecycleController extends BaseController {
         r.setQueryStartTime(queryStartTime);
         r.setQueryEndTime(queryEndTime);
         r.setIsCoupon(isCoupon);
+        r.setProductName(type);
         if(StringUtils.isBlank(isLoveMoney)){
             r.setLovemoney(null);
         }else{

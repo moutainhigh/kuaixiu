@@ -298,7 +298,7 @@
             and t.order_no=#{orderNo}
         </if>
         <if test="productName != null and productName != ''">
-            and t.product_name=#{productName}
+            and t.product_name like concat('%',#{productName},'%')
         </if>
         <if test="recycleType != null">
             and t.recycle_type =#{recycleType}

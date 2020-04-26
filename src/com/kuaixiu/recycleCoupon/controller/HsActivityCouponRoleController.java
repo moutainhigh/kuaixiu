@@ -373,6 +373,11 @@ public class HsActivityCouponRoleController extends BaseController {
                 }
             }
             activityCoupon.setActivityRole(sb.toString());
+            //增加页面文字，按钮颜色等设定
+            activityCoupon.setTitle(request.getParameter("title"));
+            activityCoupon.setTitleColor(request.getParameter("titleColor"));
+            activityCoupon.setButtonColor(request.getParameter("buttonColor"));
+            activityCoupon.setButtonCodeColor(request.getParameter("buttonCodeColor"));
             hsActivityCouponService.add(activityCoupon);
             //活动绑定加价券
             hsActivityCouponService.activityAndCoupon(activityCoupon.getId(), couponRoles, activityCoupon.getEndTime());
@@ -488,6 +493,9 @@ public class HsActivityCouponRoleController extends BaseController {
             activityCoupon.setSource(sb1.toString());
             activityCoupon.setCentercolorValue(centercolorValue);
             activityCoupon.setEndTime(endTime);
+
+
+
             if(totalSum!=null){
                 try {
                     activityCoupon.setTotalSum(Integer.parseInt(totalSum));
@@ -503,6 +511,11 @@ public class HsActivityCouponRoleController extends BaseController {
                 }
             }
             activityCoupon.setActivityRole(sb.toString());
+            activityCoupon.setTitle(request.getParameter("title"));
+            activityCoupon.setTitleColor(request.getParameter("titleColor"));
+            activityCoupon.setButtonColor(request.getParameter("buttonColor"));
+            activityCoupon.setButtonCodeColor(request.getParameter("buttonCodeColor"));
+
             hsActivityCouponService.saveUpdate(activityCoupon);
             hsActivityAndCouponService.getDao().deleteByActivityId(activityCoupon.getId());
             //活动绑定加价券

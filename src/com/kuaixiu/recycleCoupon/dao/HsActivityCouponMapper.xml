@@ -26,6 +26,11 @@
         <result column="end_time" property="endTime"/>
         <result column="total_sum" property="totalSum"/>
         <result column="use_sum" property="useSum"/>
+        <result column="title" property="title"/>
+        <result column="button_color" property="buttonColor"/>
+        <result column="title_color" property="titleColor"/>
+        <result column="button_code_color" property="buttonCodeColor"/>
+
     </resultMap>
 
     <!-- hs_activity_coupon table all fields -->
@@ -34,7 +39,7 @@
         center_url,centercolor_value,center_height,center_wide,activity_role,
         date_format(`create_time`,'%Y-%m-%d %H:%i:%s')create_time,create_userid,
         date_format(`update_time`,'%Y-%m-%d %H:%i:%s')update_time,update_userid,
-        end_time,total_sum,use_sum
+        end_time,total_sum,use_sum,title,button_color,title_color,button_code_color
     </sql>
 
     <!-- 插入记录 -->
@@ -42,11 +47,12 @@
         insert into hs_activity_coupon
         (id,activity_label,source,is_del,head_url,head_height,head_wide,margin_height,margin_wide,center_url,
         centercolor_value,center_height,center_wide,activity_role,create_time,
-        create_userid,update_time,update_userid,end_time,total_sum,use_sum)
+        create_userid,update_time,update_userid,end_time,total_sum,use_sum,title,button_color,title_color,button_code_color)
         values
         (#{id},#{activityLabel},#{source},0,#{headUrl},#{headHeight},#{headWide},#{marginHeight},
         #{marginWide},#{centerUrl},#{centercolorValue},#{centerHeight},#{centerWide},#{activityRole},
-        now(),#{createUserid},#{updateTime},#{updateUserid},#{endTime},#{totalSum},#{useSum})
+        now(),#{createUserid},#{updateTime},#{updateUserid},#{endTime},#{totalSum},#{useSum},#{title},
+        #{buttonColor},#{titleColor},#{buttonCodeColor})
     </insert>
 
     <!-- 根据id，修改记录-->
@@ -72,6 +78,10 @@
             update_time=#{updateTime},
             total_sum=#{totalSum},
             use_sum=#{useSum},
+            title=#{title},
+            button_color=#{buttonColor},
+            title_color=#{titleColor},
+            button_code_color=#{buttonCodeColor},
             update_userid=#{updateUserid}
         where id=#{id}
     </update>

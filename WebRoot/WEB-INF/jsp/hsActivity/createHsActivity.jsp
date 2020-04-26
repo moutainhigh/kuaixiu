@@ -53,6 +53,45 @@
                                placeholder="加价券图片色值">
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span style="color:red">*</span>页面名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="title" style="width:400px;" name="title"
+                               class="form-control"
+                               placeholder="页面标题名称">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">页面标题字体颜色</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="titleColor" style="width:400px;" name="titleColor"
+                               class="form-control"
+                               placeholder="页面标题字体颜色">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">按钮背景颜色</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="buttonColor" style="width:400px;" name="buttonColor"
+                               class="form-control"
+                               placeholder="按钮背景颜色">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">按钮文字颜色</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="buttonCodeColor" style="width:400px;" name="buttonCodeColor"
+                               class="form-control"
+                               placeholder="按钮文字颜色">
+                    </div>
+                </div>
+
+
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span style="color:red">*</span>活动结束时间</label>
                     <div class="am-datepicker-date col-sm-9">

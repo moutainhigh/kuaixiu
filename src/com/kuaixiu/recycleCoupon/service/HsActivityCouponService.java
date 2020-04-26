@@ -65,6 +65,12 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
 
     public JSONObject actCoupon2Json(HsActivityCoupon actCoupon) throws Exception {
         JSONObject json = new JSONObject();
+        //增加返回标题名字，颜色和按钮颜色
+        json.put("title", actCoupon.getTitle());
+        json.put("titleColor", actCoupon.getTitleColor());
+        json.put("buttonColor", actCoupon.getButtonColor());
+        json.put("buttonCodeColor", actCoupon.getButtonCodeColor());
+
         json.put("activityLabel", actCoupon.getActivityLabel());
         JSONObject headImage = new JSONObject();
         headImage.put("headUrl", actCoupon.getHeadUrl());
