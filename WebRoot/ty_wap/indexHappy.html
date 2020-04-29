@@ -394,17 +394,17 @@
         }
         //2. 根据ticket获得手机号码
 			//a 记录抽奖号码
-			if( fm == '21' ){
+			// if( fm == '21' ){
             eCacheUtil.storage.cache( CacheKey.source, fm );
 
             //从欢Go客户端加载当前页面
             if( ticket && ticket != '' ){
                 getMobileByTicket( ticket );
             }
-            else{
-                alert( '请先用欢Go账号登录再操作' );
-            }
-        }
+            // else{
+            //     alert( '请先用欢Go账号登录再操作' );
+            // }
+        // }
         else{
             //良品价检测
             eCacheUtil.storage.cache(CacheKey.isGood,GetQueryString('isGood'));
