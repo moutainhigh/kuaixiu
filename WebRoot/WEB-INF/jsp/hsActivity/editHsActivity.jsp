@@ -97,7 +97,23 @@
 
 
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">用劵下单栏色号</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="smallColor" value="${hsActivityCoupon.smallColor }"  style="width:400px;" name="smallColor"
+                               class="form-control"
+                               placeholder="用劵下单栏色号">
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">活动介绍背景色号</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="bigColor" value="${hsActivityCoupon.bigColor }"  style="width:400px;" name="bigColor"
+                               class="form-control"
+                               placeholder="活动介绍背景色号">
+                    </div>
+                </div>
 
 
                 <div class="form-group">

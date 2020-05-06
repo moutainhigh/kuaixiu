@@ -183,7 +183,8 @@ webpackJsonp([1], {
                 }, getcouponIndex: function () {
                     var t = this, e = {params: {fm: this.fm, label: this.hd}};
                     this.$http({
-                        url: this.baseurl + "/recycle/getCouponIndex.do",
+                        // this.baseurl
+                        url: "http://localhost" + "/recycle/getCouponIndex.do",
                         method: "post",
                         params: e
                     }).then(function (e) {
@@ -200,6 +201,15 @@ webpackJsonp([1], {
                         if(e.data.result.titleColor!=undefined){
                             $(".but div").css('color',e.data.result.titleColor);
                         }
+                        if(e.data.result.smallColor!=undefined){
+                            console.log(205);
+                            $(".heard ").css('background-color',e.data.result.smallColor);
+                        }
+                        if(e.data.result.bigColor!=undefined){
+                            console.log(209);
+                            $(".main ").css('background-color',e.data.result.bigColor);
+                        }
+
 
 
                     })

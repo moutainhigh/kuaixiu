@@ -70,6 +70,10 @@ public class HsActivityCouponService extends BaseService<HsActivityCoupon> {
         json.put("titleColor", actCoupon.getTitleColor());
         json.put("buttonColor", actCoupon.getButtonColor());
         json.put("buttonCodeColor", actCoupon.getButtonCodeColor());
+        json.put("smallColor", actCoupon.getSmallColor());
+        json.put("bigColor", actCoupon.getBigColor());
+
+
 
         json.put("activityLabel", actCoupon.getActivityLabel());
         JSONObject headImage = new JSONObject();

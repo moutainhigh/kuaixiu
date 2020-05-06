@@ -515,6 +515,8 @@ public class HsActivityCouponRoleController extends BaseController {
             activityCoupon.setTitleColor(request.getParameter("titleColor"));
             activityCoupon.setButtonColor(request.getParameter("buttonColor"));
             activityCoupon.setButtonCodeColor(request.getParameter("buttonCodeColor"));
+            activityCoupon.setSmallColor(request.getParameter("smallColor"));
+            activityCoupon.setBigColor(request.getParameter("bigColor"));
 
             hsActivityCouponService.saveUpdate(activityCoupon);
             hsActivityAndCouponService.getDao().deleteByActivityId(activityCoupon.getId());

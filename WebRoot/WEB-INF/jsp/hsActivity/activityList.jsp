@@ -53,6 +53,8 @@
                 <th class="fontWeight_normal tdwidth60 center">页面标题字体颜色</th>
                 <th class="fontWeight_normal tdwidth60 center">按钮背景颜色</th>
                 <th class="fontWeight_normal tdwidth60 center">按钮文字颜色</th>
+                <th class="fontWeight_normal tdwidth60 center">用劵下单栏色号</th>
+                <th class="fontWeight_normal tdwidth60 center">活动介绍背景色号</th>
                 <th class="fontWeight_normal tdwidth50 center">总数量</th>
                 <th class="fontWeight_normal tdwidth50 center">已领取数量</th>
                 <th class="fontWeight_normal tdwidth50 center">操作</th>
@@ -118,6 +120,8 @@
         {"data": "titleColor", "class": ""},
         {"data": "buttonColor", "class": ""},
         {"data": "buttonCodeColor", "class": ""},
+        {"data": "smallColor", "class": ""},
+        {"data": "bigColor", "class": ""},
         {"data": "totalSum", "class": ""},
         {"data": "useSum", "class": ""},
         {"defaultContent": "操作", "class": ""}
