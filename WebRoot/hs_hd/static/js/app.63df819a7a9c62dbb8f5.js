@@ -184,7 +184,7 @@ webpackJsonp([1], {
                     var t = this, e = {params: {fm: this.fm, label: this.hd}};
                     this.$http({
                         // this.baseurl
-                        url: "http://localhost" + "/recycle/getCouponIndex.do",
+                        url: this.baseurl + "/recycle/getCouponIndex.do",
                         method: "post",
                         params: e
                     }).then(function (e) {
